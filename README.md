@@ -4,7 +4,7 @@
 
 With the fastest possible Arduino-compatible 8-bit AVR GPIO and register manipulation...
 
-IT'S THE BIGGEST OF HITS WHEN YOU NEED TO BANG BITS.
+IT'S THE BIGGEST OF HITS <br/>WHEN YOU NEED TO BANG BITS.
 ========================================
 
 Getting tired of mindlessly staring down your wristwatch in an open-mouthed gape, awaiting a digitalRead's return?  Do you long for a super-simple way to set or flip your bits?  Has repeatedly ALT-TABing to the ATmega datasheets to look up register descriptions worn you down to the last raw nerve?
