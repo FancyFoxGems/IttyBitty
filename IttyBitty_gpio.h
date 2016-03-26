@@ -1,3 +1,7 @@
+/************************************************************
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
+*************************************************************/
+
 #ifndef _ITTYBITTY_GPIO_H
 #define _ITTYBITTY_GPIO_H
 
@@ -7,20 +11,26 @@
 	#include "WProgram.h"
 #endif
 
-#include "IttyBitty_bits.h"
 
-namespace GPIO
+#include "IttyBitty_registers.h"
+#include "IttyBitty_bytes.h"
+
+
+namespace IttyBitty
 {
-	class IttyBitty_GPIO
+	class GPIO
 	{
-	 protected:
-
-
 	 public:
-		void init();
+		GPIO();
+
+	 protected:
 	};
 
-	extern const IttyBitty_GPIO gp;
+	typedef GPIO * PGPIO, & RGPIO;
+	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO;
 }
+
+extern const IttyBitty::GPIO gp;
+
 
 #endif
