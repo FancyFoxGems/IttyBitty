@@ -1,6 +1,8 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ...
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_BYTES_H
 #define _ITTYBITTY_BYTES_H
@@ -15,12 +17,15 @@
 #include "IttyBitty_bits.h"
 
 
+IGNORE_WARNING(-Wstrict-aliasing)
+IGNORE_WARNING(-Wpointer-arith)
+
+
 /* BIT-PACKING / BIT REFERENCE MACROS */
 
-#define BIT_SIZE(type) (sizeof(type) * 8)
+#define BIT_SIZE(type) static_cast<SIZE>(SIZEOF(type) * 8)
 
-IGNORE_WARNING(-Wstrict-aliasing)
-#define PACK_BYTE(byte) (*((IttyBitty::PBITPACK)&byte))
+#define PACK_BYTE(byte) (*reinterpret_cast<IttyBitty::PBITPACK>(&byte))
 #define _B(byte, i) (BIT)(PACK_BYTE(byte).b##i)
 
 #define BIT0(byte) _B(byte, 0)
@@ -37,11 +42,12 @@ namespace IttyBitty
 {
 	/* NYBBLE, BYTE, & WORD MASKS */
 
-	#define LOW_NYBBLE(byte_addr) BMASK(byte_addr, WORD_BYTE_MASKS[0])
-	#define HIGH_NYBBLE(byte_addr) WORD_BYTE_MASKS[0]
+	#define LOW_NYBBLE(byte_addr) MASK(byte_addr, WORD_BYTE_MASKS[0])
+	#define HIGH_NYBBLE(byte_addr) MASK(byte_addr, WORD_BYTE_MASKS[1])
 
 	#define WORD_LOW_BYTE WORD_BYTE_MASKS[0]
 	#define WORD_HIGH_BYTE WORD_BYTE_MASKS[0]
+
 
 	/* BIT OFFSET, L/H NYBBLE, BYTE, & WORD MASK MAPS */
 
@@ -56,11 +62,13 @@ namespace IttyBitty
 	CDWORD DWORD_WORD_MASKS[] = { 0x0000FFFF, 0xFFFF0000 };
 	
 
+	/* [BITPACK]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF MEMORY BYTES */
+
 	struct _BitPack;
-	typedef struct _BitPack bitpack_t, BitPack, BITPACK, * PBITPACK, & RBITPACK;
+	typedef struct _BitPack _bitpack_t, BitPack, BITPACK, * PBITPACK, & RBITPACK;
 	typedef const struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK;
 
-	PACKED_STRUCT _BitPack
+	BITFIELD _BitPack
 	{
 	public:
 
@@ -73,7 +81,11 @@ namespace IttyBitty
 		BIT b6 : 1;
 		BIT b7 : 1;
 
-		CSIZE Size() const;
+		_BitPack(RCBITPACK other);
+
+		STATIC RCBITPACK NULL_OBJECT();
+
+		STATIC CSIZE Size();
 		
 		BIT operator[](SIZE i) const;
 		
@@ -81,8 +93,10 @@ namespace IttyBitty
 	};
 	
 
+	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
+
 	class ByteField;
-	typedef class ByteField bytefield_t, BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD;
+	typedef class ByteField _bytefield_t, BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD;
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD;
 
 	class ByteField
@@ -90,30 +104,42 @@ namespace IttyBitty
 	public:
 
 		struct __BitProxy;
-		typedef struct __BitProxy BitRef, BITREF;
-		typedef const struct __BitProxy CBITREF;
-
-		ByteField(BYTE);
+		typedef struct __BitProxy BitRef, BITREF, * PBITREF, & RBITREF;
+		typedef const struct __BitProxy CBITREF, * PCBITREF, & RCBITREF;
+		
+		ByteField();
+		ByteField(RCBYTE);	
 		ByteField(RBYTE);
 		ByteField(PBYTE);
+		
+		ByteField(RCBYTEFIELD);
 
 		~ByteField();
 
-		CSIZE Size() const;
+		STATIC RCBITREF NULL_BITREF();
+		STATIC RCBYTEFIELD NULL_OBJECT();
+
+		STATIC CSIZE Size();
+		STATIC CSIZE ByteSize();
 
 		operator BYTE() const;
-		operator BYTE();
+		operator PBYTE();
+		operator RBYTE();
 		
 		operator CHAR() const;
-		operator CHAR();
+		operator PCHAR();
+		operator RCHAR();
 
-		operator BitPack();
+		operator RCBITPACK() const;
+		operator PBITPACK();
 
 		BIT operator[](SIZE) const;
 		BITREF operator[](SIZE);
 
 		BIT Bit(SIZE) const;
 		BITREF Bit(SIZE);
+
+		PBYTE ByteRef() const;
 
 		BYTE ByteValue() const;
 		PBYTEFIELD SetByteValue(BYTE);
@@ -128,43 +154,53 @@ namespace IttyBitty
 		BYTE HighNybble() const;
 		PBYTEFIELD SetHighNybble(BYTE);
 
-	private:
-
-		STATIC CBITREF NULL_BITREF;
+	protected:
 
 		VOLATILE UNION
 		{
-			PBYTE _Byte;
-			PBITPACK _Bits;
+			PBYTE _pByte;
+			PBITPACK _pBitPack;
 		}
 		PACKED;
 
-		BOOL _DestroyPtr;
+		BOOL _DestroyByte;
 
-		typedef struct __BitProxy _bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
+		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
 		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 	};
 	
 	typedef ByteField::BitRef BITREF;
+	
 
+	/* [MAPPEDBITS]: BASE CLASS TO ENCAPSULATE BIT-PACKED MEMORY OF ARBITRARY BYTE-WIDTH */
 
 	class MappedBits;
-	typedef class MappedBits mappedbits_t, MAPPEDBITS, * PMAPPEDBITS, & RMAPPEDBITS;
+	typedef class MappedBits _mappedbits_t, MAPPEDBITS, * PMAPPEDBITS, & RMAPPEDBITS;
 	typedef const class MappedBits CMAPPEDBITS, * PCMAPPEDBITS, & RCMAPPEDBITS;
 
 	CLASS MappedBits
 	{
-	protected:
-
-		MappedBits(BYTE);
-		MappedBits(BYTE[]);
-		MappedBits(PBYTE[]);
-
 	public:
+		
+		MappedBits();
+		MappedBits(SIZE);
+		MappedBits(PVOID, SIZE);
+		MappedBits(PBYTEFIELD, SIZE);
+		MappedBits(BYTE[], SIZE);
+		MappedBits(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
+		MappedBits(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+		
+		MappedBits(RCMAPPEDBITS);
 
 		~MappedBits();
 
-		CSIZE Size() const;
+		STATIC RCMAPPEDBITS NULL_OBJECT();
+		
+		CSIZE BitWidth() const;
+		CSIZE ByteSize() const;
+		CSIZE WordSize() const;
+		
+		operator PPBYTE() const;
 
 		BIT operator[](SIZE) const;
 		BITREF operator[](SIZE);
@@ -172,55 +208,89 @@ namespace IttyBitty
 		BIT Bit(SIZE) const;
 		BITREF Bit(SIZE);
 
-		CONST RBYTEFIELD Byte(SIZE i) const;
-		RBYTEFIELD Byte(SIZE i);
+		PBYTEFIELD Bytes() const;
+
+		BYTE Byte(SIZE) const;
+		virtual PBYTEFIELD Byte(SIZE);
 
 	protected:
 
-		STATIC CBYTEFIELD NULL_BYTEFIELD;
-
-		PBYTEFIELD _Bits;
+		PBYTEFIELD _ByteFields;
+		SIZE _ByteSize;
+		
+		BOOL _DisposeByteFields;
+		BOOL _DisposeByteFieldsPtr;
 	};
 	
 
+	/* [WORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 16-BIT (WORD) MEMORY BLOCKS */
+
 	class WordField;
-	typedef class WordField wordfield_t, WORDFIELD, * PWORDFIELD, & RWORDFIELD;
+	typedef class WordField _wordfield_t, WORDFIELD, * PWORDFIELD, & RWORDFIELD;
 	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD;
 
-	CLASS WordField : MappedBits
+	CLASS WordField : public MappedBits
+	{
+	public:
+		
+		WordField();
+		WordField(WORD);
+		WordField(PWORD);
+		WordField(PBYTEFIELD);
+		
+		WordField(RCWORDFIELD);
+
+		STATIC RCWORDFIELD NULL_OBJECT();
+
+		operator WORD() const;
+		operator SHORT() const;
+		
+		PBYTEFIELD LowByte();
+		PBYTEFIELD HighByte();
+	};
+	
+
+	/* [DWORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 32-BIT (DOUBLE WORD) MEMORY BLOCKS */
+
+	class DWordField;
+	typedef class DWordField _dwordfield_t, DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD;
+	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD;
+
+	CLASS DWordField : public MappedBits
 	{
 	public:
 
-		operator WORD() const;
-		operator WORD();
+		DWordField();
+		DWordField(DWORD);
+		DWordField(PDWORD);
+		DWordField(PBYTEFIELD);
+		DWordField(PWORDFIELD);
+		DWordField(PWORDFIELD[]);
 		
-		operator SHORT() const;
-		operator SHORT();
-		
-		CONST RBYTEFIELD LowByte() const;
-		CONST RBYTEFIELD HighByte() const;
-	};
+		DWordField(RCDWORDFIELD);
 
+		~DWordField();
 
-	class DWordField;
-	typedef class DWordField dwordfield_t, DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD;
-	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD;
+	private:
 
-	CLASS DWordField : MappedBits
-	{
+		VOID InitWordFields();
+
 	public:
 
 		operator DWORD() const;
-		operator DWORD();
-		
 		operator LONG() const;
-		operator LONG();
-
-		CONST RWORDFIELD Word(SIZE i) const;
-		RWORDFIELD Word(SIZE i);
 		
-		CONST RWORDFIELD LowWord() const;
-		CONST RWORDFIELD HighWord() const;
+		PBYTEFIELD Byte(SIZE);
+
+		WORD Word(SIZE) const;
+		RWORDFIELD Word(SIZE);
+		
+		RWORDFIELD LowWord();
+		RWORDFIELD HighWord();
+
+	protected:
+
+		PWORDFIELD _WordFields;
 	};
 }
 

@@ -1,6 +1,9 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
+*	NOTE: ^-- The fastest method of register management for ATmegas
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_BITS_H
 #define _ITTYBITTY_BITS_H
@@ -15,12 +18,24 @@
 #include "IttyBitty_util.h"
 
 
+/* BIT-WISE OPERATOR ALIASES */
+
+#define NOT ~
+#define AND &
+#define OR |
+#define XOR ^
+#define SHR >>
+#define SHIFT_RIGHT SHR
+#define SHL <<
+#define SHIFT_LEFT SHL
+
+
 /* SINGLE-BIT-TWIDDLING MACROS */
 
 #define BMASK(bit_offset) (1 << (bit_offset))
 #define BITMASK(bit_offset) BMASK(bit_offset)
 
-#define BNOT(bit_offset) ~BMASK(bit_offset)
+#define BNOT(bit_offset) NOT BMASK(bit_offset)
 #define NOT_BIT(bit_offset) BNOT(bit_offset)
 
 #define BSET(addr, bit_offset) ((addr) |= BMASK(bit_offset))
@@ -39,11 +54,13 @@
 #define CHECK_BIT_NOT(addr, bit_offset) BSNT(addr, bit_offset)
 #define CHECK_UNSET(addr, bit_offset) BSNT(addr, bit_offset)
 
-#define BFLP(addr, bit_offset) (addr ^= BMASK(bit_offset))
+#define BFLP(addr, bit_offset) ((addr) ^= BMASK(bit_offset))
 #define FLIP_BIT(addr, bit_offset) BFLP(addr, bit_offset)
 #define TOGGLE_BIT(addr, bit_offset) BFLP(addr, bit_offset)
 #define NOW_FLIP_BIT(addr, bit_offset) BFLP(addr, bit_offset)
 #define FLIP_BIT_GOOD(addr, bit_offset) BFLP(addr, bit_offset) // [heh...]
+
+// CORRESPONDING EXPANSION MACROS...
 
 #define BSETP(addr_bit_offset_pair) BSET(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
 #define SET_BIT_PAIR(addr_bit_offset_pair) BSETP(addr_bit_offset_pair)
@@ -66,26 +83,26 @@
 #define TOGGLE_BIT_PAIR(addr_bit_offset_pair) BFLPP(addr_bit_offset_pair)
 
 
-/* BITMASK MACROS */
+/* BITMASK MACROS (FOR MULTI-BIT MANIPULATION OPERATIONS) */
 
-#define BMASKSET(addr, mask) (addr |= (mask))
+#define BMASKSET(addr, mask) ((addr) |= (mask))
 #define SET_BITS(addr, mask) BMASKSET(addr, mask)
 
-#define BMASKRST(addr, mask) (addr &= ~(mask))
+#define BMASKRST(addr, mask) ((addr) &= ~(mask))
 #define RESET_BITS(addr, mask) BMASKRST(addr, mask)
 #define UNSET_BITS(addr, mask) BMASKRST(addr, mask)
 #define CLEAR_BITS(addr, mask) BMASKRST(addr, mask)
 
-#define BMASKCHK(addr, mask) (addr & (mask))
+#define BMASKCHK(addr, mask) ((addr) & (mask))
 #define MASK(addr, mask) BMASKCHK(addr, mask)
 #define CHECK_BITS(addr, mask) BMASKCHK(addr, mask)
 #define CHECK_BITS_SET(addr, mask) BMASKCHK(addr, mask)
 
-#define BMASKSNT(addr, mask) (addr & ~(mask))
+#define BMASKSNT(addr, mask) ((addr) & ~(mask))
 #define CHECK_BITS_NOT(addr, mask) BMASKSNT(addr, mask)
 #define CHECK_BITS_UNSET(addr, mask) BMASKSNT(addr, mask)
 
-#define BMASKFLP(addr, mask) (addr ^= (mask))
+#define BMASKFLP(addr, mask) ((addr) ^= (mask))
 #define FLIP_BITS(addr, mask) BMASKFLP(addr, mask)
 #define TOGGLE_BITS(addr, mask) BMASKFLP(addr, mask)
 
@@ -111,7 +128,7 @@
 #define TOGGLE_BITS_PAIR(addr_mask_pair) BMASKFLPP(addr_mask_pair)
 
 
-/* BIT-SPECIFIC TWIDDLING MACRO ALIASES */
+/* BIT-SPECIFIC MACRO ALIASES FOR BYTES */
 
 #define BIT0_MASK BMASK(0)
 #define SET_BIT0(byte) SET_BIT(byte, 0)

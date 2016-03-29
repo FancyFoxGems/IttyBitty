@@ -1,6 +1,8 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_UTIL_H
 #define _ITTYBITTY_UTIL_H
@@ -13,6 +15,7 @@
 
 
 #include "IttyBitty_aliases.h"
+#include "remove_const.cpp"
 
 
 /* MACRO EXPANSION MACROS */
@@ -29,9 +32,14 @@
 #define IGNORE_WARNING(w) PRAGMA_MACRO(GCC diagnostic ignored #w)
 
 
-/* GENERAL-PURPOSE MACROS */
+/* ATTRIBUTES & META FUNCTION ALIASES */
 
-#define countof(var) (sizeof(var) / sizeof(0[var]))
+#define PACKED __attribute__ ((packed))
+#define BITFIELD STRUCT PACKED
+
+#define TYPEOF(var) __typeof__(var)
+#define SIZEOF(var) sizeof(var)
+#define countof(var) (SIZEOF(var) / SIZEOF(0[var]))
 #define CAPACITY(var) countof(var)
 
 
@@ -43,20 +51,9 @@
 #define MAKE_CONST(var) const_cast<CONST_TYPEOF(var)>(var)
 #define MAKE_CONST_2D(var) ((CONST_TYPEOF((var)[0][0])(*)[CAPACITY((var)[0])])(var))
 #define MAKE_CONST_PP(var) ((CONST_TYPEOF(**(var))**)(var))
+#define FORCE_CONST(var) (*const_cast<CONST_TYPEOF(var) *>(&(var)))
 
-template <class T>
-struct remove_const
-{
-	typedef T type;
-};
-
-template <class T>
-struct remove_const<const T>
-{
-	typedef T type;
-};
-
-#define UNCONST(var) *(const_cast<typename remove_const<TYPEOF(var)>::type *>(&(var)))
+#define UNCONST(var) (*const_cast<typename remove_const<TYPEOF(var)>::type *>(&(var)))
 
 #define UNION_CAST(var, to_type) (((UNION {TYPEOF(var) from; to_type to;})(var)).to)
 
