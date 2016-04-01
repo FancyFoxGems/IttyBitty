@@ -72,7 +72,7 @@ public:
 		return MASK(_Parent->ByteValue(), _BitMask) != 0;
 	}
 				
-	__BitProxy& operator=(CONST RBITPROXY crRValue)
+	__BitProxy& operator=(RCBITREF crRValue)
 	{
 		*this = (BIT)crRValue;
 		return *this;
@@ -82,6 +82,12 @@ public:
 	{
 		_Parent->SetByteValue(_Parent->Mask(~_BitMask) | (bit ? _BitMask : (BYTE)0));
 		return *this;
+	}
+
+	BIT Flip()
+	{
+		BIT flipped = MASK(~_Parent->Mask(_BitMask), _BitMask);
+		return this->operator=(flipped);
 	}
 
 	PBYTEFIELD Parent() const
@@ -175,9 +181,9 @@ ByteField::operator RCHAR()
 	return (RCHAR)*_pByte;
 }
 
-ByteField::operator RCBITPACK() const
+ByteField::operator PCBITPACK() const
 {
-	return *_pBitPack;
+	return MAKE_CONST(_pBitPack);
 }
 
 ByteField::operator PBITPACK()
@@ -192,6 +198,7 @@ BIT ByteField::operator[](SIZE i) const
 
 BITREF ByteField::operator[](SIZE i)
 {
+	add_pointer<PCBITPACK>::type b;
 	return this->Bit(i);
 }
 
@@ -245,7 +252,7 @@ BYTE ByteField::LowNybble() const
 	return LOW_NYBBLE(this->ByteValue());
 }
 
-PBYTEFIELD ByteField::SetLowNybble(BYTE nybbleVal)
+PIBYTE ByteField::SetLowNybble(BYTE nybbleVal)
 {
 	*_pByte = (this->HighNybble() << 4) | LOW_NYBBLE(nybbleVal);
 	return this;
@@ -256,7 +263,7 @@ BYTE ByteField::HighNybble() const
 	return HIGH_NYBBLE(this->ByteValue());
 }
 
-PBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
+PIBYTE ByteField::SetHighNybble(BYTE nybbleVal)
 {
 	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
 	return this;
@@ -264,23 +271,23 @@ PBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
 
 
 
-/* [MAPPEDBITS] DEFINITION */
+/* [BYTEFIELD] DEFINITION */
 
-MappedBits::MappedBits() : _DisposeByteFields(false), _DisposeByteFieldsPtr(true)
+ByteField::ByteField() : _DisposeByteFields(false), _DisposeByteFieldsPtr(true)
 {
-	this->~MappedBits();
+	this->~ByteField();
 
 	// TODO: Use placement new or explicit reference assignment?
-	//*this = MappedBits((BYTE)0);
-	new (this) MappedBits((SIZE)0);
+	//*this = ByteField((BYTE)0);
+	new (this) ByteField((SIZE)0);
 }
 
-MappedBits::MappedBits(SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
+ByteField::ByteField(SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
 {
 	_ByteFields = new ByteField[_ByteSize];
 }
 
-MappedBits::MappedBits(PVOID memAddr, SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
+ByteField::ByteField(PVOID memAddr, SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
 {
 	_ByteFields = new ByteField[_ByteSize];
 
@@ -288,12 +295,12 @@ MappedBits::MappedBits(PVOID memAddr, SIZE byteWidth) : _ByteSize(byteWidth), _D
 		_ByteFields[i] = ByteField((PBYTE)memAddr + i);
 }
 
-MappedBits::MappedBits(PBYTEFIELD byteFields, SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(false), _DisposeByteFieldsPtr(false)
+ByteField::ByteField(PBYTEFIELD byteFields, SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(false), _DisposeByteFieldsPtr(false)
 {
 	_ByteFields = byteFields;
 }
 
-MappedBits::MappedBits(BYTE byteVals[], SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
+ByteField::ByteField(BYTE byteVals[], SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
 {
 	_ByteFields = new ByteField[_ByteSize];
 
@@ -301,7 +308,7 @@ MappedBits::MappedBits(BYTE byteVals[], SIZE byteWidth) : _ByteSize(byteWidth), 
 		_ByteFields[i] = ByteField((BYTE)byteVals[i]);
 }
 
-MappedBits::MappedBits(PBYTE pBytes[], SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
+ByteField::ByteField(PBYTE pBytes[], SIZE byteWidth) : _ByteSize(byteWidth), _DisposeByteFields(true), _DisposeByteFieldsPtr(true)
 {
 	_ByteFields = new ByteField[_ByteSize];
 
@@ -309,7 +316,7 @@ MappedBits::MappedBits(PBYTE pBytes[], SIZE byteWidth) : _ByteSize(byteWidth), _
 		_ByteFields[i] = ByteField(pBytes[i]);
 }
 
-MappedBits::MappedBits(PBYTEFIELD pByteFields[], SIZE byteWidth): _ByteSize(byteWidth), _DisposeByteFields(false), _DisposeByteFieldsPtr(true)
+ByteField::ByteField(PB pByteFields[], SIZE byteWidth): _ByteSize(byteWidth), _DisposeByteFields(false), _DisposeByteFieldsPtr(true)
 {
 	_ByteFields = new ByteField[_ByteSize];
 
@@ -318,16 +325,16 @@ MappedBits::MappedBits(PBYTEFIELD pByteFields[], SIZE byteWidth): _ByteSize(byte
 
 }
 
-MappedBits::MappedBits(RCMAPPEDBITS other)
+ByteField::ByteField(RCBYTEFIELD other)
 {
-	this->~MappedBits();
+	this->~ByteField();
 
 	// TODO: Use placement new or explicit reference assignment?
-	//*this = MappedBits((PVOID)other.Bytes(), other.ByteSize());
-	new (this) MappedBits((PVOID)other.Bytes(), other.ByteSize());
+	//*this = ByteField((PVOID)other.Bytes(), other.ByteSize());
+	new (this) ByteField((PVOID)other.Bytes(), other.ByteSize());
 }
 
-MappedBits::~MappedBits()
+ByteField::~ByteField()
 {
 	if (_DisposeByteFields)
 		delete[] _ByteFields;
@@ -335,28 +342,28 @@ MappedBits::~MappedBits()
 		delete _ByteFields;
 }
 
-RCMAPPEDBITS MappedBits::NULL_OBJECT()
+RCBYTEFIELD ByteField::NULL_OBJECT()
 {
-	static CMAPPEDBITS NULL_MAPPEDBITS((BYTE)0);
-	return NULL_MAPPEDBITS;
+	static CBYTEFIELD NULL_BYTEFIELD((BYTE)0);
+	return NULL_BYTEFIELD;
 }
 		
-CSIZE MappedBits::BitWidth() const
+CSIZE ByteField::BitWidth() const
 {
 	return BITPACK::Size() * this->ByteSize();
 }
 
-CSIZE MappedBits::ByteSize() const
+CSIZE ByteField::ByteSize() const
 {
 	return _ByteSize;
 }
 
-CSIZE MappedBits::WordSize() const
+CSIZE ByteField::WordSize() const
 {
 	return _ByteSize / 2;
 }
 
-MappedBits::operator PPBYTE() const
+ByteField::operator PPBYTE() const
 {
 	static PPBYTE BYTES = new PBYTE[_ByteSize];		// NOTE: NOT thread-safe
 
@@ -366,22 +373,22 @@ MappedBits::operator PPBYTE() const
 	return BYTES;
 }
 
-BIT MappedBits::operator[](SIZE i) const
+BIT ByteField::operator[](SIZE i) const
 {
 	return this->Bit(i);
 }
 
-BITREF MappedBits::operator[](SIZE i)
+BITREF ByteField::operator[](SIZE i)
 {
 	return this->Bit(i);
 }
 
-BIT MappedBits::Bit(SIZE i) const
+BIT ByteField::Bit(SIZE i) const
 {
 	return (BIT)this->Bit(i);
 }
 
-BITREF MappedBits::Bit(SIZE i)
+BITREF ByteField::Bit(SIZE i)
 {
 	if (i >= this->BitWidth())
 		return ByteField::NULL_BITREF();
@@ -392,17 +399,17 @@ BITREF MappedBits::Bit(SIZE i)
 	return this->Byte(byteIdx)->Bit(bitIdx);
 }
 
-PBYTEFIELD MappedBits::Bytes() const
+PBYTEFIELD ByteField::Bytes() const
 {
 	return _ByteFields;
 }
 
-BYTE MappedBits::Byte(SIZE i) const
+BYTE ByteField::Byte(SIZE i) const
 {
 	return ((BYTEFIELD)this->Byte(i)).ByteValue();
 }
 
-PBYTEFIELD MappedBits::Byte(SIZE i)
+PBYTEFIELD ByteField::Byte(SIZE i)
 {
 	if (i >= this->ByteSize())
 		return NULL;
@@ -413,15 +420,15 @@ PBYTEFIELD MappedBits::Byte(SIZE i)
 
 /* [WORDFIELD] DEFINITION */
 
-WordField::WordField() : MappedBits(2) { }
+WordField::WordField() : ByteField(2) { }
 
-WordField::WordField(WORD wordVal) : MappedBits((PBYTE)&wordVal, 2) { }
+WordField::WordField(WORD wordVal) : ByteField((PBYTE)&wordVal, 2) { }
 
-WordField::WordField(PWORD pWord) : MappedBits((PPBYTE)pWord, 2) { }
+WordField::WordField(PWORD pWord) : ByteField((PPBYTE)pWord, 2) { }
 
-WordField::WordField(PBYTEFIELD byteFields) : MappedBits(byteFields, 2) { }
+WordField::WordField(PBYTEFIELD byteFields) : ByteField(byteFields, 2) { }
 		
-WordField::WordField(RCWORDFIELD other) : MappedBits(other) { }
+WordField::WordField(RCWORDFIELD other) : ByteField(other) { }
 
 RCWORDFIELD WordField::NULL_OBJECT()
 {
@@ -452,22 +459,22 @@ PBYTEFIELD WordField::HighByte()
 
 /* [DWORDFIELD] DEFINITION */
 
-DWordField::DWordField() : MappedBits(4)
+DWordField::DWordField() : ByteField(4)
 {
 	this->InitWordFields();
 }
 
-DWordField::DWordField(DWORD dwordVal) : MappedBits((PBYTE)&dwordVal, 4)
+DWordField::DWordField(DWORD dwordVal) : ByteField((PBYTE)&dwordVal, 4)
 {
 	this->InitWordFields();
 }
 
-DWordField::DWordField(PDWORD pDWord) : MappedBits((PPBYTE)pDWord, 4)
+DWordField::DWordField(PDWORD pDWord) : ByteField((PPBYTE)pDWord, 4)
 {
 	this->InitWordFields();
 }
 
-DWordField::DWordField(PBYTEFIELD byteFields) : MappedBits(byteFields, 4)
+DWordField::DWordField(PBYTEFIELD byteFields) : ByteField(byteFields, 4)
 {
 	this->InitWordFields();
 }
@@ -485,13 +492,13 @@ DWordField::DWordField(PWORDFIELD wordFields)
 	this->~DWordField();
 
 	// TODO: Use placement new or explicit reference assignment?
-	//*this = MappedBits(byteFieldPtrs, 4);
-	new (this) MappedBits(byteFieldPtrs, 4);
+	//*this = ByteField(byteFieldPtrs, 4);
+	new (this) ByteField(byteFieldPtrs, 4);
 	
 	this->InitWordFields();
 }
 		
-DWordField::DWordField(RCDWORDFIELD other) : MappedBits(other) { }
+DWordField::DWordField(RCDWORDFIELD other) : ByteField(other) { }
 
 DWordField::~DWordField()
 {

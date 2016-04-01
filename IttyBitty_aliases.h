@@ -14,19 +14,39 @@
 #endif
 
 
+using namespace std;
+
+
 /* C/C++ KEYWORD ALIASES */
 
 #define STATIC static
-#define VOLATILE volatile
 #define CONST const
+#define VOLATILE volatile
+#define CONST_VOLATILE const volatile
+#define cv const volatile
+#define CV const volatile
+
 #define ENUM enum class
-#define STRUCT struct
 #define UNION union
+#define STRUCT struct
 #define CLASS class
 #define INTERFACE class
 
+#define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)
+#define TEMPLATE_STRUCT(T_clause) template<T_clause> STRUCT
+#define TEMPLATE_CLASS(T_clause) template<T_clause> CLASS
+#define TEMPLATE_INTERFACE(T_clause) template<T_clause> INTERFACE
 
-/* NATIVE DATA TYPE ALIASES FOR WIN32 API-STYLE TYPE REFERENCES  */
+#ifndef TRUE
+	#define TRUE true
+#endif
+
+#ifndef FALSE
+	#define FALSE false
+#endif
+
+
+/* (NATIVE) FUNDAMENTAL DATA TYPE ALIASES FOR WIN32 API-STYLE TYPE REFERENCES  */
 
 typedef bool BIT, * PBIT, & RBIT, ** PPBIT, BOOL, * PBOOL, & RBOOL, ** PPBOOL;
 typedef const bool CBIT, * PCBIT, & RCBIT, ** PPCBIT, CBOOL, * PCBOOL, & RCBOOL, ** PPCBOOL;
@@ -71,6 +91,14 @@ typedef unsigned long long UINT64, U64, QWORD, * PQWORD, & RQWORD, ** PPQWORD;
 typedef const unsigned long long CQWORD, * PCQWORD, & RCQWORD, ** PPCQWORD;
 typedef volatile unsigned long long VU64, VQWORD, * PVQWORD, & RVQWORD, ** PPVQWORD;
 
+typedef int INT, * PINT, & RINT, ** PPINT;
+typedef const int CINT, * PCINT, & RCINT, ** PPCINT;
+typedef volatile int VINT, * PVINT, & RVINT, ** PPVINT;
+
+typedef unsigned int UINT, * PUINT, & RUINT, ** PPUINT;
+typedef const unsigned int CUINT, * PCUINT, & RCUINT, ** PPCUINT;
+typedef volatile unsigned int VUINT, * PVUINT, & RVUINT, ** PPVUINT;
+
 typedef float FLOAT, * PFLOAT, & RFLOAT, ** PPFLOAT;
 typedef const float CFLOAT, * PCFLOAT, & RCFLOAT, ** PPCFLOAT;
 typedef volatile float VFLOAT, * PVFLOAT, & RVFLOAT, ** PPVFLOAT;
@@ -79,27 +107,28 @@ typedef double DOUBLE, * PDOUBLE, & RDOUBLE, ** PPDOUBLE;
 typedef const double CDOUBLE, * PCDOUBLE, & RCDOUBLE, ** PPCDOUBLE;
 typedef volatile double VDOUBLE, * PVDOUBLE, & RVDOUBLE, ** PPVDOUBLE;
 
-typedef int INT, * PINT, & RINT, ** PPINT;
-typedef const int CINT, * PCINT, & RCINT, ** PPCINT;
-typedef volatile int VINT, * PVINT, & RVINT, ** PPVINT;
-
 typedef size_t SIZE, * PSIZE, & RSIZE, ** PPSIZE;
 typedef const size_t CSIZE, * PCSIZE, & RCSIZE, ** PPCSIZE;
 
 typedef ptrdiff_t PTRDIFF, * PPTRDIFF, & RPTRDIFF, ** PPPTRDIFF;
+typedef const ptrdiff_t CPTRDIFF, * PCPTRDIFF, & RCPTRDIFF, ** PPCPTRDIFF;
 
-/* DATA TYPE MACROS FOR SIGNAGE */
+typedef nullptr_t NULLPTR, * PNULLPTR, & RNULLPTR, ** PPNULLPTR;
+typedef const nullptr_t CNULLPTR, * PCNULLPTR, & RCNULLPTR, ** PPCNULLPTR;
 
-#define SIGNED(type) SIGNED_##type()
-#define SIGNED_BYTE() CHAR
-#define SIGNED_WORD() SHORT
-#define SIGNED_QWORD() LONGLONG
 
-#define UNSIGNED(type) UNSIGNED_##type()
-#define UNSIGNED_CHAR() BYTE
-#define UNSIGNED_SHORT() WORD
-#define UNSIGNED_LONG() DWORD
-#define UNSIGNED_LONGLONG() QWORD
+/* DATA TYPE ALIAS MACROS FOR SIGNAGE */
+
+#define SIGNED(T) SIGNED_##T
+#define SIGNED_BYTE CHAR
+#define SIGNED_WORD SHORT
+#define SIGNED_QWORD LONGLONG
+
+#define UNSIGNED(T) UNSIGNED_##T
+#define UNSIGNED_CHAR BYTE
+#define UNSIGNED_SHORT WORD
+#define UNSIGNED_LONG DWORD
+#define UNSIGNED_LONGLONG QWORD
 
 
 #endif
