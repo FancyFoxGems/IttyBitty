@@ -1,6 +1,8 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_led.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_LED_H
 #define _ITTYBITTY_LED_H

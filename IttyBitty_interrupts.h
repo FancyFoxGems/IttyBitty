@@ -1,6 +1,8 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_interrupts.h]: 
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_INTERRUPTS_H
 #define _ITTYBITTY_INTERRUPTS_H

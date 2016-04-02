@@ -12,5 +12,3 @@ GPIO::GPIO()
 
 	
 }
-
-const GPIO gp;

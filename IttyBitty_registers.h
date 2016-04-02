@@ -1,6 +1,8 @@
-/************************************************************
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED. *
-*************************************************************/
+/*******************************************************************************
+* [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
+*
+* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
+*******************************************************************************/
 
 #ifndef _ITTYBITTY_REGISTERS_H
 #define _ITTYBITTY_REGISTERS_H
@@ -12,10 +14,10 @@
 #endif
 
 
-#include "IttyBitty_util.h"
+#include "IttyBitty_bytes.h"
 
 
-/* register DECLARATION ALIAS */
+/* [register] DECLARATION ALIAS */
 
 #define REG volatile register
 
@@ -32,6 +34,17 @@
 #define REG_VAR(type, var_name, register_num) REG type var_name asm("r" #register_num)
 #define REG_CHAR(var_name, register_num) REG_VAR(CHAR, var_name, register_num)
 #define REG_BYTE(var_name, register_num) REG_VAR(BYTE, var_name, register_num)
+
+
+/* BIT-PACKED REGISTER TYPE ALIASES */
+
+typedef volatile IttyBitty::BYTEFIELD REG8, * PREG8, RREG8;
+typedef volatile IttyBitty::WORDFIELD REG16, * PREG16, RREG16;
+
+
+/* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */
+
+
 
 
 #endif
