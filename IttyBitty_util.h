@@ -15,15 +15,16 @@
 
 
 #include "IttyBitty_type_traits.h"
-//#include "placement_new.cpp"
+#include "placement_new.cpp"
 
 
 /* MACRO EXPANSION MACROS */
 
 #define STR(x) #x
 #define CONCAT(x, y) x##y
-#define COMBA(a, b) a
-#define COMBB(a, b) b
+#define COMBA(a, b, c) a
+#define COMBB(a, b, c) b
+#define COMBC(a, b, c) c
 
 
 /* COMPILER MACROS */
@@ -80,6 +81,17 @@
 #define TYPE_IF(condition, T, F) conditional_t<condition, T, F>
 
 
+/* DATA TYPE SIZES */
+
+#define BITS_PER_BYTE 8
+
+#define BYTE_SIZE(T) SIZEOF(T)
+#define BYTE_SIZEOF(var) BYTE_SIZE(TYPEOF(var))
+
+#define BIT_SIZE(type) static_cast<SIZE>(SIZEOF(type) * BITS_PER_BYTE)
+#define BIT_SIZEOF(var) BIT_SIZE(TYPEOF(var))
+
+
 /* CASTING MACROS */
 
 #define MAKE_CONST(var) const_cast<ONLY_CONST_TYPEOF(var)>(var)
@@ -90,6 +102,24 @@
 #define UNCONST(var) (*const_cast<UNCONST_TYPEOF(var)>::type *>(&(var)))
 
 #define UNION_CAST(var, to_type) (((UNION {TYPEOF(var) from; to_type to;})(var)).to)
+
+
+/* MISCELLANEOUS GENERAL PURPOSE MACROS */
+
+#define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
+#define _CONSTRUCT(constructor_expr) FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
+
+#define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
+#define _CSTR_P(string_addr) FLASH_STRING(string_addr)
+
+
+/* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */
+
+template<typename T, typename R = VOID, typename ... args>
+INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
+{
+	return (tInstance->*function)(&params...);
+}
 
 
 #endif

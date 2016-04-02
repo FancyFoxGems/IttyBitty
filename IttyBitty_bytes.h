@@ -17,84 +17,19 @@
 #include "IttyBitty_bits.h"
 
 
+/* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING */
+
+IGNORE_WARNING(-Wstrict-aliasing)
+
+
 /* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING AND POINTER ARITHMETIC */
 
 IGNORE_WARNING(-Wstrict-aliasing)
 IGNORE_WARNING(-Wpointer-arith)
 
 
-/* BIT-PACKING / BIT REFERENCE MACROS */
-
-#define BIT_SIZE(type) static_cast<SIZE>(SIZEOF(type) * 8)
-
-#define PACK_BYTE(byte) (*reinterpret_cast<IttyBitty::PBITPACK>(&byte))
-#define _B(byte, i) (BIT)(PACK_BYTE(byte).b##i)
-
-#define BIT0(byte) _B(byte, 0)
-#define BIT1(byte) _B(byte, 1)
-#define BIT2(byte) _B(byte, 2)
-#define BIT3(byte) _B(byte, 3)
-#define BIT4(byte) _B(byte, 4)
-#define BIT5(byte) _B(byte, 5)
-#define BIT6(byte) _B(byte, 6)
-#define BIT7(byte) _B(byte, 7)
-
-
 namespace IttyBitty
 {
-	/* NYBBLE, BYTE, & WORD MASKS */
-
-	#define LOW_NYBBLE(byte_addr) MASK(byte_addr, WORD_BYTE_MASKS[0])
-	#define HIGH_NYBBLE(byte_addr) MASK(byte_addr, WORD_BYTE_MASKS[1])
-
-	#define WORD_LOW_BYTE WORD_BYTE_MASKS[0]
-	#define WORD_HIGH_BYTE WORD_BYTE_MASKS[0]
-
-
-	/* BIT OFFSET, L/H NYBBLE, BYTE, & WORD MASK MAPS */
-
-	CBYTE BYTE_BIT_MASKS[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 }; // Primarily for reference
-	CBYTE BYTE_NYBBLE_MASKS[] = { 0x0F, 0xF0 };
-
-	CWORD WORD_BIT_MASKS[] = { 0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080,
-		0x0100, 0x0200, 0x0400, 0x0800, 0x1000, 0x2000, 0x4000, 0x8000 };
-	CWORD WORD_BYTE_MASKS[] = { 0x00FF, 0xFF00 };
-
-	CDWORD DWORD_BYTE_MASKS[] = { 0x000000FF, 0x00FF0000, 0x0000FF00, 0xFF000000 };
-	CDWORD DWORD_WORD_MASKS[] = { 0x0000FFFF, 0xFFFF0000 };
-
-
-	/* [BITPACK]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
-
-	struct _BitPack;
-	typedef volatile struct _BitPack _bitpack_t, BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK;;
-	typedef const struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
-
-	BITFIELD_STRUCT _BitPack
-	{
-	public:
-
-		BIT b0 : 1;
-		BIT b1 : 1;
-		BIT b2 : 1;
-		BIT b3 : 1;
-		BIT b4 : 1;
-		BIT b5 : 1;
-		BIT b6 : 1;
-		BIT b7 : 1;
-
-		_BitPack(RCBITPACK other);
-
-		STATIC RCBITPACK NULL_OBJECT();
-
-		STATIC CSIZE Size();
-
-		BIT operator[](SIZE i) const;
-
-		BIT Bit(SIZE i) const;
-	};
-
-
 	/* [IBYTE]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
 	class IByte;

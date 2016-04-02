@@ -12,12 +12,12 @@
 
 	/* PLACEMENT NEW IMPLEMENTATION */
 
-	PVOID operator new(SIZE size, PVOID ptr)
+	INLINE PVOID operator new(SIZE size, PVOID ptr)
 	{
 		return ptr;
 	}
 
-	PVOID operator new[](SIZE size, PVOID ptr)
+	INLINE PVOID operator new[](SIZE size, PVOID ptr)
 	{
 		return ptr;
 	}
