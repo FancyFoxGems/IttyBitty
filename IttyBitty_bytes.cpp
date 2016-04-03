@@ -7,219 +7,209 @@
 using namespace IttyBitty;
 
 
-/* [BITPROXY/BITREF]: NESTED PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
+/* [BITPROXY/BITREF]: PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
 
-STRUCT ByteField::__BitProxy
+_BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i) : _Parent(pParent), _BitMask(BIT_MASK(i)) { }
+
+_BitProxy::_BitProxy(RCBITREF other) : _Parent(other.Parent()), _BitMask(other.BitMask()) { }
+
+_BitProxy::~_BitProxy() { }
+
+_BitProxy::operator BIT() const
 {
-public:
-
-	__BitProxy(PBYTEFIELD pParent, SIZE i) : _Parent(pParent), _BitMask(BIT_MASK(i)) { }
-
-	__BitProxy(RCBITREF other) : _Parent(other.Parent()), _BitMask(other.BitMask()) { }
-
-	~__BitProxy() { }
-
-	operator BIT() const
-	{
-		return _Parent->Mask(_BitMask) != 0;
-	}
+	return _Parent->Mask(_BitMask) != 0;
+}
 				
-	__BitProxy& operator=(RCBITREF crRValue)
-	{
-		*this = (BIT)crRValue;
-		return *this;
-	}
+RBITREF _BitProxy::operator=(RCBITREF crRValue)
+{
+	*this = (BIT)crRValue;
+	return *this;
+}
 				
-	__BitProxy& operator=(BIT bit)
-	{
-		_Parent->SetByteValue(_Parent->Mask(NOT _BitMask) | (bit ? _BitMask : (BYTE)0));
-		return *this;
-	}
-
-	BIT Flip()
-	{
-		return this->operator=(NOT (BIT)this);
-	}
-
-	PBYTEFIELD Parent() const
-	{
-		return _Parent;
-	}
-
-	BYTE BitMask() const
-	{
-		return _BitMask;
-	}
-
-private:
-
-	VOLATILE PBYTEFIELD _Parent;
-	BYTE _BitMask;
-};
-
-
-/* [BYTEIELD] DEFINITION */
-
-ByteField::ByteField()
+RBITREF _BitProxy::operator=(BIT bit)
 {
-	this->~ByteField();
-
-	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField((BYTE)0);
-	new (this) ByteField((BYTE)0);
+	_Parent->SetValue(_Parent->Mask(NOT _BitMask) | (bit ? _BitMask : (BYTE)0));
+	return *this;
 }
 
-ByteField::ByteField(RCBYTE byteVal) : _pByte(new BYTE(byteVal)), _DestroyByte(true) { }
-	
-ByteField::ByteField(RBYTE byteRef) : _pByte(&byteRef), _DestroyByte(false) { }
-	
-ByteField::ByteField(PBYTE pByte) : _pByte(pByte), _DestroyByte(false) { }
-
-ByteField::ByteField(RCBYTEFIELD other)
+BIT _BitProxy::Flip()
 {
-	this->~ByteField();
-
-	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField(other.ByteRef());
-	new (this) ByteField(other.ByteRef());
-}
-	
-ByteField::~ByteField()
-{
-	if (_DestroyByte)
-		delete _pByte;
+	return this->operator=(NOT (BIT)this);
 }
 
-ByteField::RCBITREF ByteField::NULL_BITREF()
+PIBYTEFIELD _BitProxy::Parent() const
 {
-	static CBITREF NULL_BITREF(NULL, 0);
-	return NULL_BITREF;
+	return _Parent;
 }
 
-RCBYTEFIELD ByteField::NULL_OBJECT()
+BYTE _BitProxy::BitMask() const
 {
-	static CBYTEFIELD NULL_BYTEFIELD((BYTE)0);
-	return NULL_BYTEFIELD;
-}
-
-CSIZE ByteField::Size()
-{
-	return SIZEOF(ByteField);
-}
-
-CSIZE ByteField::ByteSize()
-{
-	return 1;
-}
-
-ByteField::operator BYTE() const
-{
-	return this->ByteValue();
-}
-
-ByteField::operator RBYTE()
-{
-	return *_pByte;
-}
-
-ByteField::operator CHAR() const
-{
-	return (CHAR)this->ByteValue();
-}
-
-ByteField::operator RCHAR()
-{
-	return (RCHAR)*_pByte;
-}
-
-ByteField::operator PCBITPACK() const
-{
-	return MAKE_CONST(_pBitPack);
-}
-
-ByteField::operator PBITPACK()
-{
-	return _pBitPack;
-}
-
-BIT ByteField::operator[](SIZE i) const
-{
-	return this->Bit(i);
-}
-
-BITREF ByteField::operator[](SIZE i)
-{
-	return this->Bit(i);
-}
-
-BIT ByteField::Bit(SIZE i) const
-{
-	return MAKE_CONST(_pBitPack)->Bit(i);
-}
-
-BITREF ByteField::Bit(SIZE i)
-{
-	if (i >= _pBitPack->Size())
-		return ByteField::NULL_BITREF();
-
-	return BitRef(this, i);
-}
-
-PBYTE ByteField::ByteRef() const
-{
-	return _pByte;
-}
-
-BYTE ByteField::ByteValue() const
-{
-	return *_pByte;
-}
-
-PBYTEFIELD ByteField::SetByteValue(BYTE byteVal)
-{
-	*_pByte = byteVal;
-	return this;
-}
-
-PBYTEFIELD ByteField::CopyByte(PBYTE pByte)
-{
-	return this->SetByteValue(*pByte);
-}
-
-PBYTEFIELD ByteField::PointTo(PBYTE pByte)
-{
-	_pByte = pByte;
-	return this;
-}
-
-BYTE ByteField::Mask(BYTE bitMask) const
-{
-	return MASK(this->ByteValue(), bitMask);
-}
-
-BYTE ByteField::LowNybble() const
-{
-	return LOW_NYBBLE(this->ByteValue());
-}
-
-PIBYTE ByteField::SetLowNybble(BYTE nybbleVal)
-{
-	*_pByte = (this->HighNybble() << 4) | LOW_NYBBLE(nybbleVal);
-	return this;
-}
-
-BYTE ByteField::HighNybble() const
-{
-	return HIGH_NYBBLE(this->ByteValue());
-}
-
-PIBYTE ByteField::SetHighNybble(BYTE nybbleVal)
-{
-	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
-	return this;
+	return _BitMask;
 }
 
 
+///* [BYTEIELD] DEFINITION */
+//
+//ByteField::ByteField()
+//{
+//	this->~ByteField();
+//
+//	// TODO: Use placement new or explicit reference assignment?
+//	//*this = ByteField((BYTE)0);
+//	new (this) ByteField((BYTE)0);
+//}
+//
+//ByteField::ByteField(RCBYTE byteVal) : _pByte(new BYTE(byteVal)), _DestroyByte(true) { }
+//	
+//ByteField::ByteField(RBYTE byteRef) : _pByte(&byteRef), _DestroyByte(false) { }
+//	
+//ByteField::ByteField(PBYTE pByte) : _pByte(pByte), _DestroyByte(false) { }
+//
+//ByteField::ByteField(RCBYTEFIELD other)
+//{
+//	this->~ByteField();
+//
+//	// TODO: Use placement new or explicit reference assignment?
+//	//*this = ByteField(other.ByteRef());
+//	new (this) ByteField(other.ByteRef());
+//}
+//	
+//ByteField::~ByteField()
+//{
+//	if (_DestroyByte)
+//		delete _pByte;
+//}
+//
+//ByteField::RCBITREF ByteField::NULL_BITREF()
+//{
+//	static CBITREF NULL_BITREF(NULL, 0);
+//	return NULL_BITREF;
+//}
+//
+//RCBYTEFIELD ByteField::NULL_OBJECT()
+//{
+//	static CBYTEFIELD NULL_BYTEFIELD((BYTE)0);
+//	return NULL_BYTEFIELD;
+//}
+//
+//CSIZE ByteField::Size()
+//{
+//	return SIZEOF(ByteField);
+//}
+//
+//CSIZE ByteField::ByteSize()
+//{
+//	return 1;
+//}
+//
+//ByteField::operator BYTE() const
+//{
+//	return this->ByteValue();
+//}
+//
+//ByteField::operator RBYTE()
+//{
+//	return *_pByte;
+//}
+//
+//ByteField::operator CHAR() const
+//{
+//	return (CHAR)this->ByteValue();
+//}
+//
+//ByteField::operator RCHAR()
+//{
+//	return (RCHAR)*_pByte;
+//}
+//
+//ByteField::operator PCBITPACK() const
+//{
+//	return MAKE_CONST(_pBitPack);
+//}
+//
+//ByteField::operator PBITPACK()
+//{
+//	return _pBitPack;
+//}
+//
+//BIT ByteField::operator[](SIZE i) const
+//{
+//	return this->Bit(i);
+//}
+//
+//BITREF ByteField::operator[](SIZE i)
+//{
+//	return this->Bit(i);
+//}
+//
+//BIT ByteField::Bit(SIZE i) const
+//{
+//	return MAKE_CONST(_pBitPack)->Bit(i);
+//}
+//
+//BITREF ByteField::Bit(SIZE i)
+//{
+//	if (i >= _pBitPack->Size())
+//		return ByteField::NULL_BITREF();
+//
+//	return BitRef(this, i);
+//}
+//
+//PBYTE ByteField::ByteRef() const
+//{
+//	return _pByte;
+//}
+//
+//BYTE ByteField::ByteValue() const
+//{
+//	return *_pByte;
+//}
+//
+//PBYTEFIELD ByteField::SetByteValue(BYTE byteVal)
+//{
+//	*_pByte = byteVal;
+//	return this;
+//}
+//
+//PBYTEFIELD ByteField::CopyByte(PBYTE pByte)
+//{
+//	return this->SetByteValue(*pByte);
+//}
+//
+//PBYTEFIELD ByteField::PointTo(PBYTE pByte)
+//{
+//	_pByte = pByte;
+//	return this;
+//}
+//
+//BYTE ByteField::Mask(BYTE bitMask) const
+//{
+//	return MASK(this->ByteValue(), bitMask);
+//}
+//
+//BYTE ByteField::LowNybble() const
+//{
+//	return LOW_NYBBLE(this->ByteValue());
+//}
+//
+//PIBYTE ByteField::SetLowNybble(BYTE nybbleVal)
+//{
+//	*_pByte = (this->HighNybble() << 4) | LOW_NYBBLE(nybbleVal);
+//	return this;
+//}
+//
+//BYTE ByteField::HighNybble() const
+//{
+//	return HIGH_NYBBLE(this->ByteValue());
+//}
+//
+//PIBYTE ByteField::SetHighNybble(BYTE nybbleVal)
+//{
+//	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
+//	return this;
+//}
+//
+//
 //
 ///* [BYTEFIELD] DEFINITION */
 //

@@ -339,7 +339,7 @@ namespace IttyBitty
 	/* [BITPACK]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
 
 	struct _BitPack;
-	typedef volatile struct _BitPack _bitpack_t, BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK;;
+	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK;
 	typedef const struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
 
 	BITFIELD_STRUCT _BitPack

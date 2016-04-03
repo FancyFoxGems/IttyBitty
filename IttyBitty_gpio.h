@@ -32,9 +32,9 @@ namespace IttyBitty
 
 	protected:
 		
-		REG8 _DirectionReg;
+		/*REG8 _DirectionReg;
 		REG8 _OutputReg;
-		REG8 _InputReg;
+		REG8 _InputReg;*/
 	};
 
 

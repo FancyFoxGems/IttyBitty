@@ -30,20 +30,14 @@ IGNORE_WARNING(-Wpointer-arith)
 
 namespace IttyBitty
 {
-	/* [IBYTE]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
+	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
 
-	class IByte;
-	typedef class IByte _ibyte_t, IByte, IBYTE, * PIBYTE, & RIBYTE, ** PPIBYTE;;
-	typedef const class IByte CIBYTE, * PCIBYTE, & RCIBYTE, ** PPCIBYTE;
-
-	class ByteField;
-	typedef class ByteField _bytefield_t, ByteField, BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD;
-	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
+	struct _BitProxy;
+	typedef struct _BitProxy BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF;
+	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
 	template<typename T = BYTE>
 	class IBitField;
-	template<typename T = BYTE>
-	using _ibitfield_t = IBitField<T>;
 	template<typename T = BYTE>
 	using IBITFIELD = IBitField<T>;
 	template<typename T = BYTE>
@@ -57,13 +51,32 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using RCIBITFIELD = const IBitField<T> &;
 
-	typedef class IBitField<BYTE> IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD;
-	typedef const class IBitField<BYTE> CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
+	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD;
+	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
+
+	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD;
+	typedef const class IWordField CIWORDFIELD, * PCIWORDFIELD, & RCIWORDFIELD, ** PPCIWORDFIELD;
+
+	template<typename T = DWORD>
+	class IManyBitField;
+	template<typename T = DWORD>
+	using IMANYBITFIELD = IManyBitField<T>;
+	template<typename T = DWORD>
+	using PIMANYBITFIELD = IManyBitField<T> *;
+	template<typename T = DWORD>
+	using RIMANYBITFIELD = IManyBitField<T> &;
+	template<typename T = DWORD>
+	using CIMANYBITFIELD =  const IManyBitField<T>;
+	template<typename T = DWORD>
+	using PCIMANYBITFIELD = const IManyBitField<T> *;
+	template<typename T = DWORD>
+	using RCIMANYBITFIELD = const IManyBitField<T> &;
+
+	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD;
+	typedef const class IDWordField CIDWORDFIELD, * PCIDWORDFIELD, & RCIDWORDFIELD, ** PPCIDWORDFIELD;
 
 	template<typename T = BYTE>
 	class BitField;
-	template<typename T = BYTE>
-	using _bitfield_t = BitField<T>;
 	template<typename T = BYTE>
 	using BITFIELD = BitField<T>;
 	template<typename T = BYTE>
@@ -77,142 +90,59 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using RCBITFIELD = const BitField<T> &;
 
-/*	typedef class BitField<BYTE> BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD;
-	typedef const class BitField<BYTE> CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;*/
-/*
-	template<typename T = BYTE>
-	class BitField;
-	template<typename T = BYTE>
-	typedef class BitField _bitfield_t, BITFIELD, * PBITFIELD, & RBITFIELD;
-	template<typename T = BYTE>
-	typedef const class BitField CBITFIELD, * PCBITFIELD, & RCBITFIELD;*/
+	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD;
+	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
 
-	template<typename T = WORD>
-	class IManyBitField;
-	template<typename T = WORD>
-	using _imanybytefield_t = IManyBitField<T>;
-	template<typename T = WORD>
-	using IMANYBYTEFIELD = IManyBitField<T>;
-	template<typename T = WORD>
-	using PIMANYBYTEFIELD = IManyBitField<T> *;
-	template<typename T = WORD>
-	using RIMANYBYTEFIELD = IManyBitField<T> &;
-	template<typename T = WORD>
-	using CIMANYBYTEFIELD =  const IManyBitField<T>;
-	template<typename T = WORD>
-	using PCIMANYBYTEFIELD = const IManyBitField<T> *;
-	template<typename T = WORD>
-	using RCIMANYBYTEFIELD = const IManyBitField<T> &;
+	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD;
+	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD, ** PPCWORDFIELD;
 
-	typedef class IManyBitField<WORD> IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD;
-	typedef const class IManyBitField<WORD> CIWORDFIELD, * PCIWORDFIELD, & RCIWORDFIELD, ** PPCIWORDFIELD;
-	
-	class WordField;
-	typedef class WordField _wordfield_t, WORDFIELD, * PWORDFIELD, & RWORDFIELD;
-	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD;
+	template<typename T = DWORD>
+	class ManyBitField;
+	template<typename T = DWORD>
+	using MANYBITFIELD = ManyBitField<T>;
+	template<typename T = DWORD>
+	using PMANYBITFIELD = ManyBitField<T> *;
+	template<typename T = DWORD>
+	using RMANYBITFIELD = ManyBitField<T> &;
+	template<typename T = DWORD>
+	using CMANYBITFIELD =  const ManyBitField<T>;
+	template<typename T = DWORD>
+	using PCMANYBITFIELD = const ManyBitField<T> *;
+	template<typename T = DWORD>
+	using RCMANYBITFIELD = const ManyBitField<T> &;
 
-	class DWordField;
-	typedef class DWordField _dwordfield_t, DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD;
-	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD;
+	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD;
+	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
 
 
-	INTERFACE IByte
+	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
+			
+	STRUCT _BitProxy
 	{
 	public:
+		
+		_BitProxy(PIBYTEFIELD, SIZE);
+		_BitProxy(RCBITREF);
+		
+		~_BitProxy();
 
-		virtual ~IByte() = 0;
+		operator BIT() const;
 
-		virtual BYTE LowNybble() const = 0;
-		virtual PIBYTE SetLowNybble(BYTE) = 0;
-		virtual BYTE HighNybble() const = 0;
-		virtual PIBYTE SetHighNybble(BYTE) = 0;
-	};
+		RBITREF operator=(RCBITREF);
+		RBITREF operator=(BIT);
 
-
-	/* [BITTYBYTE]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
-
-	CLASS ByteField : IByte
-	{
-	public:
-
-		struct __BitProxy;
-		typedef struct __BitProxy BitRef, BITREF, * PBITREF, & RBITREF;
-		typedef const struct __BitProxy CBITREF, * PCBITREF, & RCBITREF;
-
-		/*struct __BitProxy
-		{
-			operator BIT() const;
-
-			__BitProxy& operator=(RCBITREF);
-			__BitProxy& operator=(BIT);
-
-			BIT Flip();
-		};
-*/
-		ByteField();
-		ByteField(RCBYTE);
-		ByteField(RBYTE);
-		ByteField(PBYTE);
-
-		ByteField(RCBYTEFIELD);
-
-		~ByteField();
-
-		STATIC RCBITREF NULL_BITREF();
-		STATIC RCBYTEFIELD NULL_OBJECT();
-
-		STATIC CSIZE Size();
-		STATIC CSIZE ByteSize();
-
-		operator BYTE() const;
-		operator PBYTE();
-		operator RBYTE();
-
-		operator CHAR() const;
-		operator PCHAR();
-		operator RCHAR();
-
-		operator PCBITPACK() const;
-		operator PBITPACK();
-
-		BIT operator[](SIZE) const;
-		BITREF operator[](SIZE);
-
-		BIT Bit(SIZE) const;
-		BITREF Bit(SIZE);
-		BITREF Flip(SIZE);
-
-		PBYTE ByteRef() const;
-
-		BYTE ByteValue() const;
-		PBYTEFIELD SetByteValue(BYTE);
-
-		PBYTEFIELD CopyByte(PBYTE);
-		PBYTEFIELD PointTo(PBYTE);
-
-		BYTE Mask(BYTE) const;
-
-		BYTE LowNybble() const;
-		PIBYTE SetLowNybble(BYTE);
-		BYTE HighNybble() const;
-		PIBYTE SetHighNybble(BYTE);
+		BIT Flip();
 
 	protected:
 
-		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
-		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
+		PIBYTEFIELD Parent() const;
+		BYTE BitMask() const;
 
-		VOLATILE UNION
-		{
-			PBYTE _pByte;
-			PBITPACK _pBitPack;
-		}
-		PACKED;
+	private:
 
-		BOOL _DestroyByte;
+		VOLATILE PIBYTEFIELD _Parent;
+		BYTE _BitMask;
 	};
-
-	typedef ByteField::BitRef BITREF;
 
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
@@ -221,7 +151,7 @@ namespace IttyBitty
 	INTERFACE IBitField
 	{
 	public:
-
+		
 		virtual ~IBitField() { }
 
 		virtual CSIZE Size() const = 0;
@@ -234,9 +164,12 @@ namespace IttyBitty
 		virtual operator T*() = 0;
 		virtual operator T&() = 0;
 
-		virtual operator MAKE_SIGNED(BYTE)*() const = 0;
+		virtual operator MAKE_SIGNED(BYTE)() const = 0;
 		virtual operator MAKE_SIGNED(BYTE)*() = 0;
 		virtual operator MAKE_SIGNED(BYTE)&() = 0;
+
+		virtual operator PPBYTE() const = 0;
+		virtual operator PPCHAR() const = 0;
 		
 		virtual operator PCBYTEFIELD() const = 0;
 		virtual operator PBYTEFIELD() const = 0;
@@ -270,30 +203,81 @@ namespace IttyBitty
 		virtual PIBITFIELD<T> CloneByReference() = 0;
 		virtual PIBITFIELD<T> CloneByValue() = 0;
 	};
+	
 
-	template<>
-	INTERFACE IBitField<BYTE> : IByte
+	/* [IBYTEFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
+
+	INTERFACE IByteField : public IBitField<BYTE>
 	{
 	public:
 
+		virtual operator PCBITPACK() const = 0;
+		virtual operator PBITPACK() = 0;
+
+		virtual PBYTE ByteRef() const = 0;
+
 		virtual BYTE LowNybble() const = 0;
-		virtual PIBYTE SetLowNybble(BYTE) = 0;
+		virtual PIBYTEFIELD SetLowNybble(BYTE) = 0;
 		virtual BYTE HighNybble() const = 0;
-		virtual PIBYTE SetHighNybble(BYTE) = 0;
+		virtual PIBYTEFIELD SetHighNybble(BYTE) = 0;
+	};
+	
+
+	/* [IWORDFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
+
+	INTERFACE IWordField : public IBitField<WORD>
+	{
+	public:
+
+		virtual BYTE LowByte() const = 0;
+		virtual PIBYTEFIELD SetLowByte(BYTE) = 0;
+		virtual BYTE HighByte() const = 0;
+		virtual PIBYTEFIELD SetHighByte(BYTE) = 0;
+	};
+
+
+	/* [IMANYBITFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
+
+	template<typename T>
+	INTERFACE IManyBitField : public IBitField<T>
+	{
+	public:
+
+		virtual SIZE WordSize() const = 0;
+
+		virtual operator PPWORD() const = 0;
+		virtual operator PPSHORT() const = 0;
+
+		virtual PCIWORDFIELD Words() const = 0;
+		virtual WORD Word(SIZE) const = 0;
+		virtual PIWORDFIELD Word(SIZE) = 0;
+	};
+
+
+	/* [IDWORDFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
+
+	INTERFACE IDWordField : IManyBitField<DWORD>
+	{
+	public:
+
+		virtual WORD LowWord() const = 0;
+		virtual PIWORDFIELD SetLowWord(DWORD) = 0;
+		virtual WORD HighWord() const = 0;
+		virtual PIWORDFIELD SetHighWord(DWORD) = 0;
 	};
 
 
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
 	template<typename T>
-	CLASS BitField : IBitField<T>
+	CLASS BitField : public IBitField<T>
 	{
 	public:
 
 		BitField();
 		BitField(SIZE);
 		BitField(PVOID, SIZE);
-		BitField(BYTEFIELD[], SIZE);
+		//BitField(BYTEFIELD[], SIZE);
 		BitField(PBYTEFIELD[], SIZE) ;
 
 		virtual ~BitField();
@@ -308,9 +292,12 @@ namespace IttyBitty
 		virtual operator T*();
 		virtual operator T&();
 
-		virtual operator MAKE_SIGNED(BYTE)*() const;
+		virtual operator MAKE_SIGNED(BYTE)() const;
 		virtual operator MAKE_SIGNED(BYTE)*();
 		virtual operator MAKE_SIGNED(BYTE)&();
+
+		virtual operator PPBYTE() const;
+		virtual operator PPCHAR() const;
 		
 		virtual operator PCBYTEFIELD() const;
 		virtual operator PBYTEFIELD() const;
@@ -349,114 +336,110 @@ namespace IttyBitty
 		PBYTEFIELD _ByteFields;
 		SIZE _ByteSize;
 
-		BOOL _DisposeBitFields;
-		BOOL _DisposeBitFieldsPtr;
+		BOOL _DisposeByteFields;
+		BOOL _DisposeByteFieldsPtr;
 	};
 
+	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
-	/* [BITFIELD<BYTE>]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
-
-	template<>
-	CLASS BitField<BYTE> : IBitField<BYTE>
+	CLASS ByteField : public BitField<BYTE>, public IByteField
 	{
 	public:
 
-		BitField();
-		BitField(SIZE);
-		BitField(PVOID, SIZE);
-		BitField(BYTEFIELD[], SIZE);
-		BitField(PBYTEFIELD[], SIZE) ;
+		/*using BitField<BYTE>::Size;
 
-		BYTE LowNybble() const;
-		PIBYTE SetLowNybble(BYTE);
-		BYTE HighNybble() const;
-		PIBYTE SetHighNybble(BYTE);
-	};
+		using BitField<BYTE>::BitWidth;
+		using BitField<BYTE>::ByteSize;
+		using BitField<BYTE>::WordSize;
 
+		using BitField<BYTE>::operator BYTE;
+		using BitField<BYTE>::operator PBYTE;
+		using BitField<BYTE>::operator RBYTE;
 
-	/* [BITFIELD]: TEMPLATED BASE CLASS TO ENCAPSULATE BIT-PACKED MEMORY OF ARBITRARY BYTE-WIDTH */
+		using BitField<BYTE>::operator CHAR;
+		using BitField<BYTE>::operator PCHAR;
+		using BitField<BYTE>::operator RCHAR;
 
-	//template<typename T>
-	//CLASS BitField : public IBitField<T>
-	//{
-	//public:
+		using BitField<BYTE>::operator PPBYTE;
+		using BitField<BYTE>::operator PPCHAR;
+		
+		using BitField<BYTE>::operator PCBYTEFIELD;
+		using BitField<BYTE>::operator PBYTEFIELD;
+		using BitField<BYTE>::operator PPBYTEFIELD;
+		using BitField<BYTE>::operator PVOID;
 
-	//	BitField();
-	//	explicit BitField(SIZE);
-	//	BitField(PVOID, SIZE);
-	//	BitField(PBYTEFIELD, SIZE);
-	//	BitField(BYTE[], SIZE);
-	//	BitField(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
-	//	BitField(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+		using BitField<BYTE>::operator[];
 
-	//	BitField(RCBITFIELD);
+		using BitField<BYTE>::Bit;
+		using BitField<BYTE>::Flip;
 
-	//	~BitField();
+		using BitField<BYTE>::Value;
+		using BitField<BYTE>::SetValue;
+		using BitField<BYTE>::SetValueFrom;
+		using BitField<BYTE>::CopyFrom;
 
-	//	STATIC RCBITFIELD NULL_OBJECT();
+		using BitField<BYTE>::Memory;
+		using BitField<BYTE>::SetReference;
+		using BitField<BYTE>::PointTo;
+		using BitField<BYTE>::ReferenceFrom;
 
-	//	CSIZE BitWidth() const;
-	//	CSIZE ByteSize() const;
-	//	CSIZE WordSize() const;
+		using BitField<BYTE>::Bytes;
+		using BitField<BYTE>::Byte;
 
-	//	operator PPBYTE() const;
+		using BitField<BYTE>::Mask;
 
-	//	BIT operator[](SIZE) const;
-	//	BITREF operator[](SIZE);
+		using BitField<BYTE>::CloneByReference;
+		using BitField<BYTE>::CloneByValue;
+*/
+		ByteField();
+		ByteField(RCBYTE);
+		ByteField(RBYTE);
+		ByteField(PBYTE);
 
-	//	BIT Bit(SIZE) const;
-	//	BITREF Bit(SIZE);
+		ByteField(RCBYTEFIELD);
 
-	//	PBYTEFIELD Bytes() const;
+		~ByteField();
 
-	//	BYTE Byte(SIZE) const;
-	//	virtual PBYTEFIELD Byte(SIZE);
+		STATIC RCBITREF NULL_BITREF();
+		STATIC RCBYTEFIELD NULL_OBJECT();
 
-	//	virtual PBYTE Mask(RCBITFIELD) const;
+		virtual operator PCBITPACK() const;
+		virtual operator PBITPACK();
 
-	//protected:
+		virtual PBYTE ByteRef() const;
 
-	//	PBYTEFIELD _BitFields;
-	//	SIZE _ByteSize;
+		virtual BYTE LowNybble() const;
+		virtual PIBYTEFIELD SetLowNybble(BYTE);
+		virtual BYTE HighNybble() const;
+		virtual PIBYTEFIELD SetHighNybble(BYTE);
 
-	//	BOOL _DisposeBitFields;
-	//	BOOL _DisposeBitFieldsPtr;
-	//};
+	protected:
 
+		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
+		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 
-	/* [IMANYBYTEFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
+		VOLATILE UNION
+		{
+			PBYTE _pByte;
+			PBITPACK _pBitPack;
+		}
+		PACKED;
 
-	template<typename T>
-	INTERFACE IManyBitField : public IBitField<T>
-	{
-	public:
-
-		virtual SIZE WordSize() const = 0;
-
-		virtual PCIWORDFIELD Words() const = 0;
-		virtual WORD Word(SIZE) const = 0;
-		virtual PIWORDFIELD Word(SIZE) = 0;
-	};
-
-	INTERFACE IWord
-	{
-	public:
-
-		virtual PIBYTEFIELD LowByte() = 0;
-		virtual PIBYTEFIELD HighByte() = 0;
+		BOOL _DisposeByte;
 	};
 
 
 	/* [WORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 16-BIT (WORD) MEMORY BLOCKS */
 
-	CLASS WordField : public BitField<WORD>//, public IManyBitField<WORD>, public IWord
+	CLASS WordField : public BitField<WORD>, public IWordField
 	{
 	public:
 
 		WordField();
-		WordField(WORD);
+		WordField(RCWORD);
+		WordField(RWORD);
 		WordField(PWORD);
-		WordField(PBYTEFIELD);
+		//WordField(BYTEFIELD[]);
 
 		WordField(RCWORDFIELD);
 
@@ -471,9 +454,45 @@ namespace IttyBitty
 	};
 
 
+	/* [MANYBITFIELD]: TEMPLATED BASE CLASS TO ENCAPSULATE BIT-PACKED MEMORY OF ARBITRARY BYTE-WIDTH */
+
+	template<typename T>
+	CLASS ManyBitField : public BitField<T>, public IManyBitField<T>
+	{
+	public:
+
+		ManyBitField();
+		explicit ManyBitField(SIZE);
+		ManyBitField(PVOID, SIZE);
+		ManyBitField(PBYTEFIELD, SIZE);
+		ManyBitField(BYTE[], SIZE);
+		ManyBitField(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
+		ManyBitField(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+
+		ManyBitField(RCBITFIELD<T>);
+
+		~ManyBitField();
+
+		virtual SIZE WordSize() const;
+
+		virtual operator PPWORD() const;
+		virtual operator PPSHORT() const;
+
+		virtual PCIWORDFIELD Words() const;
+		virtual WORD Word(SIZE) const;
+		virtual PIWORDFIELD Word(SIZE);
+
+	protected:
+
+		VOID InitWordFields();
+
+		PWORDFIELD _WordFields;
+	};
+
+
 	/* [DWORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 32-BIT (DOUBLE WORD) MEMORY BLOCKS */
 
-	CLASS DWordField : public BitField<DWORD>, public IManyBitField<DWORD>
+	CLASS DWordField : public ManyBitField<DWORD>, public IDWordField
 	{
 	public:
 
@@ -488,17 +507,12 @@ namespace IttyBitty
 
 		~DWordField();
 
-	private:
-
-		VOID InitWordFields();
-
 	public:
 
-		WORD Word(SIZE) const;
-		PIWORDFIELD Word(SIZE);
-
-		RWORDFIELD LowWord();
-		RWORDFIELD HighWord();
+		virtual WORD LowWord() const;
+		virtual PIWORDFIELD SetLowWord(DWORD);
+		virtual WORD HighWord() const;
+		virtual PIWORDFIELD SetHighWord(DWORD);
 	};
 }
 
