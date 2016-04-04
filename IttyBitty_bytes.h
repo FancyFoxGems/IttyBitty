@@ -126,7 +126,7 @@ namespace IttyBitty
 		
 		~_BitProxy();
 
-		STATIC RCBITREF NULL_OBJECT();
+		STATIC RBITREF NULL_OBJECT();
 
 		operator BIT() const;
 
@@ -163,7 +163,7 @@ namespace IttyBitty
 		virtual SIZE WordSize() const = 0;
 
 		virtual operator CONST T() const = 0;
-		virtual operator MAKE_SIGNED(CONST T)() const = 0;
+		virtual operator SIGNED_TYPE(CONST T)() const = 0;
 
 		virtual operator PCBYTE() const = 0;
 		virtual operator PPBYTE() = 0;
@@ -171,8 +171,8 @@ namespace IttyBitty
 		virtual operator PCCHAR() const = 0;
 		virtual operator PPCHAR() = 0;
 		
-		virtual operator PCIBYTEFIELD() const = 0;
-		virtual operator PPIBYTEFIELD() = 0;
+		virtual operator PBYTEFIELD() const = 0;
+		virtual operator PPBYTEFIELD() = 0;
 
 		virtual BIT operator[](SIZE) const = 0;
 		virtual BITREF operator[](SIZE) = 0;
@@ -181,7 +181,7 @@ namespace IttyBitty
 		virtual BITREF Bit(SIZE) = 0;
 		virtual BIT Flip(SIZE) = 0;
 
-		virtual PPCIBYTEFIELD Bytes() const = 0;
+		virtual PPCBYTEFIELD Bytes() const = 0;
 		virtual BYTE Byte(SIZE) const = 0;
 		virtual RIBYTEFIELD Byte(SIZE) = 0;
 
@@ -206,7 +206,7 @@ namespace IttyBitty
 			None = 0,
 			ByteFieldsPtr = 1,
 			ByteFieldsPtrs = 2,
-			ByteFieldsData = 2
+			ByteFieldsData = 3
 		};
 	};
 	
@@ -230,15 +230,15 @@ namespace IttyBitty
 		virtual PIBYTEFIELD CloneByReference() const = 0;
 
 		virtual BYTE LowNybble() const = 0;
-		virtual PIBYTEFIELD SetLowNybble(BYTE) = 0;
+		virtual RIBYTEFIELD SetLowNybble(BYTE) = 0;
 		virtual BYTE HighNybble() const = 0;
-		virtual PIBYTEFIELD SetHighNybble(BYTE) = 0;
+		virtual RIBYTEFIELD SetHighNybble(BYTE) = 0;
 	};
 	
 
 	/* [IWORDFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
-	INTERFACE IWordField : public IBitField<WORD>
+	INTERFACE IWordField //: public IBitField<WORD>
 	{
 	public:
 		
@@ -249,9 +249,9 @@ namespace IttyBitty
 		virtual operator RSHORT() = 0;
 
 		virtual BYTE LowByte() const = 0;
-		virtual PIBYTEFIELD SetLowByte(BYTE) = 0;
+		virtual RIBYTEFIELD SetLowByte(BYTE) = 0;
 		virtual BYTE HighByte() const = 0;
-		virtual PIBYTEFIELD SetHighByte(BYTE) = 0;
+		virtual RIBYTEFIELD SetHighByte(BYTE) = 0;
 	};
 
 
@@ -306,7 +306,7 @@ namespace IttyBitty
 
 		~ByteField();
 
-		STATIC RCBYTEFIELD NULL_OBJECT();
+		STATIC RBYTEFIELD NULL_OBJECT();
 		
 		// IBitField<BYTE>
 
@@ -325,8 +325,8 @@ namespace IttyBitty
 		virtual operator PCCHAR() const;
 		virtual operator PPCHAR();
 		
-		virtual operator PCIBYTEFIELD() const;
-		virtual operator PPIBYTEFIELD();
+		virtual operator PBYTEFIELD() const;
+		virtual operator PPBYTEFIELD();
 
 		virtual BIT operator[](SIZE) const;
 		virtual BITREF operator[](SIZE);
@@ -335,7 +335,7 @@ namespace IttyBitty
 		virtual BITREF Bit(SIZE);
 		virtual BIT Flip(SIZE);
 
-		virtual PPCIBYTEFIELD Bytes() const;
+		virtual PPCBYTEFIELD Bytes() const;
 		virtual BYTE Byte(SIZE) const;
 		virtual RIBYTEFIELD Byte(SIZE);
 
@@ -365,9 +365,9 @@ namespace IttyBitty
 		virtual PIBYTEFIELD CloneByReference() const;
 
 		virtual BYTE LowNybble() const;
-		virtual PIBYTEFIELD SetLowNybble(BYTE);
+		virtual RIBYTEFIELD SetLowNybble(BYTE);
 		virtual BYTE HighNybble() const;
-		virtual PIBYTEFIELD SetHighNybble(BYTE);
+		virtual RIBYTEFIELD SetHighNybble(BYTE);
 
 	protected:
 
@@ -393,6 +393,8 @@ namespace IttyBitty
 	public:
 
 		BitField();
+		BitField(T);
+		BitField(T *);
 		explicit BitField(PVOID, SIZE = SIZEOF(T));
 		BitField(BYTE[SIZEOF(T)]);
 		BitField(PBYTE[SIZEOF(T)]);
@@ -403,7 +405,7 @@ namespace IttyBitty
 
 		virtual ~BitField();
 
-		STATIC RCBITFIELD<T> NULL_OBJECT();
+		STATIC RBITFIELD<T> NULL_OBJECT();
 
 		virtual CSIZE Size() const;
 
@@ -412,7 +414,7 @@ namespace IttyBitty
 		virtual SIZE WordSize() const;
 
 		virtual operator CONST T() const;
-		virtual operator MAKE_SIGNED(CONST T)() const;
+		virtual operator SIGNED_TYPE(CONST T)() const;
 
 		virtual operator PCBYTE() const;	// NOTE: NOT thread-safe
 		virtual operator PPBYTE();			// NOTE: NOT thread-safe
@@ -420,8 +422,8 @@ namespace IttyBitty
 		virtual operator PCCHAR() const;	// NOTE: NOT thread-safe
 		virtual operator PPCHAR();			// NOTE: NOT thread-safe
 		
-		virtual operator PCIBYTEFIELD() const;
-		virtual operator PPIBYTEFIELD();
+		virtual operator PBYTEFIELD() const;
+		virtual operator PPBYTEFIELD();
 
 		virtual BIT operator[](SIZE) const;
 		virtual BITREF operator[](SIZE);
@@ -430,7 +432,7 @@ namespace IttyBitty
 		virtual BITREF Bit(SIZE);
 		virtual BIT Flip(SIZE);
 
-		virtual PPCIBYTEFIELD Bytes() const;
+		virtual PPCBYTEFIELD Bytes() const;
 		virtual BYTE Byte(SIZE) const;
 		virtual RIBYTEFIELD Byte(SIZE);
 
@@ -452,7 +454,7 @@ namespace IttyBitty
 
 		typedef typename IBitField<T>::DisposalLevel DisposalLevel;
 
-		PPIBYTEFIELD _ByteFieldPtrs;
+		PPBYTEFIELD _ByteFieldPtrs;
 
 		DisposalLevel _DisposalLevel;
 	};
@@ -465,14 +467,15 @@ namespace IttyBitty
 	public:
 
 		WordField();
-		WordField(RCWORD);
+		WordField(WORD);
 		WordField(RWORD);
 		WordField(PWORD);
-		WordField(BYTEFIELD[]);
+		WordField(BYTEFIELD[2]);
+		WordField(PBYTEFIELD[2]);
 
 		WordField(RCWORDFIELD);
 
-		STATIC RCWORDFIELD NULL_OBJECT();
+		STATIC RWORDFIELD NULL_OBJECT();
 		
 		virtual operator PWORD();
 		virtual operator RWORD();
@@ -480,12 +483,14 @@ namespace IttyBitty
 		virtual operator PSHORT();
 		virtual operator RSHORT();
 
-		virtual PIBYTEFIELD LowByte();
-		virtual PIBYTEFIELD HighByte();
+		virtual BYTE LowByte() const;
+		virtual RIBYTEFIELD SetLowByte(BYTE);
+		virtual BYTE HighByte() const;
+		virtual RIBYTEFIELD SetHighByte(BYTE);
 
 	protected:
 
-		PWORDFIELD _WordFields;
+		PWORD _pWord;
 	};
 
 
@@ -508,7 +513,7 @@ namespace IttyBitty
 
 		~ManyBitField();
 
-		STATIC RCMANYBITFIELD<T> NULL_OBJECT();
+		STATIC RMANYBITFIELD<T> NULL_OBJECT();
 
 		virtual SIZE WordSize() const;
 
@@ -523,7 +528,7 @@ namespace IttyBitty
 
 		VOID InitWordFields();
 
-		PWORDFIELD _WordFields;
+		PPWORDFIELD _WordFieldsPtr;
 	};
 
 

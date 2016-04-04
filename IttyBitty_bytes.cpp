@@ -15,9 +15,9 @@ _BitProxy::_BitProxy(RCBITREF other) : _Parent(other.Parent()), _BitMask(other.B
 
 _BitProxy::~_BitProxy() { }
 
-RCBITREF _BitProxy::NULL_OBJECT()
+RBITREF _BitProxy::NULL_OBJECT()
 {
-	static CBITREF NULL_BITREF(NULL, 0);
+	static BITREF NULL_BITREF(NULL, 0);
 	return NULL_BITREF;
 }
 
@@ -86,9 +86,9 @@ ByteField::~ByteField()
 		delete _pByte;
 }
 
-RCBYTEFIELD ByteField::NULL_OBJECT()
+RBYTEFIELD ByteField::NULL_OBJECT()
 {
-	static CBYTEFIELD NULL_BYTEFIELD((BYTE)0);
+	static BYTEFIELD NULL_BYTEFIELD((BYTE)0);
 	return NULL_BYTEFIELD;
 }
 
@@ -143,15 +143,15 @@ ByteField::operator PPCHAR()
 	return (PPCHAR)this->operator PPBYTE();
 }
 		
-ByteField::operator PCIBYTEFIELD() const
+ByteField::operator PBYTEFIELD() const
 {
-	return this;
+	return NULL;
 }
 
-ByteField::operator PPIBYTEFIELD()
+ByteField::operator PPBYTEFIELD()
 {
-	static PIBYTEFIELD thisClone = this;
-	return &thisClone;
+	static PBYTEFIELD sillyPtr[1] = { this };
+	return sillyPtr;
 }
 
 BIT ByteField::operator[](SIZE i) const
@@ -182,9 +182,9 @@ BIT ByteField::Flip(SIZE i)
 	return this->Bit(i).Flip();
 }
 
-PPCIBYTEFIELD ByteField::Bytes() const
+PPCBYTEFIELD ByteField::Bytes() const
 {
-	static PCIBYTEFIELD thisClone = this;
+	static PCBYTEFIELD thisClone = this;
 	return &thisClone;
 }
 
@@ -286,10 +286,10 @@ BYTE ByteField::LowNybble() const
 	return LOW_NYBBLE(this->Value());
 }
 
-PIBYTEFIELD ByteField::SetLowNybble(BYTE nybbleVal)
+RIBYTEFIELD ByteField::SetLowNybble(BYTE nybbleVal)
 {
 	*_pByte = (this->HighNybble() << 4) | LOW_NYBBLE(nybbleVal);
-	return this;
+	return *this;
 }
 
 BYTE ByteField::HighNybble() const
@@ -297,10 +297,10 @@ BYTE ByteField::HighNybble() const
 	return HIGH_NYBBLE(this->Value());
 }
 
-PIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
+RIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
 {
 	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
-	return this;
+	return *this;
 }
 
 
@@ -313,6 +313,18 @@ BitField<T>::BitField() : _DisposalLevel(DisposalLevel::ByteFieldsData)
 
 	for (SIZE i = 0; i < T_SIZE; i++)
 		_ByteFieldPtrs[i] = (PBYTEFIELD)NULL;
+}
+
+template<typename T>
+BitField<T>::BitField(T tVal)
+{
+	this->SetValue(tVal);
+}
+
+template<typename T>
+BitField<T>::BitField(T * tPtr)
+{
+	this->PointTo(tPtr);
 }
 
 template<typename T>
@@ -365,11 +377,11 @@ BitField<T>::BitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) : _DisposalLevel(Disposa
 template<typename T>
 BitField<T>::BitField(RCBITFIELD<T> other)
 {
-	this->~ByteField();
+	this->~BitField<T>();
 
 	// TODO: Use placement new or explicit reference assignment?
 	//*this = ByteField((PVOID)other.Bytes(), other.ByteSize());
-	new (this) ByteField((PVOID)other.Bytes(), other.ByteSize());
+	new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
 }
 
 template<typename T>
@@ -399,9 +411,9 @@ BitField<T>::~BitField()
 }
 
 template<typename T>
-RCBITFIELD<T> BitField<T>::NULL_OBJECT()
+RBITFIELD<T> BitField<T>::NULL_OBJECT()
 {
-	static CBITFIELD<T> NULL_BITFIELD((BYTE)0);
+	static BITFIELD<T> NULL_BITFIELD((BYTE)0);
 	return NULL_BITFIELD;
 }
 
@@ -436,31 +448,31 @@ BitField<T>::operator CONST T() const
 }
 
 template<typename T>
-BitField<T>::operator MAKE_SIGNED(CONST T)() const
+BitField<T>::operator SIGNED_TYPE(CONST T)() const
 {
-	return (MAKE_SIGNED(T))this->Value();
+	return (SIGNED_TYPE(T))this->Value();
 }
 
 template<typename T>
 BitField<T>::operator PCBYTE() const
 {
-	BYTE bytes[T_SIZE];
+	static BYTE bytes[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i ++)
 		bytes[i] = _ByteFieldPtrs[i]->Value();
 
-	return MAKE_CONST(bytes);
+	return bytes;
 }
 
 template<typename T>
 BitField<T>::operator PPBYTE()
 {
-	PBYTE bytePtrs[T_SIZE];
+	static PPBYTE bytePtrs[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i ++)
-		bytePtrs[i] = _ByteFieldPtrs[i]->Pointer();
+		(*bytePtrs)[i] = _ByteFieldPtrs[i]->Pointer();
 
-	return bytePtrs;
+	return *bytePtrs;
 }
 
 template<typename T>
@@ -476,13 +488,13 @@ BitField<T>::operator PPCHAR()
 }
 
 template<typename T>
-BitField<T>::operator PCIBYTEFIELD() const
+BitField<T>::operator PBYTEFIELD() const
 {
-	return MAKE_CONST(*_ByteFieldPtrs);
+	return *_ByteFieldPtrs;
 }
 
 template<typename T>
-BitField<T>::operator PPIBYTEFIELD()
+BitField<T>::operator PPBYTEFIELD()
 {
 	return _ByteFieldPtrs;
 }
@@ -527,9 +539,9 @@ BIT BitField<T>::Flip(SIZE i)
 }
 
 template<typename T>
-PPCIBYTEFIELD BitField<T>::Bytes() const
+PPCBYTEFIELD BitField<T>::Bytes() const
 {
-	return MAKE_CONST(_ByteFieldPtrs);
+	return NULL; //MAKE_CONST_PP(_ByteFieldPtrs);
 }
 
 template<typename T>
@@ -542,7 +554,7 @@ template<typename T>
 RIBYTEFIELD BitField<T>::Byte(SIZE i)
 {
 	if (i >= this->ByteSize())
-		return NULL;
+		return ByteField::NULL_OBJECT();
 	
 	return *_ByteFieldPtrs[i];
 }
@@ -561,7 +573,7 @@ T BitField<T>::Value() const
 template<typename T>
 VOID BitField<T>::SetValue(T tVal)
 {
-	this->~ByteField();
+	this->~BitField<T>();
 
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
@@ -580,13 +592,13 @@ VOID BitField<T>::CopyFrom(RCIBITFIELD<T> other)
 template<typename T>
 T * BitField<T>::Pointer() const
 {
-	return _ByteFieldPtrs[0]->Pointer();
+	return (T *)_ByteFieldPtrs[0]->Pointer();
 }
 
 template<typename T>
 VOID BitField<T>::PointTo(T * tPtr)
 {
-	this->~ByteField();
+	this->~BitField<T>();
 
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
@@ -599,10 +611,12 @@ VOID BitField<T>::PointTo(T * tPtr)
 template<typename T>
 VOID BitField<T>::ReferenceFrom(RCIBITFIELD<T> other)
 {
-	this->~ByteField();
+	this->~BitField<T>();
 	
-	_ByteFieldPtrs = other.Bytes();
-	_DisposalLevel = DisposalLevel::None;
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+	*_ByteFieldPtrs = (PBYTEFIELD)other;
+
+	_DisposalLevel = DisposalLevel::ByteFieldsPtr;
 }
 
 template<typename T>
@@ -620,53 +634,76 @@ T BitField<T>::Mask(RCIBITFIELD<T> other) const
 template<typename T>
 PIBITFIELD<T> BitField<T>::CloneByValue() const
 {
-	return new PIBITFIELD<T>(this->Value());
+	return new BitField<T>(this->Value());
 }
 
 template<typename T>
 PIBITFIELD<T> BitField<T>::CloneByReference() const
 {
-	return new PIBITFIELD<T>((PBYTEFIELD[T_SIZE])_ByteFieldPtrs);
+	return new BitField<T>((PVOID)_ByteFieldPtrs, T_SIZE);
 }
 
 
 /* [WORDFIELD] DEFINITION */
 
-//WordField::WordField() : ByteField(2) { }
-//
-//WordField::WordField(WORD wordVal) : ByteField((PBYTE)&wordVal, 2) { }
-//
-//WordField::WordField(PWORD pWord) : ByteField((PPBYTE)pWord, 2) { }
-//
-//WordField::WordField(PBYTEFIELD byteFields) : ByteField(byteFields, 2) { }
-//		
-//WordField::WordField(RCWORDFIELD other) : ByteField(other) { }
-//
-//RCWORDFIELD WordField::NULL_OBJECT()
-//{
-//	static CWORDFIELD NULL_WORDFIELD((WORD)0);
-//	return NULL_WORDFIELD;
-//}
-//
-//WordField::operator WORD() const
-//{
-//	return (WORD)this->operator SHORT();
-//}
-//		
-//WordField::operator SHORT() const
-//{
-//	return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
-//}
-//		
-//PBYTEFIELD WordField::LowByte()
-//{
-//	return this->Byte(0);
-//}
-//
-//PBYTEFIELD WordField::HighByte()
-//{
-//	return this->Byte(1);
-//}
+WordField::WordField() : BitField<WORD>() { }
+
+WordField::WordField(WORD wordVal)
+{
+	this->SetValue(wordVal);
+}
+
+WordField::WordField(RWORD rWord) : BitField<WORD>((PVOID)&rWord, 2) { }
+
+WordField::WordField(PWORD pWord) : BitField<WORD>((PVOID)pWord, 2) { }
+
+WordField::WordField(BYTEFIELD byteFields[2]) : BitField<WORD>(byteFields) { }
+
+WordField::WordField(PBYTEFIELD byteFieldPtrs[2]) : BitField<WORD>(byteFieldPtrs) { }
+		
+WordField::WordField(RCWORDFIELD other) : BitField<WORD>(other) { }
+
+RWORDFIELD WordField::NULL_OBJECT()
+{
+	static WORDFIELD NULL_WORDFIELD((WORD)0);
+	return NULL_WORDFIELD;
+}
+
+WordField::operator PWORD()
+{
+	return _pWord;
+}
+
+WordField::operator RWORD()
+{
+	return *_pWord;
+}
+
+WordField::operator PSHORT()
+{
+	return (PSHORT)_pWord;
+	//return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
+}
+
+WordField::operator RSHORT()
+{
+	return (RSHORT)*_pWord;
+	//return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
+}
+		
+RIBYTEFIELD WordField::SetLowByte(BYTE byteVal)
+{
+	RIBYTEFIELD byteField = this->Byte(0);
+	byteField.SetValue(byteVal);
+	return byteField;
+}
+
+RIBYTEFIELD WordField::SetHighByte(BYTE byteVal)
+{
+	RIBYTEFIELD byteField = this->Byte(1);
+	byteField.SetValue(byteVal);
+	return byteField;
+}
 
 
 /* [DWORDFIELD] DEFINITION */

@@ -71,6 +71,12 @@ namespace std
 	};
 	
 	template<typename T>
+	STRUCT add_const<T **>
+	{
+		typedef CONST T ** type;
+	};
+	
+	template<typename T>
 	STRUCT add_const<T &>
 	{
 		typedef CONST T & type;
