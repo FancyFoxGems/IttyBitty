@@ -226,29 +226,14 @@ VOID ByteField::PointTo(PBYTE pByte)
 	_pByte = pByte;
 }
 
-VOID ByteField::PointFrom(RCIBITFIELD<BYTE> other)
+VOID ByteField::ReferenceFrom(RCIBITFIELD<BYTE> other)
 {
 	_pByte = other.Pointer();
 }
 
-RBYTE ByteField::Reference() const
+BYTE ByteField::Mask(BYTE byteMask) const
 {
-	return *_pByte;
-}
-
-VOID ByteField::SetReference(RBYTE rByte)
-{
-	*_pByte = rByte;
-}
-
-VOID ByteField::ReferenceFrom(RCIBITFIELD<BYTE> other)
-{
-	*_pByte = other.Reference();
-}
-
-BYTE ByteField::Mask(BYTE bitMask) const
-{
-	return MASK(this->Value(), bitMask);
+	return MASK(this->Value(), byteMask);
 }
 
 BYTE ByteField::Mask(RCIBITFIELD<BYTE> other) const
@@ -324,57 +309,57 @@ PIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
 template<typename T>
 BitField<T>::BitField() : _DisposalLevel(DisposalLevel::ByteFieldsData)
 {
-	_pByteFields = new PBYTEFIELD[T_SIZE];
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i++)
-		_pByteFields[i] = (PBYTEFIELD)NULL;
+		_ByteFieldPtrs[i] = (PBYTEFIELD)NULL;
 }
 
 template<typename T>
 BitField<T>::BitField(PVOID memAddr, SIZE byteWidth) : _DisposalLevel(DisposalLevel::ByteFieldsData)
 {
-	_pByteFields = new PBYTEFIELD[T_SIZE];
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i++)
 	{
 		if (i < byteWidth)
-			_pByteFields[i] = new ByteField((PBYTE)memAddr + i);
+			_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + i);
 		else
-			_pByteFields[i] = new ByteField((BYTE)0);
+			_ByteFieldPtrs[i] = new ByteField((BYTE)0);
 	}
 }
 
 template<typename T>
 BitField<T>::BitField(BYTE byteVals[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsData)
 {
-	_pByteFields = new ByteField[T_SIZE];
+	_ByteFieldPtrs = new ByteField[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i++)
-		_pByteFields[i] = new ByteField((BYTE)byteVals[i]);
+		_ByteFieldPtrs[i] = new ByteField((BYTE)byteVals[i]);
 }
 
 template<typename T>
-BitField<T>::BitField(PBYTE pBytes[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsData)
+BitField<T>::BitField(PBYTE bytePtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsData)
 {
-	_pByteFields = new PBYTEFIELD[T_SIZE];
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 	for (SIZE i = 0; i < T_SIZE; i++)
-		_pByteFields[i] = new ByteField(pBytes[i]);
+		_ByteFieldPtrs[i] = new ByteField(bytePtrs[i]);
 }
 
 template<typename T>
 BitField<T>::BitField(BYTEFIELD byteFields[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsPtr)
 {
-	_pByteFields = new PBYTEFIELD[T_SIZE];
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 	
 	for (SIZE i = 0; i < T_SIZE; i++)
-		_pByteFields[i] = &byteFields[i];
+		_ByteFieldPtrs[i] = &byteFields[i];
 }
 
 template<typename T>
-BitField<T>::BitField(PBYTEFIELD pByteFields[T_SIZE]) : _DisposalLevel(DisposalLevel::None)
+BitField<T>::BitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::None)
 {
-	_pByteFields = pByteFields;
+	_ByteFieldPtrs = byteFieldPtrs;
 }
 
 template<typename T>
@@ -392,16 +377,24 @@ BitField<T>::~BitField()
 {
 	switch (_DisposalLevel)
 	{
-	case DisposalLevel::None:
-		return;
+	case DisposalLevel::ByteFieldsData:
+
+		for (SIZE i = 0; i < T_SIZE; i++)
+			delete _ByteFieldPtrs[i];
+
+	case DisposalLevel::ByteFieldsPtrs:
+
+		delete[] _ByteFieldPtrs;
+		break;
 		
 	case DisposalLevel::ByteFieldsPtr:
-		delete _pByteFields;
-		return;
 
-	case DisposalLevel::ByteFields:
-		delete[] _pByteFields;
-		return;
+		delete _ByteFieldPtrs;
+		break;
+
+	case DisposalLevel::None:
+
+		break;
 	}
 }
 
@@ -451,23 +444,23 @@ BitField<T>::operator MAKE_SIGNED(CONST T)() const
 template<typename T>
 BitField<T>::operator PCBYTE() const
 {
-	static PBYTE BYTES = new BYTE[T_SIZE];		// NOTE: NOT thread-safe!
+	BYTE bytes[T_SIZE];
 
-	for (SIZE i = 0; i < this->ByteSize(); i ++)
-		BYTES[i] = (BYTE)_pByteFields[i];
+	for (SIZE i = 0; i < T_SIZE; i ++)
+		bytes[i] = _ByteFieldPtrs[i]->Value();
 
-	return MAKE_CONST(BYTES);
+	return MAKE_CONST(bytes);
 }
 
 template<typename T>
 BitField<T>::operator PPBYTE()
 {
-	static PPBYTE BYTES = new PBYTE[T_SIZE];		// NOTE: NOT thread-safe!
+	PBYTE bytePtrs[T_SIZE];
 
-	for (SIZE i = 0; i < this->ByteSize(); i ++)
-		BYTES[i] = (PBYTE)_pByteFields[i];
+	for (SIZE i = 0; i < T_SIZE; i ++)
+		bytePtrs[i] = _ByteFieldPtrs[i]->Pointer();
 
-	return BYTES;
+	return bytePtrs;
 }
 
 template<typename T>
@@ -485,13 +478,13 @@ BitField<T>::operator PPCHAR()
 template<typename T>
 BitField<T>::operator PCIBYTEFIELD() const
 {
-	return MAKE_CONST(_pByteFields);
+	return MAKE_CONST(*_ByteFieldPtrs);
 }
 
 template<typename T>
 BitField<T>::operator PPIBYTEFIELD()
 {
-	return &_pByteFields;
+	return _ByteFieldPtrs;
 }
 
 template<typename T>
@@ -521,7 +514,7 @@ BITREF BitField<T>::Bit(SIZE i)
 	BYTE byteIdx = i / T_SIZE;
 	BYTE bitIdx = i % T_SIZE;
 
-	return this->Byte(byteIdx)->Bit(bitIdx);
+	return this->Byte(byteIdx).Bit(bitIdx);
 }
 
 template<typename T>
@@ -530,19 +523,19 @@ BIT BitField<T>::Flip(SIZE i)
 	if (i >= this->BitWidth())
 		return BitRef::NULL_OBJECT();
 	
-	return this->Bit(i)->Flip();
+	return this->Bit(i).Flip();
 }
 
 template<typename T>
 PPCIBYTEFIELD BitField<T>::Bytes() const
 {
-	return MAKE_CONST(_pByteFields);
+	return MAKE_CONST(_ByteFieldPtrs);
 }
 
 template<typename T>
 BYTE BitField<T>::Byte(SIZE i) const
 {
-	return _pByteFields[i]->Value();
+	return _ByteFieldPtrs[i]->Value();
 }
 
 template<typename T>
@@ -551,7 +544,89 @@ RIBYTEFIELD BitField<T>::Byte(SIZE i)
 	if (i >= this->ByteSize())
 		return NULL;
 	
-	return *_pByteFields[i];
+	return *_ByteFieldPtrs[i];
+}
+
+template<typename T>
+T BitField<T>::Value() const
+{
+	T tVal = 0;
+
+	for (SIZE i = 0; i < T_SIZE; i++)
+		tVal += _ByteFieldPtrs[i]->Value() * (256 << i);
+
+	return tVal;
+}
+
+template<typename T>
+VOID BitField<T>::SetValue(T tVal)
+{
+	this->~ByteField();
+
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+
+	for (SIZE i = 0; i < this->ByteSize(); i ++)
+		_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + i));
+
+	_DisposalLevel = DisposalLevel::ByteFieldsData;
+}
+
+template<typename T>
+VOID BitField<T>::CopyFrom(RCIBITFIELD<T> other)
+{	
+	this->SetValue(other.Value());
+}
+
+template<typename T>
+T * BitField<T>::Pointer() const
+{
+	return _ByteFieldPtrs[0]->Pointer();
+}
+
+template<typename T>
+VOID BitField<T>::PointTo(T * tPtr)
+{
+	this->~ByteField();
+
+	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+
+	for (SIZE i = 0; i < this->ByteSize(); i ++)
+		_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + i);
+
+	_DisposalLevel = DisposalLevel::ByteFieldsData;
+}
+
+template<typename T>
+VOID BitField<T>::ReferenceFrom(RCIBITFIELD<T> other)
+{
+	this->~ByteField();
+	
+	_ByteFieldPtrs = other.Bytes();
+	_DisposalLevel = DisposalLevel::None;
+}
+
+template<typename T>
+T BitField<T>::Mask(T tMask) const
+{
+	return MASK(this->Value(), tMask);
+}
+
+template<typename T>
+T BitField<T>::Mask(RCIBITFIELD<T> other) const
+{
+	return MASK(this->Value(), other.Value());
+}
+
+template<typename T>
+PIBITFIELD<T> BitField<T>::CloneByValue() const
+{
+	return new PIBITFIELD<T>(this->Value());
+}
+
+template<typename T>
+PIBITFIELD<T> BitField<T>::CloneByReference() const
+{
+	return new PIBITFIELD<T>((PBYTEFIELD[T_SIZE])_ByteFieldPtrs);
 }
 
 
@@ -674,7 +749,7 @@ RIBYTEFIELD BitField<T>::Byte(SIZE i)
 //		return UNCONST(WordField::NULL_OBJECT());
 //
 //	return _WordFields[i];
-//	//return WordField(&_pByteFields[i * 2]);
+//	//return WordField(&_ByteFieldPtrs[i * 2]);
 //}
 //		
 //RWORDFIELD DWordField::LowWord()

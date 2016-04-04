@@ -191,10 +191,6 @@ namespace IttyBitty
 
 		virtual T * Pointer() const = 0;
 		virtual VOID PointTo(T *) = 0;
-		virtual VOID PointFrom(RCIBITFIELD<T>) = 0;
-		
-		virtual T & Reference() const = 0;
-		virtual VOID SetReference(T &) = 0;
 		virtual VOID ReferenceFrom(RCIBITFIELD<T>) = 0;
 
 		virtual T Mask(T) const = 0;
@@ -209,7 +205,7 @@ namespace IttyBitty
 		{
 			None = 0,
 			ByteFieldsPtr = 1,
-			//ByteFieldsPtrs = 2,
+			ByteFieldsPtrs = 2,
 			ByteFieldsData = 2
 		};
 	};
@@ -349,10 +345,6 @@ namespace IttyBitty
 
 		virtual PBYTE Pointer() const;
 		virtual VOID PointTo(PBYTE);
-		virtual VOID PointFrom(RCIBITFIELD<BYTE>);
-		
-		virtual RBYTE Reference() const;
-		virtual VOID SetReference(RBYTE);
 		virtual VOID ReferenceFrom(RCIBITFIELD<BYTE>);
 
 		virtual BYTE Mask(BYTE) const;
@@ -448,10 +440,6 @@ namespace IttyBitty
 
 		virtual T * Pointer() const;
 		virtual VOID PointTo(T *);
-		virtual VOID PointFrom(RCIBITFIELD<T>);
-		
-		virtual T & Reference() const;
-		virtual VOID SetReference(T &);
 		virtual VOID ReferenceFrom(RCIBITFIELD<T>);
 
 		virtual T Mask(T) const;
@@ -464,7 +452,7 @@ namespace IttyBitty
 
 		typedef typename IBitField<T>::DisposalLevel DisposalLevel;
 
-		PPIBYTEFIELD _pByteFields;
+		PPIBYTEFIELD _ByteFieldPtrs;
 
 		DisposalLevel _DisposalLevel;
 	};
@@ -480,7 +468,7 @@ namespace IttyBitty
 		WordField(RCWORD);
 		WordField(RWORD);
 		WordField(PWORD);
-		//WordField(BYTEFIELD[]);
+		WordField(BYTEFIELD[]);
 
 		WordField(RCWORDFIELD);
 
