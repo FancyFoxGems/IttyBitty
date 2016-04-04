@@ -50,10 +50,12 @@ namespace IttyBitty
 	using PCIBITFIELD = const IBitField<T> *;
 	template<typename T = BYTE>
 	using RCIBITFIELD = const IBitField<T> &;
-
+	
+	class IByteField;
 	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD;
 	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
 
+	class IWordField;
 	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD;
 	typedef const class IWordField CIWORDFIELD, * PCIWORDFIELD, & RCIWORDFIELD, ** PPCIWORDFIELD;
 
@@ -71,7 +73,8 @@ namespace IttyBitty
 	using PCIMANYBITFIELD = const IManyBitField<T> *;
 	template<typename T = DWORD>
 	using RCIMANYBITFIELD = const IManyBitField<T> &;
-
+	
+	class IDWordField;
 	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD;
 	typedef const class IDWordField CIDWORDFIELD, * PCIDWORDFIELD, & RCIDWORDFIELD, ** PPCIDWORDFIELD;
 
@@ -89,10 +92,12 @@ namespace IttyBitty
 	using PCBITFIELD = const BitField<T> *;
 	template<typename T = BYTE>
 	using RCBITFIELD = const BitField<T> &;
-
+	
+	class ByteField;
 	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD;
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
 
+	class WordField;
 	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD;
 	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD, ** PPCWORDFIELD;
 
@@ -110,7 +115,8 @@ namespace IttyBitty
 	using PCMANYBITFIELD = const ManyBitField<T> *;
 	template<typename T = DWORD>
 	using RCMANYBITFIELD = const ManyBitField<T> &;
-
+	
+	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
 
@@ -160,7 +166,6 @@ namespace IttyBitty
 
 		virtual SIZE BitWidth() const = 0;
 		virtual SIZE ByteSize() const = 0;
-		virtual SIZE WordSize() const = 0;
 
 		virtual operator CONST T() const = 0;
 		virtual operator SIGNED_TYPE(CONST T)() const = 0;
@@ -201,6 +206,8 @@ namespace IttyBitty
 
 	protected:
 
+		IBitField() { };
+
 		ENUM DisposalLevel : BYTE
 		{
 			None = 0,
@@ -213,7 +220,7 @@ namespace IttyBitty
 
 	/* [IBYTEFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
-	INTERFACE IByteField : public IBitField<BYTE>
+	INTERFACE IByteField : public virtual IBitField<BYTE>
 	{
 	public:
 		
@@ -238,7 +245,7 @@ namespace IttyBitty
 
 	/* [IWORDFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
-	INTERFACE IWordField //: public IBitField<WORD>
+	INTERFACE IWordField : public virtual IBitField<WORD>
 	{
 	public:
 		
@@ -258,7 +265,7 @@ namespace IttyBitty
 	/* [IMANYBITFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
 	template<typename T>
-	INTERFACE IManyBitField : public IBitField<T>
+	INTERFACE IManyBitField : public virtual IBitField<T>
 	{
 	public:
 
@@ -269,13 +276,13 @@ namespace IttyBitty
 
 		virtual PCIWORDFIELD Words() const = 0;
 		virtual WORD Word(SIZE) const = 0;
-		virtual PIWORDFIELD Word(SIZE) = 0;
+		virtual RIWORDFIELD Word(SIZE) = 0;
 	};
 
 
 	/* [IDWORDFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
-	INTERFACE IDWordField : public IManyBitField<DWORD>
+	INTERFACE IDWordField : public virtual IManyBitField<DWORD>
 	{
 	public:
 		
@@ -286,14 +293,14 @@ namespace IttyBitty
 		virtual operator RLONG() = 0;
 
 		virtual WORD LowWord() const = 0;
-		virtual PIWORDFIELD SetLowWord(DWORD) = 0;
+		virtual RIWORDFIELD SetLowWord(WORD) = 0;
 		virtual WORD HighWord() const = 0;
-		virtual PIWORDFIELD SetHighWord(DWORD) = 0;
+		virtual RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
-	CLASS ByteField : public IByteField
+	CLASS ByteField : public virtual IByteField
 	{
 	public:
 
@@ -314,7 +321,6 @@ namespace IttyBitty
 
 		virtual SIZE BitWidth() const;
 		virtual SIZE ByteSize() const;
-		virtual SIZE WordSize() const;
 
 		virtual operator CBYTE() const;
 		virtual operator CCHAR() const;
@@ -388,7 +394,7 @@ namespace IttyBitty
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
 	template<typename T>
-	CLASS BitField : public IBitField<T>
+	CLASS BitField : public virtual IBitField<T>
 	{
 	public:
 
@@ -411,7 +417,6 @@ namespace IttyBitty
 
 		virtual SIZE BitWidth() const;
 		virtual SIZE ByteSize() const;
-		virtual SIZE WordSize() const;
 
 		virtual operator CONST T() const;
 		virtual operator SIGNED_TYPE(CONST T)() const;
@@ -462,26 +467,67 @@ namespace IttyBitty
 
 	/* [WORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 16-BIT (WORD) MEMORY BLOCKS */
 
-	CLASS WordField : public BitField<WORD>, public IWordField
+	CLASS WordField : public BitField<WORD>, public virtual IWordField
 	{
 	public:
-
-		WordField();
-		WordField(WORD);
-		WordField(RWORD);
-		WordField(PWORD);
-		WordField(BYTEFIELD[2]);
-		WordField(PBYTEFIELD[2]);
-
-		WordField(RCWORDFIELD);
-
-		STATIC RWORDFIELD NULL_OBJECT();
 		
-		virtual operator PWORD();
-		virtual operator RWORD();
+		//using BitField<WORD>::BitField;
+
+		//using BitField<WORD>::Size;
+
+		//using BitField<WORD>::BitWidth;
+		//using BitField<WORD>::ByteSize;
+
+		//using BitField<WORD>::operator const WORD;
+
+		//using BitField<WORD>::operator PCBYTE;
+		//using BitField<WORD>::operator PPBYTE;
+
+		//using BitField<WORD>::operator PCCHAR;
+		//using BitField<WORD>::operator PPCHAR;
+		//
+		//using BitField<WORD>::operator IttyBitty::PBYTEFIELD;
+		//using BitField<WORD>::operator IttyBitty::PPBYTEFIELD;
+
+		//using BitField<WORD>::operator[];
+
+		//using BitField<WORD>::Bit;
+		//using BitField<WORD>::Flip;
+
+		//using BitField<WORD>::Bytes;
+		//using BitField<WORD>::Byte;
+
+		//using BitField<WORD>::Value;
+		//using BitField<WORD>::SetValue;
+		//using BitField<WORD>::CopyFrom;
+
+		//using BitField<WORD>::Pointer;
+		//using BitField<WORD>::PointTo;
+		//using BitField<WORD>::ReferenceFrom;
+
+		//using BitField<WORD>::Mask;
+
+		//using BitField<WORD>::CloneByValue;
+		//using BitField<WORD>::CloneByReference;
+
+		INLINE WordField();
+		INLINE WordField(WORD);
+		INLINE WordField(RWORD);
+		INLINE WordField(PWORD);
+		INLINE WordField(BYTEFIELD[2]);
+		INLINE WordField(PBYTEFIELD[2]);
+
+		INLINE WordField(RCWORDFIELD);
+
+		~WordField();
+
+		INLINE STATIC RWORDFIELD NULL_OBJECT();
 		
-		virtual operator PSHORT();
-		virtual operator RSHORT();
+		INLINE virtual operator PWORD();
+		INLINE virtual operator RWORD();
+		
+		INLINE virtual operator PSHORT();
+		INLINE virtual operator RSHORT();
 
 		virtual BYTE LowByte() const;
 		virtual RIBYTEFIELD SetLowByte(BYTE);
@@ -497,19 +543,21 @@ namespace IttyBitty
 	/* [MANYBITFIELD]: TEMPLATED BASE CLASS TO ENCAPSULATE BIT-PACKED MEMORY OF ARBITRARY BYTE-WIDTH */
 
 	template<typename T>
-	CLASS ManyBitField : public BitField<T>, public IManyBitField<T>
+	CLASS ManyBitField : public BitField<T>, public virtual IManyBitField<T>
 	{
 	public:
 
-		ManyBitField();
-		ManyBitField(SIZE);
-		ManyBitField(PVOID, SIZE);
-		ManyBitField(PBYTEFIELD, SIZE);
-		ManyBitField(BYTE[], SIZE);
-		ManyBitField(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
-		ManyBitField(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+		using BitField<T>::ByteSize;
 
-		ManyBitField(RCBITFIELD<T>);
+		INLINE ManyBitField();
+		INLINE ManyBitField(SIZE);
+		INLINE ManyBitField(PVOID, SIZE);
+		INLINE ManyBitField(PBYTEFIELD, SIZE);
+		INLINE ManyBitField(BYTE[], SIZE);
+		INLINE ManyBitField(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
+		INLINE ManyBitField(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+
+		INLINE ManyBitField(RCBITFIELD<T>);
 
 		~ManyBitField();
 
@@ -522,7 +570,7 @@ namespace IttyBitty
 
 		virtual PCIWORDFIELD Words() const;
 		virtual WORD Word(SIZE) const;
-		virtual PIWORDFIELD Word(SIZE);
+		virtual RIWORDFIELD Word(SIZE);
 
 	protected:
 
@@ -534,31 +582,33 @@ namespace IttyBitty
 
 	/* [DWORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 32-BIT (DOUBLE WORD) MEMORY BLOCKS */
 
-	CLASS DWordField : public ManyBitField<DWORD>, public IDWordField
+	CLASS DWordField : public ManyBitField<DWORD>, public virtual IDWordField
 	{
 	public:
 
-		DWordField();
-		DWordField(DWORD);
-		DWordField(PDWORD);
-		DWordField(PBYTEFIELD);
-		DWordField(PWORDFIELD);
-		DWordField(PWORDFIELD[]);
+		using ManyBitField<DWORD>::Word;
 
-		DWordField(RCDWORDFIELD);
+		INLINE DWordField();
+		INLINE DWordField(DWORD);
+		INLINE DWordField(PDWORD);
+		INLINE DWordField(PBYTEFIELD);
+		INLINE DWordField(PWORDFIELD);
+		INLINE DWordField(PWORDFIELD[]);
+
+		INLINE DWordField(RCDWORDFIELD);
 
 		~DWordField();
 		
-		virtual operator PDWORD();
-		virtual operator RDWORD();
+		INLINE virtual operator PDWORD();
+		INLINE virtual operator RDWORD();
 		
-		virtual operator PLONG();
-		virtual operator RLONG();
+		INLINE virtual operator PLONG();
+		INLINE virtual operator RLONG();
 
 		virtual WORD LowWord() const;
-		virtual PIWORDFIELD SetLowWord(DWORD);
+		virtual RIWORDFIELD SetLowWord(WORD);
 		virtual WORD HighWord() const;
-		virtual PIWORDFIELD SetHighWord(DWORD);
+		virtual RIWORDFIELD SetHighWord(WORD);
 	};
 }
 
