@@ -359,7 +359,7 @@ namespace IttyBitty
 
 		STATIC RCBITPACK NULL_OBJECT();
 
-		STATIC CSIZE Size();
+		STATIC CSIZE BitSize();
 
 		BIT operator[](SIZE i) const;
 

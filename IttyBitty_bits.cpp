@@ -16,7 +16,7 @@ _BitPack::_BitPack(RCBITPACK other)
 	*this = other;
 }
 
-CSIZE _BitPack::Size()
+CSIZE _BitPack::BitSize()
 {
 	return BIT_SIZE(_BitPack);
 }
@@ -28,7 +28,7 @@ BIT _BitPack::operator[](SIZE i) const
 
 BIT _BitPack::Bit(SIZE i) const
 {
-	if (i >= Size())
+	if (i >= this->BitSize())
 		return NULL;
 	
 	switch (i)

@@ -96,15 +96,17 @@
 
 #define MAKE_CONST(var) const_cast<ONLY_CONST_TYPEOF(var)>(var)
 #define MAKE_CONST_2D(var) ((ONLY_CONST_TYPEOF((var)[0][0])(*)[CAPACITY((var)[0])])(var))
-#define MAKE_CONST_PP(var) ((ONLY_CONST_TYPEOF(**(var))**)(var))
+#define MAKE_CONST_PP(var) ((ONLY_CONST_TYPEOF(**(var)) **)(var))
 #define FORCE_CONST(var) (*const_cast<ONLY_CONST_TYPEOF(var) *>(&(var)))
 
-#define UNCONST(var) (*const_cast<UNCONST_TYPEOF(var)>::type *>(&(var)))
+#define UNCONST(var) (*const_cast<UNCONST_TYPEOF(var) *>(&(var)))
 
 #define UNION_CAST(var, to_type) (((UNION {TYPEOF(var) from; to_type to;})(var)).to)
 
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
+
+#define T_SIZE SIZEOF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
 #define _CONSTRUCT(constructor_expr) FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
