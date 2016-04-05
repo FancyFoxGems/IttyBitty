@@ -211,9 +211,9 @@ namespace IttyBitty
 		ENUM DisposalLevel : BYTE
 		{
 			None = 0,
-			ByteFieldsPtr = 1,
-			ByteFieldsPtrs = 2,
-			ByteFieldsData = 3
+			FieldPtrPtr = 1,
+			FieldPtrs = 2,
+			FieldData = 3
 		};
 	};
 	
@@ -529,7 +529,7 @@ namespace IttyBitty
 		INLINE ManyBitField();
 		INLINE ManyBitField(T);
 		INLINE ManyBitField(T *);
-		explicit INLINE ManyBitField(PVOID, SIZE = T_SIZE);
+		INLINE explicit ManyBitField(PVOID, SIZE = T_SIZE);
 		INLINE ManyBitField(BYTE[T_SIZE]);
 		INLINE ManyBitField(PBYTE[T_SIZE]);
 		INLINE ManyBitField(BYTEFIELD[T_SIZE]);
@@ -539,7 +539,7 @@ namespace IttyBitty
 
 		INLINE ManyBitField(RCMANYBITFIELD<T>);
 
-		~ManyBitField();
+		virtual ~ManyBitField();
 
 		STATIC RMANYBITFIELD<T> NULL_OBJECT();
 
@@ -554,9 +554,13 @@ namespace IttyBitty
 
 	protected:
 
+		typedef typename IBitField<T>::DisposalLevel DisposalLevel;
+
+		using BitField<T>::_DisposalLevel;
+
 		VOID InitWordFields();
 
-		PPWORDFIELD _WordFieldsPtr;
+		PPWORDFIELD _WordFieldPtrs;
 	};
 
 

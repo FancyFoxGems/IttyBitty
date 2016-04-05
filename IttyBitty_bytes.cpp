@@ -302,7 +302,7 @@ RIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
 /* [BITFIELD] DEFINITION */
 
 template<typename T>
-BitField<T>::BitField() : _DisposalLevel(DisposalLevel::ByteFieldsData)
+BitField<T>::BitField() : _DisposalLevel(DisposalLevel::FieldData)
 {
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
@@ -311,19 +311,19 @@ BitField<T>::BitField() : _DisposalLevel(DisposalLevel::ByteFieldsData)
 }
 
 template<typename T>
-BitField<T>::BitField(T tVal)
+BitField<T>::BitField(T tVal) : _DisposalLevel(DisposalLevel::None)
 {
 	this->SetValue(tVal);
 }
 
 template<typename T>
-BitField<T>::BitField(T * tPtr)
+BitField<T>::BitField(T * tPtr) : _DisposalLevel(DisposalLevel::None)
 {
 	this->PointTo(tPtr);
 }
 
 template<typename T>
-BitField<T>::BitField(PVOID memAddr, SIZE byteWidth) : _DisposalLevel(DisposalLevel::ByteFieldsData)
+BitField<T>::BitField(PVOID memAddr, SIZE byteWidth) : _DisposalLevel(DisposalLevel::FieldData)
 {
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
@@ -337,7 +337,7 @@ BitField<T>::BitField(PVOID memAddr, SIZE byteWidth) : _DisposalLevel(DisposalLe
 }
 
 template<typename T>
-BitField<T>::BitField(BYTE byteVals[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsData)
+BitField<T>::BitField(BYTE byteVals[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldData)
 {
 	_ByteFieldPtrs = new ByteField[T_SIZE];
 
@@ -346,7 +346,7 @@ BitField<T>::BitField(BYTE byteVals[T_SIZE]) : _DisposalLevel(DisposalLevel::Byt
 }
 
 template<typename T>
-BitField<T>::BitField(PBYTE bytePtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsData)
+BitField<T>::BitField(PBYTE bytePtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldData)
 {
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
@@ -355,7 +355,7 @@ BitField<T>::BitField(PBYTE bytePtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::By
 }
 
 template<typename T>
-BitField<T>::BitField(BYTEFIELD byteFields[T_SIZE]) : _DisposalLevel(DisposalLevel::ByteFieldsPtr)
+BitField<T>::BitField(BYTEFIELD byteFields[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldPtrPtr) // TODO: FieldPtrs?
 {
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 	
@@ -376,7 +376,7 @@ BitField<T>::BitField(RCBITFIELD<T> other)
 
 	// TODO: Use placement new or explicit reference assignment?
 	//*this = ByteField((PVOID)other.Bytes(), other.ByteSize());
-	//new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
+	new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
 }
 
 template<typename T>
@@ -384,17 +384,17 @@ BitField<T>::~BitField()
 {
 	switch (_DisposalLevel)
 	{
-	case DisposalLevel::ByteFieldsData:
+	case DisposalLevel::FieldData:
 
 		for (SIZE i = 0; i < T_SIZE; i++)
 			delete _ByteFieldPtrs[i];
 
-	case DisposalLevel::ByteFieldsPtrs:
+	case DisposalLevel::FieldPtrs:
 
 		delete[] _ByteFieldPtrs;
 		break;
 		
-	case DisposalLevel::ByteFieldsPtr:
+	case DisposalLevel::FieldPtrPtr:
 
 		delete _ByteFieldPtrs;
 		break;
@@ -569,7 +569,7 @@ VOID BitField<T>::SetValue(T tVal)
 	for (SIZE i = 0; i < this->ByteSize(); i ++)
 		_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + i));
 
-	_DisposalLevel = DisposalLevel::ByteFieldsData;
+	_DisposalLevel = DisposalLevel::FieldData;
 }
 
 template<typename T>
@@ -594,7 +594,7 @@ VOID BitField<T>::PointTo(T * tPtr)
 	for (SIZE i = 0; i < this->ByteSize(); i ++)
 		_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + i);
 
-	_DisposalLevel = DisposalLevel::ByteFieldsData;
+	_DisposalLevel = DisposalLevel::FieldData;
 }
 
 template<typename T>
@@ -605,7 +605,7 @@ VOID BitField<T>::ReferenceFrom(RCIBITFIELD<T> other)
 	_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 	*_ByteFieldPtrs = (PBYTEFIELD)other;
 
-	_DisposalLevel = DisposalLevel::ByteFieldsPtr;
+	_DisposalLevel = DisposalLevel::FieldPtrs;
 }
 
 template<typename T>
@@ -719,6 +719,18 @@ ManyBitField<T>::ManyBitField(PVOID memAddr, SIZE byteWidth) : BitField<T>(memAd
 }
 
 template<typename T>
+ManyBitField<T>::ManyBitField(BYTE byteVals[T_SIZE]) : BitField<T>(byteVals)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(PBYTE bytePtrs[T_SIZE]) : BitField<T>(bytePtrs)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
 ManyBitField<T>::ManyBitField(BYTEFIELD byteFields[T_SIZE]) : BitField<T>(byteFields)
 {
 	this->InitWordFields();
@@ -744,8 +756,8 @@ ManyBitField<T>::ManyBitField(WORDFIELD wordFields[T_SIZE / 2])
 	this->~ManyBitField();
 
 	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField(byteFieldPtrs, 4);
-	new (this) ManyBitField(byteFieldPtrs, 4);
+	//*this = ManyBitField(byteFieldPtrs);
+	new (this) ManyBitField(byteFieldPtrs);
 	
 	this->InitWordFields();
 }
@@ -764,8 +776,8 @@ ManyBitField<T>::ManyBitField(PWORDFIELD wordFields[T_SIZE / 2])
 	this->~ManyBitField();
 
 	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField(byteFieldPtrs, 4);
-	new (this) ManyBitField(byteFieldPtrs, 4);
+	//*this = ManyBitField(byteFieldPtrs;
+	new (this) ManyBitField(byteFieldPtrs);
 	
 	this->InitWordFields();
 }
@@ -779,7 +791,27 @@ ManyBitField<T>::ManyBitField(RCMANYBITFIELD<T> other) : BitField<T>(other)
 template<typename T>
 ManyBitField<T>::~ManyBitField()
 {
-	delete[] _WordFieldsPtr;
+	switch (_DisposalLevel)
+	{
+	case DisposalLevel::FieldData:
+
+		for (SIZE i = 0; i < T_SIZE; i++)
+			delete _WordFieldPtrs[i];
+
+	case DisposalLevel::FieldPtrs:
+
+		delete[] _WordFieldPtrs;
+		break;
+		
+	case DisposalLevel::FieldPtrPtr:
+
+		delete _WordFieldPtrs;
+		break;
+
+	case DisposalLevel::None:
+
+		break;
+	}
 }
 
 template<typename T>
@@ -796,6 +828,23 @@ SIZE ManyBitField<T>::WordSize() const
 }
 
 template<typename T>
+ManyBitField<T>::operator PPWORD() const
+{
+	STATIC PPWORD wordPtrs[T_SIZE];
+
+	for (SIZE i = 0; i < T_SIZE; i ++)
+		(*wordPtrs)[i] = _WordFieldPtrs[i]->Pointer();
+
+	return *wordPtrs;
+}
+
+template<typename T>
+ManyBitField<T>::operator PPSHORT() const
+{
+	return (PPSHORT)this->operator PPWORD();
+}
+
+template<typename T>
 WORD ManyBitField<T>::Word(SIZE i) const
 {
 	return (WORD)this->Word(i);
@@ -807,30 +856,20 @@ RIWORDFIELD ManyBitField<T>::Word(SIZE i)
 	if (i > this->ByteSize() / 2)
 		return WordField::NULL_OBJECT();
 
-	return *_WordFieldsPtr[i];
-	//return WordField(&_ByteFieldPtrs[i * 2]);
+	return *_WordFieldPtrs[i];
 }
-//
-//ManyBitField<T>::operator PPWORD() const
-//{
-//	return (PPWORD)this->operator PPWORD();
-//}
-//		
-//ManyBitField<T>::operator PPSHORT() const
-//{
-//	return (((LONG)(SHORT)this->Word(1)) << 16) OR (SHORT)this->Word(0);
-//}
-//
-//VOID ManyBitField<T>::InitWordFields()
-//{
-//	if (_WordFields != NULL)
-//		delete[] _WordFields;
-//	
-//	_WordFields = new WordField[this->WordSize()];
-//
-//	for (SIZE i = 0; i < this->WordSize(); i++)
-//		_WordFields[i] = WordField((PBYTEFIELD)(this->Bytes() + i));
-//}
+
+template<typename T>
+VOID ManyBitField<T>::InitWordFields()
+{
+	if (_WordFieldPtrs != NULL)
+		delete[] _WordFieldPtrs;
+	
+	_WordFieldPtrs = new PWORDFIELD[this->WordSize()];
+
+	for (SIZE i = 0; i < this->WordSize(); i++)
+		_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + i * 2));
+}
 
 
 /* [DWORDFIELD] DEFINITION */
