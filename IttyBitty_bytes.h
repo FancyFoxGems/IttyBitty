@@ -973,11 +973,11 @@ namespace IttyBitty
 		
 		DWordField(RCDWORDFIELD other) : ManyBitField<DWORD>(other) { }
 
-		/*STATIC RDWORDFIELD NULL_OBJECT()
+		STATIC RDWORDFIELD NULL_OBJECT()
 		{
 			STATIC DWORDFIELD NULL_DWORDFIELD((DWORD)0);
 			return NULL_DWORDFIELD;
-		}*/
+		}
 
 		WORD LowWord() const
 		{
