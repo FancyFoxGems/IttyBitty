@@ -33,7 +33,7 @@
 #define IGNORE_WARNING(w) PRAGMA_MACRO(GCC diagnostic ignored #w)
 
 
-/* ATTRIBUTE, QUALIFIER, & METAFUNCTION ALIASES */
+/* ATTRIBUTE & TYPE INFO ALIASES */
 
 #define PACKED __attribute__ ((packed))
 #define BITFIELD_STRUCT STRUCT PACKED
@@ -42,6 +42,25 @@
 
 #define countof(var) (SIZEOF(var) / SIZEOF(0[var]))
 #define CAPACITY(var) countof(var)
+
+
+/* METAFUNCTION ALIASES */
+
+using std::identity_t;
+using std::add_const_t;
+using std::remove_const_t;
+using std::add_volatile_t;
+using std::remove_volatile_t;
+using std::add_cv_t;
+using std::remove_cv_t;
+using std::add_pointer_t;
+using std::remove_pointer_t;
+using std::add_rvalue_ref_t;
+using std::remove_rvalue_ref_t;
+using std::make_signed_t;
+using std::make_unsigned_t;
+using std::enable_if_t;
+using std::conditional_t;
 
 #define TYPE(T) identity_t<T>
 #define TYPEOF(var) decltype(var)

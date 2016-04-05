@@ -29,6 +29,7 @@
 
 	The MCU uses r0 and r1 for MUL & MULS 16-bit multiplication instructions; 
 	General purpose registers r8-15 are utilized by the AVR-C++ compiler;
+
 	SEE: http://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_regbind
 */
 #define REG_VAR(type, var_name, register_num) REG type var_name asm("r" #register_num)
@@ -40,11 +41,12 @@
 
 typedef volatile IttyBitty::BYTEFIELD REG8, * PREG8, RREG8;
 typedef volatile IttyBitty::WORDFIELD REG16, * PREG16, RREG16;
+typedef volatile IttyBitty::DWORDFIELD REG32, * PREG32, RREG32;
 
 
 /* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */
 
-
+// TODO: ...
 
 
 #endif

@@ -326,8 +326,10 @@ IGNORE_WARNING(-Wstrict-aliasing)
 
 /* BIT-PACKING / BIT REFERENCE MACROS */
 
-#define PACK_BYTE(byte) (*reinterpret_cast<IttyBitty::PBITPACK>(&byte))
-#define _B(byte, i) (BIT)(PACK_BYTE(byte).b##i)
+#define PACK_BYTE(byte_addr) (*reinterpret_cast<IttyBitty::PBITPACK>(byte_addr))
+#define PACK_BYTE_VAL(byte_val) PACK_BYTE(&byte_val)
+
+#define _B(byte_addr, i) (BIT)(PACK_BYTE(byte_addr).b##i)
 
 #define BIT0(byte) _B(byte, 0)
 #define BIT1(byte) _B(byte, 1)

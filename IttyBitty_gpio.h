@@ -21,8 +21,9 @@
 namespace IttyBitty
 {
 	struct _Port;
-	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT;
-	typedef const struct _Port CPORT, * PCPORT, & RCPORT;
+	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT;
+	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
+
 
 	STRUCT _Port
 	{
@@ -31,16 +32,16 @@ namespace IttyBitty
 
 
 	protected:
-		
-		/*REG8 _DirectionReg;
+
+		REG8 _DirectionReg;
 		REG8 _OutputReg;
-		REG8 _InputReg;*/
+		REG8 _InputReg;
 	};
 
 
 	class GPIO;
-	typedef GPIO _gpio_t, * PGPIO, & RGPIO;
-	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO;
+	typedef GPIO _gpio_t, * PGPIO, & RGPIO, ** PPGPIO;
+	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 	CLASS GPIO
 	{
@@ -50,6 +51,8 @@ namespace IttyBitty
 
 	 protected:
 	};
+
+	//using GPIO::GPIO;
 }
 
 

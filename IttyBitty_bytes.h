@@ -27,7 +27,7 @@ namespace IttyBitty
 	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
 
 	struct _BitProxy;
-	typedef struct _BitProxy BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF;
+	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF;
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
 	template<typename T = BYTE>
@@ -116,14 +116,14 @@ namespace IttyBitty
 	
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
-			
+
 	STRUCT _BitProxy
 	{
 	public:
-		
+
 		_BitProxy(PIBYTEFIELD, SIZE);
 		_BitProxy(RCBITREF);
-		
+
 		~_BitProxy();
 
 		STATIC RBITREF NULL_OBJECT();
@@ -153,50 +153,50 @@ namespace IttyBitty
 	INTERFACE IBitField
 	{
 	public:
-		
-		virtual ~IBitField() { }
 
-		virtual CSIZE Size() const = 0;
+		VIRTUAL ~IBitField() { }
 
-		virtual SIZE BitWidth() const = 0;
-		virtual SIZE ByteSize() const = 0;
+		VIRTUAL CSIZE Size() const = 0;
 
-		virtual operator CONST T() const = 0;
-		virtual operator SIGNED_TYPE(CONST T)() const = 0;
+		VIRTUAL SIZE BitWidth() const = 0;
+		VIRTUAL SIZE ByteSize() const = 0;
 
-		virtual operator PCBYTE() const = 0;
-		virtual operator PPBYTE() = 0;
+		VIRTUAL operator CONST T() const = 0;
+		VIRTUAL operator SIGNED_TYPE(CONST T)() const = 0;
 
-		virtual operator PCCHAR() const = 0;
-		virtual operator PPCHAR() = 0;
-		
-		virtual operator PBYTEFIELD() const = 0;
-		virtual operator PPBYTEFIELD() = 0;
+		VIRTUAL operator PCBYTE() const = 0;
+		VIRTUAL operator PPBYTE() = 0;
 
-		virtual BIT operator[](SIZE) const = 0;
-		virtual BITREF operator[](SIZE) = 0;
+		VIRTUAL operator PCCHAR() const = 0;
+		VIRTUAL operator PPCHAR() = 0;
 
-		virtual BIT Bit(SIZE) const = 0;
-		virtual BITREF Bit(SIZE) = 0;
-		virtual BIT Flip(SIZE) = 0;
+		VIRTUAL operator PBYTEFIELD() const = 0;
+		VIRTUAL operator PPBYTEFIELD() = 0;
 
-		virtual PPCBYTEFIELD Bytes() const = 0;
-		virtual BYTE Byte(SIZE) const = 0;
-		virtual RIBYTEFIELD Byte(SIZE) = 0;
+		VIRTUAL BIT operator[](SIZE) const = 0;
+		VIRTUAL BITREF operator[](SIZE) = 0;
 
-		virtual T Value() const = 0;
-		virtual VOID SetValue(T) = 0;
-		virtual VOID CopyFrom(RCIBITFIELD<T>) = 0;
+		VIRTUAL BIT Bit(SIZE) const = 0;
+		VIRTUAL BITREF Bit(SIZE) = 0;
+		VIRTUAL BIT Flip(SIZE) = 0;
 
-		virtual T * Pointer() const = 0;
-		virtual VOID PointTo(T *) = 0;
-		virtual VOID ReferenceFrom(RCIBITFIELD<T>) = 0;
+		VIRTUAL PPCBYTEFIELD Bytes() const = 0;
+		VIRTUAL BYTE Byte(SIZE) const = 0;
+		VIRTUAL RIBYTEFIELD Byte(SIZE) = 0;
 
-		virtual T Mask(T) const = 0;
-		virtual T Mask(RCIBITFIELD<T>) const = 0;
+		VIRTUAL T Value() const = 0;
+		VIRTUAL VOID SetValue(T) = 0;
+		VIRTUAL VOID CopyFrom(RCIBITFIELD<T>) = 0;
 
-		virtual PIBITFIELD<T> CloneByValue() const = 0;
-		virtual PIBITFIELD<T> CloneByReference() const = 0;
+		VIRTUAL T * Pointer() const = 0;
+		VIRTUAL VOID PointTo(T *) = 0;
+		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<T>) = 0;
+
+		VIRTUAL T Mask(T) const = 0;
+		VIRTUAL T Mask(RCIBITFIELD<T>) const = 0;
+
+		VIRTUAL PIBITFIELD<T> CloneByValue() const = 0;
+		VIRTUAL PIBITFIELD<T> CloneByReference() const = 0;
 
 	protected:
 
@@ -217,23 +217,23 @@ namespace IttyBitty
 	INTERFACE IByteField : public virtual IBitField<BYTE>
 	{
 	public:
-		
-		virtual operator PBYTE() = 0;
-		virtual operator RBYTE() = 0;
-		
-		virtual operator PCHAR() = 0;
-		virtual operator RCHAR() = 0;
 
-		virtual operator PCBITPACK() const = 0;
-		virtual operator PBITPACK() = 0;
+		VIRTUAL operator PBYTE() = 0;
+		VIRTUAL operator RBYTE() = 0;
 
-		virtual PIBYTEFIELD CloneByValue() const = 0;
-		virtual PIBYTEFIELD CloneByReference() const = 0;
+		VIRTUAL operator PCHAR() = 0;
+		VIRTUAL operator RCHAR() = 0;
 
-		virtual BYTE LowNybble() const = 0;
-		virtual RIBYTEFIELD SetLowNybble(BYTE) = 0;
-		virtual BYTE HighNybble() const = 0;
-		virtual RIBYTEFIELD SetHighNybble(BYTE) = 0;
+		VIRTUAL operator PCBITPACK() const = 0;
+		VIRTUAL operator PBITPACK() = 0;
+
+		VIRTUAL PIBYTEFIELD CloneByValue() const = 0;
+		VIRTUAL PIBYTEFIELD CloneByReference() const = 0;
+
+		VIRTUAL BYTE LowNybble() const = 0;
+		VIRTUAL RIBYTEFIELD SetLowNybble(BYTE) = 0;
+		VIRTUAL BYTE HighNybble() const = 0;
+		VIRTUAL RIBYTEFIELD SetHighNybble(BYTE) = 0;
 	};
 	
 
@@ -243,10 +243,10 @@ namespace IttyBitty
 	{
 	public:
 
-		virtual BYTE LowByte() const = 0;
-		virtual RIBYTEFIELD SetLowByte(BYTE) = 0;
-		virtual BYTE HighByte() const = 0;
-		virtual RIBYTEFIELD SetHighByte(BYTE) = 0;
+		VIRTUAL BYTE LowByte() const = 0;
+		VIRTUAL RIBYTEFIELD SetLowByte(BYTE) = 0;
+		VIRTUAL BYTE HighByte() const = 0;
+		VIRTUAL RIBYTEFIELD SetHighByte(BYTE) = 0;
 	};
 
 
@@ -257,11 +257,11 @@ namespace IttyBitty
 	{
 	public:
 
-		virtual SIZE WordSize() const = 0;
+		VIRTUAL SIZE WordSize() const = 0;
 
-		virtual PPCWORDFIELD Words() const = 0;
-		virtual WORD Word(SIZE) const = 0;
-		virtual RIWORDFIELD Word(SIZE) = 0;
+		VIRTUAL PPCWORDFIELD Words() const = 0;
+		VIRTUAL WORD Word(SIZE) const = 0;
+		VIRTUAL RIWORDFIELD Word(SIZE) = 0;
 	};
 
 
@@ -271,10 +271,10 @@ namespace IttyBitty
 	{
 	public:
 
-		virtual WORD LowWord() const = 0;
-		virtual RIWORDFIELD SetLowWord(WORD) = 0;
-		virtual WORD HighWord() const = 0;
-		virtual RIWORDFIELD SetHighWord(WORD) = 0;
+		VIRTUAL WORD LowWord() const = 0;
+		VIRTUAL RIWORDFIELD SetLowWord(WORD) = 0;
+		VIRTUAL WORD HighWord() const = 0;
+		VIRTUAL RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
 
@@ -294,66 +294,66 @@ namespace IttyBitty
 		~ByteField();
 
 		STATIC RBYTEFIELD NULL_OBJECT();
-		
+
 		// IBitField<BYTE>
 
-		virtual CSIZE Size() const;
+		VIRTUAL CSIZE Size() const;
 
-		virtual SIZE BitWidth() const;
-		virtual SIZE ByteSize() const;
+		VIRTUAL SIZE BitWidth() const;
+		VIRTUAL SIZE ByteSize() const;
 
-		virtual operator CBYTE() const;
-		virtual operator CCHAR() const;
+		VIRTUAL operator CBYTE() const;
+		VIRTUAL operator CCHAR() const;
 
-		virtual operator PCBYTE() const;
-		virtual operator PPBYTE();
-		
-		virtual operator PCCHAR() const;
-		virtual operator PPCHAR();
-		
-		virtual operator PBYTEFIELD() const;
-		virtual operator PPBYTEFIELD();
+		VIRTUAL operator PCBYTE() const;
+		VIRTUAL operator PPBYTE();
 
-		virtual BIT operator[](SIZE) const;
-		virtual BITREF operator[](SIZE);
+		VIRTUAL operator PCCHAR() const;
+		VIRTUAL operator PPCHAR();
 
-		virtual BIT Bit(SIZE) const;
-		virtual BITREF Bit(SIZE);
-		virtual BIT Flip(SIZE);
+		VIRTUAL operator PBYTEFIELD() const;
+		VIRTUAL operator PPBYTEFIELD();
 
-		virtual PPCBYTEFIELD Bytes() const;
-		virtual BYTE Byte(SIZE) const;
-		virtual RIBYTEFIELD Byte(SIZE);
+		VIRTUAL BIT operator[](SIZE) const;
+		VIRTUAL BITREF operator[](SIZE);
 
-		virtual BYTE Value() const;
-		virtual VOID SetValue(BYTE);
-		virtual VOID CopyFrom(RCIBITFIELD<BYTE>);
+		VIRTUAL BIT Bit(SIZE) const;
+		VIRTUAL BITREF Bit(SIZE);
+		VIRTUAL BIT Flip(SIZE);
 
-		virtual PBYTE Pointer() const;
-		virtual VOID PointTo(PBYTE);
-		virtual VOID ReferenceFrom(RCIBITFIELD<BYTE>);
+		VIRTUAL PPCBYTEFIELD Bytes() const;
+		VIRTUAL BYTE Byte(SIZE) const;
+		VIRTUAL RIBYTEFIELD Byte(SIZE);
 
-		virtual BYTE Mask(BYTE) const;
-		virtual BYTE Mask(RCIBITFIELD<BYTE>) const;
+		VIRTUAL BYTE Value() const;
+		VIRTUAL VOID SetValue(BYTE);
+		VIRTUAL VOID CopyFrom(RCIBITFIELD<BYTE>);
+
+		VIRTUAL PBYTE Pointer() const;
+		VIRTUAL VOID PointTo(PBYTE);
+		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
+
+		VIRTUAL BYTE Mask(BYTE) const;
+		VIRTUAL BYTE Mask(RCIBITFIELD<BYTE>) const;
 
 		// IByteField
-		
-		virtual operator PBYTE();
-		virtual operator RBYTE();
-		
-		virtual operator PCHAR();
-		virtual operator RCHAR();
 
-		virtual operator PCBITPACK() const;
-		virtual operator PBITPACK();
-		
-		virtual PIBYTEFIELD CloneByValue() const;
-		virtual PIBYTEFIELD CloneByReference() const;
+		VIRTUAL operator PBYTE();
+		VIRTUAL operator RBYTE();
 
-		virtual BYTE LowNybble() const;
-		virtual RIBYTEFIELD SetLowNybble(BYTE);
-		virtual BYTE HighNybble() const;
-		virtual RIBYTEFIELD SetHighNybble(BYTE);
+		VIRTUAL operator PCHAR();
+		VIRTUAL operator RCHAR();
+
+		VIRTUAL operator PCBITPACK() const;
+		VIRTUAL operator PBITPACK();
+
+		VIRTUAL PIBYTEFIELD CloneByValue() const;
+		VIRTUAL PIBYTEFIELD CloneByReference() const;
+
+		VIRTUAL BYTE LowNybble() const;
+		VIRTUAL RIBYTEFIELD SetLowNybble(BYTE);
+		VIRTUAL BYTE HighNybble() const;
+		VIRTUAL RIBYTEFIELD SetHighNybble(BYTE);
 
 	protected:
 
@@ -442,7 +442,7 @@ namespace IttyBitty
 			new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
 		}
 
-		virtual ~BitField()
+		VIRTUAL ~BitField()
 		{
 			switch (_DisposalLevel)
 			{
@@ -455,7 +455,7 @@ namespace IttyBitty
 
 				delete[] _ByteFieldPtrs;
 				break;
-		
+
 			case DisposalLevel::FieldPtrPtr:
 
 				delete _ByteFieldPtrs;
@@ -473,32 +473,32 @@ namespace IttyBitty
 			return NULL_BITFIELD;
 		}
 
-		virtual CSIZE Size() const
+		VIRTUAL CSIZE Size() const
 		{
 			return sizeof(TYPEOF(*this));
 		}
 
-		virtual SIZE BitWidth() const
+		VIRTUAL SIZE BitWidth() const
 		{
 			return this->ByteSize() * BitPack::BitSize();
 		}
 
-		virtual SIZE ByteSize() const
+		VIRTUAL SIZE ByteSize() const
 		{
 			return T_SIZE;
 		}
 
-		virtual operator CONST T() const
+		VIRTUAL operator CONST T() const
 		{
 			return this->Value();
 		}
 
-		virtual operator SIGNED_TYPE(CONST T)() const
+		VIRTUAL operator SIGNED_TYPE(CONST T)() const
 		{
 			return (SIGNED_TYPE(T))this->Value();
 		}
 
-		virtual operator PCBYTE() const
+		VIRTUAL operator PCBYTE() const
 		{
 			STATIC BYTE bytes[T_SIZE];
 
@@ -508,7 +508,7 @@ namespace IttyBitty
 			return bytes;
 		}
 
-		virtual operator PPBYTE()
+		VIRTUAL operator PPBYTE()
 		{
 			STATIC PPBYTE bytePtrs[T_SIZE];
 
@@ -518,42 +518,42 @@ namespace IttyBitty
 			return *bytePtrs;
 		}
 
-		virtual operator PCCHAR() const
+		VIRTUAL operator PCCHAR() const
 		{
 			return (PCCHAR)this->operator PCBYTE();
 		}
 
-		virtual operator PPCHAR()
+		VIRTUAL operator PPCHAR()
 		{
 			return (PPCHAR)this->operator PPBYTE();
 		}
 
-		virtual operator PBYTEFIELD() const
+		VIRTUAL operator PBYTEFIELD() const
 		{
 			return *_ByteFieldPtrs;
 		}
 
-		virtual operator PPBYTEFIELD()
+		VIRTUAL operator PPBYTEFIELD()
 		{
 			return _ByteFieldPtrs;
 		}
 
-		virtual BIT operator[](SIZE i) const
+		VIRTUAL BIT operator[](SIZE i) const
 		{
 			return this->Bit(i);
 		}
 
-		virtual BITREF operator[](SIZE i)
+		VIRTUAL BITREF operator[](SIZE i)
 		{
 			return this->Bit(i);
 		}
 
-		virtual BIT Bit(SIZE i) const
+		VIRTUAL BIT Bit(SIZE i) const
 		{
 			return (BIT)this->Bit(i);
 		}
 
-		virtual BITREF Bit(SIZE i)
+		VIRTUAL BITREF Bit(SIZE i)
 		{
 			if (i >= this->BitWidth())
 				return BitRef::NULL_OBJECT();
@@ -564,7 +564,7 @@ namespace IttyBitty
 			return this->Byte(byteIdx).Bit(bitIdx);
 		}
 
-		virtual BIT Flip(SIZE i)
+		VIRTUAL BIT Flip(SIZE i)
 		{
 			if (i >= this->BitWidth())
 				return BitRef::NULL_OBJECT();
@@ -572,17 +572,17 @@ namespace IttyBitty
 			return this->Bit(i).Flip();
 		}
 
-		virtual PPCBYTEFIELD Bytes() const
+		VIRTUAL PPCBYTEFIELD Bytes() const
 		{
 			return MAKE_CONST_PP(_ByteFieldPtrs);
 		}
 
-		virtual BYTE Byte(SIZE i) const
+		VIRTUAL BYTE Byte(SIZE i) const
 		{
 			return _ByteFieldPtrs[i]->Value();
 		}
 
-		virtual RIBYTEFIELD Byte(SIZE i)
+		VIRTUAL RIBYTEFIELD Byte(SIZE i)
 		{
 			if (i >= this->ByteSize())
 				return ByteField::NULL_OBJECT();
@@ -590,7 +590,7 @@ namespace IttyBitty
 			return *_ByteFieldPtrs[i];
 		}
 
-		virtual T Value() const
+		VIRTUAL T Value() const
 		{
 			T tVal = 0;
 
@@ -599,8 +599,8 @@ namespace IttyBitty
 
 			return tVal;
 		}
-				
-		virtual VOID SetValue(T tVal)
+	
+		VIRTUAL VOID SetValue(T tVal)
 		{
 			this->~BitField<T>();
 
@@ -611,18 +611,18 @@ namespace IttyBitty
 
 			_DisposalLevel = DisposalLevel::FieldData;
 		}
-		
-		virtual VOID CopyFrom(RCIBITFIELD<T> other)
+
+		VIRTUAL VOID CopyFrom(RCIBITFIELD<T> other)
 		{	
 			this->SetValue(other.Value());
 		}
-		
+
 		T * Pointer() const
 		{
 			return (T *)_ByteFieldPtrs[0]->Pointer();
 		}
-		
-		virtual VOID PointTo(T * tPtr)
+
+		VIRTUAL VOID PointTo(T * tPtr)
 		{
 			this->~BitField<T>();
 
@@ -633,8 +633,8 @@ namespace IttyBitty
 
 			_DisposalLevel = DisposalLevel::FieldData;
 		}
-		
-		virtual VOID ReferenceFrom(RCIBITFIELD<T> other)
+
+		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<T> other)
 		{
 			this->~BitField<T>();
 	
@@ -643,23 +643,23 @@ namespace IttyBitty
 
 			_DisposalLevel = DisposalLevel::FieldPtrs;
 		}
-		
-		virtual T Mask(T tMask) const
+
+		VIRTUAL T Mask(T tMask) const
 		{
 			return MASK(this->Value(), tMask);
 		}
-		
-		virtual T Mask(RCIBITFIELD<T> other) const
+
+		VIRTUAL T Mask(RCIBITFIELD<T> other) const
 		{
 			return MASK(this->Value(), other.Value());
 		}
-		
-		virtual PIBITFIELD<T> CloneByValue() const
+
+		VIRTUAL PIBITFIELD<T> CloneByValue() const
 		{
 			return new BitField<T>(this->Value());
 		}
-		
-		virtual PIBITFIELD<T> CloneByReference() const
+
+		VIRTUAL PIBITFIELD<T> CloneByReference() const
 		{
 			return new BitField<T>((PVOID)_ByteFieldPtrs, T_SIZE);
 		}
@@ -680,7 +680,7 @@ namespace IttyBitty
 	CLASS WordField : public BitField<WORD>, public virtual IWordField
 	{
 	public:
-		
+
 		//using BitField<WORD>::BitField;
 
 		//using BitField<WORD>::Size;
@@ -719,7 +719,7 @@ namespace IttyBitty
 
 		//using BitField<WORD>::CloneByValue;
 		//using BitField<WORD>::CloneByReference;
-		
+
 		WordField() : BitField<WORD>() { }
 
 		WordField(WORD wordVal) : BitField<WORD>()
@@ -734,7 +734,7 @@ namespace IttyBitty
 		WordField(BYTEFIELD byteFields[2]) : BitField<WORD>(byteFields) { }
 
 		WordField(PBYTEFIELD byteFieldPtrs[2]) : BitField<WORD>(byteFieldPtrs) { }
-		
+
 		WordField(RCWORDFIELD other) : BitField<WORD>(other) { }
 
 		STATIC RWORDFIELD NULL_OBJECT()
@@ -854,7 +854,7 @@ namespace IttyBitty
 			this->InitWordFields();
 		}
 
-		virtual ~ManyBitField()
+		VIRTUAL ~ManyBitField()
 		{
 			switch (_DisposalLevel)
 			{
@@ -867,7 +867,7 @@ namespace IttyBitty
 
 				delete[] _WordFieldPtrs;
 				break;
-		
+
 			case DisposalLevel::FieldPtrPtr:
 
 				delete _WordFieldPtrs;
@@ -885,12 +885,12 @@ namespace IttyBitty
 			return NULL_MANYBITFIELD;
 		}
 
-		virtual SIZE WordSize() const
+		VIRTUAL SIZE WordSize() const
 		{
 			return T_SIZE / 2;
 		}
 
-		virtual operator PPWORD() const
+		VIRTUAL operator PPWORD() const
 		{
 			STATIC PPWORD wordPtrs[T_SIZE];
 
@@ -900,22 +900,22 @@ namespace IttyBitty
 			return *wordPtrs;
 		}
 
-		virtual operator PPSHORT() const
+		VIRTUAL operator PPSHORT() const
 		{
 			return (PPSHORT)this->operator PPWORD();
 		}
 
-		virtual PPCWORDFIELD Words() const
+		VIRTUAL PPCWORDFIELD Words() const
 		{
 			return MAKE_CONST_PP(_WordFieldPtrs);
 		}
 
-		virtual WORD Word(SIZE i) const
+		VIRTUAL WORD Word(SIZE i) const
 		{
 			return (WORD)this->Word(i);
 		}
 
-		virtual RIWORDFIELD Word(SIZE i)
+		VIRTUAL RIWORDFIELD Word(SIZE i)
 		{
 			if (i > this->ByteSize() / 2)
 				return WordField::NULL_OBJECT();
@@ -931,9 +931,9 @@ namespace IttyBitty
 		using BitField<T>::_DisposalLevel;
 
 		PPWORDFIELD _WordFieldPtrs;
-		
 
-		virtual VOID InitWordFields()
+
+		VIRTUAL VOID InitWordFields()
 		{
 			if (_WordFieldPtrs != NULL)
 				delete[] _WordFieldPtrs;
@@ -951,7 +951,7 @@ namespace IttyBitty
 	CLASS DWordField : public ManyBitField<DWORD>, public virtual IDWordField
 	{
 	public:
-		
+
 		DWordField() : ManyBitField<DWORD>() { }
 
 		DWordField(DWORD wordVal) : ManyBitField<DWORD>()
@@ -970,7 +970,7 @@ namespace IttyBitty
 		DWordField(WORDFIELD wordFields[2]) : ManyBitField<DWORD>(wordFields) { }
 
 		DWordField(PWORDFIELD wordFieldPtrs[2]) : ManyBitField<DWORD>(wordFieldPtrs) { }
-		
+
 		DWordField(RCDWORDFIELD other) : ManyBitField<DWORD>(other) { }
 
 		STATIC RDWORDFIELD NULL_OBJECT()
@@ -990,7 +990,7 @@ namespace IttyBitty
 			wordField.SetValue(wordVal);
 			return wordField;
 		}
-		
+
 		WORD HighWord() const
 		{
 			return this->Word(1);

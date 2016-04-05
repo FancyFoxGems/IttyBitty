@@ -127,7 +127,7 @@ ByteField::operator PPBYTE()
 {
 	return &_pByte;
 }
-		
+
 ByteField::operator PCCHAR() const
 {
 	return (PCCHAR)this->operator PCBYTE();
@@ -137,7 +137,7 @@ ByteField::operator PPCHAR()
 {
 	return (PPCHAR)this->operator PPBYTE();
 }
-		
+
 ByteField::operator PBYTEFIELD() const
 {
 	return NULL;

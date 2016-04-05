@@ -14,16 +14,19 @@
 #endif
 
 
-using namespace std;
+//using namespace std;
 
 
 /* C/C++ KEYWORD ALIASES */
 
-#define STATIC static
-#define VIRTUAL virtual
 #define INLINE inline
 #define EXPLICIT explicit
-#define CONSTEXPR constexpr
+#define STATIC static
+#define FINAL final
+#define VIRTUAL virtual
+
+//#define CONSTEXPR constexpr	// NOTE: Not supported by AVR GCC?
+
 #define CONST const
 #define VOLATILE volatile
 #define CONST_VOLATILE const volatile
