@@ -259,7 +259,7 @@ namespace IttyBitty
 
 		virtual SIZE WordSize() const = 0;
 
-		virtual PCIWORDFIELD Words() const = 0;
+		virtual PPCWORDFIELD Words() const = 0;
 		virtual WORD Word(SIZE) const = 0;
 		virtual RIWORDFIELD Word(SIZE) = 0;
 	};
@@ -378,61 +378,292 @@ namespace IttyBitty
 	{
 	public:
 
-		BitField();
-		BitField(T);
-		explicit BitField(PVOID, SIZE = T_SIZE);
-		BitField(BYTE[T_SIZE]);
-		BitField(PBYTE[T_SIZE]);
-		BitField(BYTEFIELD[T_SIZE]);
-		BitField(PBYTEFIELD[T_SIZE]) ;
+		BitField() : _DisposalLevel(DisposalLevel::FieldData)
+		{
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
-		BitField(RCBITFIELD<T>);
+			for (SIZE i = 0; i < T_SIZE; i++)
+				_ByteFieldPtrs[i] = (PBYTEFIELD)NULL;
+		}
 
-		~BitField();
+		BitField(T tVal) : _DisposalLevel(DisposalLevel::None)
+		{
+			this->SetValue(tVal);
+		}
 
-		STATIC RBITFIELD<T> NULL_OBJECT();
+		EXPLICIT BitField(PVOID memAddr, SIZE byteWidth = T_SIZE) : _DisposalLevel(DisposalLevel::FieldData)
+		{
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
-		virtual CSIZE Size() const;
+			for (SIZE i = 0; i < T_SIZE; i++)
+			{
+				if (i < byteWidth)
+					_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + i);
+				else
+					_ByteFieldPtrs[i] = new ByteField((BYTE)0);
+			}
+		}
 
-		virtual SIZE BitWidth() const;
-		virtual SIZE ByteSize() const;
+		BitField(BYTE byteVals[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldData)
+		{
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
-		virtual operator CONST T() const;
-		virtual operator SIGNED_TYPE(CONST T)() const;
+			for (SIZE i = 0; i < T_SIZE; i++)
+				_ByteFieldPtrs[i] = new ByteField((BYTE)byteVals[i]);
+		}
 
-		virtual operator PCBYTE() const;	// NOTE: NOT thread-safe
-		virtual operator PPBYTE();			// NOTE: NOT thread-safe
+		BitField(PBYTE bytePtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldData)
+		{
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
-		virtual operator PCCHAR() const;	// NOTE: NOT thread-safe
-		virtual operator PPCHAR();			// NOTE: NOT thread-safe
+			for (SIZE i = 0; i < T_SIZE; i++)
+				_ByteFieldPtrs[i] = new ByteField(bytePtrs[i]);
+		}
+
+		BitField(BYTEFIELD byteFields[T_SIZE]) : _DisposalLevel(DisposalLevel::FieldPtrPtr) // TODO: FieldPtrs?
+		{
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+	
+			for (SIZE i = 0; i < T_SIZE; i++)
+				_ByteFieldPtrs[i] = &byteFields[i];
+		}
+
+		BitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) : _DisposalLevel(DisposalLevel::None)
+		{
+			_ByteFieldPtrs = byteFieldPtrs;
+		}
+
+		BitField(RCBITFIELD<T> other)
+		{
+			this->~BitField<T>();
+
+			// TODO: Use placement new or EXPLICIT reference assignment?
+			//*this = ByteField((PVOID)other.Bytes(), other.ByteSize());
+			new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
+		}
+
+		virtual ~BitField()
+		{
+			switch (_DisposalLevel)
+			{
+			case DisposalLevel::FieldData:
+
+				for (SIZE i = 0; i < T_SIZE; i++)
+					delete _ByteFieldPtrs[i];
+
+			case DisposalLevel::FieldPtrs:
+
+				delete[] _ByteFieldPtrs;
+				break;
 		
-		virtual operator PBYTEFIELD() const;
-		virtual operator PPBYTEFIELD();
+			case DisposalLevel::FieldPtrPtr:
 
-		virtual BIT operator[](SIZE) const;
-		virtual BITREF operator[](SIZE);
+				delete _ByteFieldPtrs;
+				break;
 
-		virtual BIT Bit(SIZE) const;
-		virtual BITREF Bit(SIZE);
-		virtual BIT Flip(SIZE);
+			case DisposalLevel::None:
 
-		virtual PPCBYTEFIELD Bytes() const;
-		virtual BYTE Byte(SIZE) const;
-		virtual RIBYTEFIELD Byte(SIZE);
+				break;
+			}
+		}
 
-		virtual T Value() const;
-		virtual VOID SetValue(T);
-		virtual VOID CopyFrom(RCIBITFIELD<T>);
+		STATIC RBITFIELD<T> NULL_OBJECT()
+		{
+			STATIC BITFIELD<T> NULL_BITFIELD((T)0);
+			return NULL_BITFIELD;
+		}
 
-		virtual T * Pointer() const;
-		virtual VOID PointTo(T *);
-		virtual VOID ReferenceFrom(RCIBITFIELD<T>);
+		virtual CSIZE Size() const
+		{
+			return sizeof(TYPEOF(*this));
+		}
 
-		virtual T Mask(T) const;
-		virtual T Mask(RCIBITFIELD<T>) const;
+		virtual SIZE BitWidth() const
+		{
+			return this->ByteSize() * BitPack::BitSize();
+		}
 
-		virtual PIBITFIELD<T> CloneByValue() const;
-		virtual PIBITFIELD<T> CloneByReference() const;
+		virtual SIZE ByteSize() const
+		{
+			return T_SIZE;
+		}
+
+		virtual operator CONST T() const
+		{
+			return this->Value();
+		}
+
+		virtual operator SIGNED_TYPE(CONST T)() const
+		{
+			return (SIGNED_TYPE(T))this->Value();
+		}
+
+		virtual operator PCBYTE() const
+		{
+			STATIC BYTE bytes[T_SIZE];
+
+			for (SIZE i = 0; i < T_SIZE; i ++)
+				bytes[i] = _ByteFieldPtrs[i]->Value();
+
+			return bytes;
+		}
+
+		virtual operator PPBYTE()
+		{
+			STATIC PPBYTE bytePtrs[T_SIZE];
+
+			for (SIZE i = 0; i < T_SIZE; i ++)
+				(*bytePtrs)[i] = _ByteFieldPtrs[i]->Pointer();
+
+			return *bytePtrs;
+		}
+
+		virtual operator PCCHAR() const
+		{
+			return (PCCHAR)this->operator PCBYTE();
+		}
+
+		virtual operator PPCHAR()
+		{
+			return (PPCHAR)this->operator PPBYTE();
+		}
+
+		virtual operator PBYTEFIELD() const
+		{
+			return *_ByteFieldPtrs;
+		}
+
+		virtual operator PPBYTEFIELD()
+		{
+			return _ByteFieldPtrs;
+		}
+
+		virtual BIT operator[](SIZE i) const
+		{
+			return this->Bit(i);
+		}
+
+		virtual BITREF operator[](SIZE i)
+		{
+			return this->Bit(i);
+		}
+
+		virtual BIT Bit(SIZE i) const
+		{
+			return (BIT)this->Bit(i);
+		}
+
+		virtual BITREF Bit(SIZE i)
+		{
+			if (i >= this->BitWidth())
+				return BitRef::NULL_OBJECT();
+	
+			BYTE byteIdx = i / T_SIZE;
+			BYTE bitIdx = i % T_SIZE;
+
+			return this->Byte(byteIdx).Bit(bitIdx);
+		}
+
+		virtual BIT Flip(SIZE i)
+		{
+			if (i >= this->BitWidth())
+				return BitRef::NULL_OBJECT();
+	
+			return this->Bit(i).Flip();
+		}
+
+		virtual PPCBYTEFIELD Bytes() const
+		{
+			return MAKE_CONST_PP(_ByteFieldPtrs);
+		}
+
+		virtual BYTE Byte(SIZE i) const
+		{
+			return _ByteFieldPtrs[i]->Value();
+		}
+
+		virtual RIBYTEFIELD Byte(SIZE i)
+		{
+			if (i >= this->ByteSize())
+				return ByteField::NULL_OBJECT();
+	
+			return *_ByteFieldPtrs[i];
+		}
+
+		virtual T Value() const
+		{
+			T tVal = 0;
+
+			for (SIZE i = 0; i < T_SIZE; i++)
+				tVal += _ByteFieldPtrs[i]->Value() * (256 << i);
+
+			return tVal;
+		}
+				
+		virtual VOID SetValue(T tVal)
+		{
+			this->~BitField<T>();
+
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+
+			for (SIZE i = 0; i < this->ByteSize(); i ++)
+				_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + i));
+
+			_DisposalLevel = DisposalLevel::FieldData;
+		}
+		
+		virtual VOID CopyFrom(RCIBITFIELD<T> other)
+		{	
+			this->SetValue(other.Value());
+		}
+		
+		T * Pointer() const
+		{
+			return (T *)_ByteFieldPtrs[0]->Pointer();
+		}
+		
+		virtual VOID PointTo(T * tPtr)
+		{
+			this->~BitField<T>();
+
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+
+			for (SIZE i = 0; i < this->ByteSize(); i ++)
+				_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + i);
+
+			_DisposalLevel = DisposalLevel::FieldData;
+		}
+		
+		virtual VOID ReferenceFrom(RCIBITFIELD<T> other)
+		{
+			this->~BitField<T>();
+	
+			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
+			*_ByteFieldPtrs = (PBYTEFIELD)other;
+
+			_DisposalLevel = DisposalLevel::FieldPtrs;
+		}
+		
+		virtual T Mask(T tMask) const
+		{
+			return MASK(this->Value(), tMask);
+		}
+		
+		virtual T Mask(RCIBITFIELD<T> other) const
+		{
+			return MASK(this->Value(), other.Value());
+		}
+		
+		virtual PIBITFIELD<T> CloneByValue() const
+		{
+			return new BitField<T>(this->Value());
+		}
+		
+		virtual PIBITFIELD<T> CloneByReference() const
+		{
+			return new BitField<T>((PVOID)_ByteFieldPtrs, T_SIZE);
+		}
+
 
 	protected:
 
@@ -488,26 +719,53 @@ namespace IttyBitty
 
 		//using BitField<WORD>::CloneByValue;
 		//using BitField<WORD>::CloneByReference;
+		
+		WordField() : BitField<WORD>() { }
 
-		INLINE WordField();
-		INLINE WordField(WORD);
-		INLINE WordField(RWORD);
-		INLINE WordField(PWORD);
-		INLINE WordField(BYTEFIELD[2]);
-		INLINE WordField(PBYTEFIELD[2]);
+		WordField(WORD wordVal) : BitField<WORD>()
+		{
+			this->SetValue(wordVal);
+		}
 
-		INLINE WordField(RCWORDFIELD);
+		WordField(RWORD rWord) : BitField<WORD>((PVOID)&rWord, 2) { }
 
-		STATIC RWORDFIELD NULL_OBJECT();
+		WordField(PWORD pWord) : BitField<WORD>((PVOID)pWord, 2) { }
 
-		virtual BYTE LowByte() const;
-		virtual RIBYTEFIELD SetLowByte(BYTE);
-		virtual BYTE HighByte() const;
-		virtual RIBYTEFIELD SetHighByte(BYTE);
+		WordField(BYTEFIELD byteFields[2]) : BitField<WORD>(byteFields) { }
 
-	protected:
+		WordField(PBYTEFIELD byteFieldPtrs[2]) : BitField<WORD>(byteFieldPtrs) { }
+		
+		WordField(RCWORDFIELD other) : BitField<WORD>(other) { }
 
-		PWORD _pWord;
+		STATIC RWORDFIELD NULL_OBJECT()
+		{
+			STATIC WORDFIELD NULL_WORDFIELD((WORD)0);
+			return NULL_WORDFIELD;
+		}
+
+		BYTE LowByte() const
+		{
+			return this->Byte(0);
+		}
+
+		RIBYTEFIELD SetLowByte(BYTE byteVal)
+		{
+			RIBYTEFIELD byteField = this->Byte(0);
+			byteField.SetValue(byteVal);
+			return byteField;
+		}
+
+		BYTE HighByte() const
+		{
+			return this->Byte(1);
+		}
+
+		RIBYTEFIELD SetHighByte(BYTE byteVal)
+		{
+			RIBYTEFIELD byteField = this->Byte(1);
+			byteField.SetValue(byteVal);
+			return byteField;
+		}
 	};
 
 
@@ -518,30 +776,153 @@ namespace IttyBitty
 	{
 	public:
 
-		INLINE ManyBitField();
-		INLINE ManyBitField(T);
-		INLINE explicit ManyBitField(PVOID, SIZE = T_SIZE);
-		INLINE ManyBitField(BYTE[T_SIZE]);
-		INLINE ManyBitField(PBYTE[T_SIZE]);
-		INLINE ManyBitField(BYTEFIELD[T_SIZE]);
-		INLINE ManyBitField(PBYTEFIELD[T_SIZE]);
-		INLINE ManyBitField(WORDFIELD[T_SIZE / 2]);
-		INLINE ManyBitField(PWORDFIELD[T_SIZE / 2]);
+		ManyBitField() : BitField<T>()
+		{
+			this->InitWordFields();
+		}
 
-		INLINE ManyBitField(RCMANYBITFIELD<T>);
+		ManyBitField(T tVal) : BitField<T>((PBYTE)&tVal)
+		{
+			this->InitWordFields();
+		}
 
-		~ManyBitField();
+		EXPLICIT ManyBitField(PVOID memAddr, SIZE byteWidth = T_SIZE) : BitField<T>(memAddr, byteWidth)
+		{
+			this->InitWordFields();
+		}
 
-		STATIC RMANYBITFIELD<T> NULL_OBJECT();
+		ManyBitField(BYTE byteVals[T_SIZE]) : BitField<T>(byteVals)
+		{
+			this->InitWordFields();
+		}
 
-		virtual SIZE WordSize() const;
+		ManyBitField(PBYTE bytePtrs[T_SIZE]) : BitField<T>(bytePtrs)
+		{
+			this->InitWordFields();
+		}
 
-		virtual operator PPWORD() const;
-		virtual operator PPSHORT() const;
+		ManyBitField(BYTEFIELD byteFields[T_SIZE]) : BitField<T>(byteFields)
+		{
+			this->InitWordFields();
+		}
 
-		virtual PCIWORDFIELD Words() const;
-		virtual WORD Word(SIZE) const;
-		virtual RIWORDFIELD Word(SIZE);
+		ManyBitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) : BitField<T>(byteFieldPtrs)
+		{
+			this->InitWordFields();
+		}
+
+		ManyBitField(WORDFIELD wordFields[T_SIZE / 2])
+		{
+			PBYTEFIELD byteFieldPtrs[4];
+
+			for (SIZE i = 0; i < 2; i ++)
+			{
+				byteFieldPtrs[i * 2] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2);
+				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2 + 1);
+			}
+	
+			this->~ManyBitField();
+
+			// TODO: Use placement new or EXPLICIT reference assignment?
+			//*this = ManyBitField(byteFieldPtrs);
+			new (this) ManyBitField(byteFieldPtrs);
+	
+			this->InitWordFields();
+		}
+
+		ManyBitField(PWORDFIELD wordFields[T_SIZE / 2])
+		{
+			PBYTEFIELD byteFieldPtrs[4];
+
+			for (SIZE i = 0; i < 2; i ++)
+			{
+				byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2);
+				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2 + 1);
+			}
+	
+			this->~ManyBitField();
+
+			// TODO: Use placement new or EXPLICIT reference assignment?
+			//*this = ManyBitField(byteFieldPtrs;
+			new (this) ManyBitField(byteFieldPtrs);
+	
+			this->InitWordFields();
+		}
+
+		ManyBitField(RCMANYBITFIELD<T> other) : BitField<T>(other)
+		{
+			this->InitWordFields();
+		}
+
+		virtual ~ManyBitField()
+		{
+			switch (_DisposalLevel)
+			{
+			case DisposalLevel::FieldData:
+
+				for (SIZE i = 0; i < T_SIZE; i++)
+					delete _WordFieldPtrs[i];
+
+			case DisposalLevel::FieldPtrs:
+
+				delete[] _WordFieldPtrs;
+				break;
+		
+			case DisposalLevel::FieldPtrPtr:
+
+				delete _WordFieldPtrs;
+				break;
+
+			case DisposalLevel::None:
+
+				break;
+			}
+		}
+
+		STATIC RMANYBITFIELD<T> NULL_OBJECT()
+		{
+			STATIC MANYBITFIELD<T> NULL_MANYBITFIELD((T)0);
+			return NULL_MANYBITFIELD;
+		}
+
+		virtual SIZE WordSize() const
+		{
+			return T_SIZE / 2;
+		}
+
+		virtual operator PPWORD() const
+		{
+			STATIC PPWORD wordPtrs[T_SIZE];
+
+			for (SIZE i = 0; i < T_SIZE; i ++)
+				(*wordPtrs)[i] = _WordFieldPtrs[i]->Pointer();
+
+			return *wordPtrs;
+		}
+
+		virtual operator PPSHORT() const
+		{
+			return (PPSHORT)this->operator PPWORD();
+		}
+
+		virtual PPCWORDFIELD Words() const
+		{
+			return MAKE_CONST_PP(_WordFieldPtrs);
+		}
+
+		virtual WORD Word(SIZE i) const
+		{
+			return (WORD)this->Word(i);
+		}
+
+		virtual RIWORDFIELD Word(SIZE i)
+		{
+			if (i > this->ByteSize() / 2)
+				return WordField::NULL_OBJECT();
+
+			return *_WordFieldPtrs[i];
+		}
+
 
 	protected:
 
@@ -549,9 +930,19 @@ namespace IttyBitty
 
 		using BitField<T>::_DisposalLevel;
 
-		VOID InitWordFields();
-
 		PPWORDFIELD _WordFieldPtrs;
+		
+
+		virtual VOID InitWordFields()
+		{
+			if (_WordFieldPtrs != NULL)
+				delete[] _WordFieldPtrs;
+	
+			_WordFieldPtrs = new PWORDFIELD[this->WordSize()];
+
+			for (SIZE i = 0; i < this->WordSize(); i++)
+				_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + i * 2));
+		}
 	};
 	
 
@@ -560,63 +951,58 @@ namespace IttyBitty
 	CLASS DWordField : public ManyBitField<DWORD>, public virtual IDWordField
 	{
 	public:
+		
+		DWordField() : ManyBitField<DWORD>() { }
 
-		INLINE DWordField() : ManyBitField<DWORD>() { }
-
-		INLINE DWordField(DWORD) : ManyBitField<DWORD>()
+		DWordField(DWORD wordVal) : ManyBitField<DWORD>()
 		{
 			this->SetValue(wordVal);
 		}
 
-		INLINE DWordField(RDWORD) : ManyBitField<DWORD>((PVOID)&rDWord, 4) { }
+		DWordField(RDWORD rDWord) : ManyBitField<DWORD>((PVOID)&rDWord, 4) { }
 
-		INLINE DWordField(PDWORD) : ManyBitField<DWORD>((PVOID)pDWord, 4) { }
+		DWordField(PDWORD pDWord) : ManyBitField<DWORD>((PVOID)pDWord, 4) { }
 
-		INLINE DWordField(BYTEFIELD[4]) : ManyBitField<DWORD>(byteFields) { }
+		DWordField(BYTEFIELD byteFields[4]) : ManyBitField<DWORD>(byteFields) { }
 
-		INLINE DWordField(PBYTEFIELD[4]) : ManyBitField<DWORD>(byteFieldPtrs) { }
+		DWordField(PBYTEFIELD byteFieldPtrs[4]) : ManyBitField<DWORD>(byteFieldPtrs) { }
 
-		INLINE DWordField(WORDFIELD[2]) : ManyBitField<DWORD>(wordFields) { }
+		DWordField(WORDFIELD wordFields[2]) : ManyBitField<DWORD>(wordFields) { }
 
-		INLINE DWordField(PWORDFIELD[2]) : ManyBitField<DWORD>(wordFieldPtrs) { }
+		DWordField(PWORDFIELD wordFieldPtrs[2]) : ManyBitField<DWORD>(wordFieldPtrs) { }
 		
+		DWordField(RCDWORDFIELD other) : ManyBitField<DWORD>(other) { }
 
-		INLINE DWordField(RCDWORDFIELD) : ManyBitField<DWORD>(other) { }
-
-
-		STATIC RDWORDFIELD NULL_OBJECT()
+		/*STATIC RDWORDFIELD NULL_OBJECT()
 		{
 			STATIC DWORDFIELD NULL_DWORDFIELD((DWORD)0);
 			return NULL_DWORDFIELD;
-		}
+		}*/
 
-
-		virtual WORD LowWord() const
+		WORD LowWord() const
 		{
 			return this->Word(0);
 		}
 
-		virtual RIWORDFIELD SetLowWord(WORD)
+		RIWORDFIELD SetLowWord(WORD wordVal)
 		{
 			RIWORDFIELD wordField = this->Word(0);
 			wordField.SetValue(wordVal);
 			return wordField;
 		}
-	
-		virtual WORD HighWord() const
+		
+		WORD HighWord() const
 		{
 			return this->Word(1);
 		}
 
-		virtual RIWORDFIELD SetHighWord(WORD)
+		RIWORDFIELD SetHighWord(WORD wordVal)
 		{
 			RIWORDFIELD wordField = this->Word(1);
 			wordField.SetValue(wordVal);
 			return wordField;
 		}
 	};
-
-#include "IttyBitty_bytes.cpp"
 }
 
 

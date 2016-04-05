@@ -20,7 +20,9 @@ using namespace std;
 /* C/C++ KEYWORD ALIASES */
 
 #define STATIC static
+#define VIRTUAL virtual
 #define INLINE inline
+#define EXPLICIT explicit
 #define CONSTEXPR constexpr
 #define CONST const
 #define VOLATILE volatile
