@@ -17,14 +17,8 @@
 #include "IttyBitty_bits.h"
 
 
-/* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING */
+/* SUPRESS COMPILER WARNINGS RELATED TO POINTER ARITHMETIC */
 
-IGNORE_WARNING(-Wstrict-aliasing)
-
-
-/* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING AND POINTER ARITHMETIC */
-
-IGNORE_WARNING(-Wstrict-aliasing)
 IGNORE_WARNING(-Wpointer-arith)
 
 
@@ -119,7 +113,7 @@ namespace IttyBitty
 	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
-
+	
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 			
@@ -283,6 +277,7 @@ namespace IttyBitty
 		virtual RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
+
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
 	CLASS ByteField : public virtual IByteField
@@ -385,7 +380,6 @@ namespace IttyBitty
 
 		BitField();
 		BitField(T);
-		BitField(T *);
 		explicit BitField(PVOID, SIZE = T_SIZE);
 		BitField(BYTE[T_SIZE]);
 		BitField(PBYTE[T_SIZE]);
@@ -394,7 +388,7 @@ namespace IttyBitty
 
 		BitField(RCBITFIELD<T>);
 
-		virtual ~BitField();
+		~BitField();
 
 		STATIC RBITFIELD<T> NULL_OBJECT();
 
@@ -448,7 +442,7 @@ namespace IttyBitty
 
 		DisposalLevel _DisposalLevel;
 	};
-
+	
 
 	/* [WORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 16-BIT (WORD) MEMORY BLOCKS */
 
@@ -504,8 +498,6 @@ namespace IttyBitty
 
 		INLINE WordField(RCWORDFIELD);
 
-		~WordField();
-
 		STATIC RWORDFIELD NULL_OBJECT();
 
 		virtual BYTE LowByte() const;
@@ -528,7 +520,6 @@ namespace IttyBitty
 
 		INLINE ManyBitField();
 		INLINE ManyBitField(T);
-		INLINE ManyBitField(T *);
 		INLINE explicit ManyBitField(PVOID, SIZE = T_SIZE);
 		INLINE ManyBitField(BYTE[T_SIZE]);
 		INLINE ManyBitField(PBYTE[T_SIZE]);
@@ -539,7 +530,7 @@ namespace IttyBitty
 
 		INLINE ManyBitField(RCMANYBITFIELD<T>);
 
-		virtual ~ManyBitField();
+		~ManyBitField();
 
 		STATIC RMANYBITFIELD<T> NULL_OBJECT();
 
@@ -562,7 +553,7 @@ namespace IttyBitty
 
 		PPWORDFIELD _WordFieldPtrs;
 	};
-
+	
 
 	/* [DWORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 32-BIT (DOUBLE WORD) MEMORY BLOCKS */
 
@@ -570,26 +561,62 @@ namespace IttyBitty
 	{
 	public:
 
-		INLINE DWordField();
-		INLINE DWordField(DWORD);
-		INLINE DWordField(RDWORD);
-		INLINE DWordField(PDWORD);
-		INLINE DWordField(BYTEFIELD[4]);
-		INLINE DWordField(PBYTEFIELD[4]);
-		INLINE DWordField(WORDFIELD[2]);
-		INLINE DWordField(PWORDFIELD[2]);
+		INLINE DWordField() : ManyBitField<DWORD>() { }
 
-		INLINE DWordField(RCDWORDFIELD);
+		INLINE DWordField(DWORD) : ManyBitField<DWORD>()
+		{
+			this->SetValue(wordVal);
+		}
 
-		~DWordField();
+		INLINE DWordField(RDWORD) : ManyBitField<DWORD>((PVOID)&rDWord, 4) { }
 
-		STATIC RDWORDFIELD NULL_OBJECT();
+		INLINE DWordField(PDWORD) : ManyBitField<DWORD>((PVOID)pDWord, 4) { }
 
-		virtual WORD LowWord() const;
-		virtual RIWORDFIELD SetLowWord(WORD);
-		virtual WORD HighWord() const;
-		virtual RIWORDFIELD SetHighWord(WORD);
+		INLINE DWordField(BYTEFIELD[4]) : ManyBitField<DWORD>(byteFields) { }
+
+		INLINE DWordField(PBYTEFIELD[4]) : ManyBitField<DWORD>(byteFieldPtrs) { }
+
+		INLINE DWordField(WORDFIELD[2]) : ManyBitField<DWORD>(wordFields) { }
+
+		INLINE DWordField(PWORDFIELD[2]) : ManyBitField<DWORD>(wordFieldPtrs) { }
+		
+
+		INLINE DWordField(RCDWORDFIELD) : ManyBitField<DWORD>(other) { }
+
+
+		STATIC RDWORDFIELD NULL_OBJECT()
+		{
+			STATIC DWORDFIELD NULL_DWORDFIELD((DWORD)0);
+			return NULL_DWORDFIELD;
+		}
+
+
+		virtual WORD LowWord() const
+		{
+			return this->Word(0);
+		}
+
+		virtual RIWORDFIELD SetLowWord(WORD)
+		{
+			RIWORDFIELD wordField = this->Word(0);
+			wordField.SetValue(wordVal);
+			return wordField;
+		}
+	
+		virtual WORD HighWord() const
+		{
+			return this->Word(1);
+		}
+
+		virtual RIWORDFIELD SetHighWord(WORD)
+		{
+			RIWORDFIELD wordField = this->Word(1);
+			wordField.SetValue(wordVal);
+			return wordField;
+		}
 	};
+
+#include "IttyBitty_bytes.cpp"
 }
 
 

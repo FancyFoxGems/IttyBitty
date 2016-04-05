@@ -319,6 +319,11 @@
 #define COPY_WORD(addr, word_offset, from_addr) COPY_BITS(addr, WORD_MASK(word_offset), from_addr)
 
 
+/* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING */
+
+IGNORE_WARNING(-Wstrict-aliasing)
+
+
 /* BIT-PACKING / BIT REFERENCE MACROS */
 
 #define PACK_BYTE(byte) (*reinterpret_cast<IttyBitty::PBITPACK>(&byte))
