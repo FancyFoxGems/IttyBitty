@@ -636,7 +636,7 @@ PIBITFIELD<T> BitField<T>::CloneByReference() const
 
 WordField::WordField() : BitField<WORD>() { }
 
-WordField::WordField(WORD wordVal)
+WordField::WordField(WORD wordVal) : BitField<WORD>()
 {
 	this->SetValue(wordVal);
 }
@@ -657,27 +657,15 @@ RWORDFIELD WordField::NULL_OBJECT()
 	return NULL_WORDFIELD;
 }
 
-WordField::operator PWORD()
-{
-	return _pWord;
-}
+//WordField::operator WORD()
+//{
+//	return (WORD)this->operator SHORT();
+//}
 
-WordField::operator RWORD()
-{
-	return *_pWord;
-}
-
-WordField::operator PSHORT()
-{
-	return (PSHORT)_pWord;
-	//return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
-}
-
-WordField::operator RSHORT()
-{
-	return (RSHORT)*_pWord;
-	//return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
-}
+//WordField::operator SHORT()
+//{
+//	return (((SHORT)(BYTE)this->Byte(1)) << 8) OR (BYTE)this->Byte(0);
+//}
 
 BYTE WordField::LowByte() const
 {
@@ -707,6 +695,101 @@ RIBYTEFIELD WordField::SetHighByte(BYTE byteVal)
 /* [IMANYBITFIELD] DEFINITION */
 
 template<typename T>
+ManyBitField<T>::ManyBitField() : BitField<T>()
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(T tVal) : BitField<T>((PBYTE)&tVal)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(T * tPtr) : BitField<T>((PPBYTE)tPtr)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(PVOID memAddr, SIZE byteWidth) : BitField<T>(memAddr, byteWidth)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(BYTEFIELD byteFields[T_SIZE]) : BitField<T>(byteFields)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) : BitField<T>(byteFieldPtrs)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(WORDFIELD wordFields[T_SIZE / 2])
+{
+	PBYTEFIELD byteFieldPtrs[4];
+
+	for (SIZE i = 0; i < 2; i ++)
+	{
+		byteFieldPtrs[i * 2] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2);
+		byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2 + 1);
+	}
+	
+	this->~ManyBitField();
+
+	// TODO: Use placement new or explicit reference assignment?
+	//*this = ByteField(byteFieldPtrs, 4);
+	new (this) ManyBitField(byteFieldPtrs, 4);
+	
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(PWORDFIELD wordFields[T_SIZE / 2])
+{
+	PBYTEFIELD byteFieldPtrs[4];
+
+	for (SIZE i = 0; i < 2; i ++)
+	{
+		byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2);
+		byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2 + 1);
+	}
+	
+	this->~ManyBitField();
+
+	// TODO: Use placement new or explicit reference assignment?
+	//*this = ByteField(byteFieldPtrs, 4);
+	new (this) ManyBitField(byteFieldPtrs, 4);
+	
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::ManyBitField(RCMANYBITFIELD<T> other) : BitField<T>(other)
+{
+	this->InitWordFields();
+}
+
+template<typename T>
+ManyBitField<T>::~ManyBitField()
+{
+	delete[] _WordFieldsPtr;
+}
+
+template<typename T>
+RMANYBITFIELD<T> ManyBitField<T>::NULL_OBJECT()
+{
+	STATIC RMANYBITFIELD<T> NULL_MANYBITFIELD((T)0);
+	return NULL_MANYBITFIELD;
+}
+
+template<typename T>
 SIZE ManyBitField<T>::WordSize() const
 {
 	return T_SIZE / 2;
@@ -727,57 +810,18 @@ RIWORDFIELD ManyBitField<T>::Word(SIZE i)
 	return *_WordFieldsPtr[i];
 	//return WordField(&_ByteFieldPtrs[i * 2]);
 }
-
-
-/* [DWORDFIELD] DEFINITION */
-
-//DWordField::DWordField() : ByteField(4)
+//
+//ManyBitField<T>::operator PPWORD() const
 //{
-//	this->InitWordFields();
-//}
-//
-//DWordField::DWordField(DWORD dwordVal) : ByteField((PBYTE)&dwordVal, 4)
-//{
-//	this->InitWordFields();
-//}
-//
-//DWordField::DWordField(PDWORD pDWord) : ByteField((PPBYTE)pDWord, 4)
-//{
-//	this->InitWordFields();
-//}
-//
-//DWordField::DWordField(PBYTEFIELD byteFields) : ByteField(byteFields, 4)
-//{
-//	this->InitWordFields();
-//}
-//
-//DWordField::DWordField(PWORDFIELD wordFields)
-//{
-//	PBYTEFIELD byteFieldPtrs[4];
-//
-//	for (SIZE i = 0; i < 2; i ++)
-//	{
-//		byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->LowByte();
-//		byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->HighByte();
-//	}
-//	
-//	this->~DWordField();
-//
-//	// TODO: Use placement new or explicit reference assignment?
-//	//*this = ByteField(byteFieldPtrs, 4);
-//	new (this) ByteField(byteFieldPtrs, 4);
-//	
-//	this->InitWordFields();
+//	return (PPWORD)this->operator PPWORD();
 //}
 //		
-//DWordField::DWordField(RCDWORDFIELD other) : ByteField(other) { }
-//
-//DWordField::~DWordField()
+//ManyBitField<T>::operator PPSHORT() const
 //{
-//	delete[] _WordFields;
+//	return (((LONG)(SHORT)this->Word(1)) << 16) OR (SHORT)this->Word(0);
 //}
 //
-//VOID DWordField::InitWordFields()
+//VOID ManyBitField<T>::InitWordFields()
 //{
 //	if (_WordFields != NULL)
 //		delete[] _WordFields;
@@ -787,16 +831,36 @@ RIWORDFIELD ManyBitField<T>::Word(SIZE i)
 //	for (SIZE i = 0; i < this->WordSize(); i++)
 //		_WordFields[i] = WordField((PBYTEFIELD)(this->Bytes() + i));
 //}
-//
-//DWordField::operator DWORD() const
-//{
-//	return (DWORD)this->operator LONG();
-//}
-//		
-//DWordField::operator LONG() const
-//{
-//	return (((LONG)(SHORT)this->Word(1)) << 16) OR (SHORT)this->Word(0);
-//}
+
+
+/* [DWORDFIELD] DEFINITION */
+
+DWordField::DWordField() : ManyBitField<DWORD>() { }
+
+DWordField::DWordField(DWORD wordVal) : ManyBitField<DWORD>()
+{
+	this->SetValue(wordVal);
+}
+
+DWordField::DWordField(RDWORD rDWord) : ManyBitField<DWORD>((PVOID)&rDWord, 4) { }
+
+DWordField::DWordField(PDWORD pDWord) : ManyBitField<DWORD>((PVOID)pDWord, 4) { }
+
+DWordField::DWordField(BYTEFIELD byteFields[4]) : ManyBitField<DWORD>(byteFields) { }
+
+DWordField::DWordField(PBYTEFIELD byteFieldPtrs[4]) : ManyBitField<DWORD>(byteFieldPtrs) { }
+
+DWordField::DWordField(WORDFIELD wordFields[2]) : ManyBitField<DWORD>(wordFields) { }
+
+DWordField::DWordField(PWORDFIELD wordFieldPtrs[2]) : ManyBitField<DWORD>(wordFieldPtrs) { }
+		
+DWordField::DWordField(RCDWORDFIELD other) : ManyBitField<DWORD>(other) { }
+
+RDWORDFIELD DWordField::NULL_OBJECT()
+{
+	STATIC DWORDFIELD NULL_DWORDFIELD((DWORD)0);
+	return NULL_DWORDFIELD;
+}
 
 WORD DWordField::LowWord() const
 {

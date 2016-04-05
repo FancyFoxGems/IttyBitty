@@ -248,12 +248,6 @@ namespace IttyBitty
 	INTERFACE IWordField : public virtual IBitField<WORD>
 	{
 	public:
-		
-		virtual operator PWORD() = 0;
-		virtual operator RWORD() = 0;
-		
-		virtual operator PSHORT() = 0;
-		virtual operator RSHORT() = 0;
 
 		virtual BYTE LowByte() const = 0;
 		virtual RIBYTEFIELD SetLowByte(BYTE) = 0;
@@ -271,9 +265,6 @@ namespace IttyBitty
 
 		virtual SIZE WordSize() const = 0;
 
-		virtual operator PPWORD() const = 0;
-		virtual operator PPSHORT() const = 0;
-
 		virtual PCIWORDFIELD Words() const = 0;
 		virtual WORD Word(SIZE) const = 0;
 		virtual RIWORDFIELD Word(SIZE) = 0;
@@ -285,12 +276,6 @@ namespace IttyBitty
 	INTERFACE IDWordField : public virtual IManyBitField<DWORD>
 	{
 	public:
-		
-		virtual operator PDWORD() = 0;
-		virtual operator RDWORD() = 0;
-		
-		virtual operator PLONG() = 0;
-		virtual operator RLONG() = 0;
 
 		virtual WORD LowWord() const = 0;
 		virtual RIWORDFIELD SetLowWord(WORD) = 0;
@@ -401,11 +386,11 @@ namespace IttyBitty
 		BitField();
 		BitField(T);
 		BitField(T *);
-		explicit BitField(PVOID, SIZE = SIZEOF(T));
-		BitField(BYTE[SIZEOF(T)]);
-		BitField(PBYTE[SIZEOF(T)]);
-		BitField(BYTEFIELD[SIZEOF(T)]);
-		BitField(PBYTEFIELD[SIZEOF(T)]) ;
+		explicit BitField(PVOID, SIZE = T_SIZE);
+		BitField(BYTE[T_SIZE]);
+		BitField(PBYTE[T_SIZE]);
+		BitField(BYTEFIELD[T_SIZE]);
+		BitField(PBYTEFIELD[T_SIZE]) ;
 
 		BitField(RCBITFIELD<T>);
 
@@ -521,13 +506,7 @@ namespace IttyBitty
 
 		~WordField();
 
-		INLINE STATIC RWORDFIELD NULL_OBJECT();
-		
-		INLINE virtual operator PWORD();
-		INLINE virtual operator RWORD();
-		
-		INLINE virtual operator PSHORT();
-		INLINE virtual operator RSHORT();
+		STATIC RWORDFIELD NULL_OBJECT();
 
 		virtual BYTE LowByte() const;
 		virtual RIBYTEFIELD SetLowByte(BYTE);
@@ -547,17 +526,18 @@ namespace IttyBitty
 	{
 	public:
 
-		using BitField<T>::ByteSize;
-
 		INLINE ManyBitField();
-		INLINE ManyBitField(SIZE);
-		INLINE ManyBitField(PVOID, SIZE);
-		INLINE ManyBitField(PBYTEFIELD, SIZE);
-		INLINE ManyBitField(BYTE[], SIZE);
-		INLINE ManyBitField(PBYTE[], SIZE);		// NOTE: BYTEs are copied - not referenced.)
-		INLINE ManyBitField(PBYTEFIELD[], SIZE);	// NOTE: BYTEs are copied - not referenced.)
+		INLINE ManyBitField(T);
+		INLINE ManyBitField(T *);
+		explicit INLINE ManyBitField(PVOID, SIZE = T_SIZE);
+		INLINE ManyBitField(BYTE[T_SIZE]);
+		INLINE ManyBitField(PBYTE[T_SIZE]);
+		INLINE ManyBitField(BYTEFIELD[T_SIZE]);
+		INLINE ManyBitField(PBYTEFIELD[T_SIZE]);
+		INLINE ManyBitField(WORDFIELD[T_SIZE / 2]);
+		INLINE ManyBitField(PWORDFIELD[T_SIZE / 2]);
 
-		INLINE ManyBitField(RCBITFIELD<T>);
+		INLINE ManyBitField(RCMANYBITFIELD<T>);
 
 		~ManyBitField();
 
@@ -586,24 +566,20 @@ namespace IttyBitty
 	{
 	public:
 
-		using ManyBitField<DWORD>::Word;
-
 		INLINE DWordField();
 		INLINE DWordField(DWORD);
+		INLINE DWordField(RDWORD);
 		INLINE DWordField(PDWORD);
-		INLINE DWordField(PBYTEFIELD);
-		INLINE DWordField(PWORDFIELD);
-		INLINE DWordField(PWORDFIELD[]);
+		INLINE DWordField(BYTEFIELD[4]);
+		INLINE DWordField(PBYTEFIELD[4]);
+		INLINE DWordField(WORDFIELD[2]);
+		INLINE DWordField(PWORDFIELD[2]);
 
 		INLINE DWordField(RCDWORDFIELD);
 
 		~DWordField();
-		
-		INLINE virtual operator PDWORD();
-		INLINE virtual operator RDWORD();
-		
-		INLINE virtual operator PLONG();
-		INLINE virtual operator RLONG();
+
+		STATIC RDWORDFIELD NULL_OBJECT();
 
 		virtual WORD LowWord() const;
 		virtual RIWORDFIELD SetLowWord(WORD);
