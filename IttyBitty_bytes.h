@@ -1,8 +1,9 @@
-/*******************************************************************************
+/**********************************************************************************
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ...
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #ifndef _ITTYBITTY_BYTES_H
 #define _ITTYBITTY_BYTES_H
@@ -22,6 +23,30 @@
 IGNORE_WARNING(-Wpointer-arith)
 
 
+/* CONDITIONALLY GENERATE ENDIAN-NESS MACRO */
+
+#ifdef __AVR_ARCH__
+	#if __AVR_ARCH__ <= 60		// AVR architecture 1-6
+		#define LITTLE_ENDIAN
+		#define ENDIANNESS LSBFIRST
+	#elif __AVR_ARCH__ >= 100	// AVR architecture 10 (Xmega)
+		#define BIG_ENDIAN
+		#define ENDIANNESS MSBFIRST
+	#else
+		#define TEST_ENDIANNESS
+	#endif
+#else
+	#define TEST_ENDIANNESS
+#endif
+
+#ifdef TEST_ENDIANNESS
+	#undef TEST_ENDIANNESS
+	#define ENDIANNESS (*(uint16_t *)"\0\xff" < 0x100)
+#endif
+
+#define IS_BIG_ENDIAN ENDIANNESS == MSBFIRST
+
+
 namespace IttyBitty
 {
 	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
@@ -39,11 +64,15 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using RIBITFIELD = IBitField<T> &;
 	template<typename T = BYTE>
+	using PPIBITFIELD = IBitField<T> **;
+	template<typename T = BYTE>
 	using CIBITFIELD =  const IBitField<T>;
 	template<typename T = BYTE>
 	using PCIBITFIELD = const IBitField<T> *;
 	template<typename T = BYTE>
 	using RCIBITFIELD = const IBitField<T> &;
+	template<typename T = BYTE>
+	using PPCIBITFIELD = const IBitField<T> **;
 	
 	class IByteField;
 	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD;
@@ -62,11 +91,15 @@ namespace IttyBitty
 	template<typename T = DWORD>
 	using RIMANYBITFIELD = IManyBitField<T> &;
 	template<typename T = DWORD>
+	using PPIMANYBITFIELD = IManyBitField<T> **;
+	template<typename T = DWORD>
 	using CIMANYBITFIELD =  const IManyBitField<T>;
 	template<typename T = DWORD>
 	using PCIMANYBITFIELD = const IManyBitField<T> *;
 	template<typename T = DWORD>
 	using RCIMANYBITFIELD = const IManyBitField<T> &;
+	template<typename T = DWORD>
+	using PPCIMANYBITFIELD = const IManyBitField<T> **;
 	
 	class IDWordField;
 	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD;
@@ -81,11 +114,15 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using RBITFIELD = BitField<T> &;
 	template<typename T = BYTE>
+	using PPBITFIELD = BitField<T> **;
+	template<typename T = BYTE>
 	using CBITFIELD =  const BitField<T>;
 	template<typename T = BYTE>
 	using PCBITFIELD = const BitField<T> *;
 	template<typename T = BYTE>
 	using RCBITFIELD = const BitField<T> &;
+	template<typename T = BYTE>
+	using PPCBITFIELD = const BitField<T> **;
 	
 	class ByteField;
 	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD;
@@ -104,11 +141,15 @@ namespace IttyBitty
 	template<typename T = DWORD>
 	using RMANYBITFIELD = ManyBitField<T> &;
 	template<typename T = DWORD>
+	using PPMANYBITFIELD = ManyBitField<T> **;
+	template<typename T = DWORD>
 	using CMANYBITFIELD =  const ManyBitField<T>;
 	template<typename T = DWORD>
 	using PCMANYBITFIELD = const ManyBitField<T> *;
 	template<typename T = DWORD>
 	using RCMANYBITFIELD = const ManyBitField<T> &;
+	template<typename T = DWORD>
+	using PPCMANYBITFIELD = const ManyBitField<T> **;
 	
 	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD;
@@ -200,15 +241,15 @@ namespace IttyBitty
 
 	protected:
 
-		IBitField() { };
-
 		ENUM DisposalLevel : BYTE
 		{
-			None = 0,
+			None		= 0,
 			FieldPtrPtr = 1,
-			FieldPtrs = 2,
-			FieldData = 3
+			FieldPtrs	= 2,
+			FieldData	= 3
 		};
+
+		IBitField() { };
 	};
 	
 
@@ -360,12 +401,11 @@ namespace IttyBitty
 		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
 		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 
-		VOLATILE UNION
+		VOLATILE UNION PACKED
 		{
 			PBYTE _pByte;
 			PBITPACK _pBitPack;
-		}
-		PACKED;
+		};
 
 		BOOL _DisposeByte;
 	};
@@ -398,7 +438,11 @@ namespace IttyBitty
 			for (SIZE i = 0; i < T_SIZE; i++)
 			{
 				if (i < byteWidth)
+			#if IS_BIG_ENDIAN
+					_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + T_SIZE - 1 - i);
+			#else
 					_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + i);
+			#endif
 				else
 					_ByteFieldPtrs[i] = new ByteField((BYTE)0);
 			}
@@ -607,7 +651,11 @@ namespace IttyBitty
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
+			#if IS_BIG_ENDIAN
+				_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + T_SIZE - 1 - i));
+			#else
 				_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + i));
+			#endif
 
 			_DisposalLevel = DisposalLevel::FieldData;
 		}
@@ -629,7 +677,11 @@ namespace IttyBitty
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
+			#if IS_BIG_ENDIAN
+				_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + T_SIZE - 1 - i);
+			#else
 				_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + i);
+			#endif
 
 			_DisposalLevel = DisposalLevel::FieldData;
 		}
@@ -813,12 +865,17 @@ namespace IttyBitty
 
 		ManyBitField(WORDFIELD wordFields[T_SIZE / 2])
 		{
-			PBYTEFIELD byteFieldPtrs[4];
+			PBYTEFIELD byteFieldPtrs[T_SIZE];
 
-			for (SIZE i = 0; i < 2; i ++)
+			for (SIZE i = 0; i < T_SIZE / 2; i ++)
 			{
+			#if IS_BIG_ENDIAN
+				byteFieldPtrs[i * 2] = ((PWORDFIELD)(&wordFields + i))->Byte(T_SIZE - 2 - i * 2);
+				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(&wordFields + i))->Byte(T_SIZE - 1 - i * 2);
+			#else
 				byteFieldPtrs[i * 2] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2);
 				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(&wordFields + i))->Byte(i * 2 + 1);
+			#endif
 			}
 	
 			this->~ManyBitField();
@@ -832,12 +889,17 @@ namespace IttyBitty
 
 		ManyBitField(PWORDFIELD wordFields[T_SIZE / 2])
 		{
-			PBYTEFIELD byteFieldPtrs[4];
+			PBYTEFIELD byteFieldPtrs[T_SIZE];
 
-			for (SIZE i = 0; i < 2; i ++)
+			for (SIZE i = 0; i < T_SIZE / 2; i ++)
 			{
+			#if IS_BIG_ENDIAN
+				byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->Byte(T_SIZE - 2 - i * 2);
+				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->Byte(T_SIZE - 1 - i * 2);
+			#else
 				byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2);
 				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->Byte(i * 2 + 1);
+			#endif
 			}
 	
 			this->~ManyBitField();
@@ -941,7 +1003,11 @@ namespace IttyBitty
 			_WordFieldPtrs = new PWORDFIELD[this->WordSize()];
 
 			for (SIZE i = 0; i < this->WordSize(); i++)
+			#if IS_BIG_ENDIAN
+				_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + T_SIZE - 2 - i * 2));
+			#else
 				_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + i * 2));
+			#endif
 		}
 	};
 	

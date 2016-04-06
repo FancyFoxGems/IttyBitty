@@ -1,8 +1,9 @@
-/*******************************************************************************
+/**********************************************************************************
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #ifndef _ITTYBITTY_REGISTERS_H
 #define _ITTYBITTY_REGISTERS_H
@@ -39,9 +40,9 @@
 
 /* BIT-PACKED REGISTER TYPE ALIASES */
 
-typedef volatile IttyBitty::BYTEFIELD REG8, * PREG8, RREG8;
-typedef volatile IttyBitty::WORDFIELD REG16, * PREG16, RREG16;
-typedef volatile IttyBitty::DWORDFIELD REG32, * PREG32, RREG32;
+typedef volatile IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8;
+typedef volatile IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16;
+typedef volatile IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32;
 
 
 /* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */

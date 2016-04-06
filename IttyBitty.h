@@ -1,13 +1,16 @@
-/*******************************************************************************
+/**********************************************************************************
 * Name:		IttyBitty Library
 * Created:	3/20/2016
 * Author:	Tom Biuso <tjbtech@yahoo.com>
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #ifndef _ITTYBITTY_
 #define _ITTYBITTY_ "FTW"
+
+#ifdef __AVR__	// NOTE: AVR architecture compatibility only!
 
 
 /*******************************************************************************
@@ -93,5 +96,7 @@
 	#include "IttyBitty_led.h"
 #endif
 
+
+#endif	// __AVR__
 
 #endif

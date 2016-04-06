@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**********************************************************************************
 * [IttyBitty_base.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
 *
 *
@@ -18,8 +18,9 @@
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #define ITTYBITTY_BASE_ONLY
 

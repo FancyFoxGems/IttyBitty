@@ -1,10 +1,11 @@
-/*******************************************************************************
+/**********************************************************************************
 * [IttyBitty_type_traits.h]: METAFUNCTIONS FOR TEMPLATED TYPING GOODNESS
 *	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL 
 *		as well as various versions of C++ Standard Library [VERSION(C++) >= 11]
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #if defined(_TYPE_TRAITS_H) || defined(__TYPE_TRAITS_H) || _
 		defined(_TYPE_TRAITS_H_) || defined(__TYPE_TRAITS_H_) || defined (_INC_TYPE_TRAITS)

@@ -1,8 +1,9 @@
-/*******************************************************************************
+/**********************************************************************************
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
-* Copyright © 2016 Thomas J. Biuso III ALL RIGHTS RESERVED.
-*******************************************************************************/
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+***********************************************************************************/
 
 #ifndef _ITTYBITTY_UTIL_H
 #define _ITTYBITTY_UTIL_H
@@ -36,7 +37,9 @@
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
 #define PACKED __attribute__ ((packed))
-#define BITFIELD_STRUCT STRUCT PACKED
+#define PACKED_UNION UNION PACKED
+#define PACKED_STRUCT STRUCT PACKED
+#define BITFIELD_STRUCT PACKED_STRUCT
 
 #define SIZEOF(var) sizeof(var)
 
