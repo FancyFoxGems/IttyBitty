@@ -20,6 +20,7 @@
 
 /* C/C++ KEYWORD ALIASES */
 
+#define EXTERN extern
 #define INLINE inline
 #define EXPLICIT explicit
 #define STATIC static

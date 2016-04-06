@@ -20,7 +20,7 @@
 
 /* [register] DECLARATION ALIAS */
 
-#define REG volatile register
+#define REGISTER volatile register
 
 
 /* REGISTER-BOUND VARIABLE DECLARATION MACROS */
@@ -40,9 +40,11 @@
 
 /* BIT-PACKED REGISTER TYPE ALIASES */
 
-typedef volatile IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8;
-typedef volatile IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16;
-typedef volatile IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32;
+typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8;
+typedef IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16;
+typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32;
+
+#define NEW_REG8(reg_addr) (new ByteField((PBYTE)reg_addr))
 
 
 /* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */

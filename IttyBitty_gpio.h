@@ -31,29 +31,6 @@
 namespace IttyBitty
 {
 	typedef SIZE PIN_NUMBER;
-	
-	template<PIN_NUMBER pin_number = 0>
-	struct _Pin;
-	template<PIN_NUMBER pin_number = 0>
-	using _pin_t = volatile struct _Pin<pin_number>;
-	template<PIN_NUMBER pin_number = 0>
-	using Pin = volatile struct _Pin<pin_number>;
-	template<PIN_NUMBER pin_number = 0>
-	using PIN = volatile struct _Pin<pin_number>;
-	template<PIN_NUMBER pin_number = 0>
-	using PPIN = volatile struct _Pin<pin_number> *;
-	template<PIN_NUMBER pin_number = 0>
-	using RPIN = volatile struct _Pin<pin_number> &;
-	template<PIN_NUMBER pin_number = 0>
-	using PPPIN = volatile struct _Pin<pin_number> **;
-	template<PIN_NUMBER pin_number = 0>
-	using CPIN = const struct _Pin<pin_number>;
-	template<PIN_NUMBER pin_number = 0>
-	using PCPIN = const struct _Pin<pin_number> *;
-	template<PIN_NUMBER pin_number = 0>
-	using RCPIN = const struct _Pin<pin_number> &;
-	template<PIN_NUMBER pin_number = 0>
-	using PPCPIN = const struct _Pin<pin_number> **;
 
 	struct _PortRegisters;
 	typedef volatile struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG;
@@ -68,41 +45,45 @@ namespace IttyBitty
 	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 
-	template<PIN_NUMBER pin_number>
-	STRUCT _Pin
+	ENUM PinMode : BYTE
 	{
-	public:
-
-		ENUM PinMode : BYTE
-		{
-			Input	= INPUT,
-			Output	= OUTPUT,
-			PullUp	= INPUT_PULLUP
-		};
-
-		ENUM PinState : BYTE
-		{
-			// Input mode states
-			TriStateInput	= 0x0,	// 00b; PinMode::Input OR HIGH_Z << PinMode::Input
-			BinaryInput		= 0x2,	// 10b; PinMode::Input OR INPUT_PULLUP << PinMode::Input
-
-			// Output mode states
-			CurrentSink		= 0x1,	// 01b; PinMode::Output OR LOW << PinMode::Output
-			CurrentSource	= 0x3,	// 11b; PinMode::Output OR HIGH << PinMode::Output
-		};
+		Input	= INPUT,
+		Output	= OUTPUT,
+		PullUp	= INPUT_PULLUP
 	};
 
-	typedef _Pin<0x0>::PinMode PinMode;
-	typedef _Pin<0x0>::PinState PinState;
+	ENUM PinState : BYTE
+	{
+		// Input mode states
+		TriStateInput	= 0x0,	// 00b; PinMode::Input OR HIGH_Z << PinMode::Input
+		BinaryInput		= 0x2,	// 10b; PinMode::Input OR INPUT_PULLUP << PinMode::Input
+
+		// Output mode states
+		CurrentSink		= 0x1,	// 01b; PinMode::Output OR LOW << PinMode::Output
+		CurrentSource	= 0x3,	// 11b; PinMode::Output OR HIGH << PinMode::Output
+	};
 
 
 	STRUCT _PortRegisters
 	{
 	public:
 
-		RREG8 Direction;
-		RREG8 Output;
-		RREG8 Input;
+		_PortRegisters(PREG8 directionReg, PREG8 outputReg, PREG8 inputReg) 
+			: Direction(directionReg), Output(outputReg), Input(inputReg) { }
+
+		_PortRegisters(PBYTE directionRegAddr, PBYTE outputRegAddr, PBYTE inputRegAddr) 
+			: Direction(NEW_REG8(directionRegAddr)), Output(NEW_REG8(outputRegAddr)), Input(NEW_REG8(inputRegAddr)) { }
+
+		~_PortRegisters()
+		{
+			delete this->Direction;
+			delete this->Output;
+			delete this->Input;
+		}
+
+		PREG8 Direction;
+		PREG8 Output;
+		PREG8 Input;
 	};
 
 
@@ -110,17 +91,63 @@ namespace IttyBitty
 	{
 	public:
 
-		_Port(RREG8, RREG8, RREG8);
+		_Port() : _PortReg(new PortReg(NEW_REG8(DDRC), NEW_REG8(PORTC), NEW_REG8(PINC))) { }
 
-		~_Port();
+		//_Port(PREG8, PREG8, PREG8) { }
 
-		VOID SetPinMode(PinMode = PinMode::Output);
+		~_Port()
+		{
+			delete _PortReg;
+		}
+
+		STATIC RPORT NULL_OBJECT()
+		{
+			STATIC PORT NULL_PORT = Port();
+			return NULL_PORT;
+		}
+
+		VOID SetPinMode(PinMode = PinMode::Output) { }
 
 
 
 	protected:
 
-		PORTREG _PortReg;
+		PPORTREG _PortReg;
+	};
+
+
+	EXTERN RPORT NULL_PORT;
+	
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	struct _Pin;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using _pin_t = volatile struct _Pin<pin_number, port>;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using Pin = volatile struct _Pin<pin_number, port>;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using PIN = volatile struct _Pin<pin_number, port>;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using PPIN = volatile struct _Pin<pin_number, port> *;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using RPIN = volatile struct _Pin<pin_number, port> &;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using PPPIN = volatile struct _Pin<pin_number, port> **;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using CPIN = const struct _Pin<pin_number, port>;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using PCPIN = const struct _Pin<pin_number, port> *;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using RCPIN = const struct _Pin<pin_number, port> &;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using PPCPIN = const struct _Pin<pin_number, port> **;
+
+
+	template<PIN_NUMBER pin_number, RPORT port>
+	STRUCT _Pin
+	{
+	public:
+
+
 	};
 
 
