@@ -347,21 +347,12 @@ namespace IttyBitty
 	/* [BITPACK]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
 
 	struct _BitPack;
-	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK;
+	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK, && RRBITPACK;
 	typedef const struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
 
 	BITFIELD_STRUCT _BitPack
 	{
 	public:
-
-		BIT b0 : 1;
-		BIT b1 : 1;
-		BIT b2 : 1;
-		BIT b3 : 1;
-		BIT b4 : 1;
-		BIT b5 : 1;
-		BIT b6 : 1;
-		BIT b7 : 1;
 
 		_BitPack(RCBITPACK other);
 
@@ -372,6 +363,16 @@ namespace IttyBitty
 		BIT operator[](SIZE i) const;
 
 		BIT Bit(SIZE i) const;
+
+		
+		BIT b0 : 1;
+		BIT b1 : 1;
+		BIT b2 : 1;
+		BIT b3 : 1;
+		BIT b4 : 1;
+		BIT b5 : 1;
+		BIT b6 : 1;
+		BIT b7 : 1;
 	};
 }
 

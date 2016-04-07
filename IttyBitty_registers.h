@@ -40,9 +40,9 @@
 
 /* BIT-PACKED REGISTER TYPE ALIASES */
 
-typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8;
-typedef IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16;
-typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32;
+typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
+typedef IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16, && RRREG16;
+typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 
 #define NEW_REG8(reg_addr) (new ByteField((PBYTE)reg_addr))
 

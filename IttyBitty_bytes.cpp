@@ -10,9 +10,11 @@ using namespace IttyBitty;
 
 /* [BITPROXY/BITREF]: PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
 
-_BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i) : _Parent(pParent), _BitMask(BIT_MASK(i)) { }
+_BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i) 
+	: _Parent(pParent), _BitMask(BIT_MASK(i)) { }
 
-_BitProxy::_BitProxy(RCBITREF other) : _Parent(other.Parent()), _BitMask(other.BitMask()) { }
+_BitProxy::_BitProxy(RCBITREF other) 
+	: _Parent(other.Parent()), _BitMask(other.BitMask()) { }
 
 _BitProxy::~_BitProxy() { }
 
@@ -66,18 +68,26 @@ ByteField::ByteField()
 	new (this) ByteField((BYTE)0);
 }
 
-ByteField::ByteField(RCBYTE byteVal) : _pByte(new BYTE(byteVal)), _DisposeByte(true) { }
+ByteField::ByteField(RCBYTE byteVal) 
+	: _pByte(new BYTE(byteVal)), _DisposeByte(true) { }
 
-ByteField::ByteField(RBYTE byteRef) : _pByte(&byteRef), _DisposeByte(false) { }
+ByteField::ByteField(RBYTE byteRef) 
+	: _pByte(&byteRef), _DisposeByte(false) { }
 
-ByteField::ByteField(PBYTE pByte) : _pByte(pByte), _DisposeByte(false) { }
+ByteField::ByteField(PBYTE pByte) 
+	: _pByte(pByte), _DisposeByte(false) { }
+
+ByteField::ByteField(RRBYTEFIELD other)
+{
+	this->~ByteField();
+	new (this) ByteField((RBYTE)other);
+
+	other._DisposeByte = false;
+}
 
 ByteField::ByteField(RCBYTEFIELD other)
 {
 	this->~ByteField();
-
-	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField(other.ByteRef());
 	new (this) ByteField((RBYTE)other);
 }
 	
@@ -92,21 +102,19 @@ RBYTEFIELD ByteField::NULL_OBJECT()
 	STATIC BYTEFIELD NULL_BYTEFIELD((BYTE)0);
 	return NULL_BYTEFIELD;
 }
-
-CSIZE ByteField::Size() const
+				
+RBYTEFIELD ByteField::operator=(RRBYTEFIELD other)
 {
-	return sizeof(ByteField);
+	*this = ByteField(other);
 
+	return *this;
 }
-
-SIZE ByteField::BitWidth() const
+				
+RBYTEFIELD ByteField::operator=(RCBYTEFIELD other)
 {
-	return this->ByteSize() * BitPack::BitSize();
-}
+	*this = ByteField(other);
 
-SIZE ByteField::ByteSize() const
-{
-	return 1;
+	return *this;
 }
 
 ByteField::operator CBYTE() const
@@ -158,6 +166,22 @@ BIT ByteField::operator[](SIZE i) const
 BITREF ByteField::operator[](SIZE i)
 {
 	return this->Bit(i);
+}
+
+CSIZE ByteField::Size() const
+{
+	return sizeof(ByteField);
+
+}
+
+SIZE ByteField::BitWidth() const
+{
+	return this->ByteSize() * BitPack::BitSize();
+}
+
+SIZE ByteField::ByteSize() const
+{
+	return 1;
 }
 
 BIT ByteField::Bit(SIZE i) const

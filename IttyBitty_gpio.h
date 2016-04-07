@@ -33,15 +33,15 @@ namespace IttyBitty
 	typedef SIZE PIN_NUMBER;
 
 	struct _PortRegisters;
-	typedef volatile struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG;
+	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
 	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
 
 	struct _Port;
-	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT;
+	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
 	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
 	
 	struct GPIO;
-	typedef GPIO _gpio_t, * PGPIO, & RGPIO, ** PPGPIO;
+	typedef GPIO _gpio_t, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
 	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 
@@ -68,22 +68,41 @@ namespace IttyBitty
 	{
 	public:
 
-		_PortRegisters(PREG8 directionReg, PREG8 outputReg, PREG8 inputReg) 
-			: Direction(directionReg), Output(outputReg), Input(inputReg) { }
+		_PortRegisters()  : DirectionReg(ByteField::NULL_OBJECT()), OutputReg(ByteField::NULL_OBJECT()), InputReg(ByteField::NULL_OBJECT()) { }
 
-		_PortRegisters(PBYTE directionRegAddr, PBYTE outputRegAddr, PBYTE inputRegAddr) 
-			: Direction(NEW_REG8(directionRegAddr)), Output(NEW_REG8(outputRegAddr)), Input(NEW_REG8(inputRegAddr)) { }
+		_PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg) 
+			: DirectionReg(directionReg), OutputReg(outputReg), InputReg(inputReg) { }
 
-		~_PortRegisters()
+		_PortRegisters(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr) 
 		{
-			delete this->Direction;
-			delete this->Output;
-			delete this->Input;
+			this->DirectionReg	= ByteField((RBYTE)directionRegAddr);
+			this->OutputReg 	= ByteField((RBYTE)outputRegAddr);
+			this->InputReg		= ByteField((RBYTE)inputRegAddr);
 		}
 
-		PREG8 Direction;
-		PREG8 Output;
-		PREG8 Input;
+		_PortRegisters(RCPORTREG other)  : DirectionReg(other.DirectionReg), OutputReg(other.OutputReg), InputReg(other.InputReg) { }
+
+		VIRTUAL ~_PortRegisters() { }
+
+		STATIC RPORTREG NULL_OBJECT()
+		{
+			STATIC PORTREG NULL_PORTREG = _PortRegisters();
+			return NULL_PORTREG;
+		}
+
+		RPORTREG operator=(RCPORTREG other) 
+		{
+			this->DirectionReg	= ByteField(other.DirectionReg);
+			this->OutputReg 	= ByteField(other.OutputReg);
+			this->InputReg		= ByteField(other.InputReg);
+
+			return *this;
+		}
+
+
+		RREG8 DirectionReg	= ByteField::NULL_OBJECT();
+		RREG8 OutputReg 	= ByteField::NULL_OBJECT();
+		RREG8 InputReg		= ByteField::NULL_OBJECT();
 	};
 
 
@@ -91,14 +110,25 @@ namespace IttyBitty
 	{
 	public:
 
-		_Port() : _PortReg(new PortReg(NEW_REG8(DDRC), NEW_REG8(PORTC), NEW_REG8(PINC))) { }
+		_Port() : PortRegisters(PortReg::NULL_OBJECT()) { }
+		
 
-		//_Port(PREG8, PREG8, PREG8) { }
-
-		~_Port()
+		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg) 
 		{
-			delete _PortReg;
+			 this->PortRegisters = PortReg(directionReg, outputReg, inputReg);
 		}
+
+		_Port(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr) 
+		{
+			 this->PortRegisters = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
+		}
+
+		_Port(RCPORT other)
+		{
+			this->PortRegisters = other.PortRegisters;
+		}
+
+		~_Port() { }
 
 		STATIC RPORT NULL_OBJECT()
 		{
@@ -112,7 +142,7 @@ namespace IttyBitty
 
 	protected:
 
-		PPORTREG _PortReg;
+		RPORTREG PortRegisters = PortReg::NULL_OBJECT();
 	};
 
 
@@ -121,17 +151,19 @@ namespace IttyBitty
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
 	struct _Pin;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using _pin_t = volatile struct _Pin<pin_number, port>;
+	using _pin_t = struct _Pin<pin_number, port>;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using Pin = volatile struct _Pin<pin_number, port>;
+	using Pin = struct _Pin<pin_number, port>;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using PIN = volatile struct _Pin<pin_number, port>;
+	using PIN = struct _Pin<pin_number, port>;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using PPIN = volatile struct _Pin<pin_number, port> *;
+	using PPIN = struct _Pin<pin_number, port> *;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using RPIN = volatile struct _Pin<pin_number, port> &;
+	using RPIN = struct _Pin<pin_number, port> &;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
-	using PPPIN = volatile struct _Pin<pin_number, port> **;
+	using PPPIN = struct _Pin<pin_number, port> **;
+	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	using RRPIN = struct _Pin<pin_number, port> &&;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
 	using CPIN = const struct _Pin<pin_number, port>;
 	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
