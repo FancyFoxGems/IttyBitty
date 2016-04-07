@@ -8,6 +8,39 @@
 using namespace IttyBitty;
 
 
-RPORT NULL_PORT = Port::NULL_OBJECT();
+#define _INITIALIZE_PORT(port_letter) PORT Port##port_letter((RVBYTE)DDR##port_letter, (RVBYTE)PORT##port_letter, (RVBYTE)PIN##port_letter);
 
-RGPIO IO = GPIO::Instance();
+#ifdef PORTA
+	_INITIALIZE_PORT(A)
+#endif
+
+#ifdef PORTB
+	_INITIALIZE_PORT(B)
+#endif
+
+#ifdef PORTC
+	_INITIALIZE_PORT(C)
+#endif
+
+#ifdef PORTD
+	_INITIALIZE_PORT(D)
+#endif
+
+#ifdef PORTE
+	_INITIALIZE_PORT(E)
+#endif
+
+#ifdef PORTF
+	_INITIALIZE_PORT(F)
+#endif
+
+#ifdef PORTG
+	_INITIALIZE_PORT(G)
+#endif
+
+#ifdef PORTH
+	_INITIALIZE_PORT(H)
+#endif
+
+
+//RCIOPORTS GPIO_PORTS = IOPorts::Instance();

@@ -40,9 +40,9 @@ namespace IttyBitty
 	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
 	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
 	
-	struct GPIO;
-	typedef GPIO _gpio_t, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
-	typedef const GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
+	struct _GPIO;
+	typedef _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
+	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 
 	ENUM PinModeBasic : BYTE
@@ -181,12 +181,12 @@ namespace IttyBitty
 			return Registers.OutputReg[p];
 		}
 
-		VIRTUAL VOID SetPin(PIN_NUMBER p) const
+		VIRTUAL VOID SetPin(PIN_NUMBER p)
 		{
 			Registers.OutputReg[p] = 1;
 		}
 
-		VIRTUAL VOID ResetPin(PIN_NUMBER p) const
+		VIRTUAL VOID ResetPin(PIN_NUMBER p)
 		{
 			Registers.OutputReg[p] = 0;
 		}
@@ -196,37 +196,35 @@ namespace IttyBitty
 
 		RPORTREG Registers = PortReg::NULL_OBJECT();
 	};
-	
-	EXTERN RPORT NULL_PORT;
 
 	
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	struct _Pin;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using _pin_t = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using Pin = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using PIN = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using PPIN = struct _Pin<pin_number, port> *;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using RPIN = struct _Pin<pin_number, port> &;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using PPPIN = struct _Pin<pin_number, port> **;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using RRPIN = struct _Pin<pin_number, port> &&;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using CPIN = const struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using PCPIN = const struct _Pin<pin_number, port> *;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using RCPIN = const struct _Pin<pin_number, port> &;
-	template<PIN_NUMBER pin_number = 0x0, RPORT port = NULL_PORT>
+	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	using PPCPIN = const struct _Pin<pin_number, port> **;
 
 
-	template<PIN_NUMBER pin_number, RPORT port>
+	template<PIN_NUMBER pin_number, PPORT port>
 	STRUCT _Pin
 	{
 	public:
@@ -237,176 +235,84 @@ namespace IttyBitty
 
 		STATIC PinMode Mode()
 		{
-			return port.GetPinMode(pin_number);
+			return port->GetPinMode(pin_number);
 		}
 
 		STATIC VOID Mode(PinMode mode)
 		{
-			port.SetPinMode(pin_number, mode);
+			port->SetPinMode(pin_number, mode);
 		}
 
 		STATIC VOID BasicMode(PinModeBasic basicMode)
 		{
-			port.SetPinModeBasic(pin_number, basicMode);
+			port->SetPinModeBasic(pin_number, basicMode);
 		}
 
 		STATIC BIT Read()
 		{
-			return port.ReadPin(pin_number);
+			return port->ReadPin(pin_number);
 		}
 
 		STATIC VOID Set()
 		{
-			return port.SetPin(pin_number);
+			return port->SetPin(pin_number);
 		}
 
 		STATIC VOID Reset()
 		{
-			return port.ResetPin(pin_number);
+			return port->ResetPin(pin_number);
 		}
 
 		STATIC VOID Clear()
 		{
-			return port.ResetPin(pin_number);
+			return port->ResetPin(pin_number);
 		}
-	};
-	
-	
-#define DECLARE_PORT(port_letter) RPORT Port##port_letter = Port::NULL_OBJECT(); 
-#define INITIALIZE_PORT(port_letter) this->Port##port_letter = Port((RVBYTE)DDR##port_letter, (RVBYTE)PORT##port_letter, (RVBYTE)PIN##port_letter);
-
-
-	STRUCT GPIO FINAL
-	{
-	private:
-
-		GPIO()
-		{
-		#ifdef PORTA
-			INITIALIZE_PORT(A)
-		#endif
-
-		#ifdef PORTB
-			INITIALIZE_PORT(B)
-		#endif
-
-		#ifdef PORTC
-			INITIALIZE_PORT(C)
-		#endif
-
-		#ifdef PORTD
-			INITIALIZE_PORT(D)
-		#endif
-
-		#ifdef PORTE
-			INITIALIZE_PORT(E)
-		#endif
-
-		#ifdef PORTF
-			INITIALIZE_PORT(F)
-		#endif
-
-		#ifdef PORTG
-			INITIALIZE_PORT(G)
-		#endif
-
-		#ifdef PORTH
-			INITIALIZE_PORT(H)
-		#endif
-		}
-
-
-	public:
-
-		~GPIO()
-		{
-			delete[] _Ports;
-		}
-		
-		STATIC RGPIO Instance()
-		{
-			STATIC GPIO INSTANCE = GPIO();
-			return INSTANCE;
-		}
-		
-
-	#ifdef PORTA
-		DECLARE_PORT(A)
-	#endif
-
-	#ifdef PORTB
-		DECLARE_PORT(B)
-	#endif
-
-	#ifdef PORTC
-		DECLARE_PORT(C)
-	#endif
-
-	#ifdef PORTD
-		DECLARE_PORT(D)
-	#endif
-
-	#ifdef PORTE
-		DECLARE_PORT(E)
-	#endif
-
-	#ifdef PORTF
-		DECLARE_PORT(F)
-	#endif
-
-	#ifdef PORTG
-		DECLARE_PORT(G)
-	#endif
-
-	#ifdef PORTH
-		DECLARE_PORT(H)
-	#endif
-
-	private:
-
-		PPCPORT _Ports;
 	};
 }
 
 
-extern IttyBitty::RGPIO IO;
+#define _DECLARE_PORT(port_letter) extern IttyBitty::PORT Port##port_letter;
+#define _DECLARE_PINS(port_letter) typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1;
+	
+#ifdef PORTA
+	_DECLARE_PORT(A)
+	_DECLARE_PINS(A)
+#endif
 
+#ifdef PORTB
+	_DECLARE_PORT(B)
+	_DECLARE_PINS(B)
+#endif
 
-#define DECLARE_PINS(port_letter) extern IttyBitty::PIN<0, IO.Port##port_letter> Pin##port_letter##1;
-#define INITIALIZE_PINS(port_letter) Pin##port_letter##1 = IttyBitty::Pin<0, IO.Port##port_letter>();
+#ifdef PORTC
+	_DECLARE_PORT(C)
+	_DECLARE_PINS(C)
+#endif
 
+#ifdef PORTD
+	_DECLARE_PORT(D)
+	_DECLARE_PINS(D)
+#endif
 
-//#ifdef PORTA
-//	DECLARE_PINS(A)
-//#endif
-//
-//#ifdef PORTB
-//	DECLARE_PINS(B)
-//#endif
-//
-//#ifdef PORTC
-//	DECLARE_PINS(C)
-//#endif
-//
-//#ifdef PORTD
-//	DECLARE_PINS(D)
-//#endif
-//
-//#ifdef PORTE
-//	DECLARE_PINS(E)
-//#endif
-//
-//#ifdef PORTF
-//	DECLARE_PINS(F)
-//#endif
-//
-//#ifdef PORTG
-//	DECLARE_PINS(G)
-//#endif
-//
-//#ifdef PORTH
-//	DECLARE_PINS(H)
-//#endif
+#ifdef PORTE
+	_DECLARE_PORT(E)
+	_DECLARE_PINS(E)
+#endif
+
+#ifdef PORTF
+	_DECLARE_PORT(F)
+	_DECLARE_PINS(F)
+#endif
+
+#ifdef PORTG
+	_DECLARE_PORT(G)
+	_DECLARE_PINS(G)
+#endif
+
+#ifdef PORTH
+	_DECLARE_PORT(H)
+	_DECLARE_PINS(H)
+#endif
 
 
 #endif

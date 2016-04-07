@@ -27,7 +27,7 @@
 #define FINAL final
 #define VIRTUAL virtual
 
-//#define CONSTEXPR constexpr	// NOTE: Not supported by AVR GCC?
+#define CONSTEXPR constexpr	// NOTE: Only supported by Arduino 1.[?]+..?
 
 #define CONST const
 #define VOLATILE volatile
