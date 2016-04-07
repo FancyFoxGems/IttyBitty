@@ -173,16 +173,16 @@ namespace IttyBitty
 		_BitProxy(PIBYTEFIELD, SIZE);
 		_BitProxy(RCBITREF);
 
-		~_BitProxy();
+		VIRTUAL ~_BitProxy();
 
 		STATIC RBITREF NULL_OBJECT();
 
-		operator BIT() const;
+		VIRTUAL operator BIT() const;
 
-		RBITREF operator=(RCBITREF);
-		RBITREF operator=(BIT);
+		VIRTUAL RBITREF operator=(RCBITREF);
+		VIRTUAL RBITREF operator=(BIT);
 
-		BIT Flip();
+		VIRTUAL BIT Flip();
 
 	protected:
 

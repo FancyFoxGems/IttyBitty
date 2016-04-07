@@ -10,9 +10,4 @@ using namespace IttyBitty;
 
 RPORT NULL_PORT = Port::NULL_OBJECT();
 
-
-GPIO::GPIO()
-{
-
-	
-}
+RGPIO IO = GPIO::Instance();
