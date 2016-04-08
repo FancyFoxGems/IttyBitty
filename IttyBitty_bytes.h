@@ -57,7 +57,7 @@ namespace IttyBitty
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
 	
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 
 	template<typename T = BYTE>
 	class IBitField;
@@ -80,7 +80,7 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using PPCIBITFIELD = const IBitField<T> **;
 
-#endif	// #ifndef ITTYBITTY_SLIM
+#endif	// #ifndef ITTYBITTY_BASE
 
 	
 	class IByteField;
@@ -88,7 +88,7 @@ namespace IttyBitty
 	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
 	
 
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 
 	class IWordField;
 	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD, && RRIWORDFIELD;
@@ -140,7 +140,7 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using PPCBITFIELD = const BitField<T> **;
 
-#endif	// #ifndef ITTYBITTY_SLIM
+#endif	// #ifndef ITTYBITTY_BASE
 	
 
 	class ByteField;
@@ -148,7 +148,7 @@ namespace IttyBitty
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
 	
 
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 
 	class WordField;
 	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD, && RRWORDFIELD;
@@ -179,7 +179,7 @@ namespace IttyBitty
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
 
-#endif	// #ifndef ITTYBITTY_SLIM
+#endif	// #ifndef ITTYBITTY_BASE
 	
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
@@ -214,7 +214,7 @@ namespace IttyBitty
 	};
 
 	
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
@@ -364,13 +364,13 @@ namespace IttyBitty
 		VIRTUAL RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
-#endif	// #ifndef ITTYBITTY_SLIM
+#endif	// #ifndef ITTYBITTY_BASE
 
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
 	CLASS ByteField 
-	#ifndef ITTYBITTY_SLIM
+	#ifndef ITTYBITTY_BASE
 		: public virtual IByteField
 	#endif
 	{
@@ -423,7 +423,7 @@ namespace IttyBitty
 
 		VIRTUAL BYTE Value() const;
 		VIRTUAL VOID SetValue(BYTE);
-	#ifndef ITTYBITTY_SLIM
+	#ifndef ITTYBITTY_BASE
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<BYTE>);
 	#else
 		VIRTUAL VOID CopyFrom(RCBYTEFIELD);
@@ -431,14 +431,14 @@ namespace IttyBitty
 
 		VIRTUAL PBYTE Pointer() const;
 		VIRTUAL VOID PointTo(PBYTE);
-	#ifndef ITTYBITTY_SLIM
+	#ifndef ITTYBITTY_BASE
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
 	#else
 		VIRTUAL VOID ReferenceFrom(RCBYTEFIELD);
 	#endif
 
 		VIRTUAL BYTE Mask(BYTE) const;
-	#ifndef ITTYBITTY_SLIM
+	#ifndef ITTYBITTY_BASE
 		VIRTUAL BYTE Mask(RCIBITFIELD<BYTE>) const;
 	#else
 		VIRTUAL BYTE Mask(RCBYTEFIELD) const;
@@ -478,7 +478,7 @@ namespace IttyBitty
 	};
 
 	
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
@@ -1159,7 +1159,7 @@ namespace IttyBitty
 		}
 	};
 
-#endif	// #ifndef ITTYBITTY_SLIM
+#endif	// #ifndef ITTYBITTY_BASE
 }
 
 

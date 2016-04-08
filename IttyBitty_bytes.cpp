@@ -3,6 +3,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT. *
 ************************************************************************************/
 
+#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
+	#define EXCLUDE_ITTYBITTY_BYTES
+#endif
+
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
@@ -234,7 +238,7 @@ VOID ByteField::SetValue(BYTE value)
 	*_pByte = value;
 }
 
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 VOID ByteField::CopyFrom(RCIBITFIELD<BYTE> other)
 #else
 VOID ByteField::CopyFrom(RCBYTEFIELD other)
@@ -253,7 +257,7 @@ VOID ByteField::PointTo(PBYTE pByte)
 	_pByte = pByte;
 }
 
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 VOID ByteField::ReferenceFrom(RCIBITFIELD<BYTE> other)
 #else
 VOID ByteField::ReferenceFrom(RCBYTEFIELD other)
@@ -267,7 +271,7 @@ BYTE ByteField::Mask(BYTE byteMask) const
 	return MASK(this->Value(), byteMask);
 }
 
-#ifndef ITTYBITTY_SLIM
+#ifndef ITTYBITTY_BASE
 BYTE ByteField::Mask(RCIBITFIELD<BYTE> other) const
 #else
 BYTE ByteField::Mask(RCBYTEFIELD other) const

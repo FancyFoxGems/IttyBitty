@@ -101,7 +101,7 @@
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 	#include "IttyBitty_bytes.h"
 #else
-	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h]
+	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
 #endif
 
 
