@@ -15,7 +15,6 @@
 #endif
 
 
-#include "IttyBitty_bytes.h"
 #include "IttyBitty_registers.h"
 
 
@@ -30,21 +29,6 @@
 
 namespace IttyBitty
 {
-	typedef SIZE PIN_NUMBER;
-
-	struct _PortRegisters;
-	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
-	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
-
-	struct _Port;
-	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
-	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
-	
-	struct _GPIO;
-	typedef _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
-	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
-
-
 	ENUM PinModeBasic : BYTE
 	{
 		Input	= INPUT,
@@ -62,6 +46,27 @@ namespace IttyBitty
 		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
+}
+	
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+
+namespace IttyBitty
+{
+	typedef SIZE PIN_NUMBER;
+
+	struct _PortRegisters;
+	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
+	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
+
+	struct _Port;
+	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
+	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
+	
+	struct _GPIO;
+	typedef _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
+	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 
 	STRUCT _PortRegisters
@@ -268,51 +273,121 @@ namespace IttyBitty
 			return port->ResetPin(pin_number);
 		}
 	};
+	
+	
+	#define _GPIO_DECLARE_PORT(port_letter) STATIC RPORT P##port_letter;
+
+	STRUCT _GPIO FINAL
+	{
+	private:
+		
+		_GPIO() { }
+
+
+	public:
+
+		~_GPIO() { }
+
+		STATIC RCGPIO Instance()
+		{
+			STATIC GPIO INSTANCE = _GPIO();
+			return INSTANCE;
+		}
+	
+
+	#ifdef PORTA
+		_GPIO_DECLARE_PORT(A)
+	#endif
+
+	#ifdef PORTB
+		_GPIO_DECLARE_PORT(B)
+	#endif
+
+	#ifdef PORTC
+		_GPIO_DECLARE_PORT(C)
+	#endif
+
+	#ifdef PORTD
+		_GPIO_DECLARE_PORT(D)
+	#endif
+
+	#ifdef PORTE
+		_GPIO_DECLARE_PORT(E)
+	#endif
+
+	#ifdef PORTF
+		_GPIO_DECLARE_PORT(F)
+	#endif
+
+	#ifdef PORTG
+		_GPIO_DECLARE_PORT(G)
+	#endif
+
+	#ifdef PORTH
+		_GPIO_DECLARE_PORT(H)
+	#endif
+	};
 }
 
 
 #define _DECLARE_PORT(port_letter) extern IttyBitty::PORT Port##port_letter;
-#define _DECLARE_PINS(port_letter) typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1;
-	
+
+#define _TYPEDEF_PINS(port_letter) typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1; \
+	typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##2; \
+	typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##3; \
+	typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##4; \
+	typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##5; \
+	typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##6; \
+	typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##7; \
+	typedef IttyBitty::PIN<7, &Port##port_letter> Pin##port_letter##8;
+
 #ifdef PORTA
 	_DECLARE_PORT(A)
-	_DECLARE_PINS(A)
+	_TYPEDEF_PINS(A)
 #endif
 
 #ifdef PORTB
 	_DECLARE_PORT(B)
-	_DECLARE_PINS(B)
+	_TYPEDEF_PINS(B)
 #endif
 
 #ifdef PORTC
 	_DECLARE_PORT(C)
-	_DECLARE_PINS(C)
+	_TYPEDEF_PINS(C)
 #endif
 
 #ifdef PORTD
 	_DECLARE_PORT(D)
-	_DECLARE_PINS(D)
+	_TYPEDEF_PINS(D)
 #endif
 
 #ifdef PORTE
 	_DECLARE_PORT(E)
-	_DECLARE_PINS(E)
+	_TYPEDEF_PINS(E)
 #endif
 
 #ifdef PORTF
 	_DECLARE_PORT(F)
-	_DECLARE_PINS(F)
+	_TYPEDEF_PINS(F)
 #endif
 
 #ifdef PORTG
 	_DECLARE_PORT(G)
-	_DECLARE_PINS(G)
+	_TYPEDEF_PINS(G)
 #endif
 
 #ifdef PORTH
 	_DECLARE_PORT(H)
-	_DECLARE_PINS(H)
+	_TYPEDEF_PINS(H)
 #endif
+	
+
+#else	// EXCLUDE_ITTYBITTY_BYTES
+
+
+
+
+#endif	// ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
 #endif

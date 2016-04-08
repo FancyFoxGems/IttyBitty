@@ -15,9 +15,6 @@
 #endif
 
 
-#include "IttyBitty_bytes.h"
-
-
 /* [register] DECLARATION ALIAS */
 
 #define REGISTER volatile register
@@ -38,6 +35,16 @@
 #define REG_BYTE(var_name, register_num) REG_VAR(BYTE, var_name, register_num)
 
 
+/* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */
+
+// TODO: ...
+
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+#include "IttyBitty_bytes.h"
+
+
 /* BIT-PACKED REGISTER TYPE ALIASES */
 
 typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
@@ -47,9 +54,7 @@ typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 #define NEW_REG8(reg_addr) (new ByteField((PBYTE)reg_addr))
 
 
-/* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */
-
-// TODO: ...
+#endif	// ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
 #endif

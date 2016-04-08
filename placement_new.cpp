@@ -24,6 +24,6 @@
 	}
 
 	
-#endif	// !defined(ARDUINO)...
+#endif	// if !defined(ARDUINO)...
 	
 #endif
