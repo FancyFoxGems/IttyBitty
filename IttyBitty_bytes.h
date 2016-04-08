@@ -49,11 +49,15 @@ IGNORE_WARNING(-Wpointer-arith)
 
 namespace IttyBitty
 {
+
 	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
 
 	struct _BitProxy;
 	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF, &&RRBITREF;
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
+
+	
+#ifndef ITTYBITTY_SLIM
 
 	template<typename T = BYTE>
 	class IBitField;
@@ -75,10 +79,16 @@ namespace IttyBitty
 	using RCIBITFIELD = const IBitField<T> &;
 	template<typename T = BYTE>
 	using PPCIBITFIELD = const IBitField<T> **;
+
+#endif	// #ifndef ITTYBITTY_SLIM
+
 	
 	class IByteField;
 	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD, && RRIBYTEFIELD;
 	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
+	
+
+#ifndef ITTYBITTY_SLIM
 
 	class IWordField;
 	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD, && RRIWORDFIELD;
@@ -129,10 +139,16 @@ namespace IttyBitty
 	using RCBITFIELD = const BitField<T> &;
 	template<typename T = BYTE>
 	using PPCBITFIELD = const BitField<T> **;
+
+#endif	// #ifndef ITTYBITTY_SLIM
 	
+
 	class ByteField;
 	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD, && RRBYTEFIELD;
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
+	
+
+#ifndef ITTYBITTY_SLIM
 
 	class WordField;
 	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD, && RRWORDFIELD;
@@ -162,6 +178,8 @@ namespace IttyBitty
 	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
+
+#endif	// #ifndef ITTYBITTY_SLIM
 	
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
@@ -195,6 +213,8 @@ namespace IttyBitty
 		BYTE _BitMask;
 	};
 
+	
+#ifndef ITTYBITTY_SLIM
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
@@ -261,8 +281,8 @@ namespace IttyBitty
 		};
 
 		IBitField() { };
-	};
-	
+	};	
+
 
 	/* [IBYTEFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
@@ -344,10 +364,15 @@ namespace IttyBitty
 		VIRTUAL RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
+#endif	// #ifndef ITTYBITTY_SLIM
+
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
-	CLASS ByteField : public virtual IByteField
+	CLASS ByteField 
+	#ifndef ITTYBITTY_SLIM
+		: public virtual IByteField
+	#endif
 	{
 	public:
 
@@ -398,14 +423,26 @@ namespace IttyBitty
 
 		VIRTUAL BYTE Value() const;
 		VIRTUAL VOID SetValue(BYTE);
+	#ifndef ITTYBITTY_SLIM
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<BYTE>);
+	#else
+		VIRTUAL VOID CopyFrom(RCBYTEFIELD);
+	#endif
 
 		VIRTUAL PBYTE Pointer() const;
 		VIRTUAL VOID PointTo(PBYTE);
+	#ifndef ITTYBITTY_SLIM
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
+	#else
+		VIRTUAL VOID ReferenceFrom(RCBYTEFIELD);
+	#endif
 
 		VIRTUAL BYTE Mask(BYTE) const;
+	#ifndef ITTYBITTY_SLIM
 		VIRTUAL BYTE Mask(RCIBITFIELD<BYTE>) const;
+	#else
+		VIRTUAL BYTE Mask(RCBYTEFIELD) const;
+	#endif
 
 		// IByteField
 
@@ -440,6 +477,8 @@ namespace IttyBitty
 		BOOL _DisposeByte;
 	};
 
+	
+#ifndef ITTYBITTY_SLIM
 
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
@@ -1119,6 +1158,8 @@ namespace IttyBitty
 			return wordField;
 		}
 	};
+
+#endif	// #ifndef ITTYBITTY_SLIM
 }
 
 

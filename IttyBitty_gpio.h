@@ -46,14 +46,8 @@ namespace IttyBitty
 		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
-}
-	
-
-#ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
-namespace IttyBitty
-{
 	typedef SIZE PIN_NUMBER;
 
 	struct _PortRegisters;
@@ -380,14 +374,6 @@ namespace IttyBitty
 	_DECLARE_PORT(H)
 	_TYPEDEF_PINS(H)
 #endif
-	
-
-#else	// EXCLUDE_ITTYBITTY_BYTES
-
-
-
-
-#endif	// ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
 #endif
