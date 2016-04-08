@@ -2,7 +2,8 @@
 * [IttyBitty_base.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
 *
 *
-*		LIBRARY - BASE ONLY: BASIC UTILITY HELPERS & BIT MANIPULATION MACROS 
+*	LIBRARY - BASE BUNDLE: FULL LIBRARY FUNCTIONALITY MINUS HEAVY DATA STRUCTURES
+*	NOTE: ^-- Requires approximately 5 KB of program space and 500 B memory
 *
 * INCLUDES:
 *
@@ -16,16 +17,21 @@
 
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
-*	NOTE: ^-- In Base Only bundle, includes port/pin-referencing macros
 *
-* [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
-*	NOTE: ^-- In Base Only bundle, no structure-based abstractions
+* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
+*	NOTE: ^-- Slim bundle excludes data structures for larger blocks
+*
+* [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
+*
+* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ***********************************************************************************/
 
-#define ITTYBITTY_BASE_ONLY
+#ifndef ITTYBITTY_BASE
+	#define ITTYBITTY_BASE
+#endif
 
 #include "IttyBitty.h"

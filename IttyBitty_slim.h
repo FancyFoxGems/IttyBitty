@@ -2,7 +2,8 @@
 * [IttyBitty_slim.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
 *
 *
-*	LIBRARY - SLIM BUNDLE: FULL LIBRARY FUNCTIONALITY MINUS HEAVY DATA STRUCTURES
+*	LIBRARY - SLIM BUNDLE: BASIC UTILITY HELPERS & BIT MANIPULATION MACROS ONLY
+*	NOTE: ^-- Uses hardly ANY program space or memory!
 *
 * INCLUDES:
 *
@@ -17,18 +18,19 @@
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
-* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
-*	NOTE: ^-- Slim bundle excludes data structures for larger blocks
+* [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
+*	NOTE: ^-- In Slim bundle, no structure-based abstractions
 *
-* [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
-*
-* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
+* [IttyBitty_gpio.h]: MACROS FOR PIN ACCESS & MANIPULATION
+*	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ***********************************************************************************/
 
-#define ITTYBITTY_SLIM
+#ifndef ITTYBITTY_SLIM
+	#define ITTYBITTY_SLIM
+#endif
 
 #include "IttyBitty.h"

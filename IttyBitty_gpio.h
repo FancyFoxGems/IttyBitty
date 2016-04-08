@@ -27,6 +27,13 @@
 #define DISCONNECTED HIGH_Z
 
 
+#ifdef EXCLUDE_ITTYBITTY_BYTES
+
+#include "IttyBitty_bits.h"
+
+#endif
+
+
 namespace IttyBitty
 {
 	ENUM PinModeBasic : BYTE
@@ -46,8 +53,14 @@ namespace IttyBitty
 		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
+}
 
 
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+
+namespace IttyBitty
+{
 	typedef SIZE PIN_NUMBER;
 
 	struct _PortRegisters;
@@ -175,6 +188,16 @@ namespace IttyBitty
 			return Registers.InputReg[p];
 		}
 
+		VIRTUAL BIT CheckPinSet(PIN_NUMBER p) const
+		{
+			return Registers.InputReg[p];
+		}
+
+		VIRTUAL BIT CheckPinUnset(PIN_NUMBER p) const
+		{
+			return ~Registers.InputReg[p];
+		}
+
 		VIRTUAL BITREF PinState(PIN_NUMBER p) const
 		{
 			return Registers.OutputReg[p];
@@ -196,7 +219,6 @@ namespace IttyBitty
 		RPORTREG Registers = PortReg::NULL_OBJECT();
 	};
 
-	
 	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
 	struct _Pin;
 	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
@@ -250,6 +272,16 @@ namespace IttyBitty
 		STATIC BIT Read()
 		{
 			return port->ReadPin(pin_number);
+		}
+
+		STATIC BIT CheckSet()
+		{
+			return port->CheckPinSet(pin_number);
+		}
+
+		STATIC BIT CheckUnset()
+		{
+			return port->CheckPinUnset(pin_number);
 		}
 
 		STATIC VOID Set()
@@ -374,6 +406,106 @@ namespace IttyBitty
 	_DECLARE_PORT(H)
 	_TYPEDEF_PINS(H)
 #endif
+
+
+//#define CHECK_PIN(port_letter, pin_number) CHECK_BIT(P##port_letter##_PIN.b##pin_number);
+//#define CHECK_PIN_SET(port_letter, pin_number) CHECK_SET(P##port_letter##_PIN.b##pin_number);
+//#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET_BIT(P##port_letter##_PIN.b##pin_number);
+
+
+#else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+
+
+#include "IttyBitty_bits.h"
+
+
+#define _DECLARE_PORT_REGISTERS(port_letter) extern IttyBitty::RCBITPACK P##port_letter##_DDR; \
+	extern IttyBitty::RCBITPACK P##port_letter##_PORT; \
+	extern IttyBitty::RCBITPACK P##port_letter##_PIN; 
+
+#define CHECK_PIN(port_letter, pin_number) CHECK_BIT(P##port_letter##_PIN.b##pin_number);
+#define CHECK_PIN_SET(port_letter, pin_number) CHECK_SET(P##port_letter##_PIN.b##pin_number);
+#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET_BIT(P##port_letter##_PIN.b##pin_number);
+
+#ifdef PORTA
+	_DECLARE_PORT_REGISTERS(A)
+#endif
+
+#ifdef PORTB
+	_DECLARE_PORT_REGISTERS(B)
+#endif
+
+#ifdef PORTC
+	_DECLARE_PORT_REGISTERS(C)
+#endif
+
+#ifdef PORTD
+	_DECLARE_PORT_REGISTERS(D)
+#endif
+
+#ifdef PORTE
+	_DECLARE_PORT_REGISTERS(E)
+#endif
+
+#ifdef PORTF
+	_DECLARE_PORT_REGISTERS(F)
+#endif
+
+#ifdef PORTG
+	_DECLARE_PORT_REGISTERS(G)
+#endif
+
+#ifdef PORTH
+	_DECLARE_PORT_REGISTERS(H)
+#endif
+
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
+
+	
+#define SET_PIN(port_letter, pin_number) SET_BIT(P##port_letter##_PORT.b##pin_number);
+#define CLEAR_PIN(port_letter, pin_number) CLEAR_BIT(P##port_letter##_PORT.b##pin_number);
+#define TOGGLE_PIN(port_letter, pin_number) TOGGLE_BIT(P##port_letter##_PORT.b##pin_number);
+
+//#ifdef PORTA
+//	_DECLARE_PORT_REGISTERS(A)
+//	#define SET_PA1() SET_PIN(A, 0)
+//#endif
+//
+//#ifdef PORTB
+//	_DECLARE_PORT_REGISTERS(B)
+//	#define SET_PB1() SET_PIN(B, 0)
+//#endif
+//
+//#ifdef PORTC
+//	_DECLARE_PORT_REGISTERS(C)
+//	#define SET_PC1() SET_PIN(C, 0)
+//#endif
+//
+//#ifdef PORTD
+//	_DECLARE_PORT_REGISTERS(D)
+//	#define SET_PD1() SET_PIN(D, 0)
+//#endif
+//
+//#ifdef PORTE
+//	_DECLARE_PORT_REGISTERS(E)
+//	#define SET_PE1() SET_PIN(E, 0)
+//#endif
+//
+//#ifdef PORTF
+//	_DECLARE_PORT_REGISTERS(F)
+//	#define SET_PF1() SET_PIN(F, 0)
+//#endif
+//
+//#ifdef PORTG
+//	_DECLARE_PORT_REGISTERS(G)
+//	#define SET_PG1() SET_PIN(G, 0)
+//#endif
+//
+//#ifdef PORTH
+//	_DECLARE_PORT_REGISTERS(H)
+//	#define SET_PH1() SET_PIN(H, 0)
+//#endif
 
 
 #endif

@@ -3,6 +3,9 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT. *
 ************************************************************************************/
 
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+
 #include "IttyBitty_bytes.h"
 
 using namespace IttyBitty;
@@ -334,3 +337,6 @@ RIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
 	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
 	return *this;
 }
+
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES

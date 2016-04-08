@@ -3,7 +3,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT. *
 ************************************************************************************/
 
-#include "IttyBitty_bytes.h"
+#include "IttyBitty_bits.h"
 
 using namespace IttyBitty;
 
