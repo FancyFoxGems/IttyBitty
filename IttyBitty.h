@@ -13,7 +13,6 @@
 #ifdef __AVR__	// NOTE: AVR architecture compatibility only!
 
 
-
 /* NOTE: DEFINE [ITTYBITTY_BASE] TO INCLUDE ONLY THE BARE MINIMUM, SUCH AS BIT-TWIDDLING MACROS */
 
 /**********************************************************************************
