@@ -26,48 +26,36 @@ using namespace IttyBitty;
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
-#define _INITIALIZE_PORT_REFS(port_letter) //RBITPACK P##port_letter##_DDR = *(PACK_BYTE_REF((RVBYTE)DDR##port_letter)); \
-	//RBITPACK P##port_letter##_PORT = *(PACK_BYTE_REF((RVBYTE)PORT##port_letter)); \
-	//RBITPACK P##port_letter##_PIN = *(PACK_BYTE_REF((RVBYTE)PIN##port_letter)); \
-
 #ifdef PORTA
 	_INITIALIZE_PORT_STRUCTS(A)
-	_INITIALIZE_PORT_REFS(A)
 #endif
 
 #ifdef PORTB
 	_INITIALIZE_PORT_STRUCTS(B)
-	_INITIALIZE_PORT_REFS(B)
 #endif
 
 #ifdef PORTC
 	_INITIALIZE_PORT_STRUCTS(C)
-	_INITIALIZE_PORT_REFS(C)
 #endif
 
 #ifdef PORTD
 	_INITIALIZE_PORT_STRUCTS(D)
-	_INITIALIZE_PORT_REFS(D)
 #endif
 
 #ifdef PORTE
 	_INITIALIZE_PORT_STRUCTS(E)
-	_INITIALIZE_PORT_REFS(E)
 #endif
 
 #ifdef PORTF
 	_INITIALIZE_PORT_STRUCTS(F)
-	_INITIALIZE_PORT_REFS(F)
 #endif
 
 #ifdef PORTG
 	_INITIALIZE_PORT_STRUCTS(G)
-	_INITIALIZE_PORT_REFS(G)
 #endif
 
 #ifdef PORTH
 	_INITIALIZE_PORT_STRUCTS(H)
-	_INITIALIZE_PORT_REFS(H)
 #endif
 	
 

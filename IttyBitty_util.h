@@ -9,13 +9,13 @@
 #define _ITTYBITTY_UTIL_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
 
 
-#include <stdlib.h>
+#include <avr/eeprom.h>
 
 #include "IttyBitty_type_traits.h"
 #include "placement_new.cpp"
@@ -162,7 +162,7 @@ extern PCHAR __bss_end;
 extern PCHAR __heap_start;
 extern PCHAR __heap_end;
 
-extern PVOID __brkval;
+extern PTR __brkval;
 
 extern PCHAR __malloc_heap_start;
 extern PCHAR __malloc_heap_end;
@@ -173,22 +173,22 @@ CONSTEXPR PVUINT StackPointer()
 	return &static_cast<RVUINT>(SP);
 }
 
-INLINE WORD StackSpaceTotal()
+INLINE CWORD StackSpaceTotal()
 {
 	WORD stackEnd = reinterpret_cast<WORD>(__heap_end);
 
 	if (stackEnd > RAMEND)
 		stackEnd = reinterpret_cast<WORD>(__bss_end);
 
-	return static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin;
+	return static_cast<CWORD>(RAMEND + 1 - stackEnd - __malloc_margin);
 }
 
-INLINE WORD StackSpaceUsed()
+INLINE CWORD StackSpaceUsed()
 {
-	return static_cast<WORD>(RAMEND) + 1 - reinterpret_cast<WORD>(StackPointer());
+	return static_cast<CWORD>(RAMEND) + 1 - reinterpret_cast<CWORD>(StackPointer());
 }
 
-INLINE WORD StackSpaceAvailable()
+INLINE CWORD StackSpaceAvailable()
 {
 	return StackSpaceTotal() - reinterpret_cast<WORD>(StackPointer());
 }
@@ -201,27 +201,27 @@ INLINE PCHAR HeapPointer()
 	return reinterpret_cast<PCHAR>(__brkval);
 }
 
-INLINE WORD HeapSpaceTotal()
+INLINE CWORD HeapSpaceTotal()
 {
-	return reinterpret_cast<WORD>(__heap_end) - reinterpret_cast<WORD>(__heap_start);
+	return reinterpret_cast<CWORD>(__heap_end) - reinterpret_cast<CWORD>(__heap_start);
 }
 
-INLINE WORD HeapSpaceUsed()
+INLINE CWORD HeapSpaceUsed()
 {
-	return reinterpret_cast<WORD>(HeapPointer()) - reinterpret_cast<WORD>(__heap_start);
+	return reinterpret_cast<CWORD>(HeapPointer()) - reinterpret_cast<CWORD>(__heap_start);
 }
 
-INLINE WORD HeapSpaceAvailable()
+INLINE CWORD HeapSpaceAvailable()
 {
-	return reinterpret_cast<WORD>(__heap_end) - reinterpret_cast<WORD>(HeapPointer());
+	return reinterpret_cast<CWORD>(__heap_end) - reinterpret_cast<CWORD>(HeapPointer());
 }
 
-CONSTEXPR WORD SRAMTotalSize()
+CONSTEXPR CWORD SRAMTotalSize()
 {
-	return static_cast<WORD>(RAMEND) + 1 - static_cast<WORD>(RAMSTART);
+	return static_cast<CWORD>(RAMEND) + 1 - static_cast<CWORD>(RAMSTART);
 }
 
-INLINE WORD SRAMUsed()
+INLINE CWORD SRAMUsed()
 {
 #ifdef XRAMSTART
 	if (reinterpret_cast<WORD>(__heap_start) > RAMEND)
@@ -231,7 +231,7 @@ INLINE WORD SRAMUsed()
 	return StackSpaceUsed() + HeapSpaceUsed();
 }
 
-INLINE WORD SRAMAvailable()
+INLINE CWORD SRAMAvailable()
 {
 #ifdef XRAMSTART
 	if (reinterpret_cast<WORD>(__heap_start) > RAMEND)
@@ -243,7 +243,7 @@ INLINE WORD SRAMAvailable()
 
 CONSTEXPR WORD XRAMTotalSize()
 {
-	return static_cast<WORD>(XRAMSIZE);
+	return static_cast<CWORD>(XRAMSIZE);
 }
 
 
@@ -256,32 +256,32 @@ INLINE WORD XRAMUsed()
 	if (stackEnd > RAMEND)
 		stackEnd = reinterpret_cast<WORD>(__bss_end);
 
-	return static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin;
+	return static_cast<CWORD>(static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin);
 }
 
-INLINE WORD XRAMAvailable()
+INLINE CWORD XRAMAvailable()
 {
 	return XRAMTotalSize() - XRAMUsed();
 }
 
-INLINE WORD TotalRAMUsed()
+INLINE CWORD TotalRAMUsed()
 {
 	return SRAMUsed() + XRAMUsed();
 }
 
-INLINE WORD TotalRAMAvailable()
+INLINE CWORD TotalRAMAvailable()
 {
 	return SRAMAvailable() + XRAMAvailable();
 }
 
 #else	// #ifndef XRAMSTART
 
-INLINE WORD TotalRAMUsed()
+INLINE CWORD TotalRAMUsed()
 {
 	return SRAMUsed();
 }
 
-INLINE WORD TotalRAMAvailable()
+INLINE CWORD TotalRAMAvailable()
 {
 	return SRAMAvailable();
 }
@@ -289,22 +289,86 @@ INLINE WORD TotalRAMAvailable()
 #endif	// #ifdef XRAMSTART
 
 
-CONSTEXPR WORD TotalRAMSize()
+CONSTEXPR CWORD TotalRAMSize()
 {
 	return SRAMTotalSize() + XRAMTotalSize();
 }
 
-CONSTEXPR WORD EEPROMTotalSize()
+#define ROM_USED_DETECTION_TOLERANCE_DWORDS 4
+
+template<typename T = WORD, typename P = T>
+CONST T ROMUsed(DWORD (&rom_read_dword)(P), CWORD romSize)
 {
-	return static_cast<WORD>(E2END) + 1;
+	T lastUsedAddr = 0x0;
+	DWORD value = 0;
+	BYTE consecutiveBlanks = 0;
+
+	for (lastUsedAddr = 0x0; lastUsedAddr < romSize; lastUsedAddr++)
+	{
+		value = rom_read_dword(reinterpret_cast<P>(lastUsedAddr));
+
+		if (value == 0xFFFFFFFF)
+		{
+			if (++consecutiveBlanks == ROM_USED_DETECTION_TOLERANCE_DWORDS)
+				break;
+		}
+		else
+		{
+			consecutiveBlanks = 0;
+		}
+	}
+
+	return static_cast<CONST T>(lastUsedAddr + 1);
 }
 
-CONSTEXPR WORD FlashTotalSize()
-{
-	return static_cast<WORD>(FLASHEND) + 1;
+CONSTEXPR CWORD FlashTotalSize()
+{	
+	return static_cast<CWORD>(FLASHEND) + 1;
 }
 
-CONSTEXPR WORD (*ProgMemTotalSize)() = &FlashTotalSize;
+INLINE DWORD __pgm_read_dword(WORD dwordPtr)
+{
+	return pgm_read_dword(dwordPtr);
+}
+
+INLINE CWORD FlashUsed()
+{
+	return ROMUsed<>(__pgm_read_dword, FlashTotalSize());
+}
+
+INLINE CWORD FlashAvailable()
+{
+	return FlashTotalSize() - FlashUsed();
+}
+
+CONSTEXPR CWORD (*ProgMemTotalSize)() = &FlashTotalSize;
+
+CONSTEXPR CDWORD EEPROMTotalSize()
+{
+#if E2END == 0
+	return 0;
+#else
+	return static_cast<CWORD>(E2END) + 1;
+#endif
+}
+
+INLINE CDWORD EEPROMUsed()
+{
+#if E2END == 0
+	return 0;
+#else	
+	return ROMUsed<DWORD, PCDWORD>(eeprom_read_dword, EEPROMTotalSize());
+#endif
+}
+
+INLINE CDWORD EEPROMAvailable()
+{
+#if E2END == 0
+	return 0;
+#else	
+	return EEPROMTotalSize() - EEPROMUsed();
+#endif
+}
 
 
 /* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */

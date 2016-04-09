@@ -9,7 +9,7 @@
 #define _ITTYBITTY_GPIO_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
@@ -159,7 +159,7 @@ namespace IttyBitty
 
 		VIRTUAL BIT operator[](PIN_NUMBER p) const
 		{
-			return this->ReadPin(p);
+			return this->CheckPin(p);
 		}
 
 		VIRTUAL BITREF operator[](PIN_NUMBER p)
@@ -183,7 +183,7 @@ namespace IttyBitty
 			this->SetPinMode(p, (PinMode)basicMode);
 		}
 
-		VIRTUAL BIT ReadPin(PIN_NUMBER p) const
+		VIRTUAL BIT CheckPin(PIN_NUMBER p) const
 		{
 			return Registers.InputReg[p];
 		}
@@ -271,7 +271,7 @@ namespace IttyBitty
 
 		STATIC BIT Read()
 		{
-			return port->ReadPin(pin_number);
+			return port->CheckPin(pin_number);
 		}
 
 		STATIC BIT CheckSet()
@@ -362,7 +362,7 @@ namespace IttyBitty
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
 
-#include "IttyBitty_bits.h"
+	#include "IttyBitty_bits.h"
 
 
 	#define _DECLARE_PORT_STRUCTS(port_letter) extern IttyBitty::RBITPACK P##port_letter##_DDR; \
@@ -373,25 +373,29 @@ namespace IttyBitty
 #endif
 
 
-#define _DECLARE_PORT_REFS(port_letter) extern IttyBitty::RBITPACK P##port_letter##_DDR; \
-	extern IttyBitty::RBITPACK P##port_letter##_PORT; \
-	extern IttyBitty::RBITPACK P##port_letter##_PIN;
-
-#define PIN_REF(port_ref, pin_number) (port_ref + pin_number)
+#define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]
 
 #define PORT_PIN_PAIR(port_ref, pin_number) port_ref, pin_number	// NOTE: For use with XXXXXX_PAIR bit manipulation macros
 
-#define CHECK_PIN_SET(port_letter, pin_number) CHECK_SET(P##port_letter##_PIN.b##pin_number);
-#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET(P##port_letter##_PIN.b##pin_number);
-	
-#define SET_PIN(port_letter, pin_number) SET_BIT(P##port_letter##_PORT.b##pin_number);
-#define CLEAR_PIN(port_letter, pin_number) CLEAR_BIT(P##port_letter##_PORT.b##pin_number);
-#define TOGGLE_PIN(port_letter, pin_number) TOGGLE_BIT(P##port_letter##_PORT.b##pin_number);
+#define CHECK_PIN(port_ref, pin_number) CHECK_SET(port_ref, pin_number)
+#define CHECK_PIN_SET(port_ref, pin_number) CHECK_PIN(port_ref, pin_number)
+#define CHECK_PIN_UNSET(port_ref, pin_number) CHECK_UNSET(port_ref, pin_number)
+
+#define SET_PIN(port_ref, pin_number) SET_BIT(port_ref, pin_number)
+#define CLEAR_PIN(port_ref, pin_number) CLEAR_BIT(port_ref, pin_number)
+#define TOGGLE_PIN(port_ref, pin_number) TOGGLE_BIT(port_ref, pin_number)
+
+#define CHECK_PIN_IN(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
+#define CHECK_PIN_IN_SET(port_letter, pin_number) PIN_IN(PIN##port_letter, pin_number)
+#define CHECK_PIN_IN_UNSET(port_letter, pin_number) CHECK_UNSET(PIN##port_letter, pin_number)
+
+#define SET_PIN_OUT(port_letter, pin_number) SET_BIT(PIN##port_letter, pin_number)
+#define CLEAR_PIN_OUT(port_letter, pin_number) CLEAR_BIT(PIN##port_letter, pin_number)
+#define TOGGLE_PIN_OUT(port_letter, pin_number) TOGGLE_BIT(PIN##port_letter, pin_number)
 
 #ifdef PORTA
 	
 	_DECLARE_PORT_STRUCTS(A)
-	_DECLARE_PORT_REFS(A)
 
 	#define DDRA_1 PIN_REF(DDRA, 0)
 	#define DDRA_2 PIN_REF(DDRA, 1)
@@ -452,7 +456,6 @@ namespace IttyBitty
 #ifdef PORTB
 	
 	_DECLARE_PORT_STRUCTS(B)
-	_DECLARE_PORT_REFS(B)
 
 	#define DDRB_1 PIN_REF(DDRB, 0)
 	#define DDRB_2 PIN_REF(DDRB, 1)
@@ -513,42 +516,36 @@ namespace IttyBitty
 #ifdef PORTC
 	
 	_DECLARE_PORT_STRUCTS(C)
-	_DECLARE_PORT_REFS(C)
 
 #endif
 
 #ifdef PORTD
 	
 	_DECLARE_PORT_STRUCTS(D)
-	_DECLARE_PORT_REFS(D)
 
 #endif
 
 #ifdef PORTE
 	
 	_DECLARE_PORT_STRUCTS(E)
-	_DECLARE_PORT_REFS(E)
 
 #endif
 
 #ifdef PORTF
 	
 	_DECLARE_PORT_STRUCTS(F)
-	_DECLARE_PORT_REFS(F)
 
 #endif
 
 #ifdef PORTG
 	
 	_DECLARE_PORT_STRUCTS(G)
-	_DECLARE_PORT_REFS(G)
 
 #endif
 
 #ifdef PORTH
 	
 	_DECLARE_PORT_STRUCTS(H)
-	_DECLARE_PORT_REFS(H)
 
 #endif
 

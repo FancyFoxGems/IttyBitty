@@ -10,7 +10,7 @@
 #define _ITTYBITTY_BITS_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "arduino.h"
+	#include "Arduino.h"
 #else
 	#include "WProgram.h"
 #endif
@@ -61,7 +61,7 @@
 
 /* MASK GENERATOR MACROS */
 
-#define BIT_MASK(bit_offset) (1 << (bit_offset))
+#define BIT_MASK(bit_offset) _BV(bit_offset)
 #define BMASK(bit_offset) BIT_MASK(bit_offset)
 #define NOT_BIT(bit_offset) NOT BIT_MASK(bit_offset)
 
@@ -228,60 +228,60 @@
 /* BIT-SPECIFIC MACRO ALIASES FOR BYTES */
 
 #define BIT0_MASK BMASK(0)
-#define CHECK_BIT0(byte) CHECK_BIT(byte, 0)
-#define CHECK_UNSET_BIT0(byte) CHECK_UNSET(byte, 0)
-#define SET_BIT0(byte) SET_BIT(byte, 0)
-#define CLEAR_BIT0(byte) CLEAR_BIT(byte, 0)
-#define TOGGLE_BIT0(byte) TOGGLEBIT(byte, 0)
+#define CHECK_BIT0(byte_ref) CHECK_BIT(byte_ref, 0)
+#define CHECK_UNSET_BIT0(byte_ref) CHECK_UNSET(byte_ref, 0)
+#define SET_BIT0(byte_ref) SET_BIT(byte_ref, 0)
+#define CLEAR_BIT0(byte_ref) CLEAR_BIT(byte_ref, 0)
+#define TOGGLE_BIT0(byte_ref) TOGGLE_BIT(byte_ref, 0)
 
 #define BIT1_MASK BMASK(1)
-#define CHECK_BIT1(byte) CHECK_BIT(byte, 1)
-#define CHECK_UNSET_BIT1(byte) CHECK_UNSET(byte, 1)
-#define SET_BIT1(byte) SET_BIT(byte, 1)
-#define CLEAR_BIT1(byte) CLEAR_BIT(byte, 1)
-#define TOGGLEBIT1(byte) TOGGLEBIT(byte, 1)
+#define CHECK_BIT1(byte_ref) CHECK_BIT(byte_ref, 1)
+#define CHECK_UNSET_BIT1(byte_ref) CHECK_UNSET(byte_ref, 1)
+#define SET_BIT1(byte_ref) SET_BIT(byte_ref, 1)
+#define CLEAR_BIT1(byte_ref) CLEAR_BIT(byte_ref, 1)
+#define TOGGLE_BIT1(byte_ref) TOGGLE_BIT(byte_ref, 1)
 
 #define BIT2_MASK BMASK(2)
-#define CHECK_BIT2(byte) CHECK_BIT(byte, 2)
-#define CHECK_UNSET_BIT2(byte) CHECK_UNSET_BIT(byte, 2)
-#define SET_BIT2(byte) SET_BIT(byte, 2)
-#define CLEAR_BIT2(byte) CLEAR_BIT(byte, 2)
-#define TOGGLE_BIT2(byte) TOGGLEBIT(byte, 2)
+#define CHECK_BIT2(byte_ref) CHECK_BIT(byte_ref, 2)
+#define CHECK_UNSET_BIT2(byte_ref) CHECK_UNSET_BIT(byte_ref, 2)
+#define SET_BIT2(byte_ref) SET_BIT(byte_ref, 2)
+#define CLEAR_BIT2(byte_ref) CLEAR_BIT(byte_ref, 2)
+#define TOGGLE_BIT2(byte_ref) TOGGLE_BIT(byte_ref, 2)
 
 #define BIT3_MASK BMASK(3)
-#define CHECK_BIT3(byte) CHECK_BIT(byte, 3)
-#define CHECK_UNSET_BIT3(byte) CHECK_UNSET_BIT(byte, 3)
-#define SET_BIT3(byte) SET_BIT(byte, 3)
-#define CLEAR_BIT3(byte) CLEAR_BIT(byte, 3)
-#define TOGGLE_BIT3(byte) TOGGLEBIT(byte, 3)
+#define CHECK_BIT3(byte_ref) CHECK_BIT(byte_ref, 3)
+#define CHECK_UNSET_BIT3(byte_ref) CHECK_UNSET_BIT(byte_ref, 3)
+#define SET_BIT3(byte_ref) SET_BIT(byte_ref, 3)
+#define CLEAR_BIT3(byte_ref) CLEAR_BIT(byte_ref, 3)
+#define TOGGLE_BIT3(byte_ref) TOGGLE_BIT(byte_ref, 3)
 
 #define BIT4_MASK BMASK(4)
-#define CHECK_BIT4(byte) CHECK_BIT(byte, 4)
-#define CHECK_UNSET_BIT4(byte) CHECK_UNSET_BIT(byte, 4)
-#define SET_BIT4(byte) SET_BIT(byte, 4)
-#define CLEAR_BIT4(byte) CLEAR_BIT(byte, 4)
-#define TOGGLE_BIT4(byte) TOGGLEBIT(byte, 4)
+#define CHECK_BIT4(byte_ref) CHECK_BIT(byte_ref, 4)
+#define CHECK_UNSET_BIT4(byte_ref) CHECK_UNSET_BIT(byte_ref, 4)
+#define SET_BIT4(byte_ref) SET_BIT(byte_ref, 4)
+#define CLEAR_BIT4(byte_ref) CLEAR_BIT(byte_ref, 4)
+#define TOGGLE_BIT4(byte_ref) TOGGLE_BIT(byte_ref, 4)
 
 #define BIT5_MASK BMASK(5)
-#define CHECK_BIT5(byte) CHECK_BIT(byte, 5)
-#define CHECK_UNSET_BIT5(byte) CHECK_UNSET_BIT(byte, 5)
-#define SET_BIT5(byte) SET_BIT(byte, 5)
-#define CLEAR_BIT5(byte) CLEAR_BIT(byte, 5)
-#define TOGGLE_BIT5(byte) TOGGLEBIT(byte, 5)
+#define CHECK_BIT5(byte_ref) CHECK_BIT(byte_ref, 5)
+#define CHECK_UNSET_BIT5(byte_ref) CHECK_UNSET_BIT(byte_ref, 5)
+#define SET_BIT5(byte_ref) SET_BIT(byte_ref, 5)
+#define CLEAR_BIT5(byte_ref) CLEAR_BIT(byte_ref, 5)
+#define TOGGLE_BIT5(byte_ref) TOGGLE_BIT(byte_ref, 5)
 
 #define BIT6_MASK BMASK(6)
-#define CHECK_BIT6(byte) CHECK_BIT(byte, 6)
-#define CHECK_UNSET_BIT6(byte) CHECK_UNSET_BIT(byte, 6)
-#define SET_BIT6(byte) SET_BIT(byte, 6)
-#define CLEAR_BIT6(byte) CLEAR_BIT(byte, 6)
-#define TOGGLE_BIT6(byte) TOGGLEBIT(byte, 6)
+#define CHECK_BIT6(byte_ref) CHECK_BIT(byte_ref, 6)
+#define CHECK_UNSET_BIT6(byte_ref) CHECK_UNSET_BIT(byte_ref, 6)
+#define SET_BIT6(byte_ref) SET_BIT(byte_ref, 6)
+#define CLEAR_BIT6(byte_ref) CLEAR_BIT(byte_ref, 6)
+#define TOGGLE_BIT6(byte_ref) TOGGLE_BIT(byte_ref, 6)
 
 #define BIT7_MASK BMASK(7)
-#define CHECK_BIT7(byte) CHECK_BIT(byte, 7)
-#define CHECK_UNSET_BIT7(byte) CHECK_UNSET_BIT(byte, 7)
-#define SET_BIT7(byte) SET_BIT(byte, 7)
-#define CLEAR_BIT7(byte) CLEAR_BIT(byte, 7)
-#define TOGGLE_BIT7(byte) TOGGLEBIT(byte, 7)
+#define CHECK_BIT7(byte_ref) CHECK_BIT(byte_ref, 7)
+#define CHECK_UNSET_BIT7(byte_ref) CHECK_UNSET_BIT(byte_ref, 7)
+#define SET_BIT7(byte_ref) SET_BIT(byte_ref, 7)
+#define CLEAR_BIT7(byte_ref) CLEAR_BIT(byte_ref, 7)
+#define TOGGLE_BIT7(byte_ref) TOGGLE_BIT(byte_ref, 7)
 
 
 /* BYTE MANIPULATION MACROS */
