@@ -15,6 +15,8 @@
 #endif
 
 
+#include <stdlib.h>
+
 #include "IttyBitty_type_traits.h"
 #include "placement_new.cpp"
 
@@ -152,6 +154,160 @@ using std::conditional_t;
 
 #define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
 #define _CSTR_P(string_addr) FLASH_STRING(string_addr)
+
+
+/* MEMORY SECTION/ALLOCATION VARIABLES & FUNCTIONS */
+
+extern PCHAR __data_start;
+extern PCHAR __data_end;
+extern PCHAR __bss_start;
+extern PCHAR __bss_end;
+extern PCHAR __heap_start;
+extern PCHAR __heap_end;
+
+extern PVOID __brkval;
+
+extern PCHAR __malloc_heap_start;
+extern PCHAR __malloc_heap_end;
+extern SIZE __malloc_margin;
+
+CONSTEXPR PVUINT StackPointer()
+{
+	return &static_cast<RVUINT>(SP);
+}
+
+INLINE WORD StackSpaceTotal()
+{
+	WORD stackEnd = reinterpret_cast<WORD>(__heap_end);
+
+	if (stackEnd > RAMEND)
+		stackEnd = reinterpret_cast<WORD>(__bss_end);
+
+	return static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin;
+}
+
+INLINE WORD StackSpaceUsed()
+{
+	return static_cast<WORD>(RAMEND) + 1 - reinterpret_cast<WORD>(StackPointer());
+}
+
+INLINE WORD StackSpaceAvailable()
+{
+	return StackSpaceTotal() - reinterpret_cast<WORD>(StackPointer());
+}
+
+INLINE PCHAR HeapPointer()
+{
+	if (reinterpret_cast<WORD>(__brkval) == 0)
+		return __heap_start;
+
+	return reinterpret_cast<PCHAR>(__brkval);
+}
+
+INLINE WORD HeapSpaceTotal()
+{
+	return reinterpret_cast<WORD>(__heap_end) - reinterpret_cast<WORD>(__heap_start);
+}
+
+INLINE WORD HeapSpaceUsed()
+{
+	return reinterpret_cast<WORD>(HeapPointer()) - reinterpret_cast<WORD>(__heap_start);
+}
+
+INLINE WORD HeapSpaceAvailable()
+{
+	return reinterpret_cast<WORD>(__heap_end) - reinterpret_cast<WORD>(HeapPointer());
+}
+
+CONSTEXPR WORD SRAMTotalSize()
+{
+	return static_cast<WORD>(RAMEND) + 1 - static_cast<WORD>(RAMSTART);
+}
+
+INLINE WORD SRAMUsed()
+{
+#ifdef XRAMSTART
+	if (reinterpret_cast<WORD>(__heap_start) > RAMEND)
+		return StackSpaceUsed();
+#endif
+
+	return StackSpaceUsed() + HeapSpaceUsed();
+}
+
+INLINE WORD SRAMAvailable()
+{
+#ifdef XRAMSTART
+	if (reinterpret_cast<WORD>(__heap_start) > RAMEND)
+		return StackSpaceAvailable();
+#endif
+
+	return StackSpaceAvailable() + HeapSpaceAvailable();
+}
+
+CONSTEXPR WORD XRAMTotalSize()
+{
+	return static_cast<WORD>(XRAMSIZE);
+}
+
+
+#ifdef XRAMSTART
+
+INLINE WORD XRAMUsed()
+{
+	WORD stackEnd = reinterpret_cast<WORD>(__heap_end);
+
+	if (stackEnd > RAMEND)
+		stackEnd = reinterpret_cast<WORD>(__bss_end);
+
+	return static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin;
+}
+
+INLINE WORD XRAMAvailable()
+{
+	return XRAMTotalSize() - XRAMUsed();
+}
+
+INLINE WORD TotalRAMUsed()
+{
+	return SRAMUsed() + XRAMUsed();
+}
+
+INLINE WORD TotalRAMAvailable()
+{
+	return SRAMAvailable() + XRAMAvailable();
+}
+
+#else	// #ifndef XRAMSTART
+
+INLINE WORD TotalRAMUsed()
+{
+	return SRAMUsed();
+}
+
+INLINE WORD TotalRAMAvailable()
+{
+	return SRAMAvailable();
+}
+
+#endif	// #ifdef XRAMSTART
+
+
+CONSTEXPR WORD TotalRAMSize()
+{
+	return SRAMTotalSize() + XRAMTotalSize();
+}
+
+CONSTEXPR WORD EEPROMTotalSize()
+{
+	return static_cast<WORD>(E2END) + 1;
+}
+
+CONSTEXPR WORD FlashTotalSize()
+{
+	return static_cast<WORD>(FLASHEND) + 1;
+}
+
+CONSTEXPR WORD (*ProgMemTotalSize)() = &FlashTotalSize;
 
 
 /* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */
