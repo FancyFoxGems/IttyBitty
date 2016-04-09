@@ -408,24 +408,23 @@ namespace IttyBitty
 #endif
 
 
-//#define CHECK_PIN(port_letter, pin_number) CHECK_BIT(P##port_letter##_PIN.b##pin_number);
-//#define CHECK_PIN_SET(port_letter, pin_number) CHECK_SET(P##port_letter##_PIN.b##pin_number);
-//#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET_BIT(P##port_letter##_PIN.b##pin_number);
-
-
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
-
 #include "IttyBitty_bits.h"
+
+#endif
 
 
 #define _DECLARE_PORT_REGISTERS(port_letter) extern IttyBitty::RCBITPACK P##port_letter##_DDR; \
 	extern IttyBitty::RCBITPACK P##port_letter##_PORT; \
-	extern IttyBitty::RCBITPACK P##port_letter##_PIN; 
+	extern IttyBitty::RCBITPACK P##port_letter##_PIN;
 
-#define CHECK_PIN(port_letter, pin_number) CHECK_BIT(P##port_letter##_PIN.b##pin_number);
 #define CHECK_PIN_SET(port_letter, pin_number) CHECK_SET(P##port_letter##_PIN.b##pin_number);
-#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET_BIT(P##port_letter##_PIN.b##pin_number);
+#define CHECK_PIN_UNSET(port_letter, pin_number) CHECK_UNSET(P##port_letter##_PIN.b##pin_number);
+	
+#define SET_PIN(port_letter, pin_number) SET_BIT(P##port_letter##_PORT.b##pin_number);
+#define CLEAR_PIN(port_letter, pin_number) CLEAR_BIT(P##port_letter##_PORT.b##pin_number);
+#define TOGGLE_PIN(port_letter, pin_number) TOGGLE_BIT(P##port_letter##_PORT.b##pin_number);
 
 #ifdef PORTA
 	_DECLARE_PORT_REGISTERS(A)
@@ -458,54 +457,6 @@ namespace IttyBitty
 #ifdef PORTH
 	_DECLARE_PORT_REGISTERS(H)
 #endif
-
-
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
-
-	
-#define SET_PIN(port_letter, pin_number) SET_BIT(P##port_letter##_PORT.b##pin_number);
-#define CLEAR_PIN(port_letter, pin_number) CLEAR_BIT(P##port_letter##_PORT.b##pin_number);
-#define TOGGLE_PIN(port_letter, pin_number) TOGGLE_BIT(P##port_letter##_PORT.b##pin_number);
-
-//#ifdef PORTA
-//	_DECLARE_PORT_REGISTERS(A)
-//	#define SET_PA1() SET_PIN(A, 0)
-//#endif
-//
-//#ifdef PORTB
-//	_DECLARE_PORT_REGISTERS(B)
-//	#define SET_PB1() SET_PIN(B, 0)
-//#endif
-//
-//#ifdef PORTC
-//	_DECLARE_PORT_REGISTERS(C)
-//	#define SET_PC1() SET_PIN(C, 0)
-//#endif
-//
-//#ifdef PORTD
-//	_DECLARE_PORT_REGISTERS(D)
-//	#define SET_PD1() SET_PIN(D, 0)
-//#endif
-//
-//#ifdef PORTE
-//	_DECLARE_PORT_REGISTERS(E)
-//	#define SET_PE1() SET_PIN(E, 0)
-//#endif
-//
-//#ifdef PORTF
-//	_DECLARE_PORT_REGISTERS(F)
-//	#define SET_PF1() SET_PIN(F, 0)
-//#endif
-//
-//#ifdef PORTG
-//	_DECLARE_PORT_REGISTERS(G)
-//	#define SET_PG1() SET_PIN(G, 0)
-//#endif
-//
-//#ifdef PORTH
-//	_DECLARE_PORT_REGISTERS(H)
-//	#define SET_PH1() SET_PIN(H, 0)
-//#endif
 
 
 #endif

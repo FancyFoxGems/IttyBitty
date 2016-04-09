@@ -60,7 +60,7 @@ using namespace IttyBitty;
 #endif
 
 
-#else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
 #define _INITIALIZE_PORT_REGISTERS(port_letter) RCBITPACK P##port_letter##_DDR = *MAKE_CONST(PACK_BYTE_REF((RVBYTE)DDR##port_letter)); \
@@ -98,6 +98,3 @@ using namespace IttyBitty;
 #ifdef PORTH
 	_INITIALIZE_PORT_REGISTERS(H)
 #endif
-
-
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
