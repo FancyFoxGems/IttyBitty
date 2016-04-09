@@ -373,180 +373,36 @@ namespace IttyBitty
 #endif
 
 
-#define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]
-
-#define PORT_PIN_PAIR(port_ref, pin_number) port_ref, pin_number	// NOTE: For use with XXXXXX_PAIR bit manipulation macros
-
-#define CHECK_PIN(port_ref, pin_number) CHECK_SET(port_ref, pin_number)
-#define CHECK_PIN_SET(port_ref, pin_number) CHECK_PIN(port_ref, pin_number)
-#define CHECK_PIN_UNSET(port_ref, pin_number) CHECK_UNSET(port_ref, pin_number)
-
-#define SET_PIN(port_ref, pin_number) SET_BIT(port_ref, pin_number)
-#define CLEAR_PIN(port_ref, pin_number) CLEAR_BIT(port_ref, pin_number)
-#define TOGGLE_PIN(port_ref, pin_number) TOGGLE_BIT(port_ref, pin_number)
-
-#define CHECK_PIN_IN(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
-#define CHECK_PIN_IN_SET(port_letter, pin_number) PIN_IN(PIN##port_letter, pin_number)
-#define CHECK_PIN_IN_UNSET(port_letter, pin_number) CHECK_UNSET(PIN##port_letter, pin_number)
-
-#define SET_PIN_OUT(port_letter, pin_number) SET_BIT(PIN##port_letter, pin_number)
-#define CLEAR_PIN_OUT(port_letter, pin_number) CLEAR_BIT(PIN##port_letter, pin_number)
-#define TOGGLE_PIN_OUT(port_letter, pin_number) TOGGLE_BIT(PIN##port_letter, pin_number)
-
 #ifdef PORTA
-	
 	_DECLARE_PORT_STRUCTS(A)
-
-	#define DDRA_1 PIN_REF(DDRA, 0)
-	#define DDRA_2 PIN_REF(DDRA, 1)
-	#define DDRA_3 PIN_REF(DDRA, 2)
-	#define DDRA_4 PIN_REF(DDRA, 3)
-	#define DDRA_5 PIN_REF(DDRA, 4)
-	#define DDRA_6 PIN_REF(DDRA, 5)
-	#define DDRA_7 PIN_REF(DDRA, 6)
-	#define DDRA_8 PIN_REF(DDRA, 7)
-
-	#define PORTA_1 PIN_REF(PORTA, 0)
-	#define PORTA_2 PIN_REF(PORTA, 1)
-	#define PORTA_3 PIN_REF(PORTA, 2)
-	#define PORTA_4 PIN_REF(PORTA, 3)
-	#define PORTA_5 PIN_REF(PORTA, 4)
-	#define PORTA_6 PIN_REF(PORTA, 5)
-	#define PORTA_7 PIN_REF(PORTA, 6)
-	#define PORTA_8 PIN_REF(PORTA, 7)
-
-	#define PINA_1 PIN_REF(PINA, 0)
-	#define PINA_2 PIN_REF(PINA, 1)
-	#define PINA_3 PIN_REF(PINA, 2)
-	#define PINA_4 PIN_REF(PINA, 3)
-	#define PINA_5 PIN_REF(PINA, 4)
-	#define PINA_6 PIN_REF(PINA, 5)
-	#define PINA_7 PIN_REF(PINA, 6)
-	#define PINA_8 PIN_REF(PINA, 7)
-
-	#define DDRA_1_PAIR PORT_PIN_PAIR(DDRA, 0)
-	#define DDRA_2_PAIR PORT_PIN_PAIR(DDRA, 1)
-	#define DDRA_3_PAIR PORT_PIN_PAIR(DDRA, 2)
-	#define DDRA_4_PAIR PORT_PIN_PAIR(DDRA, 3)
-	#define DDRA_5_PAIR PORT_PIN_PAIR(DDRA, 4)
-	#define DDRA_6_PAIR PORT_PIN_PAIR(DDRA, 5)
-	#define DDRA_7_PAIR PORT_PIN_PAIR(DDRA, 6)
-	#define DDRA_8_PAIR PORT_PIN_PAIR(DDRA, 7)
-
-	#define PORTA_1_PAIR PORT_PIN_PAIR(PORTA, 0)
-	#define PORTA_2_PAIR PORT_PIN_PAIR(PORTA, 1)
-	#define PORTA_3_PAIR PORT_PIN_PAIR(PORTA, 2)
-	#define PORTA_4_PAIR PORT_PIN_PAIR(PORTA, 3)
-	#define PORTA_5_PAIR PORT_PIN_PAIR(PORTA, 4)
-	#define PORTA_6_PAIR PORT_PIN_PAIR(PORTA, 5)
-	#define PORTA_7_PAIR PORT_PIN_PAIR(PORTA, 6)
-	#define PORTA_8_PAIR PORT_PIN_PAIR(PORTA, 7)
-
-	#define PINA_1_PAIR PORT_PIN_PAIR(PINA, 0)
-	#define PINA_2_PAIR PORT_PIN_PAIR(PINA, 1)
-	#define PINA_3_PAIR PORT_PIN_PAIR(PINA, 2)
-	#define PINA_4_PAIR PORT_PIN_PAIR(PINA, 3)
-	#define PINA_5_PAIR PORT_PIN_PAIR(PINA, 4)
-	#define PINA_6_PAIR PORT_PIN_PAIR(PINA, 5)
-	#define PINA_7_PAIR PORT_PIN_PAIR(PINA, 6)
-	#define PINA_8_PAIR PORT_PIN_PAIR(PINA, 7)
-
 #endif
 
 #ifdef PORTB
-	
 	_DECLARE_PORT_STRUCTS(B)
-
-	#define DDRB_1 PIN_REF(DDRB, 0)
-	#define DDRB_2 PIN_REF(DDRB, 1)
-	#define DDRB_3 PIN_REF(DDRB, 2)
-	#define DDRB_4 PIN_REF(DDRB, 3)
-	#define DDRB_5 PIN_REF(DDRB, 4)
-	#define DDRB_6 PIN_REF(DDRB, 5)
-	#define DDRB_7 PIN_REF(DDRB, 6)
-	#define DDRB_8 PIN_REF(DDRB, 7)
-
-	#define PORTB_1 PIN_REF(PORTB, 0)
-	#define PORTB_2 PIN_REF(PORTB, 1)
-	#define PORTB_3 PIN_REF(PORTB, 2)
-	#define PORTB_4 PIN_REF(PORTB, 3)
-	#define PORTB_5 PIN_REF(PORTB, 4)
-	#define PORTB_6 PIN_REF(PORTB, 5)
-	#define PORTB_7 PIN_REF(PORTB, 6)
-	#define PORTB_8 PIN_REF(PORTB, 7)
-
-	#define PINB_1 PIN_REF(PINB, 0)
-	#define PINB_2 PIN_REF(PINB, 1)
-	#define PINB_3 PIN_REF(PINB, 2)
-	#define PINB_4 PIN_REF(PINB, 3)
-	#define PINB_5 PIN_REF(PINB, 4)
-	#define PINB_6 PIN_REF(PINB, 5)
-	#define PINB_7 PIN_REF(PINB, 6)
-	#define PINB_8 PIN_REF(PINB, 7)
-
-	#define DDRB_1_PAIR PORT_PIN_PAIR(DDRB, 0)
-	#define DDRB_2_PAIR PORT_PIN_PAIR(DDRB, 1)
-	#define DDRB_3_PAIR PORT_PIN_PAIR(DDRB, 2)
-	#define DDRB_4_PAIR PORT_PIN_PAIR(DDRB, 3)
-	#define DDRB_5_PAIR PORT_PIN_PAIR(DDRB, 4)
-	#define DDRB_6_PAIR PORT_PIN_PAIR(DDRB, 5)
-	#define DDRB_7_PAIR PORT_PIN_PAIR(DDRB, 6)
-	#define DDRB_8_PAIR PORT_PIN_PAIR(DDRB, 7)
-
-	#define PORTB_1_PAIR PORT_PIN_PAIR(PORTB, 0)
-	#define PORTB_2_PAIR PORT_PIN_PAIR(PORTB, 1)
-	#define PORTB_3_PAIR PORT_PIN_PAIR(PORTB, 2)
-	#define PORTB_4_PAIR PORT_PIN_PAIR(PORTB, 3)
-	#define PORTB_5_PAIR PORT_PIN_PAIR(PORTB, 4)
-	#define PORTB_6_PAIR PORT_PIN_PAIR(PORTB, 5)
-	#define PORTB_7_PAIR PORT_PIN_PAIR(PORTB, 6)
-	#define PORTB_8_PAIR PORT_PIN_PAIR(PORTB, 7)
-
-	#define PINB_1_PAIR PORT_PIN_PAIR(PINB, 0)
-	#define PINB_2_PAIR PORT_PIN_PAIR(PINB, 1)
-	#define PINB_3_PAIR PORT_PIN_PAIR(PINB, 2)
-	#define PINB_4_PAIR PORT_PIN_PAIR(PINB, 3)
-	#define PINB_5_PAIR PORT_PIN_PAIR(PINB, 4)
-	#define PINB_6_PAIR PORT_PIN_PAIR(PINB, 5)
-	#define PINB_7_PAIR PORT_PIN_PAIR(PINB, 6)
-	#define PINB_8_PAIR PORT_PIN_PAIR(PINB, 7)
-
 #endif
 
 #ifdef PORTC
-	
 	_DECLARE_PORT_STRUCTS(C)
-
 #endif
 
 #ifdef PORTD
-	
 	_DECLARE_PORT_STRUCTS(D)
-
 #endif
 
 #ifdef PORTE
-	
 	_DECLARE_PORT_STRUCTS(E)
-
 #endif
 
 #ifdef PORTF
-	
 	_DECLARE_PORT_STRUCTS(F)
-
 #endif
 
 #ifdef PORTG
-	
 	_DECLARE_PORT_STRUCTS(G)
-
 #endif
 
 #ifdef PORTH
-	
 	_DECLARE_PORT_STRUCTS(H)
-
 #endif
 
 
@@ -594,6 +450,9 @@ namespace IttyBitty
 	#endif
 
 #endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+
+
+#include "IttyBitty_gpio_portpins.h"
 
 
 #endif
