@@ -1,80 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="IttyBitty\IttyBitty_bits.cpp">
+    <ClInclude Include="..\IttyBitty.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\IttyBitty_bytes.cpp">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_aliases.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\IttyBitty_base.h">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_base.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\IttyBitty_gpio.cpp">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_bits.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\IttyBitty_interrupts.cpp">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_bytes.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\IttyBitty_led.cpp">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_gpio.h">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="IttyBitty\placement_new.cpp">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_interrupts.h">
       <Filter>src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="__vm\.IttyBitty.vsarduino.h">
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_led.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_registers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_slim.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_type_traits.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_util.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.extras.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_aliases.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_bits.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_bytes.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_gpio.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_interrupts.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_led.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_registers.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_slim.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_type_traits.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="IttyBitty\IttyBitty_util.h">
-      <Filter>src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="...\keywords.txt">
+      <Filter>metadata</Filter>
+    </None>
+    <None Include="...\library.properties">
+      <Filter>metadata</Filter>
+    </None>
+    <None Include="...\LICENSE">
+      <Filter>metadata</Filter>
+    </None>
+    <None Include="...\README.md">
+      <Filter>metadata</Filter>
+    </None>
     <None Include="IttyBitty.ino" />
-    <None Include="IttyBitty\keywords.txt">
-      <Filter>metadata</Filter>
-    </None>
-    <None Include="IttyBitty\library.properties">
-      <Filter>metadata</Filter>
-    </None>
-    <None Include="IttyBitty\LICENSE">
-      <Filter>metadata</Filter>
-    </None>
-    <None Include="IttyBitty\README.md">
-      <Filter>metadata</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -86,5 +66,25 @@
     <Filter Include="__vm">
       <UniqueIdentifier>{0ae123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\IttyBitty_bits.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_bytes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_gpio.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_interrupts.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_led.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\placement_new.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
