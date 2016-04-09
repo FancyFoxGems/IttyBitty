@@ -17,7 +17,11 @@ using namespace IttyBitty;
 
 /* [BITPROXY/BITREF]: PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
 
+#ifndef ITTYBITTY_BASE
 _BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i) 
+#else
+_BitProxy::_BitProxy(PBYTEFIELD pParent, SIZE i) 
+#endif
 	: _Parent(pParent), _BitMask(BIT_MASK(i)) { }
 
 _BitProxy::_BitProxy(RCBITREF other) 
@@ -53,7 +57,11 @@ BIT _BitProxy::Flip()
 	return this->operator=(NOT (BIT)this);
 }
 
+#ifndef ITTYBITTY_BASE
 PIBYTEFIELD _BitProxy::Parent() const
+#else
+PBYTEFIELD _BitProxy::Parent() const
+#endif
 {
 	return _Parent;
 }
@@ -223,7 +231,11 @@ BYTE ByteField::Byte(SIZE i) const
 	return *_pByte;
 }
 
+#ifndef ITTYBITTY_BASE
 RIBYTEFIELD ByteField::Byte(SIZE i)
+#else
+RBYTEFIELD ByteField::Byte(SIZE i)
+#endif
 {
 	return *this;
 }
@@ -241,7 +253,7 @@ VOID ByteField::SetValue(BYTE value)
 #ifndef ITTYBITTY_BASE
 VOID ByteField::CopyFrom(RCIBITFIELD<BYTE> other)
 #else
-VOID ByteField::CopyFrom(RCIBYTEFIELD other)
+VOID ByteField::CopyFrom(RCBYTEFIELD other)
 #endif
 {
 	*_pByte = other.Value();
@@ -260,7 +272,7 @@ VOID ByteField::PointTo(PBYTE pByte)
 #ifndef ITTYBITTY_BASE
 VOID ByteField::ReferenceFrom(RCIBITFIELD<BYTE> other)
 #else
-VOID ByteField::ReferenceFrom(RCIBYTEFIELD other)
+VOID ByteField::ReferenceFrom(RCBYTEFIELD other)
 #endif
 {
 	_pByte = other.Pointer();
@@ -274,7 +286,7 @@ BYTE ByteField::Mask(BYTE byteMask) const
 #ifndef ITTYBITTY_BASE
 BYTE ByteField::Mask(RCIBITFIELD<BYTE> other) const
 #else
-BYTE ByteField::Mask(RCIBYTEFIELD other) const
+BYTE ByteField::Mask(RCBYTEFIELD other) const
 #endif
 {
 	return MASK(this->Value(), other.Value());
@@ -310,12 +322,20 @@ ByteField::operator PBITPACK()
 	return _pBitPack;
 }
 
+#ifndef ITTYBITTY_BASE
 PIBYTEFIELD ByteField::CloneByValue() const
+#else
+PBYTEFIELD ByteField::CloneByValue() const
+#endif
 {
 	return new ByteField(this->Value());
 }
 
+#ifndef ITTYBITTY_BASE
 PIBYTEFIELD ByteField::CloneByReference() const
+#else
+PBYTEFIELD ByteField::CloneByReference() const
+#endif
 {
 	return new ByteField(_pByte);
 }
@@ -325,7 +345,11 @@ BYTE ByteField::LowNybble() const
 	return LOW_NYBBLE(this->Value());
 }
 
+#ifndef ITTYBITTY_BASE
 RIBYTEFIELD ByteField::SetLowNybble(BYTE nybbleVal)
+#else
+RBYTEFIELD ByteField::SetLowNybble(BYTE nybbleVal)
+#endif
 {
 	*_pByte = (this->HighNybble() << 4) | LOW_NYBBLE(nybbleVal);
 	return *this;
@@ -336,7 +360,11 @@ BYTE ByteField::HighNybble() const
 	return HIGH_NYBBLE(this->Value());
 }
 
+#ifndef ITTYBITTY_BASE
 RIBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
+#else
+RBYTEFIELD ByteField::SetHighNybble(BYTE nybbleVal)
+#endif
 {
 	*_pByte = HIGH_NYBBLE(nybbleVal) | this->LowNybble();
 	return *this;
