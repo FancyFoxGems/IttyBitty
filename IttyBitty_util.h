@@ -25,9 +25,6 @@
 
 #define STR(x) #x
 #define CONCAT(x, y) x##y
-#define COMBA(a, b, c) a
-#define COMBB(a, b, c) b
-#define COMBC(a, b, c) c
 
 
 /* COMPILER MACROS */
@@ -156,7 +153,7 @@ using std::conditional_t;
 #define _CSTR_P(string_addr) FLASH_STRING(string_addr)
 
 
-/* MEMORY SECTION/ALLOCATION VARIABLES & FUNCTIONS */
+/* MEMORY AREA/ALLOCATION VARIABLES & FUNCTIONS */
 
 extern PCHAR __data_start;
 extern PCHAR __data_end;

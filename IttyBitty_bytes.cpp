@@ -241,7 +241,7 @@ VOID ByteField::SetValue(BYTE value)
 #ifndef ITTYBITTY_BASE
 VOID ByteField::CopyFrom(RCIBITFIELD<BYTE> other)
 #else
-VOID ByteField::CopyFrom(RCBYTEFIELD other)
+VOID ByteField::CopyFrom(RCIBYTEFIELD other)
 #endif
 {
 	*_pByte = other.Value();
@@ -260,7 +260,7 @@ VOID ByteField::PointTo(PBYTE pByte)
 #ifndef ITTYBITTY_BASE
 VOID ByteField::ReferenceFrom(RCIBITFIELD<BYTE> other)
 #else
-VOID ByteField::ReferenceFrom(RCBYTEFIELD other)
+VOID ByteField::ReferenceFrom(RCIBYTEFIELD other)
 #endif
 {
 	_pByte = other.Pointer();
@@ -274,7 +274,7 @@ BYTE ByteField::Mask(BYTE byteMask) const
 #ifndef ITTYBITTY_BASE
 BYTE ByteField::Mask(RCIBITFIELD<BYTE> other) const
 #else
-BYTE ByteField::Mask(RCBYTEFIELD other) const
+BYTE ByteField::Mask(RCIBYTEFIELD other) const
 #endif
 {
 	return MASK(this->Value(), other.Value());

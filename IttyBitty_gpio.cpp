@@ -15,86 +15,96 @@ using namespace IttyBitty;
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
+	#define _INITIALIZE_PORT_STRUCTS(port_letter) PORT Port##port_letter((RVBYTE)DDR##port_letter, (RVBYTE)PORT##port_letter, (RVBYTE)PIN##port_letter);
 
-#define _INITIALIZE_PORT(port_letter) PORT Port##port_letter((RVBYTE)DDR##port_letter, (RVBYTE)PORT##port_letter, (RVBYTE)PIN##port_letter);
-#define _GPIO_INITIALIZE_PORT(port_letter) RPORT GPIO::P##port_letter = Port##port_letter;
+#else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
-#ifdef PORTA
-	_INITIALIZE_PORT(A)
-	_GPIO_INITIALIZE_PORT(A)
-#endif
-
-#ifdef PORTB
-	_INITIALIZE_PORT(B)
-	_GPIO_INITIALIZE_PORT(B)
-#endif
-
-#ifdef PORTC
-	_INITIALIZE_PORT(C)
-	_GPIO_INITIALIZE_PORT(C)
-#endif
-
-#ifdef PORTD
-	_INITIALIZE_PORT(D)
-	_GPIO_INITIALIZE_PORT(D)
-#endif
-
-#ifdef PORTE
-	_INITIALIZE_PORT(E)
-	_GPIO_INITIALIZE_PORT(E)
-#endif
-
-#ifdef PORTF
-	_INITIALIZE_PORT(F)
-	_GPIO_INITIALIZE_PORT(F)
-#endif
-
-#ifdef PORTG
-	_INITIALIZE_PORT(G)
-	_GPIO_INITIALIZE_PORT(G)
-#endif
-
-#ifdef PORTH
-	_INITIALIZE_PORT(H)
-	_GPIO_INITIALIZE_PORT(H)
-#endif
-
+	#define _INITIALIZE_PORT_STRUCTS(port_letter) RBITPACK P##port_letter##_DDR = *(PACK_BYTE_REF((RVBYTE)DDR##port_letter)); \
+		RBITPACK P##port_letter##_PORT = *(PACK_BYTE_REF((RVBYTE)PORT##port_letter)); \
+		RBITPACK P##port_letter##_PIN = *(PACK_BYTE_REF((RVBYTE)PIN##port_letter)); \
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
-#define _INITIALIZE_PORT_REGISTERS(port_letter) RCBITPACK P##port_letter##_DDR = *MAKE_CONST(PACK_BYTE_REF((RVBYTE)DDR##port_letter)); \
-	RCBITPACK P##port_letter##_PORT = *MAKE_CONST(PACK_BYTE_REF((RVBYTE)PORT##port_letter)); \
-	RCBITPACK P##port_letter##_PIN = *MAKE_CONST(PACK_BYTE_REF((RVBYTE)PIN##port_letter)); \
+#define _INITIALIZE_PORT_REFS(port_letter) //RBITPACK P##port_letter##_DDR = *(PACK_BYTE_REF((RVBYTE)DDR##port_letter)); \
+	//RBITPACK P##port_letter##_PORT = *(PACK_BYTE_REF((RVBYTE)PORT##port_letter)); \
+	//RBITPACK P##port_letter##_PIN = *(PACK_BYTE_REF((RVBYTE)PIN##port_letter)); \
 
 #ifdef PORTA
-	_INITIALIZE_PORT_REGISTERS(A)
+	_INITIALIZE_PORT_STRUCTS(A)
+	_INITIALIZE_PORT_REFS(A)
 #endif
 
 #ifdef PORTB
-	_INITIALIZE_PORT_REGISTERS(B)
+	_INITIALIZE_PORT_STRUCTS(B)
+	_INITIALIZE_PORT_REFS(B)
 #endif
 
 #ifdef PORTC
-	_INITIALIZE_PORT_REGISTERS(C)
+	_INITIALIZE_PORT_STRUCTS(C)
+	_INITIALIZE_PORT_REFS(C)
 #endif
 
 #ifdef PORTD
-	_INITIALIZE_PORT_REGISTERS(D)
+	_INITIALIZE_PORT_STRUCTS(D)
+	_INITIALIZE_PORT_REFS(D)
 #endif
 
 #ifdef PORTE
-	_INITIALIZE_PORT_REGISTERS(E)
+	_INITIALIZE_PORT_STRUCTS(E)
+	_INITIALIZE_PORT_REFS(E)
 #endif
 
 #ifdef PORTF
-	_INITIALIZE_PORT_REGISTERS(F)
+	_INITIALIZE_PORT_STRUCTS(F)
+	_INITIALIZE_PORT_REFS(F)
 #endif
 
 #ifdef PORTG
-	_INITIALIZE_PORT_REGISTERS(G)
+	_INITIALIZE_PORT_STRUCTS(G)
+	_INITIALIZE_PORT_REFS(G)
 #endif
 
 #ifdef PORTH
-	_INITIALIZE_PORT_REGISTERS(H)
+	_INITIALIZE_PORT_STRUCTS(H)
+	_INITIALIZE_PORT_REFS(H)
 #endif
+	
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+	#define _GPIO_INITIALIZE_PORT(port_letter) RPORT GPIO::P##port_letter = Port##port_letter;
+
+	#ifdef PORTA
+		_GPIO_INITIALIZE_PORT(A)
+	#endif
+
+	#ifdef PORTB
+		_GPIO_INITIALIZE_PORT(B)
+	#endif
+
+	#ifdef PORTC
+		_GPIO_INITIALIZE_PORT(C)
+	#endif
+
+	#ifdef PORTD
+		_GPIO_INITIALIZE_PORT(D)
+	#endif
+
+	#ifdef PORTE
+		_GPIO_INITIALIZE_PORT(E)
+	#endif
+
+	#ifdef PORTF
+		_GPIO_INITIALIZE_PORT(F)
+	#endif
+
+	#ifdef PORTG
+		_GPIO_INITIALIZE_PORT(G)
+	#endif
+
+	#ifdef PORTH
+		_GPIO_INITIALIZE_PORT(H)
+	#endif
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES

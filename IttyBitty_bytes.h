@@ -281,14 +281,67 @@ namespace IttyBitty
 		};
 
 		IBitField() { };
-	};	
+	};
+
+#endif	// #ifndef ITTYBITTY_BASE
 
 
 	/* [IBYTEFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
-	INTERFACE IByteField : public virtual IBitField<BYTE>
+	INTERFACE IByteField 
+	#ifndef ITTYBITTY_BASE
+		: public virtual IBitField<BYTE>
+	#endif
 	{
 	public:
+		
+	#ifdef ITTYBITTY_BASE
+
+		VIRTUAL ~IByteField() { }
+
+		VIRTUAL operator CBYTE() const = 0;
+		VIRTUAL operator CCHAR() const = 0;
+
+		VIRTUAL operator PCBYTE() const = 0;
+		VIRTUAL operator PPBYTE() = 0;
+
+		VIRTUAL operator PCCHAR() const = 0;
+		VIRTUAL operator PPCHAR() = 0;
+
+		VIRTUAL operator PBYTEFIELD() const = 0;
+		VIRTUAL operator PPBYTEFIELD() = 0;
+
+		VIRTUAL BIT operator[](SIZE) const = 0;
+		VIRTUAL BITREF operator[](SIZE) = 0;
+
+		VIRTUAL CSIZE Size() const = 0;
+
+		VIRTUAL SIZE BitWidth() const = 0;
+		VIRTUAL SIZE ByteSize() const = 0;
+
+		VIRTUAL BIT Bit(SIZE) const = 0;
+		VIRTUAL BITREF Bit(SIZE) = 0;
+		VIRTUAL BIT Flip(SIZE) = 0;
+
+		VIRTUAL PPCBYTEFIELD Bytes() const = 0;
+		VIRTUAL BYTE Byte(SIZE) const = 0;
+		VIRTUAL RIBYTEFIELD Byte(SIZE) = 0;
+
+		VIRTUAL BYTE Value() const = 0;
+		VIRTUAL VOID SetValue(BYTE) = 0;
+		VIRTUAL VOID CopyFrom(RCIBYTEFIELD) = 0;
+
+		VIRTUAL PBYTE Pointer() const = 0;
+		VIRTUAL VOID PointTo(PBYTE) = 0;
+		VIRTUAL VOID ReferenceFrom(RCIBYTEFIELD) = 0;
+
+		VIRTUAL BYTE Mask(BYTE) const = 0;
+		VIRTUAL BYTE Mask(RCIBYTEFIELD) const = 0;
+
+		VIRTUAL PIBYTEFIELD CloneByValue() const = 0;
+		VIRTUAL PIBYTEFIELD CloneByReference() const = 0;
+		
+	#endif
 		
 		RIBYTEFIELD operator=(RRIBYTEFIELD) { return *this; };
 		RIBYTEFIELD operator=(RCIBYTEFIELD) { return *this; };
@@ -302,14 +355,14 @@ namespace IttyBitty
 		VIRTUAL operator PCBITPACK() const = 0;
 		VIRTUAL operator PBITPACK() = 0;
 
-		VIRTUAL PIBYTEFIELD CloneByValue() const = 0;
-		VIRTUAL PIBYTEFIELD CloneByReference() const = 0;
-
 		VIRTUAL BYTE LowNybble() const = 0;
 		VIRTUAL RIBYTEFIELD SetLowNybble(BYTE) = 0;
 		VIRTUAL BYTE HighNybble() const = 0;
 		VIRTUAL RIBYTEFIELD SetHighNybble(BYTE) = 0;
 	};
+	
+
+#ifndef ITTYBITTY_BASE
 	
 
 	/* [IWORDFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
@@ -369,10 +422,7 @@ namespace IttyBitty
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
-	CLASS ByteField 
-	#ifndef ITTYBITTY_BASE
-		: public virtual IByteField
-	#endif
+	CLASS ByteField : public virtual IByteField
 	{
 	public:
 
@@ -426,7 +476,7 @@ namespace IttyBitty
 	#ifndef ITTYBITTY_BASE
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<BYTE>);
 	#else
-		VIRTUAL VOID CopyFrom(RCBYTEFIELD);
+		VIRTUAL VOID CopyFrom(RCIBYTEFIELD);
 	#endif
 
 		VIRTUAL PBYTE Pointer() const;
@@ -434,14 +484,14 @@ namespace IttyBitty
 	#ifndef ITTYBITTY_BASE
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
 	#else
-		VIRTUAL VOID ReferenceFrom(RCBYTEFIELD);
+		VIRTUAL VOID ReferenceFrom(RCIBYTEFIELD);
 	#endif
 
 		VIRTUAL BYTE Mask(BYTE) const;
 	#ifndef ITTYBITTY_BASE
 		VIRTUAL BYTE Mask(RCIBITFIELD<BYTE>) const;
 	#else
-		VIRTUAL BYTE Mask(RCBYTEFIELD) const;
+		VIRTUAL BYTE Mask(RCIBYTEFIELD) const;
 	#endif
 
 		// IByteField

@@ -38,6 +38,12 @@
 //CDWORD DWORD_WORD_MASKS[] = { 0x0000FFFF, 0xFFFF0000 };
 
 
+/* REDEFINE [_BV] MACRO FOR CAPABILITY OF ADDRESSING MSB (bit-offset 15) OF AN <<UNSIGNED>> INT */
+
+#undef _BV
+#define _BV(bit_offset) (1U << (bit_offset))
+
+
 /* BIT-WISE OPERATOR ALIASES */
 
 #define NOT ~
@@ -49,13 +55,14 @@
 #define SHL <<
 #define SHIFT_LEFT SHL
 
-#define MASK(addr, mask) ((addr) & (mask))
-#define INVERSE_MASK(addr, mask) ((addr) & ~(mask))
+#define MASK(ref, mask) ((ref) & (mask))
+#define INVERSE_MASK(ref, mask) ((ref) & ~(mask))
 
 
 /* MASK GENERATOR MACROS */
 
 #define BIT_MASK(bit_offset) (1 << (bit_offset))
+#define BMASK(bit_offset) BIT_MASK(bit_offset)
 #define NOT_BIT(bit_offset) NOT BIT_MASK(bit_offset)
 
 #define NYBBLE_MASK(nybble_offset) (0x0F << (nybble_offset) * 4)
@@ -73,143 +80,149 @@
 
 /* BITMASK MACROS (FOR MULTI-BIT MANIPULATION OPERATIONS) */
 
-#define BMASKNOT(addr, mask) INVERSE_MASK(addr, mask)
-#define NOT_BITS(addr, mask) BMASKNOT(addr, mask)
+#define BMASKNOT(ref, mask) INVERSE_MASK(ref, mask)
+#define NOT_BITS(ref, mask) BMASKNOT(ref, mask)
 
-#define BMASK(addr, mask) MASK(addr, mask)
-#define BITS(addr, mask) BMASK(addr, mask)
-#define CHECK_BITS(addr, mask) BMASK(addr, mask)
-#define CHECK_BITS_SET(addr, mask) BMASK(addr, mask)
+#define BITS(ref, mask) BMASK(ref, mask)
+#define CHECK_BITS(ref, mask) BMASK(ref, mask)
+#define CHECK_BITS_SET(ref, mask) BMASK(ref, mask)
 
-#define BMASKSNT(addr, mask) ~MASK(addr, mask)
-#define CHECK_BITS_SNT(addr, mask) BMASKSNT(addr, mask)
-#define CHECK_BITS_UNSET(addr, mask) BMASKSNT(addr, mask)
+#define BMASKSNT(ref, mask) ~MASK(ref, mask)
+#define CHECK_BITS_SNT(ref, mask) BMASKSNT(ref, mask)
+#define CHECK_BITS_UNSET(ref, mask) BMASKSNT(ref, mask)
 
-#define BMASKSET(addr, mask) ((addr) |= (mask))
-#define SET_BITS(addr, mask) BMASKSET(addr, mask)
+#define BMASKSET(ref, mask) ((ref) |= (mask))
+#define SET_BITS(ref, mask) BMASKSET(ref, mask)
 
-#define BMASKRST(addr, mask) ((addr) &= ~(mask))
-#define RESET_BITS(addr, mask) BMASKRST(addr, mask)
-#define UNSET_BITS(addr, mask) BMASKRST(addr, mask)
-#define CLEAR_BITS(addr, mask) BMASKRST(addr, mask)
+#define BMASKRST(ref, mask) ((ref) &= ~(mask))
+#define RESET_BITS(ref, mask) BMASKRST(ref, mask)
+#define UNSET_BITS(ref, mask) BMASKRST(ref, mask)
+#define CLEAR_BITS(ref, mask) BMASKRST(ref, mask)
 
-#define BMASKFLP(addr, mask) ((addr) ^= (mask))
-#define FLIP_BITS(addr, mask) BMASKFLP(addr, mask)
-#define TOGGLE_BITS(addr, mask) BMASKFLP(addr, mask)
+#define BMASKFLP(ref, mask) ((ref) ^= (mask))
+#define FLIP_BITS(ref, mask) BMASKFLP(ref, mask)
+#define TOGGLE_BITS(ref, mask) BMASKFLP(ref, mask)
 
-#define SET_BITS_FROM(addr, mask, from_addr) BMASKSET(addr, MASK(from_addr, mask))
+#define SET_BITS_FROM(ref, mask, from_ref) BMASKSET(ref, MASK(from_ref, mask))
 
-#define CLEAR_BITS_FROM(addr, mask, from_addr) BMASKRST(addr, MASK(from_addr, mask))
+#define CLEAR_BITS_FROM(ref, mask, from_ref) BMASKRST(ref, MASK(from_ref, mask))
 
-#define COPY_BITS(addr, mask, from_addr) ((addr) = NOT_BITS(addr, mask) | MASK(addr, from_addr))
+#define COPY_BITS(ref, mask, from_ref) ((ref) = NOT_BITS(ref, mask) | MASK(ref, from_ref))
 
 // CORRESPONDING EXPANSION MACROS...
 
-#define BMASKNOTP(addr_mask_pair) BMASKNOT(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define NOT_BITS_PAIR(addr_mask_pair) BMASKNOTP(addr_mask_pair)
+#define BMASKNOTP(ref_mask_pair) BMASKNOT(ref_mask_pair)
+#define NOT_BITS_PAIR(ref_mask_pair) BMASKNOT(ref_mask_pair)
 
-#define BMASKP(addr_mask_pair) BMASK(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define BITS_PAIR(addr_mask_pair) BMASKP(addr_mask_pair)
-#define MASK_PAIR(addr_mask_pair) BMASKP(addr_mask_pair)
-#define CHECK_BITS_PAIR(addr_mask_pair) BMASKP(addr_mask_pair)
-#define CHECK_BITS_SET_PAIR(addr_mask_pair) BMASKP(addr_mask_pair)
+#define BMASKP(ref_mask_pair) BMASK(ref_mask_pair)
+#define BITS_PAIR(ref_mask_pair) BMASK(ref_mask_pair)
+#define MASK_PAIR(ref_mask_pair) BMASK(ref_mask_pair)
+#define CHECK_BITS_PAIR(ref_mask_pair) BMASK(ref_mask_pair)
+#define CHECK_BITS_SET_PAIR(ref_mask_pair) BMASK(ref_mask_pair)
 
-#define BMASKSNTP(addr_mask_pair) BMASKSNT(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define CHECK_BITS_SNT_PAIR(addr_mask_pair) BMASKSNTP(addr_mask_pair)
-#define CHECK_BITS_UNSET_PAIR(addr_mask_pair) BMASKSNTP(addr_mask_pair)
+#define BMASKSNTP(ref_mask_pair) BMASKSNT(ref_mask_pair)
+#define CHECK_BITS_SNT_PAIR(ref_mask_pair) BMASKSNT(ref_mask_pair)
+#define CHECK_BITS_UNSET_PAIR(ref_mask_pair) BMASKSNT(ref_mask_pair)
 
-#define BMASKSETP(addr_mask_pair) BMASKSET(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define SET_BITS_PAIR(addr_mask_pair) BMASKSETP(addr_mask_pair)
+#define BMASKSETP(ref_mask_pair) BMASKSET(ref_mask_pair)
+#define SET_BITS_PAIR(ref_mask_pair) BMASKSET(ref_mask_pair)
 
-#define BMASKRSTP(addr_mask_pair) BMASKRST(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define RESET_BITS_PAIR(addr_mask_pair) BMASKRSTP(addr_mask_pair)
-#define UNSET_BITS_PAIR(addr_mask_pair) BMASKRSTP(addr_mask_pair)
-#define CLEAR_BITS_PAIR(addr_mask_pair) BMASKRSTP(addr_mask_pair)
+#define BMASKRSTP(ref_mask_pair) BMASKRST(ref_mask_pair)
+#define RESET_BITS_PAIR(ref_mask_pair) BMASKRST(ref_mask_pair)
+#define UNSET_BITS_PAIR(ref_mask_pair) BMASKRST(ref_mask_pair)
+#define CLEAR_BITS_PAIR(ref_mask_pair) BMASKRST(ref_mask_pair)
 
-#define BMASKFLPP(addr_mask_pair) BMASKFLP(COMBA(addr_mask_pair), COMBB(addr_mask_pair))
-#define FLIP_BITS_PAIR(addr_mask_pair) BMASKFLPP(addr_mask_pair)
-#define TOGGLE_BITS_PAIR(addr_mask_pair) BMASKFLPP(addr_mask_pair)
+#define BMASKFLPP(ref_mask_pair) BMASKFL(ref_mask_pair)
+#define FLIP_BITS_PAIR(ref_mask_pair) BMASKFLP(ref_mask_pair)
+#define TOGGLE_BITS_PAIR(ref_mask_pair) BMASKFLP(ref_mask_pair)
 
-#define SET_BITS_FROM_TUPLE(addr_mask_from_addr_tuple) \
-	SET_BITS_FROM(COMBA(addr_mask_from_addr_tuple), COMBB(addr_mask_from_addr_tuple), COMBC(addr_mask_from_addr_tuple))
+#define SET_BITS_FROM_PAIR(ref_mask_pair, from_ref) SET_BITS_FROM(ref_mask_pair, from_ref)
 
-#define CLEAR_BITS_FROM_TUPLE(addr_mask_from_addr_tuple) \
-	CLEAR_BITS_FROM(COMBA(addr_mask_from_addr_tuple), COMBB(addr_mask_from_addr_tuple), COMBC(addr_mask_from_addr_tuple))
+#define CLEAR_BITS_FROM_PAIR(ref_mask_pair, from_ref) CLEAR_BITS_FROM(ref_mask_pair, from_ref)
 
-#define COPY_BITS_TUPLE(addr_mask_from_addr_tuple) \
-	COPY_BITS(COMBA(addr_mask_from_addr_tuple), COMBB(addr_mask_from_addr_tuple), COMBC(addr_mask_from_addr_tuple))
+#define COPY_BITS_PAIR(ref_mask_pair, from_ref) COPY_BITS(ref_mask_pair, from_ref)
+
+#define SET_BITS_FROM_TUPLE(ref_mask_from_ref_tuple) SET_BITS_FROM(ref_mask_from_ref_tuple
+
+#define CLEAR_BITS_FROM_TUPLE(ref_mask_from_ref_tuple) CLEAR_BITS_FROM(ref_mask_from_ref_tuple
+
+#define COPY_BITS_TUPLE(ref_mask_from_ref_tuple) COPY_BITS(ref_mask_from_ref_tuple
 
 
 /* (SINGLE) BIT-TWIDDLING MACROS */
 
-#define BNOT(addr, bit_offset) NOT_BIT(addr, bit_offset)
+#define BNOT(ref, bit_offset) NOT_BIT(ref, bit_offset)
 
-#define BCHK(addr, bit_offset) CHECK_BITS((addr) & BMASK(bit_offset))
-#define CHECK_BIT(addr, bit_offset) BCHK(addr, bit_offset)
-#define CHECK_SET(addr, bit_offset) BCHK(addr, bit_offset)
+#define BCHK(ref, bit_offset) CHECK_BITS((ref) & BMASK(bit_offset))
+#define CHECK_BIT(ref, bit_offset) BCHK(ref, bit_offset)
+#define CHECK_SET(ref, bit_offset) BCHK(ref, bit_offset)
 
-#define BSNT(addr, bit_offset) ~BCHK(addr, bit_offset)
-#define CHECK_BIT_NOT(addr, bit_offset) BSNT(addr, bit_offset)
-#define CHECK_UNSET(addr, bit_offset) BSNT(addr, bit_offset)
+#define BSNT(ref, bit_offset) ~BCHK(ref, bit_offset)
+#define CHECK_BIT_NOT(ref, bit_offset) BSNT(ref, bit_offset)
+#define CHECK_UNSET(ref, bit_offset) BSNT(ref, bit_offset)
 
-#define BSET(addr, bit_offset) ((addr) |= BMASK(bit_offset))
-#define SET_BIT(addr, bit_offset) BSET(addr, bit_offset)
+#define BSET(ref, bit_offset) ((ref) |= BMASK(bit_offset))
+#define SET_BIT(ref, bit_offset) BSET(ref, bit_offset)
 
-#define BRST(addr, bit_offset) ((addr) &= ~BMASK(bit_offset))
-#define RESET_BIT(addr, bit_offset) BRST(addr, bit_offset)
-#define UNSET_BIT(addr, bit_offset) BRST(addr, bit_offset)
-#define CLEAR_BIT(addr, bit_offset) BRST(addr, bit_offset)
+#define BRST(ref, bit_offset) ((ref) &= ~BMASK(bit_offset))
+#define RESET_BIT(ref, bit_offset) BRST(ref, bit_offset)
+#define UNSET_BIT(ref, bit_offset) BRST(ref, bit_offset)
+#define CLEAR_BIT(ref, bit_offset) BRST(ref, bit_offset)
 
-#define BFLP(addr, bit_offset) ((addr) ^= BMASK(bit_offset))
-#define FLIP_BIT(addr, bit_offset) BFLP(addr, bit_offset)
-#define TOGGLE_BIT(addr, bit_offset) BFLP(addr, bit_offset)
-#define NOW_FLIP_BIT(addr, bit_offset) BFLP(addr, bit_offset)
-#define FLIP_BIT_GOOD(addr, bit_offset) BFLP(addr, bit_offset) // [heh...]
+#define BFLP(ref, bit_offset) ((ref) ^= BMASK(bit_offset))
+#define FLIP_BIT(ref, bit_offset) BFLP(ref, bit_offset)
+#define TOGGLE_BIT(ref, bit_offset) BFLP(ref, bit_offset)
+#define NOW_FLIP_BIT(ref, bit_offset) BFLP(ref, bit_offset)
+#define FLIP_BIT_GOOD(ref, bit_offset) BFLP(ref, bit_offset) // [heh...]
 
-#define SET_BIT_TO(addr, bit_offset, value) ((addr) = BNOT(bit_offset) | (value) << bit_offset)
+#define SET_BIT_TO(ref, bit_offset, value) ((ref) = BNOT(bit_offset) | (value) << bit_offset)
 
-#define SET_BIT_FROM(addr, bit_offset, from_addr) SET_BIT_TO(addr, bit_offset, BCHK(from_addr, bit_offset))
+#define SET_BIT_FROM(ref, bit_offset, from_ref) SET_BIT_TO(ref, bit_offset, BCHK(from_ref, bit_offset))
 
-#define CLEAR_BIT_FROM(addr, bit_offset, from_addr) SET_BIT_TO(addr, bit_offset, BSNT(from_addr, bit_offset))
+#define CLEAR_BIT_FROM(ref, bit_offset, from_ref) SET_BIT_TO(ref, bit_offset, BSNT(from_ref, bit_offset))
 
-#define COPY_BIT(addr, bit_offset, from_addr) ((addr) = NOT_BIT(addr, bit_offset) | BCHK(addr, bit_offset))
+#define COPY_BIT(ref, bit_offset, from_ref) ((ref) = NOT_BIT(ref, bit_offset) | BCHK(ref, bit_offset))
 
 // CORRESPONDING EXPANSION MACROS...
 
-#define BNOTP(addr_bit_offset_pair) BNOT(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define NOT_BIT_PAIR(addr_bit_offset_pair) BNOTP(addr_bit_offset_pair)
+#define BNOTP(ref_bit_offset_pair) BNOT(ref_bit_offset_pair)
+#define NOT_BIT_PAIR(ref_bit_offset_pair) BNOT(ref_bit_offset_pair)
 
-#define BCHKP(addr_bit_offset_pair) BCHK(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define CHECK_BIT_PAIR(addr_bit_offset_pair) BCHKP(addr_bit_offset_pair)
-#define CHECK_SET_PAIR(addr_bit_offset_pair) BCHKP(addr_bit_offset_pair)
+#define BCHKP(ref_bit_offset_pair) BCHK(ref_bit_offset_pair)
+#define CHECK_BIT_PAIR(ref_bit_offset_pair) BCHK(ref_bit_offset_pair)
+#define CHECK_SET_PAIR(ref_bit_offset_pair) BCHK(ref_bit_offset_pair)
 
-#define BSNTP(addr_bit_offset_pair) BSNT(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define CHECK_BIT_NOT_PAIR(addr_bit_offset_pair) BSNTP(addr_bit_offset_pair)
-#define CHECK_UNSET_PAIR(addr_bit_offset_pair) BSNTP(addr_bit_offset_pair)
+#define BSNTP(ref_bit_offset_pair) BSNT(ref_bit_offset_pair)
+#define CHECK_BIT_NOT_PAIR(ref_bit_offset_pair) BSNT(ref_bit_offset_pair)
+#define CHECK_UNSET_PAIR(ref_bit_offset_pair) BSNT(ref_bit_offset_pair)
 
-#define BSETP(addr_bit_offset_pair) BSET(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define SET_BIT_PAIR(addr_bit_offset_pair) BSETP(addr_bit_offset_pair)
+#define BSETP(ref_bit_offset_pair) BSET(ref_bit_offset_pair)
+#define SET_BIT_PAIR(ref_bit_offset_pair) BSET(ref_bit_offset_pair)
 
-#define BRSTP(addr_bit_offset_pair) BRST(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define UNSET_BIT_PAIR(addr_bit_offset_pair) BRSTP(addr_bit_offset_pair)
-#define RESET_BIT_PAIR(addr_bit_offset_pair) BRSTP(addr_bit_offset_pair)
-#define CLEAR_BIT_PAIR(addr_bit_offset_pair) BRSTP(addr_bit_offset_pair)
+#define BRSTP(ref_bit_offset_pair) BRST(ref_bit_offset_pair)
+#define UNSET_BIT_PAIR(ref_bit_offset_pair) BRST(ref_bit_offset_pair)
+#define RESET_BIT_PAIR(ref_bit_offset_pair) BRST(ref_bit_offset_pair)
+#define CLEAR_BIT_PAIR(ref_bit_offset_pair) BRST(ref_bit_offset_pair)
 
-#define BFLPP(addr_bit_offset_pair) BFLP(COMBA(addr_bit_offset_pair), COMBB(addr_bit_offset_pair))
-#define FLIP_BIT_PAIR(addr_bit_offset_pair) BFLPP(addr_bit_offset_pair)
-#define TOGGLE_BIT_PAIR(addr_bit_offset_pair) BFLPP(addr_bit_offset_pair)
+#define BFLPP(ref_bit_offset_pair) BFLP(ref_bit_offset_pair)
+#define FLIP_BIT_PAIR(ref_bit_offset_pair) BFLP(ref_bit_offset_pair)
+#define TOGGLE_BIT_PAIR(ref_bit_offset_pair) BFLP(ref_bit_offset_pair)
 
-#define SET_BIT_TO_TUPLE(addr_mask_value_tuple) SET_BIT_TO(COMBA(addr_mask_value_tuple), \
-	COMBB(addr_mask_value_tuple), COMBC(addr_mask_value_tuple))
+#define SET_BIT_TO_PAIR(ref_mask_pair, value) SET_BIT_TO(ref_mask_pair, value)
 
-#define SET_BIT_FROM_TUPLE(addr_bit_offset_from_addr_tuple) SET_BIT_FROM(COMBA(addr_bit_offset_from_addr_tuple), \
-	COMBB(addr_bit_offset_from_addr_tuple), COMBC(addr_bit_offset_from_addr_tuple))
+#define SET_BIT_FROM_PAIR(ref_bit_offset_pair, from_ref) SET_BIT_FROM(ref_bit_offset_pair, from_ref)
 
-#define CLEAR_BIT_FROM_TUPLE(addr_bit_offset_from_addr_tuple) CLEAR_BIT_FROM(COMBA(addr_bit_offset_from_addr_tuple), \
-	COMBB(addr_bit_offset_from_addr_tuple), COMBC(addr_bit_offset_from_addr_tuple))
+#define CLEAR_BIT_FROM_PAIR(ref_bit_offset_pair, from_ref) CLEAR_BIT_FROM(ref_bit_offset_pair, from_ref)
 
-#define COPY_BIT_TUPLE(addr_bit_offset_from_addr_tuple) COPY_BIT(COMBA(addr_bit_offset_from_addr_tuple), \
-	COMBB(addr_bit_offset_from_addr_tuple), COMBC(addr_bit_offset_from_addr_tuple))
+#define COPY_BIT_PAIR(ref_bit_offset_pair, from_ref) COPY_BIT(ref_bit_offset_pair, from_ref)
+
+#define SET_BIT_TO_TUPLE(ref_mask_value_tuple) SET_BIT_TO(ref_mask_value_tuple)
+
+#define SET_BIT_FROM_TUPLE(ref_bit_offset_from_ref_tuple) SET_BIT_FROM(ref_bit_offset_from_ref_tuple)
+
+#define CLEAR_BIT_FROM_TUPLE(ref_bit_offset_from_ref_tuple) CLEAR_BIT_FROM(ref_bit_offset_from_ref_tuple)
+
+#define COPY_BIT_TUPLE(ref_bit_offset_from_ref_tuple) COPY_BIT(ref_bit_offset_from_ref_tuple)
 
 
 /* BIT-SPECIFIC MACRO ALIASES FOR BYTES */
@@ -276,27 +289,27 @@
 #define LOW_NYBBLE_MASK NYBBLE_MASK(0)
 #define HIGH_NYBBLE_MASK NYBBLE_MASK(1)
 
-#define LOW_NYBBLE(byte_addr) MASK(byte_addr, LOW_NYBBLE_MASK)
-#define HIGH_NYBBLE(byte_addr) MASK(byte_addr, HIGH_NYBBLE_MASK)
+#define LOW_NYBBLE(byte_ref) MASK(byte_ref, LOW_NYBBLE_MASK)
+#define HIGH_NYBBLE(byte_ref) MASK(byte_ref, HIGH_NYBBLE_MASK)
 
-#define CHECK_NYBBLE(byte_addr, nybble_offset) MASK(byte_addr, NYBBLE_MASK(nybble_offset))
+#define CHECK_NYBBLE(byte_ref, nybble_offset) MASK(byte_ref, NYBBLE_MASK(nybble_offset))
 
-#define CHECK_UNSET_NYBBLE(byte_addr, nybble_offset) MASK(byte_addr, NOT_NYBBLE(nybble_offset))
+#define CHECK_UNSET_NYBBLE(byte_ref, nybble_offset) MASK(byte_ref, NOT_NYBBLE(nybble_offset))
 
-#define SET_LOW_NYBBLE(byte_addr, from_addr) SET_BITS(byte_addr, LOW_NYBBLE_MASK, from_addr)
-#define SET_HIGH_NYBBLE(byte_addr, from_addr) SET_BITS(byte_addr, HIGH_NYBBLE_MASK, from_addr)
+#define SET_LOW_NYBBLE(byte_ref, from_ref) SET_BITS(byte_ref, LOW_NYBBLE_MASK, from_ref)
+#define SET_HIGH_NYBBLE(byte_ref, from_ref) SET_BITS(byte_ref, HIGH_NYBBLE_MASK, from_ref)
 
-#define CLEAR_LOW_NYBBLE(byte_addr, from_addr) CLEAR_BITS(byte_addr, LOW_NYBBLE_MASK, from_addr)
-#define CLEAR_HIGH_NYBBLE(byte_addr, from_addr) CLEAR_BITS(byte_addr, HIGH_NYBBLE_MASK, from_addr)
+#define CLEAR_LOW_NYBBLE(byte_ref, from_ref) CLEAR_BITS(byte_ref, LOW_NYBBLE_MASK, from_ref)
+#define CLEAR_HIGH_NYBBLE(byte_ref, from_ref) CLEAR_BITS(byte_ref, HIGH_NYBBLE_MASK, from_ref)
 
-#define TOGGLE_LOW_NYBBLE(byte_addr, from_addr) TOGGLE_BITS(byte_addr, LOW_NYBBLE_MASK, from_addr)
-#define TOGGLE_HIGH_NYBBLE(byte_addr, from_addr) TOGGLE_BITS(byte_addr, HIGH_NYBBLE_MASK, from_addr)
+#define TOGGLE_LOW_NYBBLE(byte_ref, from_ref) TOGGLE_BITS(byte_ref, LOW_NYBBLE_MASK, from_ref)
+#define TOGGLE_HIGH_NYBBLE(byte_ref, from_ref) TOGGLE_BITS(byte_ref, HIGH_NYBBLE_MASK, from_ref)
 
-#define SET_NYBBLE(addr, nybble_offset, from_addr) SET_BITS(addr, NYBBLE_MASK(nybble_offset), from_addr)
+#define SET_NYBBLE(ref, nybble_offset, from_ref) SET_BITS(ref, NYBBLE_MASK(nybble_offset), from_ref)
 
-#define CLEAR_NYBBLE(addr, nybble_offset, from_addr) CLEAR_BITS(addr, NYBBLE_MASK(nybble_offset), from_addr)
+#define CLEAR_NYBBLE(ref, nybble_offset, from_ref) CLEAR_BITS(ref, NYBBLE_MASK(nybble_offset), from_ref)
 
-#define COPY_NYBBLE(addr, nybble_offset, from_addr) COPY_BITS(addr, NYBBLE_MASK(nybble_offset), from_addr)
+#define COPY_NYBBLE(ref, nybble_offset, from_ref) COPY_BITS(ref, NYBBLE_MASK(nybble_offset), from_ref)
 
 
 /* BYTE MANIPULATION MACROS */
@@ -304,27 +317,27 @@
 #define LOW_BYTE_MASK BYTE_MASK(0)
 #define HIGH_BYTE_MASK BYTE_MASK(1)
 
-#define LOW_BYTE(word_addr) MASK(word_addr, LOW_BYTE_MASK)
-#define HIGH_BYTE(word_addr) MASK(word_addr, HIGH_BYTE_MASK)
+#define LOW_BYTE(word_ref) MASK(word_ref, LOW_BYTE_MASK)
+#define HIGH_BYTE(word_ref) MASK(word_ref, HIGH_BYTE_MASK)
 
-#define CHECK_BYTE(addr, byte_offset) MASK(addr, BYTE_MASK(byte_offset))
+#define CHECK_BYTE(ref, byte_offset) MASK(ref, BYTE_MASK(byte_offset))
 
-#define CHECK_UNSET_BYTE(addr, byte_offset) MASK(addr, NOT_BYTE(byte_offset))
+#define CHECK_UNSET_BYTE(ref, byte_offset) MASK(ref, NOT_BYTE(byte_offset))
 
-#define SET_LOW_BYTE(word_addr, from_addr) SET_BITS(word_addr, LOW_BYTE_MASK, from_addr)
-#define SET_HIGH_BYTE(word_addr, from_addr) SET_BITS(word_addr, HIGH_BYTE_MASK, from_addr)
+#define SET_LOW_BYTE(word_ref, from_ref) SET_BITS(word_ref, LOW_BYTE_MASK, from_ref)
+#define SET_HIGH_BYTE(word_ref, from_ref) SET_BITS(word_ref, HIGH_BYTE_MASK, from_ref)
 
-#define CLEAR_LOW_BYTE(word_addr, from_addr) CLEAR_BITS(word_addr, LOW_BYTE_MASK, from_addr)
-#define CLEAR_HIGH_BYTE(word_addr, from_addr) CLEAR_BITS(word_addr, HIGH_BYTE_MASK, from_addr)
+#define CLEAR_LOW_BYTE(word_ref, from_ref) CLEAR_BITS(word_ref, LOW_BYTE_MASK, from_ref)
+#define CLEAR_HIGH_BYTE(word_ref, from_ref) CLEAR_BITS(word_ref, HIGH_BYTE_MASK, from_ref)
 
-#define TOGGLE_LOW_BYTE(word_addr, from_addr) TOGGLE_BITS(word_addr, LOW_BYTE_MASK, from_addr)
-#define TOGGLE_HIGH_BYTE(word_addr, from_addr) TOGGLE_BITS(word_addr, HIGH_BYTE_MASK, from_addr)
+#define TOGGLE_LOW_BYTE(word_ref, from_ref) TOGGLE_BITS(word_ref, LOW_BYTE_MASK, from_ref)
+#define TOGGLE_HIGH_BYTE(word_ref, from_ref) TOGGLE_BITS(word_ref, HIGH_BYTE_MASK, from_ref)
 
-#define SET_BYTE(addr, byte_offset, from_addr) SET_BITS(addr, BYTE_MASK(byte_offset), from_addr)
+#define SET_BYTE(ref, byte_offset, from_ref) SET_BITS(ref, BYTE_MASK(byte_offset), from_ref)
 
-#define CLEAR_BYTE(addr, byte_offset, from_addr) CLEAR_BITS(addr, BYTE_MASK(byte_offset), from_addr)
+#define CLEAR_BYTE(ref, byte_offset, from_ref) CLEAR_BITS(ref, BYTE_MASK(byte_offset), from_ref)
 
-#define COPY_BYTE(addr, byte_offset, from_addr) COPY_BITS(addr, BYTE_MASK(byte_offset), from_addr)
+#define COPY_BYTE(ref, byte_offset, from_ref) COPY_BITS(ref, BYTE_MASK(byte_offset), from_ref)
 
 
 /* WORD MANIPULATION MACROS */
@@ -332,27 +345,27 @@
 #define LOW_WORD_MASK WORD_MASK(0)
 #define HIGH_WORD_MASK WORD_MASK(1)
 
-#define LOW_WORD(dword_addr) MASK(dword_addr, LOW_WORD_MASK)
-#define HIGH_WORD(dword_addr) MASK(dword_addr, HIGH_WORD_MASK)
+#define LOW_WORD(dword_ref) MASK(dword_ref, LOW_WORD_MASK)
+#define HIGH_WORD(dword_ref) MASK(dword_ref, HIGH_WORD_MASK)
 
-#define CHECK_WORD(addr, word_offset) MASK(addr, WORD_MASK(word_offset))
+#define CHECK_WORD(ref, word_offset) MASK(ref, WORD_MASK(word_offset))
 
-#define CHECK_UNSET_WORD(addr, word_offset) MASK(addr, NOT_WORD(word_offset))
+#define CHECK_UNSET_WORD(ref, word_offset) MASK(ref, NOT_WORD(word_offset))
 
-#define SET_LOW_WORD(dword_addr, from_addr) SET_BITS(dword_addr, LOW_WORD_MASK, from_addr)
-#define SET_HIGH_WORD(dword_addr, from_addr) SET_BITS(dword_addr, HIGH_WORD_MASK, from_addr)
+#define SET_LOW_WORD(dword_ref, from_ref) SET_BITS(dword_ref, LOW_WORD_MASK, from_ref)
+#define SET_HIGH_WORD(dword_ref, from_ref) SET_BITS(dword_ref, HIGH_WORD_MASK, from_ref)
 
-#define CLEAR_LOW_WORD(dword_addr, from_addr) CLEAR_BITS(dword_addr, LOW_WORD_MASK, from_addr)
-#define CLEAR_HIGH_WORD(dword_addr, from_addr) CLEAR_BITS(dword_addr, HIGH_WORD_MASK, from_addr)
+#define CLEAR_LOW_WORD(dword_ref, from_ref) CLEAR_BITS(dword_ref, LOW_WORD_MASK, from_ref)
+#define CLEAR_HIGH_WORD(dword_ref, from_ref) CLEAR_BITS(dword_ref, HIGH_WORD_MASK, from_ref)
 
-#define TOGGLE_LOW_WORD(dword_addr, from_addr) TOGGLE_BITS(dword_addr, LOW_WORD_MASK, from_addr)
-#define TOGGLE_HIGH_WORD(dword_addr, from_addr) TOGGLE_BITS(dword_addr, HIGH_WORD_MASK, from_addr)
+#define TOGGLE_LOW_WORD(dword_ref, from_ref) TOGGLE_BITS(dword_ref, LOW_WORD_MASK, from_ref)
+#define TOGGLE_HIGH_WORD(dword_ref, from_ref) TOGGLE_BITS(dword_ref, HIGH_WORD_MASK, from_ref)
 
-#define SET_WORD(addr, word_offset, from_addr) SET_BITS(addr, WORD_MASK(word_offset), from_addr)
+#define SET_WORD(ref, word_offset, from_ref) SET_BITS(ref, WORD_MASK(word_offset), from_ref)
 
-#define CLEAR_WORD(addr, word_offset, from_addr) CLEAR_BITS(addr, WORD_MASK(word_offset), from_addr)
+#define CLEAR_WORD(ref, word_offset, from_ref) CLEAR_BITS(ref, WORD_MASK(word_offset), from_ref)
 
-#define COPY_WORD(addr, word_offset, from_addr) COPY_BITS(addr, WORD_MASK(word_offset), from_addr)
+#define COPY_WORD(ref, word_offset, from_ref) COPY_BITS(ref, WORD_MASK(word_offset), from_ref)
 
 
 /* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING */
@@ -362,9 +375,10 @@ IGNORE_WARNING(-Wstrict-aliasing)
 
 /* BIT-PACKING / BIT REFERENCE MACROS */
 
-#define PACK_BYTE(byte_addr) (reinterpret_cast<IttyBitty::PBITPACK>(byte_addr))
+#define PACK_BYTE(byte_addr) reinterpret_cast<IttyBitty::PBITPACK>(byte_addr)
 #define PACK_BYTE_REF(byte_ref) PACK_BYTE(&(byte_ref))
-#define PACK_BYTE_VAL(byte_val) PACK_BYTE(&(byte_val))
+#define PACK_BYTE_CREF(byte_val) MAKE_CONST(PACK_BYTE(&(byte_val)))
+#define PACK_BYTE_VAL(byte_val) PACK_BYTE_CREF(byte_val)
 
 #define _B(byte_addr, i) (PACK_BYTE(byte_addr)->b##i)
 
