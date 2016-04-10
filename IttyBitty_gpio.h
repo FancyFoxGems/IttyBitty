@@ -486,9 +486,9 @@ namespace IttyBitty
 
 CSIZE NUM_PORTS = __COUNTER__;
 
-EXTERN PVBYTE DDR_PORTS[NUM_PORTS];
-EXTERN PVBYTE OUT_PORTS[NUM_PORTS];
-EXTERN PVBYTE PIN_PORTS[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_MODE_PORTS[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_OUT_PORTS[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_IN_PORTS[NUM_PORTS];
 
 EXTERN SIZE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
@@ -503,9 +503,9 @@ INLINE VOID _InitializePortTables()
 {
 	for (SIZE i = 0; i < NUM_PORTS; i++)
 	{
-		DDR_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		OUT_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		PIN_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_MODE_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_OUT_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_IN_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
 	}
 }
 
@@ -528,7 +528,24 @@ namespace IttyBitty
 }
 
 
-#define SET_ARDUINO_PIN(arduino_pin) 
+#define ARDUINO_PIN_MODE_REF(arduino_pin) (*ARDUINO_MODE_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
+#define ARDUINO_PIN_OUT_REF(arduino_pin) (*ARDUINO_OUT_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
+#define ARDUINO_PIN_IN_REF(arduino_pin) (*ARDUINO_IN_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
+
+#define CHECK_ARDUINO_PIN(arduino_pin)  CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN_SET(arduino_pin)  CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN_UNSET(arduino_pin)  CHECK_UNSET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+
+#define SET_ARDUINO_PIN(arduino_pin)  SET_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CLEAR_ARDUINO_PIN(arduino_pin)  CLEAR_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define TOGGLE_ARDUINO_PIN(arduino_pin)  TOGGLE_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+
+#define GET_ARDUINO_PIN_MODE(arduino_pin) ((PinMode)(CHECK_SET(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) OR \
+	CHECK_SET(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) SHL 1))
+#define SET_ARDUINO_PIN_MODE(arduino_pin, mode) \
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) \
+		else CLEAR_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]); \
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_ARDUINO_PIN(arduino_pin) else CLEAR_ARDUINO_PIN(arduino_pin);
 
 
 #define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]
@@ -544,7 +561,7 @@ namespace IttyBitty
 #define TOGGLE_PIN(port_ref, pin_number) TOGGLE_BIT(port_ref, pin_number)
 
 #define PIN_IN_CHECK(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
-#define PIN_IN_CHECK_SET(port_letter, pin_number) PIN_IN(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK_SET(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
 #define PIN_IN_CHECK_UNSET(port_letter, pin_number) CHECK_UNSET(PIN##port_letter, pin_number)
 
 #define PIN_OUT_SET(port_letter, pin_number) SET_BIT(PORT##port_letter, pin_number)
