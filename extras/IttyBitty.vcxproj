@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|Win32">
@@ -43,16 +43,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <ForcedIncludeFiles>C:\RC\Sketchbook\IttyBitty\IttyBitty\extras\__vm\.extras.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>__vm\.extras.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\IttyBitty\IttyBitty\extras;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\142e2xuy.j4i\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\142e2xuy.j4i\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\tools\avr/avr/include/;C:\Program Files (x86)\Arduino\hardware\tools\avr//avr/include/avr/;C:\Program Files (x86)\Arduino\hardware\tools\avr/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\keywords.txt" />
-    <None Include="..\library.properties" />
     <None Include="IttyBitty.ino" />
     <None Include="...\keywords.txt" />
     <None Include="...\library.properties" />
@@ -60,6 +57,7 @@
     <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="__vm\.extras.vsarduino.h" />
     <ClInclude Include="..\avr_cpunames.h" />
     <ClInclude Include="..\IttyBitty.h" />
     <ClInclude Include="..\IttyBitty_aliases.h" />
@@ -67,14 +65,17 @@
     <ClInclude Include="..\IttyBitty_bits.h" />
     <ClInclude Include="..\IttyBitty_bytes.h" />
     <ClInclude Include="..\IttyBitty_gpio.h" />
+    <ClInclude Include="..\IttyBitty_gpio_arduino.h" />
     <ClInclude Include="..\IttyBitty_gpio_portpins.h" />
+    <ClInclude Include="..\IttyBitty_info.h" />
     <ClInclude Include="..\IttyBitty_interrupts.h" />
     <ClInclude Include="..\IttyBitty_led.h" />
     <ClInclude Include="..\IttyBitty_registers.h" />
+    <ClInclude Include="..\IttyBitty_signals.h" />
     <ClInclude Include="..\IttyBitty_slim.h" />
     <ClInclude Include="..\IttyBitty_type_traits.h" />
     <ClInclude Include="..\IttyBitty_util.h" />
-    <ClInclude Include="__vm\.extras.vsarduino.h" />
+    <ClInclude Include="..\IttyBitty_wavetables.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\IttyBitty_bits.cpp" />
@@ -82,7 +83,7 @@
     <ClCompile Include="..\IttyBitty_gpio.cpp" />
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
     <ClCompile Include="..\IttyBitty_led.cpp" />
-    <ClCompile Include="..\placement_new.cpp" />
+    <ClCompile Include="..\IttyBitty_signals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

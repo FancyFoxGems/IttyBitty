@@ -73,15 +73,19 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <..\..\IttyBitty\IttyBitty_bytes.h>
 #include <..\..\IttyBitty\IttyBitty_gpio.cpp>
 #include <..\..\IttyBitty\IttyBitty_gpio.h>
+#include <..\..\IttyBitty\IttyBitty_gpio_arduino.h>
 #include <..\..\IttyBitty\IttyBitty_gpio_portpins.h>
+#include <..\..\IttyBitty\IttyBitty_info.h>
 #include <..\..\IttyBitty\IttyBitty_interrupts.cpp>
 #include <..\..\IttyBitty\IttyBitty_interrupts.h>
 #include <..\..\IttyBitty\IttyBitty_led.cpp>
 #include <..\..\IttyBitty\IttyBitty_led.h>
 #include <..\..\IttyBitty\IttyBitty_registers.h>
+#include <..\..\IttyBitty\IttyBitty_signals.cpp>
+#include <..\..\IttyBitty\IttyBitty_signals.h>
 #include <..\..\IttyBitty\IttyBitty_slim.h>
 #include <..\..\IttyBitty\IttyBitty_type_traits.h>
 #include <..\..\IttyBitty\IttyBitty_util.h>
+#include <..\..\IttyBitty\IttyBitty_wavetables.h>
 #include <..\..\IttyBitty\avr_cpunames.h>
-#include <..\..\IttyBitty\placement_new.cpp>
 #endif

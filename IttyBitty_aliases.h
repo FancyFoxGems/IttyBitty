@@ -18,7 +18,7 @@
 //using namespace std;
 
 
-/* C/C++ KEYWORD ALIASES */
+/* C++ KEYWORD ALIASES */
 
 #define EXTERN extern
 #define INLINE inline

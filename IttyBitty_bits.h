@@ -9,12 +9,6 @@
 #ifndef _ITTYBITTY_BITS_H
 #define _ITTYBITTY_BITS_H
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
 
 #include "IttyBitty_util.h"
 

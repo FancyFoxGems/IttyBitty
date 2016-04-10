@@ -8,12 +8,6 @@
 #ifndef _ITTYBITTY_UTIL_H
 #define _ITTYBITTY_UTIL_H
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
 
 #include "IttyBitty_type_traits.h"
 
@@ -150,6 +144,8 @@ using std::extent;
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
 
+#define ASM(expr) __asm__(expr)
+
 #define T_SIZE SIZEOF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
@@ -161,7 +157,7 @@ using std::extent;
 template<typename T, T N> 
 struct overflow { char operator()() { return N + 256; } };
 
-#define COMPILE_PRINT_CONST(var) char(overflow<TYPEOF(var), var>())
+#define PRINT_COMPILE_CONST(var) char(overflow<TYPEOF(var), var>())
 
 
 /* PLACEMENT NEW IMPLEMENTATION */

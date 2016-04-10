@@ -12,6 +12,32 @@
 #include "IttyBitty_gpio.h"
 
 
+#define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]
+
+#define PORT_PIN_PAIR(port_ref, pin_number) port_ref, pin_number	// NOTE: For use with XXXXXX_PAIR bit manipulation macros
+
+#define CHECK_PIN(port_ref, pin_number) CHECK_SET(port_ref, pin_number)
+#define CHECK_PIN_SET(port_ref, pin_number) CHECK_PIN(port_ref, pin_number)
+#define CHECK_PIN_UNSET(port_ref, pin_number) CHECK_UNSET(port_ref, pin_number)
+
+#define SET_PIN(port_ref, pin_number) SET_BIT(port_ref, pin_number)
+#define CLEAR_PIN(port_ref, pin_number) CLEAR_BIT(port_ref, pin_number)
+#define TOGGLE_PIN(port_ref, pin_number) TOGGLE_BIT(port_ref, pin_number)
+
+#define PIN_IN_CHECK(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK_SET(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK_UNSET(port_letter, pin_number) CHECK_UNSET(PIN##port_letter, pin_number)
+
+#define PIN_OUT_SET(port_letter, pin_number) SET_BIT(PORT##port_letter, pin_number)
+#define PIN_OUT_CLEAR(port_letter, pin_number) CLEAR_BIT(PORT##port_letter, pin_number)
+#define PIN_OUT_TOGGLE(port_letter, pin_number) TOGGLE_BIT(PORT##port_letter, pin_number)
+
+#define PIN_GET_MODE(port_letter, pin_number) ((PinMode)(CHECK_SET(DDR##port_letter, pin_number) OR CHECK_SET(PORT##port_letter, pin_number) SHL 1))
+#define PIN_SET_MODE(port_letter, pin_number, mode) \
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(DDR##port_letter, pin_number) else CLEAR_PIN(DDR##port_letter, pin_number); \
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_PIN(POR##port_letter, pin_number) else CLEAR_PIN(POR##port_letter, pin_number);
+
+
 #ifdef PORTA
 	
 

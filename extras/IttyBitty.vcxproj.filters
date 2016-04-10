@@ -1,6 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="__vm\.extras.vsarduino.h">
+      <Filter>__vm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\avr_cpunames.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -19,6 +25,15 @@
     <ClInclude Include="..\IttyBitty_gpio.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_gpio_arduino.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_gpio_portpins.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_info.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_interrupts.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -26,6 +41,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_registers.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_signals.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_slim.h">
@@ -37,13 +55,7 @@
     <ClInclude Include="..\IttyBitty_util.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.extras.vsarduino.h">
-      <Filter>__vm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_gpio_portpins.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\avr_cpunames.h">
+    <ClInclude Include="..\IttyBitty_wavetables.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -61,12 +73,6 @@
       <Filter>metadata</Filter>
     </None>
     <None Include="IttyBitty.ino" />
-    <None Include="..\library.properties">
-      <Filter>src</Filter>
-    </None>
-    <None Include="..\keywords.txt">
-      <Filter>src</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -95,7 +101,7 @@
     <ClCompile Include="..\IttyBitty_led.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\placement_new.cpp">
+    <ClCompile Include="..\IttyBitty_signals.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

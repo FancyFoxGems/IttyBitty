@@ -5,14 +5,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ***********************************************************************************/
 
-#ifndef _ITTYBITTY_UTIL_H
-#define _ITTYBITTY_UTIL_H
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#ifndef _ITTYBITTY_INFO_H
+#define _ITTYBITTY_INFO_H
 
 
 #include <avr/eeprom.h>
@@ -225,12 +219,7 @@ INLINE CWORD FlashUsed()
 		STATIC CONST CWORD FLASH_PAGE_SIZE = SPM_PAGESIZE;
 	#endif
 
-	if (textAndDataSize % FLASH_PAGE_SIZE > 0)
-		textAndDataSize += FLASH_PAGE_SIZE;
-
-	if textAndDataSize %
-
-	return static_cast<CWORD>(textAndDataSize);
+	return static_cast<CWORD>(textAndDataSize) + FLASH_PAGE_SIZE;
 }
 
 INLINE CWORD FlashAvailable()
