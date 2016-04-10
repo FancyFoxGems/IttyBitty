@@ -514,6 +514,39 @@ namespace std
 	
 	template<bool condition, typename T = VOID, typename F = VOID>
 	using conditional_t = typename conditional<condition, T, F>::type;
+
+
+	/* [extent]: METAFUNCTION */
+	
+	template<typename T, unsigned N = 0>
+	STRUCT extent
+	{
+		STATIC CONSTEXPR T value = N;
+	};
+ 
+	template<typename T>
+	struct extent<T[], 0>
+	{
+		STATIC CONSTEXPR T value = 0;
+	};
+ 
+	template<typename T, unsigned N>
+	STRUCT extent<T[], N>
+	{
+		STATIC CONSTEXPR T value = N - 1;
+	};
+ 
+	template<typename T, SIZE N>
+	STRUCT extent<T[N], 0>
+	{
+		STATIC CONSTEXPR T value = N;
+	};
+ 
+	template<typename T, unsigned N, SIZE I>
+	STRUCT extent<T[I], N>
+	{
+		STATIC CONSTEXPR T value = N - 1;
+	};
 }
 
 

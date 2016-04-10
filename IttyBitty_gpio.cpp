@@ -7,10 +7,22 @@
 	#define EXCLUDE_ITTYBITTY_BYTES
 #endif
 
+
 #include "IttyBitty_gpio.h"
 
-
 using namespace IttyBitty;
+
+
+PVBYTE DDR_PORTS[_PORT_ARRAY_SIZE];
+PVBYTE OUT_PORTS[_PORT_ARRAY_SIZE];
+PVBYTE PIN_PORTS[_PORT_ARRAY_SIZE];
+
+SIZE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
+BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
+
+
+//_InitializePortTables();
+//_InitializeArduinoPinTables();
 
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES

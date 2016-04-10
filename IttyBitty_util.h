@@ -17,20 +17,31 @@
 
 #include <avr/eeprom.h>
 
+#ifndef _AVR_CPU_NAME_
+#include "avr_cpunames.h"
+#endif
+
 #include "IttyBitty_type_traits.h"
 #include "placement_new.cpp"
 
 
 /* MACRO EXPANSION MACROS */
 
+#define NULL_MACRO(x) 
+#define EXPAND(x) x
 #define STR(x) #x
+#define EXPAND_STR(x) STR(x)
 #define CONCAT(x, y) x##y
+#define EXPAND_CONCAT(x, y) CONCAT(x, y)
 
 
 /* COMPILER MACROS */
 
 #define PRAGMA_MACRO(x) _Pragma(#x)
 #define IGNORE_WARNING(w) PRAGMA_MACRO(GCC diagnostic ignored #w)
+
+#define VAR_NAME_VALUE(var) #var " = " EXPAND_STR(var)
+#define PRINT_VAR(var) PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
 
 
 /* ATTRIBUTE & TYPE INFO ALIASES */
@@ -43,7 +54,6 @@
 #define SIZEOF(var) sizeof(var)
 
 #define countof(var) (SIZEOF(var) / SIZEOF(0[var]))
-#define CAPACITY(var) countof(var)
 
 
 /* METAFUNCTION ALIASES */
@@ -63,6 +73,7 @@ using std::make_signed_t;
 using std::make_unsigned_t;
 using std::enable_if_t;
 using std::conditional_t;
+using std::extent;
 
 #define TYPE(T) identity_t<T>
 #define TYPEOF(var) decltype(var)
@@ -118,6 +129,8 @@ using std::conditional_t;
 #define ENABLE_IF(condition, T) enable_if_t<condition, T>
 #define TYPE_IF(condition, T, F) conditional_t<condition, T, F>
 
+#define CAPACITY(var) extent<TYPEOF(var)>::value
+
 
 /* DATA TYPE SIZES */
 
@@ -152,23 +165,36 @@ using std::conditional_t;
 #define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
 #define _CSTR_P(string_addr) FLASH_STRING(string_addr)
 
+template<typename T, T N> 
+struct overflow { char operator()() { return N + 256; } };
+
+#define COMPILE_PRINT_CONST(var) char(overflow<TYPEOF(var), var>())
+
+
+/* GENERAL CPU & ARDUINO INFO FUNCTIONS */
+
+CONSTEXPR PCCHAR CPUType()
+{
+	return _AVR_CPU_NAME_;
+}
+
 
 /* MEMORY AREA/ALLOCATION VARIABLES & FUNCTIONS */
 
-extern PCHAR __data_start;
-extern PCHAR __data_end;
-extern PCHAR __bss_start;
-extern PCHAR __bss_end;
-extern PCHAR __heap_start;
-extern PCHAR __heap_end;
+EXTERN PCHAR __data_start;
+EXTERN PCHAR __data_end;
+EXTERN PCHAR __bss_start;
+EXTERN PCHAR __bss_end;
+EXTERN PCHAR __heap_start;
+EXTERN PCHAR __heap_end;
 
-extern PTR __brkval;
+EXTERN PTR __brkval;
 
-extern PCHAR __malloc_heap_start;
-extern PCHAR __malloc_heap_end;
-extern SIZE __malloc_margin;
+EXTERN PCHAR __malloc_heap_start;
+EXTERN PCHAR __malloc_heap_end;
+EXTERN SIZE __malloc_margin;
 
-CONSTEXPR PVUINT StackPointer()
+INLINE PVUINT StackPointer()
 {
 	return &static_cast<RVUINT>(SP);
 }
