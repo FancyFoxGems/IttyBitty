@@ -484,30 +484,47 @@ namespace IttyBitty
 #endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
 
-namespace std
-{
-}
-
-
-CSIZE _PORT_ARRAY_SIZE = CAPACITY(port_to_mode_PGM);
 CSIZE NUM_PORTS = __COUNTER__;
 
-EXTERN PVBYTE DDR_PORTS[_PORT_ARRAY_SIZE];
-EXTERN PVBYTE OUT_PORTS[_PORT_ARRAY_SIZE];
-EXTERN PVBYTE PIN_PORTS[_PORT_ARRAY_SIZE];
+EXTERN PVBYTE DDR_PORTS[NUM_PORTS];
+EXTERN PVBYTE OUT_PORTS[NUM_PORTS];
+EXTERN PVBYTE PIN_PORTS[NUM_PORTS];
 
 EXTERN SIZE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
+#ifndef PORTA
+	CONSTEXPR CSIZE ARDUINO_PORT_INDEX_CORRECTION = 2;
+#else
+	CONSTEXPR CSIZE ARDUINO_PORT_INDEX_CORRECTION = 1;
+#endif
 
 INLINE VOID _InitializePortTables()
 {
-	// reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[2]))
+	for (SIZE i = 0; i < NUM_PORTS; i++)
+	{
+		DDR_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		OUT_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		PIN_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+	}
 }
 
 INLINE VOID _InitializeArduinoPinTables()
 {
+	for (SIZE i = 0; i < NUM_DIGITAL_PINS; i++)
+	{
+		ARDUINO_PIN_TO_PORT[i] = pgm_read_byte(&digital_pin_to_port_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
+		ARDUINO_PIN_TO_MASK[i] = pgm_read_byte(&digital_pin_to_bit_mask_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
+	}
+}
 
+namespace IttyBitty
+{
+	INLINE VOID InitGPIO()
+	{
+		_InitializePortTables();
+		_InitializeArduinoPinTables();
+	}
 }
 
 
