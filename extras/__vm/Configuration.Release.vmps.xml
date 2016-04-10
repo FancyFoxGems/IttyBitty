@@ -1,8 +1,0 @@
-<VisualMicro>
-  <Program Name="IttyBitty" Ext=".ino" Location="..">
-    <Compile IsDebugStart="1" IsCompiled="0" CompilerErrors="0" ConfigurationName="Release" StopOnError="True" OptimiseLibs="True" OptimiseCore="True" BuildPath=".\Builds\IttyBitty\nano_atmega328" CombinedProjectAdditionalPreProcs="" AdditionalPreprocessor="" ReCompileIfSourceIsNewer="1" />
-    <Debug DebugEnabled="0" EnableBreak="1" />
-    <Platform Name="arduino16x" Package="arduino" Platform="avr" Architecture="avr">
-    </Platform>
-  </Program>
-</VisualMicro>
