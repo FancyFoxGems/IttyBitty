@@ -40,6 +40,12 @@
     <ClInclude Include="__vm\.extras.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_gpio_portpins.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\avr_cpunames.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="...\keywords.txt">
@@ -55,6 +61,12 @@
       <Filter>metadata</Filter>
     </None>
     <None Include="IttyBitty.ino" />
+    <None Include="..\library.properties">
+      <Filter>src</Filter>
+    </None>
+    <None Include="..\keywords.txt">
+      <Filter>src</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

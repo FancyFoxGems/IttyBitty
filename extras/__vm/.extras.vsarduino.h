@@ -12,7 +12,6 @@
 #define _VSARDUINO_H_
 #define __AVR_ATmega328p__
 #define __AVR_ATmega328P__
-#define ITTYBITTY_SLIM
 #define F_CPU 16000000L
 #define ARDUINO 10608
 #define ARDUINO_AVR_NANO
@@ -74,6 +73,7 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <..\..\IttyBitty\IttyBitty_bytes.h>
 #include <..\..\IttyBitty\IttyBitty_gpio.cpp>
 #include <..\..\IttyBitty\IttyBitty_gpio.h>
+#include <..\..\IttyBitty\IttyBitty_gpio_portpins.h>
 #include <..\..\IttyBitty\IttyBitty_interrupts.cpp>
 #include <..\..\IttyBitty\IttyBitty_interrupts.h>
 #include <..\..\IttyBitty\IttyBitty_led.cpp>
@@ -82,5 +82,6 @@ extern "C" void __cxa_pure_virtual() {;}
 #include <..\..\IttyBitty\IttyBitty_slim.h>
 #include <..\..\IttyBitty\IttyBitty_type_traits.h>
 #include <..\..\IttyBitty\IttyBitty_util.h>
+#include <..\..\IttyBitty\avr_cpunames.h>
 #include <..\..\IttyBitty\placement_new.cpp>
 #endif
