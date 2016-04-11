@@ -186,7 +186,4 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 }
 
 
-#include "IttyBitty_info.h"
-
-
 #endif

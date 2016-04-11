@@ -95,6 +95,9 @@
 //#include "IttyBitty_util.h"			// Included by [IttyBitty_bits.h]
 
 
+#include "IttyBitty_info.h"
+
+
 /* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES

@@ -77,9 +77,9 @@
 #define BMASKNOT(ref, mask) INVERSE_MASK(ref, mask)
 #define NOT_BITS(ref, mask) BMASKNOT(ref, mask)
 
-#define BITS(ref, mask) BMASK(ref, mask)
-#define CHECK_BITS(ref, mask) BMASK(ref, mask)
-#define CHECK_BITS_SET(ref, mask) BMASK(ref, mask)
+#define BITS(ref, mask) MASK(ref, mask)
+#define CHECK_BITS(ref, mask) MASK(ref, mask)
+#define CHECK_BITS_SET(ref, mask) MASK(ref, mask)
 
 #define BMASKSNT(ref, mask) ~MASK(ref, mask)
 #define CHECK_BITS_SNT(ref, mask) BMASKSNT(ref, mask)
