@@ -17,7 +17,7 @@
 IGNORE_WARNING(-Wpointer-arith)
 
 
-/* CONDITIONALLY GENERATE ENDIAN-NESS MACRO */
+/* CONDITIONALLY GENERATE ENDIANNESS MACRO */
 
 #ifdef __AVR_ARCH__
 	#if __AVR_ARCH__ <= 60		// AVR architecture 1-6
@@ -41,6 +41,14 @@ IGNORE_WARNING(-Wpointer-arith)
 #define IS_BIG_ENDIAN ENDIANNESS == MSBFIRST
 
 
+/* ENDIANNESS SWAPPING MACROS */
+
+#define REVERSE_ENDIANNESS_16(var) __builtin_bswap16(var)
+#define REVERSE_ENDIANNESS_32(var) __builtin_bswap32(var)
+#define REVERSE_ENDIANNESS_64(var) __builtin_bswap64(var)
+#define REVERSE_ENDIANNESS(var) REVERSE_ENDIANNESS_16(var)
+
+
 namespace IttyBitty
 {
 
@@ -50,7 +58,7 @@ namespace IttyBitty
 	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF, &&RRBITREF;
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
-	
+
 #ifndef ITTYBITTY_BASE
 
 	template<typename T = BYTE>
@@ -76,11 +84,11 @@ namespace IttyBitty
 
 #endif	// #ifndef ITTYBITTY_BASE
 
-	
+
 	class IByteField;
 	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD, && RRIBYTEFIELD;
 	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
-	
+
 
 #ifndef ITTYBITTY_BASE
 
@@ -108,7 +116,7 @@ namespace IttyBitty
 	using RCIMANYBITFIELD = const IManyBitField<T> &;
 	template<typename T = DWORD>
 	using PPCIMANYBITFIELD = const IManyBitField<T> **;
-	
+
 	class IDWordField;
 	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD, && RRIDWORDFIELD;
 	typedef const class IDWordField CIDWORDFIELD, * PCIDWORDFIELD, & RCIDWORDFIELD, ** PPCIDWORDFIELD;
@@ -135,12 +143,12 @@ namespace IttyBitty
 	using PPCBITFIELD = const BitField<T> **;
 
 #endif	// #ifndef ITTYBITTY_BASE
-	
+
 
 	class ByteField;
 	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD, && RRBYTEFIELD;
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
-	
+
 
 #ifndef ITTYBITTY_BASE
 
@@ -168,20 +176,20 @@ namespace IttyBitty
 	using RCMANYBITFIELD = const ManyBitField<T> &;
 	template<typename T = DWORD>
 	using PPCMANYBITFIELD = const ManyBitField<T> **;
-	
+
 	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
 
 #endif	// #ifndef ITTYBITTY_BASE
-	
+
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
 	STRUCT _BitProxy
 	{
 	public:
-		
+
 	#ifndef ITTYBITTY_BASE
 		_BitProxy(PIBYTEFIELD, SIZE);
 	#else
@@ -201,7 +209,7 @@ namespace IttyBitty
 		VIRTUAL BIT Flip();
 
 	protected:
-		
+
 	#ifndef ITTYBITTY_BASE
 		PIBYTEFIELD Parent() const;
 	#else
@@ -219,7 +227,7 @@ namespace IttyBitty
 		BYTE _BitMask;
 	};
 
-	
+
 #ifndef ITTYBITTY_BASE
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
@@ -230,7 +238,7 @@ namespace IttyBitty
 	public:
 
 		VIRTUAL ~IBitField() { }
-		
+
 		RIBITFIELD<T> operator=(RRIBITFIELD<T>) { return *this; };
 		RIBITFIELD<T> operator=(RCIBITFIELD<T>) { return *this; };
 
@@ -295,7 +303,7 @@ namespace IttyBitty
 	INTERFACE IByteField : public virtual IBitField<BYTE>
 	{
 	public:
-		
+
 	#ifdef ITTYBITTY_BASE
 
 		VIRTUAL ~IByteField() { }
@@ -341,9 +349,9 @@ namespace IttyBitty
 
 		VIRTUAL PIBYTEFIELD CloneByValue() const = 0;
 		VIRTUAL PIBYTEFIELD CloneByReference() const = 0;
-		
+
 	#endif
-		
+
 		RIBYTEFIELD operator=(RRIBYTEFIELD) { return *this; };
 		RIBYTEFIELD operator=(RCIBYTEFIELD) { return *this; };
 
@@ -361,14 +369,14 @@ namespace IttyBitty
 		VIRTUAL BYTE HighNybble() const = 0;
 		VIRTUAL RIBYTEFIELD SetHighNybble(BYTE) = 0;
 	};
-	
+
 
 	/* [IWORDFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
 	INTERFACE IWordField : public virtual IBitField<WORD>
 	{
 	public:
-		
+
 		RIWORDFIELD operator=(RRIWORDFIELD) { return *this; };
 		RIWORDFIELD operator=(RCIWORDFIELD) { return *this; };
 
@@ -385,10 +393,10 @@ namespace IttyBitty
 	INTERFACE IManyBitField : public virtual IBitField<T>
 	{
 	public:
-		
+
 		RIMANYBITFIELD<T> operator=(RRIMANYBITFIELD<T>) { return *this; };
 		RIMANYBITFIELD<T> operator=(RCIMANYBITFIELD<T>) { return *this; };
-		
+
 		VIRTUAL operator PPWORD() const = 0;
 		VIRTUAL operator PPSHORT() const = 0;
 
@@ -405,7 +413,7 @@ namespace IttyBitty
 	INTERFACE IDWordField : public virtual IManyBitField<DWORD>
 	{
 	public:
-		
+
 		RIDWORDFIELD operator=(RRIDWORDFIELD) { return *this; };
 		RIDWORDFIELD operator=(RCIDWORDFIELD) { return *this; };
 
@@ -420,7 +428,7 @@ namespace IttyBitty
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
-	CLASS ByteField 
+	CLASS ByteField
 	#ifndef ITTYBITTY_BASE
 		: public virtual IByteField
 	#endif
@@ -431,14 +439,14 @@ namespace IttyBitty
 		ByteField(RCBYTE);
 		ByteField(RBYTE);
 		ByteField(PBYTE);
-		
+
 		ByteField(RRBYTEFIELD);
 		ByteField(RCBYTEFIELD);
 
 		~ByteField();
 
 		STATIC RBYTEFIELD NULL_OBJECT();
-		
+
 		VIRTUAL RBYTEFIELD operator=(RRBYTEFIELD);
 		VIRTUAL RBYTEFIELD operator=(RCBYTEFIELD);
 
@@ -509,7 +517,7 @@ namespace IttyBitty
 
 		VIRTUAL operator PCBITPACK() const;
 		VIRTUAL operator PBITPACK();
-		
+
 	#ifndef ITTYBITTY_BASE
 		VIRTUAL PIBYTEFIELD CloneByValue() const;
 		VIRTUAL PIBYTEFIELD CloneByReference() const;
@@ -546,7 +554,7 @@ namespace IttyBitty
 		BOOL _DisposeByte;
 	};
 
-	
+
 #ifndef ITTYBITTY_BASE
 
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
@@ -564,13 +572,13 @@ namespace IttyBitty
 				_ByteFieldPtrs[i] = (PBYTEFIELD)NULL;
 		}
 
-		BitField(T tVal) 
+		BitField(T tVal)
 			: _DisposalLevel(DisposalLevel::None)
 		{
 			this->SetValue(tVal);
 		}
 
-		EXPLICIT BitField(PVOID memAddr, SIZE byteWidth = T_SIZE) 
+		EXPLICIT BitField(PVOID memAddr, SIZE byteWidth = T_SIZE)
 			: _DisposalLevel(DisposalLevel::FieldData)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
@@ -588,7 +596,7 @@ namespace IttyBitty
 			}
 		}
 
-		BitField(BYTE byteVals[T_SIZE]) 
+		BitField(BYTE byteVals[T_SIZE])
 			: _DisposalLevel(DisposalLevel::FieldData)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
@@ -597,7 +605,7 @@ namespace IttyBitty
 				_ByteFieldPtrs[i] = new ByteField((BYTE)byteVals[i]);
 		}
 
-		BitField(PBYTE bytePtrs[T_SIZE]) 
+		BitField(PBYTE bytePtrs[T_SIZE])
 			: _DisposalLevel(DisposalLevel::FieldData)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
@@ -606,16 +614,16 @@ namespace IttyBitty
 				_ByteFieldPtrs[i] = new ByteField(bytePtrs[i]);
 		}
 
-		BitField(BYTEFIELD byteFields[T_SIZE]) 
+		BitField(BYTEFIELD byteFields[T_SIZE])
 			: _DisposalLevel(DisposalLevel::FieldPtrPtr) // TODO: FieldPtrs?
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
-	
+
 			for (SIZE i = 0; i < T_SIZE; i++)
 				_ByteFieldPtrs[i] = &byteFields[i];
 		}
 
-		BitField(PBYTEFIELD byteFieldPtrs[T_SIZE]) 
+		BitField(PBYTEFIELD byteFieldPtrs[T_SIZE])
 			: _DisposalLevel(DisposalLevel::None)
 		{
 			_ByteFieldPtrs = byteFieldPtrs;
@@ -665,14 +673,14 @@ namespace IttyBitty
 			STATIC BITFIELD<T> NULL_BITFIELD((T)0);
 			return NULL_BITFIELD;
 		}
-		
+
 		VIRTUAL RBITFIELD<T> operator=(RRBITFIELD<T> other)
 		{
 			*this = BitField<T>(other);
 
 			return *this;
 		}
-				
+
 		VIRTUAL RBITFIELD<T> operator=(RCBITFIELD<T> other)
 		{
 			*this = BitField<T>(other);
@@ -764,7 +772,7 @@ namespace IttyBitty
 		{
 			if (i >= this->BitWidth())
 				return BitRef::NULL_OBJECT();
-	
+
 			BYTE byteIdx = i / T_SIZE;
 			BYTE bitIdx = i % T_SIZE;
 
@@ -775,7 +783,7 @@ namespace IttyBitty
 		{
 			if (i >= this->BitWidth())
 				return BitRef::NULL_OBJECT();
-	
+
 			return this->Bit(i).Flip();
 		}
 
@@ -793,7 +801,7 @@ namespace IttyBitty
 		{
 			if (i >= this->ByteSize())
 				return ByteField::NULL_OBJECT();
-	
+
 			return *_ByteFieldPtrs[i];
 		}
 
@@ -806,7 +814,7 @@ namespace IttyBitty
 
 			return tVal;
 		}
-	
+
 		VIRTUAL VOID SetValue(T tVal)
 		{
 			this->~BitField<T>();
@@ -824,7 +832,7 @@ namespace IttyBitty
 		}
 
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<T> other)
-		{	
+		{
 			this->SetValue(other.Value());
 		}
 
@@ -852,7 +860,7 @@ namespace IttyBitty
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<T> other)
 		{
 			this->~BitField<T>();
-	
+
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 			*_ByteFieldPtrs = (PBYTEFIELD)other;
 
@@ -888,7 +896,7 @@ namespace IttyBitty
 
 		DisposalLevel _DisposalLevel;
 	};
-	
+
 
 	/* [WORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 16-BIT (WORD) MEMORY BLOCKS */
 
@@ -1097,7 +1105,7 @@ namespace IttyBitty
 			STATIC MANYBITFIELD<T> NULL_MANYBITFIELD((T)0);
 			return NULL_MANYBITFIELD;
 		}
-				
+
 		VIRTUAL RMANYBITFIELD<T> operator=(RCMANYBITFIELD<T> other)
 		{
 			*this = ManyBitField<T>(other);
@@ -1157,7 +1165,7 @@ namespace IttyBitty
 		{
 			if (_WordFieldPtrs != NULL)
 				delete[] _WordFieldPtrs;
-	
+
 			_WordFieldPtrs = new PWORDFIELD[this->WordSize()];
 
 			for (SIZE i = 0; i < this->WordSize(); i++)
@@ -1168,7 +1176,7 @@ namespace IttyBitty
 			#endif
 		}
 	};
-	
+
 
 	/* [DWORDFIELD]: CLASS TO ENCAPSULATE BIT-PACKED 32-BIT (DOUBLE WORD) MEMORY BLOCKS */
 

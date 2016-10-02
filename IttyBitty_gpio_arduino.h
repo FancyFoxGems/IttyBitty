@@ -12,36 +12,48 @@
 #include "IttyBitty_gpio.h"
 
 
-#ifdef PORTA		
+#ifdef PORTA
 	CSIZE __DUMMY_PORTA = __COUNTER__;
 #endif
 
-#ifdef PORTB		
+#ifdef PORTB
 	CSIZE __DUMMY_PORTB = __COUNTER__;
 #endif
 
-#ifdef PORTC		
+#ifdef PORTC
 	CSIZE __DUMMY_PORTC = __COUNTER__;
 #endif
 
-#ifdef PORTD		
+#ifdef PORTD
 	CSIZE __DUMMY_PORTD = __COUNTER__;
 #endif
 
-#ifdef PORTE		
+#ifdef PORTE
 	CSIZE __DUMMY_PORTE = __COUNTER__;
 #endif
 
-#ifdef PORTF		
+#ifdef PORTF
 	CSIZE __DUMMY_PORTF = __COUNTER__;
 #endif
 
-#ifdef PORTG		
+#ifdef PORTG
 	CSIZE __DUMMY_PORTG = __COUNTER__;
 #endif
 
-#ifdef PORTH		
+#ifdef PORTH
 	CSIZE __DUMMY_PORTH = __COUNTER__;
+#endif
+
+#ifdef PORTJ
+	CSIZE __DUMMY_PORTJ = __COUNTER__;
+#endif
+
+#ifdef PORTK
+	CSIZE __DUMMY_PORTK = __COUNTER__;
+#endif
+
+#ifdef PORTL
+	CSIZE __DUMMY_PORTL = __COUNTER__;
 #endif
 
 
@@ -64,6 +76,7 @@ INLINE VOID _InitializePortTables()
 {
 	for (SIZE i = 0; i < NUM_PORTS; i++)
 	{
+		if (i == 9) ++i;
 		ARDUINO_MODE_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
 		ARDUINO_OUT_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
 		ARDUINO_IN_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));

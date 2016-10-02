@@ -62,7 +62,7 @@ namespace IttyBitty
 	struct _Port;
 	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
 	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
-	
+
 	struct _GPIO;
 	typedef _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
 	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
@@ -77,10 +77,10 @@ namespace IttyBitty
 
 	public:
 
-		_PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg) 
+		_PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 			: DirectionReg(directionReg), OutputReg(outputReg), InputReg(inputReg) { }
 
-		_PortRegisters(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr) 
+		_PortRegisters(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr)
 		{
 			this->DirectionReg	= ByteField((RBYTE)directionRegAddr);
 			this->OutputReg 	= ByteField((RBYTE)outputRegAddr);
@@ -97,7 +97,7 @@ namespace IttyBitty
 			return NULL_PORTREG;
 		}
 
-		VIRTUAL RPORTREG operator=(RCPORTREG other) 
+		VIRTUAL RPORTREG operator=(RCPORTREG other)
 		{
 			this->DirectionReg	= ByteField(other.DirectionReg);
 			this->OutputReg 	= ByteField(other.OutputReg);
@@ -113,18 +113,29 @@ namespace IttyBitty
 	};
 
 
+	// TODO: NEW
+	template<BYTE P>
+	STRUCT _Pin
+	{
+	public:
+
+		_Pin() { }
+
+
+
+
 	STRUCT _Port
 	{
-	public:	
+	public:
 
 		_Port() : Registers(PortReg::NULL_OBJECT()) { }
-		
-		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg) 
+
+		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 		{
 			 this->Registers = PortReg(directionReg, outputReg, inputReg);
 		}
 
-		_Port(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr) 
+		_Port(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr)
 		{
 			 this->Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
 		}
@@ -142,7 +153,7 @@ namespace IttyBitty
 			return NULL_PORT;
 		}
 
-		VIRTUAL RPORT operator=(RCPORT other) 
+		VIRTUAL RPORT operator=(RCPORT other)
 		{
 			this->Registers = other.Registers;
 
@@ -204,7 +215,17 @@ namespace IttyBitty
 		{
 			Registers.OutputReg[p] = 0;
 		}
-		
+
+		// TODO: NEW
+		//Reset pin to default state
+		/* PORTB |= (1 << 4);
+		DDRB |= (1 << 4);
+		PORTB &= ~(1 << 4);
+		DDRB &= ~(1 << 4);*/
+
+		// TogglePin
+		// PINB |= (1 <<4)
+
 
 	protected:
 
@@ -291,14 +312,14 @@ namespace IttyBitty
 			return port->ResetPin(pin_number);
 		}
 	};
-	
-	
+
+
 	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
 
 	STRUCT _GPIO FINAL
 	{
 	private:
-		
+
 		_GPIO() { }
 
 
@@ -311,7 +332,7 @@ namespace IttyBitty
 			STATIC GPIO INSTANCE = _GPIO();
 			return INSTANCE;
 		}
-	
+
 
 	#ifdef PORTA
 		_GPIO_DECLARE_PORT_STRUCTS(A)
@@ -343,6 +364,18 @@ namespace IttyBitty
 
 	#ifdef PORTH
 		_GPIO_DECLARE_PORT_STRUCTS(H)
+	#endif
+
+	#ifdef PORTJ
+		_GPIO_DECLARE_PORT_STRUCTS(J)
+	#endif
+
+	#ifdef PORTK
+		_GPIO_DECLARE_PORT_STRUCTS(K)
+	#endif
+
+	#ifdef PORTL
+		_GPIO_DECLARE_PORT_STRUCTS(L)
 	#endif
 	};
 }
@@ -397,6 +430,18 @@ namespace IttyBitty
 	_DECLARE_PORT_STRUCTS(H)
 #endif
 
+#ifdef PORTJ
+	_DECLARE_PORT_STRUCTS(J)
+#endif
+
+#ifdef PORTK
+	_DECLARE_PORT_STRUCTS(K)
+#endif
+
+#ifdef PORTL
+	_DECLARE_PORT_STRUCTS(L)
+#endif
+
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
@@ -441,9 +486,21 @@ namespace IttyBitty
 		_TYPEDEF_PINS(H)
 	#endif
 
+	#ifdef PORTJ
+		_TYPEDEF_PINS(J)
+	#endif
+
+	#ifdef PORTK
+		_TYPEDEF_PINS(K)
+	#endif
+
+	#ifdef PORTL
+		_TYPEDEF_PINS(L)
+	#endif
+
 #endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
-		
+
 #include "IttyBitty_gpio_arduino.h"
 
 

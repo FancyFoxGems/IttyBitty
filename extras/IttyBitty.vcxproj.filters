@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="__vm\.extras.vsarduino.h">
@@ -58,27 +58,31 @@
     <ClInclude Include="..\IttyBitty_wavetables.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="__vm\.IttyBitty.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="...\keywords.txt">
-      <Filter>metadata</Filter>
+      <Filter>Metadata</Filter>
     </None>
     <None Include="...\library.properties">
-      <Filter>metadata</Filter>
+      <Filter>Metadata</Filter>
     </None>
     <None Include="...\LICENSE">
-      <Filter>metadata</Filter>
+      <Filter>Metadata</Filter>
     </None>
     <None Include="...\README.md">
-      <Filter>metadata</Filter>
+      <Filter>Metadata</Filter>
     </None>
-    <None Include="IttyBitty.ino" />
+    <None Include="..\..\IttyBitty.ino" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
       <UniqueIdentifier>{99f1f04e-ead0-4414-8f80-e2c03bac81e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="metadata">
+    <Filter Include="Examples">
+      <UniqueIdentifier>{0be123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Metadata">
       <UniqueIdentifier>{0f068f51-3d28-425e-9cef-26f7bd5557c3}</UniqueIdentifier>
     </Filter>
     <Filter Include="__vm">

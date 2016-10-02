@@ -12,20 +12,39 @@
 #include "IttyBitty_type_traits.h"
 
 
-/* MACRO EXPANSION MACROS */
+/* MACRO EXPANSION MACROS (META-MACROS) */
 
-#define NULL_MACRO(x) 
+#define NULL_MACRO(x)
 #define EXPAND(x) x
 #define STR(x) #x
 #define EXPAND_STR(x) STR(x)
 #define CONCAT(x, y) x##y
 #define EXPAND_CONCAT(x, y) CONCAT(x, y)
 
+#define __VA_MACRO(MACRO, _0, _1, _2, _3, _4, ARGS...) MACRO##_##_4
+#define _VA_MACRO(MACRO, ARGS...) __VA_MACRO(MACRO, ##ARGS, 4, 3, 2, 1, 0)
+#define VA_MACRO(MACRO, ARGS...) _VA_MACRO(MACRO, ##ARGS)(, ##ARGS)
+
 
 /* COMPILER MACROS */
 
+#define ASM(expr) __asm__(expr)
+
+#define PREFETCH(addr, ARGS...) VA_MACRO(PREFETCH, addr, ##ARGS)
+#define PREFETCH_1(addr) __builtin_prefetch (addr)
+#define PREFETCH_2(addr, rw) __builtin_prefetch (addr, rw)
+#define PREFETCH_3(addr, rw, locality) __builtin_prefetch (addr, rw, locality)
+
+#define EXPECT(expr, val) __builtin_expect(expr, val)
+#define EXPECTED(expr) EXPECT(expr, TRUE)
+#define NOT_EXPECTED(expr) EXPECT(expr, FALSE)
+
 #define PRAGMA_MACRO(x) _Pragma(#x)
 #define IGNORE_WARNING(w) PRAGMA_MACRO(GCC diagnostic ignored #w)
+
+#define CODE_FILE_NAME() _builtin_FILE()
+#define CODE_FUNCTION_NAME() _builtin_FUNCTION()
+#define CODE_LINE_NUMBER() _builtin_LINE()
 
 #define VAR_NAME_VALUE(var) #var " = " EXPAND_STR(var)
 #define PRINT_VAR(var) PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
@@ -33,6 +52,7 @@
 
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
+#define ALWAYS_INLINE __attribute__((always_inline))
 #define PACKED __attribute__ ((packed))
 #define PACKED_UNION UNION PACKED
 #define PACKED_STRUCT STRUCT PACKED
@@ -41,6 +61,7 @@
 #define SIZEOF(var) sizeof(var)
 
 #define countof(var) (SIZEOF(var) / SIZEOF(0[var]))
+#define COUNT(var) (SIZEOF(var) / SIZEOF(0[var]))
 
 
 /* METAFUNCTION ALIASES */
@@ -144,20 +165,25 @@ using std::extent;
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
 
-#define ASM(expr) __asm__(expr)
-
 #define T_SIZE SIZEOF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
 #define _CONSTRUCT(constructor_expr) FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
 
+#define ever (;;)
+#define forever for ever
+
 #define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
 #define _CSTR_P(string_addr) FLASH_STRING(string_addr)
 
-template<typename T, T N> 
+template<typename T, T N>
 struct overflow { char operator()() { return N + 256; } };
 
 #define PRINT_COMPILE_CONST(var) char(overflow<TYPEOF(var), var>())
+
+// TODO: NEW
+#define FLASH_FUNCTION_VARIATION(func) func ## _P
+#define PASS_FLASH_STRING(func, flash_string) (FLASH_FUNCTION_VARIATION(func)(PSTR(#flash_string)))
 
 
 /* PLACEMENT NEW IMPLEMENTATION */
@@ -173,7 +199,7 @@ struct overflow { char operator()() { return N + 256; } };
 	{
 		return ptr;
 	}
-		
+
 #endif	// if !defined(ARDUINO)...
 
 
@@ -185,5 +211,48 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 	return (tInstance->*function)(&params...);
 }
 
+// TODO: NEW
+#include <avr/wdt.h>
+
+void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
+
+void wdt_init(void)
+{
+	MCUSR = 0;
+	wdt_disable();
+
+	return;
+}
+
+#define soft_reset()        \
+do                          \
+{                           \
+	wdt_enable(WDTO_15MS);  \
+	for(;;)                 \
+	{                       \
+	}                       \
+} while(0)
+
+
+;; begin xram.S
+
+#include <avr/io.h>
+
+		.section .init1,"ax",@progbits
+
+		ldi r16,_BV(SRE) | _BV(SRW)
+		out _SFR_IO_ADDR(MCUCR),r16
+
+;; end xram.S
+
+void my_init_portb (void) __attribute__ ((naked)) \
+	__attribute__ ((section (".init3")));
+
+void
+my_init_portb (void)
+{
+		PORTB = 0xff;
+		DDRB = 0xff;
+}
 
 #endif

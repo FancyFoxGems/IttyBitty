@@ -13,17 +13,17 @@
 #include "IttyBitty_util.h"
 
 
-/* BIT OFFSET, L/H NYBBLE, BYTE, & WORD MASK CONSTANT MAPS; NOTE: PRIMARY FOR REFERENCE PURPOSES */
+/* BIT OFFSET, L/H NYBBLE, BYTE, & WORD MASK CONSTANT MAPS; NOTE: PRIMARILY FOR REFERENCE PURPOSES */
 
 //CBYTE BYTE_BIT_MASKS[] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 //CBYTE BYTE_NYBBLE_MASKS[] = { 0x0F, 0xF0 };
 
-//CWORD WORD_BIT_MASKS[] = { 
+//CWORD WORD_BIT_MASKS[] = {
 //	0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080,		// LOW BYTE
 //	0x0100, 0x0200, 0x0400, 0x0800, 0x1000, 0x2000, 0x4000, 0x8000 };	// HIGH BYTE
 //CWORD WORD_BYTE_MASKS[] = { 0x00FF, 0xFF00 };
-	
-//CWORD DWORD_BIT_MASKS[] = { 
+
+//CWORD DWORD_BIT_MASKS[] = {
 //	0x00000001, 0x00000002, 0x00000004, 0x00000008, 0x00000010, 0x00000020, 0x00000040, 0x00800000,		// LSB; LOW WORD
 //	0x00000100, 0x00000200, 0x00000400, 0x00000800, 0x00001000, 0x00002000, 0x00004000, 0x00008000,		// BYTE 1
 //	0x00010000, 0x00020000, 0x00040000, 0x00080000, 0x00100000, 0x00200000, 0x00400000, 0x00800000,		// BYTE 2; HIGH WORD
@@ -36,6 +36,39 @@
 
 #undef _BV
 #define _BV(bit_offset) (1U << (bit_offset))
+
+
+/* MISCELLANOUS BUILT-IN BIT OPERATION ALIASES */
+
+#define REDUNDANT_LEADING_BITS_16(int_val) __builtin_clrs(int_val)
+#define REDUNDANT_LEADING_BITS_32(long_val) __builtin_clrsl(long_val)
+#define REDUNDANT_LEADING_BITS_64(long_long_val) __builtin_clrsll(long_long_val)
+#define REDUNDANT_LEADING_BITS(val) REDUNDANT_LEADING_BITS_16(val)
+
+#define LEAST_SIGNIFICANT_ONE_BIT_16(int_val) __builtin_ffs(int_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_32(long_val) __builtin_ffsl(long_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_64(long_long_val) __builtin_ffsll(long_long_val)
+#define LEAST_SIGNIFICANT_ONE_BIT(val) LEAST_SIGNIFICANT_ONE_BIT_16(val)
+
+#define ONE_BITS_16(int_val) __builtin_popcount(int_val)
+#define ONE_BITS_32(long_val) __builtin_popcountl(long_val)
+#define ONE_BITS_64(long_long_val) __builtin_popcountll(long_long_val)
+#define ONE_BITS(val) ONE_BITS_16(val)
+
+#define LEADING_ZERO_BITS_16(int_val) __builtin_clz(int_val)
+#define LEADING_ZERO_BITS_32(long_val) __builtin_clzl(long_val)
+#define LEADING_ZERO_BITS_64(long_long_val) __builtin_clzll(long_long_val)
+#define LEADING_ZERO_BITS(val) LEADING_ZERO_BITS_16(val)
+
+#define TRAILING_ZERO_BITS_16(int_val) __builtin_ctz(int_val)
+#define TRAILING_ZERO_BITS_32(long_val) __builtin_ctzl(long_val)
+#define TRAILING_ZERO_BITS_64(long_long_val) __builtin_ctzll(long_long_val)
+#define TRAILING_ZERO_BITS(val) TRAILING_ZERO_BITS_16(val)
+
+#define BIT_PARITY_16(int_val) __builtin_parity(int_val)
+#define BIT_PARITY_32(long_val) __builtin_parityl(long_val)
+#define BIT_PARITY_64(long_long_val) __builtin_parityll(long_long_val)
+#define BIT_PARITY(val) BIT_PARITY_16(val)
 
 
 /* BIT-WISE OPERATOR ALIASES */
@@ -408,7 +441,7 @@ namespace IttyBitty
 
 		BIT Bit(SIZE i) const;
 
-		
+
 		BIT b0 : 1;
 		BIT b1 : 1;
 		BIT b2 : 1;
