@@ -213,16 +213,17 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 
 // TODO: NEW
 #include <avr/wdt.h>
+/*
+void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
 
-void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
-
-void wdt_init(void)
+void wdt_init()
 {
 	MCUSR = 0;
 	wdt_disable();
 
 	return;
 }
+*/
 
 #define soft_reset()        \
 do                          \
@@ -234,6 +235,7 @@ do                          \
 } while(0)
 
 
+/*
 ;; begin xram.S
 
 #include <avr/io.h>
@@ -244,7 +246,9 @@ do                          \
 		out _SFR_IO_ADDR(MCUCR),r16
 
 ;; end xram.S
+*/
 
+/*
 void my_init_portb (void) __attribute__ ((naked)) \
 	__attribute__ ((section (".init3")));
 
@@ -254,5 +258,6 @@ my_init_portb (void)
 		PORTB = 0xff;
 		DDRB = 0xff;
 }
+*/
 
 #endif

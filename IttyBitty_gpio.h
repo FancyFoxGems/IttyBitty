@@ -113,17 +113,6 @@ namespace IttyBitty
 	};
 
 
-	// TODO: NEW
-	template<BYTE P>
-	STRUCT _Pin
-	{
-	public:
-
-		_Pin() { }
-
-
-
-
 	STRUCT _Port
 	{
 	public:
@@ -445,13 +434,14 @@ namespace IttyBitty
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
-	#define _TYPEDEF_PINS(port_letter) typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1; \
-		typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##2; \
-		typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##3; \
-		typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##4; \
-		typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##5; \
-		typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##6; \
-		typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##7; \
+	#define _TYPEDEF_PINS(port_letter)										\
+		typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1;	\
+		typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##2;	\
+		typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##3;	\
+		typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##4;	\
+		typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##5;	\
+		typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##6;	\
+		typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##7;	\
 		typedef IttyBitty::PIN<7, &Port##port_letter> Pin##port_letter##8;
 
 	#ifdef PORTA
