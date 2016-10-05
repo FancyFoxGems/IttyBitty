@@ -1,22 +1,20 @@
 #######################################
-# Syntax Coloring Map For Test
+# Syntax Coloring Map For IttyBitty
 #######################################
 
+
 #######################################
-# Datatypes (KEYWORD1)
+# Namespaces & Data Types (KEYWORD1)
 #######################################
 
 IttyBitty	KEYWORD1
 
-#######################################
-# Methods and Functions (KEYWORD2)
-#######################################
 
-######################################
-# Instances (KEYWORD2)
+#######################################
+# Macros, Functions, Members (KEYWORD2)
 #######################################
 
 
 #######################################
-# Constants (LITERAL1)
+# Constants & Enum Values(LITERAL1)
 #######################################
