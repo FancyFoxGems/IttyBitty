@@ -17,5 +17,5 @@ So set those bits free with a little help from your friends - a plenitude of eas
 
 ## License
 Copyright © 2016 Tom Biuso.
-<br />This library is released under the GNU Lesser General Public License v3.0.
-<br />See LICENSE file for detailed terms and LGPL v3.0 license text.
+<br />This library is released under the GNU General Public License v3.0.
+<br />See LICENSE file for detailed terms and GPL v3.0 license text.
