@@ -1,9 +1,10 @@
-/**********************************************************************************
+/***********************************************************************************************
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ...
 *
+* This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+***********************************************************************************************/
 
 #ifndef _ITTYBITTY_BYTES_H
 #define _ITTYBITTY_BYTES_H

@@ -1,9 +1,10 @@
-/**********************************************************************************
+/***********************************************************************************************
 * [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
 *
+* This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+***********************************************************************************************/
 
 #ifndef _ITTYBITTY_INFO_H
 #define _ITTYBITTY_INFO_H
@@ -219,7 +220,7 @@ namespace IttyBitty
 	{
 	#if E2END == 0
 		return 0;
-	#else	
+	#else
 		return ROMUsed<DWORD, PCDWORD>(eeprom_read_dword, EEPROMTotalSize());
 	#endif
 	}
@@ -228,13 +229,13 @@ namespace IttyBitty
 	{
 	#if E2END == 0
 		return 0;
-	#else	
+	#else
 		return EEPROMTotalSize() - EEPROMUsed();
 	#endif
 	}
 
 	CONSTEXPR CWORD FlashROMTotalSize()
-	{	
+	{
 		return static_cast<CWORD>(FLASHEND) + 1;
 	}
 
@@ -257,7 +258,7 @@ namespace IttyBitty
 			BYTE bootSizeFactor = CHECK_BITS(hFuseByte, BOOTSZ1 OR BOOTSZ0) SHR 1;
 
 			BOOTLOADER_SIZE = 2 ^ (5 - bootSizeFactor) * SPM_PAGESIZE;
-				
+
 			return static_cast<CWORD>(BOOTLOADER_SIZE);
 
 		#endif

@@ -1,7 +1,8 @@
-/************************************************************************************
-* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.  *
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT. *
-************************************************************************************/
+/**********************************************************************************************
+* This file is part of the Itty Bitty Arduino library.                                        *
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.            *
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
+***********************************************************************************************/
 
 #if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
 	#define EXCLUDE_ITTYBITTY_BYTES
@@ -18,13 +19,13 @@ using namespace IttyBitty;
 /* [BITPROXY/BITREF]: PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
 
 #ifndef ITTYBITTY_BASE
-_BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i) 
+_BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i)
 #else
-_BitProxy::_BitProxy(PBYTEFIELD pParent, SIZE i) 
+_BitProxy::_BitProxy(PBYTEFIELD pParent, SIZE i)
 #endif
 	: _Parent(pParent), _BitMask(BIT_MASK(i)) { }
 
-_BitProxy::_BitProxy(RCBITREF other) 
+_BitProxy::_BitProxy(RCBITREF other)
 	: _Parent(other.Parent()), _BitMask(other.BitMask()) { }
 
 _BitProxy::~_BitProxy() { }
@@ -83,13 +84,13 @@ ByteField::ByteField()
 	new (this) ByteField((BYTE)0);
 }
 
-ByteField::ByteField(RCBYTE byteVal) 
+ByteField::ByteField(RCBYTE byteVal)
 	: _pByte(new BYTE(byteVal)), _DisposeByte(true) { }
 
-ByteField::ByteField(RBYTE byteRef) 
+ByteField::ByteField(RBYTE byteRef)
 	: _pByte(&byteRef), _DisposeByte(false) { }
 
-ByteField::ByteField(PBYTE pByte) 
+ByteField::ByteField(PBYTE pByte)
 	: _pByte(pByte), _DisposeByte(false) { }
 
 ByteField::ByteField(RRBYTEFIELD other)
@@ -105,7 +106,7 @@ ByteField::ByteField(RCBYTEFIELD other)
 	this->~ByteField();
 	new (this) ByteField((RBYTE)other);
 }
-	
+
 ByteField::~ByteField()
 {
 	if (_DisposeByte)
@@ -117,14 +118,14 @@ RBYTEFIELD ByteField::NULL_OBJECT()
 	STATIC BYTEFIELD NULL_BYTEFIELD((BYTE)0);
 	return NULL_BYTEFIELD;
 }
-				
+
 RBYTEFIELD ByteField::operator=(RRBYTEFIELD other)
 {
 	*this = ByteField(other);
 
 	return *this;
 }
-				
+
 RBYTEFIELD ByteField::operator=(RCBYTEFIELD other)
 {
 	*this = ByteField(other);

@@ -1,9 +1,10 @@
-/**********************************************************************************
+/***********************************************************************************************
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
+* This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+***********************************************************************************************/
 
 #ifndef _ITTYBITTY_REGISTERS_H
 #define _ITTYBITTY_REGISTERS_H
@@ -25,7 +26,7 @@
 /*
 	!! CONSTRAINT: 2 <= <register_num> <= 7 !!
 
-	The MCU uses r0 and r1 for MUL & MULS 16-bit multiplication instructions; 
+	The MCU uses r0 and r1 for MUL & MULS 16-bit multiplication instructions;
 	General purpose registers r8-15 are utilized by the AVR-C++ compiler;
 
 	SEE: http://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_regbind

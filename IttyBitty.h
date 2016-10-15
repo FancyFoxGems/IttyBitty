@@ -1,11 +1,21 @@
-/**********************************************************************************
-* Name:		IttyBitty Library
+/************************************************************************************************
+* Name:		Itty Bitty (Arduino Library)
 * Created:	3/20/2016
 * Author:	Tom Biuso <tjbtech@yahoo.com>
 *
+* This file is the root, primary source code file for the Itty Bitty Arduino Library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+*
+* Itty Bitty is free software: you can redistribute it and/or modify it under the terms of the
+* GNU General Public License as published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version.
+*
+* Itty Bitty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+* See the included GNU General Public License text for more details.
+************************************************************************************************/
 
 #ifndef _ITTYBITTY_
 #define _ITTYBITTY_ "FTW"
@@ -27,7 +37,7 @@
 * [IttyBitty_aliases.h]: TYPEDEFS FOR WIN32 API-STYLE TYPE REFERENCES
 
 * [IttyBitty_type_traits.h]: METAFUNCTIONS FOR TEMPLATED TYPING GOODNESS
-*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL 
+*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL
 *		as well as various versions of C++ Standard Library [VERSION(C++) >= 11]
 
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
@@ -65,7 +75,7 @@
 * [IttyBitty_aliases.h]: TYPEDEFS FOR WIN32 API-STYLE TYPE REFERENCES
 
 * [IttyBitty_type_traits.h]: METAFUNCTIONS FOR TEMPLATED TYPING GOODNESS
-*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL 
+*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL
 *		as well as various versions of C++ Standard Library [VERSION(C++) >= 11]
 
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.

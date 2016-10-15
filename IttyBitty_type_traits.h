@@ -1,11 +1,12 @@
-/**********************************************************************************
+/***********************************************************************************************
 * [IttyBitty_type_traits.h]: METAFUNCTIONS FOR TEMPLATED TYPING GOODNESS
-*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL 
+*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL
 *		as well as various versions of C++ Standard Library [VERSION(C++) >= 11]
 *
+* This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
+***********************************************************************************************/
 
 #if defined(_TYPE_TRAITS_H) || defined(__TYPE_TRAITS_H) || _
 		defined(_TYPE_TRAITS_H_) || defined(__TYPE_TRAITS_H_) || defined (_INC_TYPE_TRAITS)
@@ -40,37 +41,37 @@ namespace std
 
 
 	/* [add_const]: METAFUNCTION W/ SPECIALIZATION ON VALUE-NESS FOR CONST QUALIFICATION ADDITION */
-	
+
 	template<typename T = VOID>
 	STRUCT add_const
 	{
 		typedef CONST T type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_const<T *>
 	{
 		typedef CONST T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_const<VOLATILE T *>
 	{
 		typedef CV T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_const<CV T *>
 	{
 		typedef CV T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_const<T **>
 	{
 		typedef CONST T ** type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_const<T &>
 	{
@@ -85,49 +86,49 @@ namespace std
 
 	template<typename T = VOID>
 	STRUCT remove_const : identity<T> { };
-	
+
 	template<typename T>
 	STRUCT remove_const<CONST T>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_const<CONST T *>
 	{
 		typedef T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_const<CV T *>
 	{
 		typedef VOLATILE T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_const<CONST T &>
 	{
 		typedef T & type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_const<CONST T[]>
 	{
 		typedef T type[];
 	};
-	
+
 	template<typename T>
 	STRUCT remove_const<CV T[]>
 	{
 		typedef VOLATILE T type[];
 	};
-	
+
 	template<typename T, SIZE N>
 	STRUCT remove_const<CONST T[N]>
 	{
 		typedef T type[N];
 	};
-	
+
 	template<typename T, SIZE N>
 	STRUCT remove_const<CV T[N]>
 	{
@@ -139,31 +140,31 @@ namespace std
 
 
 	/* [add_volatile]: METAFUNCTION W/ SPECIALIZATION ON VALUE-NESS FOR VOLATILE QUALIFICATION ADDITION */
-	
+
 	template<typename T = VOID>
 	STRUCT add_volatile
 	{
 		typedef VOLATILE T type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_volatile<T *>
 	{
 		typedef VOLATILE T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_volatile<CONST T *>
 	{
 		typedef CV T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_volatile<CV T *>
 	{
 		typedef CV T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_volatile<T &>
 	{
@@ -178,19 +179,19 @@ namespace std
 
 	template<typename T = VOID>
 	STRUCT remove_volatile : identity<T> { };
-	
+
 	template<typename T>
 	STRUCT remove_volatile<VOLATILE T>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_volatile<VOLATILE T *>
 	{
 		typedef T * type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_volatile<CV T *>
 	{
@@ -208,13 +209,13 @@ namespace std
 	{
 		typedef CONST T type[];
 	};
-	
+
 	template<typename T, SIZE N>
 	STRUCT remove_volatile<VOLATILE T[N]>
 	{
 		typedef T type[N];
 	};
-	
+
 	template<typename T, SIZE N>
 	STRUCT remove_volatile<CV T[N]>
 	{
@@ -226,7 +227,7 @@ namespace std
 
 
 	/* [add_cv]: METAFUNCTION W/ SPECIALIZATION ON VALUE-NESS FOR CONST-VOLATILE QUALIFICATION ADDITION */
-	
+
 	template<typename T = VOID>
 	STRUCT add_cv
 	{
@@ -250,7 +251,7 @@ namespace std
 
 
 	/* [add_pointer]: METAFUNCTION W/ SPECIALIZATION ON POINTER TYPE-NESS FOR POINTER TYPE REFERENCE */
-	
+
 	template<typename T = VOID>
 	struct remove_reference;
 
@@ -263,19 +264,19 @@ namespace std
 	{
 		using type = remove_reference_t<T> *;
 	};
- 
+
 	template<typename T>
 	struct add_pointer<T, TRUE>
 	{
 		using type = T;
 	};
- 
+
 	template<typename T, typename... args>
 	struct add_pointer<T(args...), TRUE>
 	{
 		using type = T(*)(args...);
 	};
- 
+
 	template<typename T, typename... args>
 	struct add_pointer<T(args..., ...), TRUE>
 	{
@@ -290,25 +291,25 @@ namespace std
 
 	template<typename T = VOID>
 	STRUCT remove_pointer : identity<T> { };
-	
+
 	template<typename T>
 	STRUCT remove_pointer<T *>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_pointer<T * const>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_pointer<T * volatile>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_pointer<T * cv>
 	{
@@ -320,19 +321,19 @@ namespace std
 
 
 	/* [add_rvalue_ref / add_reference]: METAFUNCTIONS W/ SPECIALIZATION ON REFERENCE TYPE-NESS FOR REFERENCE TYPE REFERENCE */
-	
+
 	template<typename T = VOID>
 	STRUCT add_rvalue_ref
 	{
 		using type = remove_pointer_t<T> &&;
 	};
-	
+
 	template<typename T>
 	STRUCT add_rvalue_ref<T &>
 	{
 		typedef T && type;
 	};
-	
+
 	template<typename T>
 	STRUCT add_rvalue_ref<T &&>
 	{
@@ -348,13 +349,13 @@ namespace std
 	{
 		using type = remove_pointer_t<T> &;
 	};
-	
+
 	template<typename T>
 	STRUCT add_reference<T &>
 	{
 		using type = add_rvalue_ref_t<T &>;
 	};
-	
+
 	template<typename T>
 	STRUCT add_reference<T &&>
 	{
@@ -366,16 +367,16 @@ namespace std
 
 
 	/* [remove_rvalue_ref / remove_reference]: METAFUNCTIONS W/ SPECIALIZATION ON REFERENCE TYPE-NESS FOR REFERENCE REMOVAL */
-	
+
 	template<typename T = VOID>
 	STRUCT remove_rvalue_ref : identity<T> { };
-	
+
 	template<typename T>
 	STRUCT remove_rvalue_ref<T &&>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_rvalue_ref<CONST T &&>
 	{
@@ -388,19 +389,19 @@ namespace std
 
 	template<typename T>
 	STRUCT remove_reference : identity<T> { };
-	
+
 	template<typename T>
 	STRUCT remove_reference<T &>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_reference<CONST T &>
 	{
 		typedef T type;
 	};
-	
+
 	template<typename T>
 	STRUCT remove_reference<T &&>
 	{
@@ -490,10 +491,10 @@ namespace std
 
 	template<bool condition, typename T = VOID>
 	STRUCT enable_if { };
-	
+
 	template<typename T>
 	STRUCT enable_if<TRUE, T> : identity<T> { };
-	
+
 	template<bool condition, typename T = VOID>
 	using enable_if_t = typename enable_if<condition, T>::type;
 
@@ -502,40 +503,40 @@ namespace std
 
 	template<bool condition, typename T = VOID, typename F = VOID>
 	STRUCT conditional : identity<T> { };
-	
+
 	template<typename T, typename F>
 	STRUCT conditional<FALSE, T, F> : identity<F> { };
-	
+
 	template<bool condition, typename T = VOID, typename F = VOID>
 	using conditional_t = typename conditional<condition, T, F>::type;
 
 
 	/* [extent]: METAFUNCTION */
-	
+
 	template<typename T, unsigned N = 0>
 	STRUCT extent
 	{
 		STATIC CONSTEXPR T value = N;
 	};
- 
+
 	template<typename T>
 	struct extent<T[], 0>
 	{
 		STATIC CONSTEXPR T value = 0;
 	};
- 
+
 	template<typename T, unsigned N>
 	STRUCT extent<T[], N>
 	{
 		STATIC CONSTEXPR T value = N - 1;
 	};
- 
+
 	template<typename T, SIZE N>
 	STRUCT extent<T[N], 0>
 	{
 		STATIC CONSTEXPR T value = N;
 	};
- 
+
 	template<typename T, unsigned N, SIZE I>
 	STRUCT extent<T[I], N>
 	{
