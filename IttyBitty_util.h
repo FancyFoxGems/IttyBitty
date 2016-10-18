@@ -84,8 +84,9 @@ using std::enable_if_t;
 using std::conditional_t;
 using std::extent;
 
-#define TYPE(T) identity_t<T>
 #define TYPEOF(var) decltype(var)
+
+#define IDENTITY(T) identity_t<T>
 
 #define CONST_TYPE(T) add_const_t<T>
 #define CONST_TYPEOF(var) CONST_TYPE(TYPEOF(var))
@@ -226,14 +227,14 @@ void wdt_init()
 }
 */
 
-#define soft_reset()        \
-do                          \
-{                           \
-	wdt_enable(WDTO_15MS);  \
-	for(;;)                 \
-	{                       \
-	}                       \
-} while(0)
+#define soft_reset()			\
+	do                          \
+	{                           \
+		wdt_enable(WDTO_15MS);  \
+		for(;;)                 \
+		{                       \
+		}                       \
+	} while(0)
 
 
 /*
