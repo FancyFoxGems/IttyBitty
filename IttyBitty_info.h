@@ -242,7 +242,9 @@ namespace IttyBitty
 	#define BOOTSZ0 _BV(1)
 	#define BOOTSZ1 _BV(2)
 
-	INLINE CWORD BootloaderSpaceTotalSize()
+	STATIC BYTE __hFuseByte;
+	
+	INLINE CWORD BootloaderAllocatedSize()
 	{
 		#ifndef SPM_PAGESIZE
 
@@ -254,8 +256,8 @@ namespace IttyBitty
 
 			if (BOOTLOADER_SIZE  == 0)
 
-			BYTE hFuseByte = boot_lock_fuse_bits_get(GET_EXTENDED_FUSE_BITS);
-			BYTE bootSizeFactor = CHECK_BITS(hFuseByte, BOOTSZ1 OR BOOTSZ0) SHR 1;
+			__hFuseByte = boot_lock_fuse_bits_get(GET_EXTENDED_FUSE_BITS);
+			STATIC BYTE bootSizeFactor = CHECK_BITS(__hFuseByte, BOOTSZ1 OR BOOTSZ0) SHR 1;
 
 			BOOTLOADER_SIZE = 2 ^ (5 - bootSizeFactor) * SPM_PAGESIZE;
 
@@ -264,7 +266,7 @@ namespace IttyBitty
 		#endif
 	}
 
-	CONSTEXPR CWORD (*BootloaderSize)() = &BootloaderSpaceTotalSize;
+	CWORD (*BootloaderSize)() = &BootloaderAllocatedSize;
 
 	INLINE CWORD SketchSpaceTotalSize()
 	{
@@ -284,7 +286,7 @@ namespace IttyBitty
 		return static_cast<CWORD>(textAndDataSize) + FLASH_PAGE_SIZE;
 	}
 
-	CONSTEXPR CWORD (*SketchSize)() = &SketchSpaceUsed;
+	CWORD (*SketchSize)() = &SketchSpaceUsed;
 
 	INLINE CWORD SketchSpaceAvailable()
 	{
@@ -303,8 +305,8 @@ namespace IttyBitty
 	}
 
 	CONSTEXPR CWORD (*ProgMemTotalSize)() = &FlashROMTotalSize;
-	CONSTEXPR CWORD (*ProgMemUsed)() = &FlashROMUsed;
-	CONSTEXPR CWORD (*ProgMemAvailable)() = &FlashROMAvailable;
+	CWORD (*ProgMemUsed)() = &FlashROMUsed;
+	CWORD (*ProgMemAvailable)() = &FlashROMAvailable;
 }
 
 
