@@ -433,17 +433,19 @@ namespace IttyBitty
 	public:
 		
 		_BitPack();
+		_BitPack(RBYTE);
 		_BitPack(RCBYTE);
-		_BitPack(RCBITPACK other);
+		_BitPack(_BitPack const &);
 
-		STATIC RBITPACK NULL_OBJECT();
+		STATIC _BitPack & NULL_OBJECT();
 
 		STATIC CSIZE BitSize();
+		
+		_BitPack & operator =(_BitPack const &);
 
 		BIT operator[](SIZE i) const;
 
 		BIT Bit(SIZE i) const;
-
 
 		BIT b0 : 1;
 		BIT b1 : 1;

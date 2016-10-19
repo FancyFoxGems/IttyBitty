@@ -15,25 +15,36 @@ using namespace IttyBitty;
 
 _BitPack::_BitPack() { }
 
-_BitPack::_BitPack(RCBYTE value)
+_BitPack::_BitPack(RBYTE value)
 {
-	*this = value;
+	*this = static_cast<VBYTE>(value);
 }
 
-_BitPack::_BitPack(RCBITPACK other)
+_BitPack::_BitPack(RCBYTE value)
+{
+	*static_cast<_BitPack *>(this) = value;
+}
+
+_BitPack::_BitPack(_BitPack const & other)
 {
 	*this = other;
 }
 
-RBITPACK _BitPack::NULL_OBJECT()
+_BitPack & _BitPack::NULL_OBJECT()
 {
-	STATIC BITPACK NULL_BITPACK;
+	STATIC _BitPack NULL_BITPACK;
 	return NULL_BITPACK;
 }
 
 CSIZE _BitPack::BitSize()
 {
 	return BIT_SIZE(_BitPack);
+}
+
+_BitPack & _BitPack::operator =(_BitPack const & other)
+{
+	*this = _BitPack(other);
+	return *this;
 }
 
 BIT _BitPack::operator[](SIZE i) const
