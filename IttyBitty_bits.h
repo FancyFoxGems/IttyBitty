@@ -431,10 +431,12 @@ namespace IttyBitty
 	BITFIELD_STRUCT _BitPack
 	{
 	public:
-
+		
+		_BitPack();
+		_BitPack(RCBYTE);
 		_BitPack(RCBITPACK other);
 
-		STATIC RCBITPACK NULL_OBJECT();
+		STATIC RBITPACK NULL_OBJECT();
 
 		STATIC CSIZE BitSize();
 

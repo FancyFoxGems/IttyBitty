@@ -13,9 +13,22 @@ using namespace IttyBitty;
 
 #define __BIT(i) (this->b##i)
 
+_BitPack::_BitPack() { }
+
+_BitPack::_BitPack(RCBYTE value)
+{
+	*this = value;
+}
+
 _BitPack::_BitPack(RCBITPACK other)
 {
 	*this = other;
+}
+
+RBITPACK _BitPack::NULL_OBJECT()
+{
+	STATIC BITPACK NULL_BITPACK;
+	return NULL_BITPACK;
 }
 
 CSIZE _BitPack::BitSize()
