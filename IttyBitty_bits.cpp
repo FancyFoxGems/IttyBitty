@@ -13,22 +13,24 @@ using namespace IttyBitty;
 
 #define __BIT(i) (this->b##i)
 
+
 _BitPack::_BitPack() { }
 
-_BitPack::_BitPack(RBYTE value)
+_BitPack::_BitPack(_BitPack const & other)
 {
-	*this = static_cast<VBYTE>(value);
+	*(reinterpret_cast<PBYTE>(this)) = reinterpret_cast<RCBYTE>(other);
+}
+
+_BitPack::_BitPack(_BitPack && other)
+{
+	new (this) _BitPack(reinterpret_cast<RBYTE>(other));
 }
 
 _BitPack::_BitPack(RCBYTE value)
 {
-	*static_cast<_BitPack *>(this) = value;
+	*(reinterpret_cast<PBYTE>(this)) = value;
 }
 
-_BitPack::_BitPack(_BitPack const & other)
-{
-	*this = other;
-}
 
 _BitPack & _BitPack::NULL_OBJECT()
 {
@@ -41,9 +43,22 @@ CSIZE _BitPack::BitSize()
 	return BIT_SIZE(_BitPack);
 }
 
-_BitPack & _BitPack::operator =(_BitPack const & other)
+
+_BitPack & _BitPack::operator =(_BitPack const & rValue)
 {
-	*this = _BitPack(other);
+	*this = _BitPack(rValue);
+	return *this;
+}
+
+_BitPack & _BitPack::operator =(_BitPack && rValue)
+{
+	*this = _BitPack(rValue);
+	return *this;
+}
+
+_BitPack & _BitPack::operator =(RCBYTE rValue)
+{
+	*this = _BitPack(rValue);
 	return *this;
 }
 
@@ -51,6 +66,7 @@ BIT _BitPack::operator[](SIZE i) const
 {
 	return this->Bit(i);
 }
+
 
 BIT _BitPack::Bit(SIZE i) const
 {
