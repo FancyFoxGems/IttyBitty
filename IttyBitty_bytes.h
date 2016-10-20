@@ -204,8 +204,8 @@ namespace IttyBitty
 
 		VIRTUAL operator BIT() const;
 
-		VIRTUAL RBITREF operator=(RCBITREF);
-		VIRTUAL RBITREF operator=(BIT);
+		VIRTUAL RBITREF operator =(RCBITREF);
+		VIRTUAL RBITREF operator =(BIT);
 
 		VIRTUAL BIT Flip();
 
@@ -240,8 +240,8 @@ namespace IttyBitty
 
 		VIRTUAL ~IBitField() { }
 
-		RIBITFIELD<T> operator=(RRIBITFIELD<T>) { return *this; };
-		RIBITFIELD<T> operator=(RCIBITFIELD<T>) { return *this; };
+		RIBITFIELD<T> operator =(RRIBITFIELD<T>) { return *this; };
+		RIBITFIELD<T> operator =(RCIBITFIELD<T>) { return *this; };
 
 		VIRTUAL operator CONST T() const = 0;
 		VIRTUAL operator SIGNED_TYPE(CONST T)() const = 0;
@@ -353,8 +353,8 @@ namespace IttyBitty
 
 	#endif
 
-		RIBYTEFIELD operator=(RRIBYTEFIELD) { return *this; };
-		RIBYTEFIELD operator=(RCIBYTEFIELD) { return *this; };
+		RIBYTEFIELD operator =(RRIBYTEFIELD) { return *this; };
+		RIBYTEFIELD operator =(RCIBYTEFIELD) { return *this; };
 
 		VIRTUAL operator PBYTE() = 0;
 		VIRTUAL operator RBYTE() = 0;
@@ -378,8 +378,8 @@ namespace IttyBitty
 	{
 	public:
 
-		RIWORDFIELD operator=(RRIWORDFIELD) { return *this; };
-		RIWORDFIELD operator=(RCIWORDFIELD) { return *this; };
+		RIWORDFIELD operator =(RRIWORDFIELD) { return *this; };
+		RIWORDFIELD operator =(RCIWORDFIELD) { return *this; };
 
 		VIRTUAL BYTE LowByte() const = 0;
 		VIRTUAL RIBYTEFIELD SetLowByte(BYTE) = 0;
@@ -395,8 +395,8 @@ namespace IttyBitty
 	{
 	public:
 
-		RIMANYBITFIELD<T> operator=(RRIMANYBITFIELD<T>) { return *this; };
-		RIMANYBITFIELD<T> operator=(RCIMANYBITFIELD<T>) { return *this; };
+		RIMANYBITFIELD<T> operator =(RRIMANYBITFIELD<T>) { return *this; };
+		RIMANYBITFIELD<T> operator =(RCIMANYBITFIELD<T>) { return *this; };
 
 		VIRTUAL operator PPWORD() const = 0;
 		VIRTUAL operator PPSHORT() const = 0;
@@ -415,8 +415,8 @@ namespace IttyBitty
 	{
 	public:
 
-		RIDWORDFIELD operator=(RRIDWORDFIELD) { return *this; };
-		RIDWORDFIELD operator=(RCIDWORDFIELD) { return *this; };
+		RIDWORDFIELD operator =(RRIDWORDFIELD) { return *this; };
+		RIDWORDFIELD operator =(RCIDWORDFIELD) { return *this; };
 
 		VIRTUAL WORD LowWord() const = 0;
 		VIRTUAL RIWORDFIELD SetLowWord(WORD) = 0;
@@ -448,8 +448,8 @@ namespace IttyBitty
 
 		STATIC RBYTEFIELD NULL_OBJECT();
 
-		VIRTUAL RBYTEFIELD operator=(RRBYTEFIELD);
-		VIRTUAL RBYTEFIELD operator=(RCBYTEFIELD);
+		VIRTUAL RBYTEFIELD operator =(RRBYTEFIELD);
+		VIRTUAL RBYTEFIELD operator =(RCBYTEFIELD);
 
 		// IBitField<BYTE>
 
@@ -675,14 +675,14 @@ namespace IttyBitty
 			return NULL_BITFIELD;
 		}
 
-		VIRTUAL RBITFIELD<T> operator=(RRBITFIELD<T> other)
+		VIRTUAL RBITFIELD<T> operator =(RRBITFIELD<T> other)
 		{
 			*this = BitField<T>(other);
 
 			return *this;
 		}
 
-		VIRTUAL RBITFIELD<T> operator=(RCBITFIELD<T> other)
+		VIRTUAL RBITFIELD<T> operator =(RCBITFIELD<T> other)
 		{
 			*this = BitField<T>(other);
 
@@ -1107,7 +1107,7 @@ namespace IttyBitty
 			return NULL_MANYBITFIELD;
 		}
 
-		VIRTUAL RMANYBITFIELD<T> operator=(RCMANYBITFIELD<T> other)
+		VIRTUAL RMANYBITFIELD<T> operator =(RCMANYBITFIELD<T> other)
 		{
 			*this = ManyBitField<T>(other);
 
