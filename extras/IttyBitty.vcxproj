@@ -64,12 +64,14 @@
     <ClInclude Include="..\IttyBitty_base.h" />
     <ClInclude Include="..\IttyBitty_bits.h" />
     <ClInclude Include="..\IttyBitty_bytes.h" />
+    <ClInclude Include="..\IttyBitty_fields.h" />
     <ClInclude Include="..\IttyBitty_gpio.h" />
     <ClInclude Include="..\IttyBitty_gpio_arduino.h" />
     <ClInclude Include="..\IttyBitty_gpio_portpins.h" />
     <ClInclude Include="..\IttyBitty_info.h" />
     <ClInclude Include="..\IttyBitty_interrupts.h" />
     <ClInclude Include="..\IttyBitty_led.h" />
+    <ClInclude Include="..\IttyBitty_messages.h" />
     <ClInclude Include="..\IttyBitty_registers.h" />
     <ClInclude Include="..\IttyBitty_signals.h" />
     <ClInclude Include="..\IttyBitty_slim.h" />
@@ -81,9 +83,11 @@
   <ItemGroup>
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
+    <ClCompile Include="..\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty_gpio.cpp" />
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
     <ClCompile Include="..\IttyBitty_led.cpp" />
+    <ClCompile Include="..\IttyBitty_messages.cpp" />
     <ClCompile Include="..\IttyBitty_signals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
