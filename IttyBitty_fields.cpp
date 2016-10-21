@@ -692,16 +692,25 @@ PCBYTE VarLengthField::ToBytes() const
 		delete[] __field_buffer;
 
 	__field_buffer = new BYTE[size];
+	PBYTE bufferPtr = __field_buffer;
 	
-	memcpy(__field_buffer, &_Length, SIZEOF(_Length));
-	memcpy(&__field_buffer[SIZEOF(_Length)], &_DataType, SIZEOF(DataType));
-	memcpy(&__field_buffer[SIZEOF(_Length) + SIZEOF(DataType)], _Value.Bytes, this->ByteWidth());
+	memcpy(bufferPtr, &_Length, SIZEOF(_Length));
+	bufferPtr += SIZEOF(_Length);
+
+	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
+	bufferPtr += SIZEOF(DataType);
+
+	if (_Value.Bytes != NULL)
+		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
 
 	return __field_buffer;
 }
 
 PCCHAR VarLengthField::ToString() const
 {
+	if (_Value.Bytes == NULL)
+		return "";
+
 	if (_DataType == DataType::STRING_FIELD)
 		return _Value.String;
 			
@@ -724,7 +733,9 @@ SIZE VarLengthField::printTo(Print& printer) const
 {
 	SIZE printed = printer.print(_Length);
 	printed += printer.print(_DataType);
-	printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
+	
+	if (_Value.Bytes != NULL)
+		printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
 	
 	return printed;
 }
