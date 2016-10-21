@@ -24,70 +24,31 @@ namespace IttyBitty
 
 #pragma endregion
 
-
-#pragma region ENUMS
-
-#ifdef COMPILE_STANDALONE
-
-	enum MessageCode : BYTE
-	{
-		// Primary types
-		REQUEST_TYPE		= 0x0,
-		RESPONSE_TYPE		= 0x80,
-
-
-		// Categories
-		ANGLE_TYPE			= 0x10,
-		NEWANGLE_TYPE		= 0x20,
-		STATUS_TYPE			= 0x40,
-
-
-		// Request types
-		ANGLE_REQUEST		= REQUEST_TYPE | ANGLE_TYPE,
-		NEWANGLE_REQUEST	= REQUEST_TYPE | NEWANGLE_TYPE,
-		STATUS_REQUEST		= REQUEST_TYPE | STATUS_TYPE,
-
-		// Response types
-		ANGLE_RESPONSE		= RESPONSE_TYPE | 0x1,
-		NEWANGLE_RESPONSE	= RESPONSE_TYPE | 0x2,
-		STATUS_RESPONSE		= RESPONSE_TYPE | STATUS_TYPE,
-		CONTROLLER_STATUS	= STATUS_RESPONSE | 0x1,
-		DRIVER_STATUS		= STATUS_RESPONSE | 0x2
-	};
-
-#else
-
-	EXTERN enum MessageCode;
-
-#endif	// #ifdef COMPILE_STANDALONE
-	
-#pragma endregion 
-
 	
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 
 	//  Message
 
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	class Message;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using MESSAGE = Message<TMessage, MsgCode, ParamCnt>;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using PMESSAGE = Message<TMessage, MsgCode, ParamCnt> *;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using RMESSAGE = Message<TMessage, MsgCode, ParamCnt> &;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using PPMESSAGE = Message<TMessage, MsgCode, ParamCnt> **;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using RRMESSAGE = Message<TMessage, MsgCode, ParamCnt> &&;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using CMESSAGE = const Message<TMessage, MsgCode, ParamCnt>;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using PCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> *;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using RCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> &;
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 	using PPCMESSAGE = const Message<TMessage, MsgCode, ParamCnt> **;
 
 #pragma endregion
@@ -95,14 +56,14 @@ namespace IttyBitty
 
 #pragma region Message DECLARATION
 
-	template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt = 0>
+	template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt = 0>
 	CLASS Message : public ISerializable
 	{
 	public:
 
 		// STATIC CONSTEXPR METHODS
 
-		STATIC CONSTEXPR MessageCode MESSAGE_CODE();
+		STATIC CONSTEXPR CBYTE MESSAGE_CODE();
 		STATIC CONSTEXPR CSIZE PARAM_COUNT();
 
 

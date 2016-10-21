@@ -17,20 +17,15 @@ using namespace IttyBitty;
 PCCHAR IttyBitty::MESSAGE_MARKER = "!!";
 
 
-#ifndef COMPILE_STANDALONE
-	EXTERN enum IttyBitty::MessageCode;
-#endif
-
-
 // STATIC CONSTEXPR METHODS
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
-CONSTEXPR MessageCode Message<TMessage, MsgCode, ParamCnt>::MESSAGE_CODE()
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
+CONSTEXPR CBYTE Message<TMessage, MsgCode, ParamCnt>::MESSAGE_CODE()
 {
 	return MsgCode;
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 CONSTEXPR CSIZE Message<TMessage, MsgCode, ParamCnt>::PARAM_COUNT()
 {
 	return ParamCnt;
@@ -39,23 +34,23 @@ CONSTEXPR CSIZE Message<TMessage, MsgCode, ParamCnt>::PARAM_COUNT()
 
 // CONSTRUCTORS/DESTRUCTOR
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::Message() : _Dispose(TRUE)
 {
 	_Params = new Field[ParamCnt];
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::Message(RIFIELD param) : _Dispose(TRUE)
 {
 	_Params = new Field[ParamCnt];
 	_Params[0] = param;
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::Message(PIFIELD params) : _Params(params) { }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 Message<TMessage, MsgCode, ParamCnt>::~Message()
 {
 	if (_Params != NULL)
@@ -65,13 +60,13 @@ Message<TMessage, MsgCode, ParamCnt>::~Message()
 
 // OPERATORS
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 RCIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i) const
 {
 	return _Params[i];
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 RIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i)
 {
 	return this->Param(i);
@@ -80,7 +75,7 @@ RIFIELD Message<TMessage, MsgCode, ParamCnt>::operator[](CSIZE i)
 
 // USER METHODS
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i)
 {
 	if (_Params == NULL)
@@ -92,19 +87,19 @@ RIFIELD Message<TMessage, MsgCode, ParamCnt>::Param(CSIZE i)
 
 // ISerializable IMPLEMENTATION
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 CSIZE Message<TMessage, MsgCode, ParamCnt>::Size() const
 {
-	return strlen(MESSAGE_MARKER) + SIZEOF(MessageCode) + SIZEOF(CSIZE) + this->ParamsSize();
+	return strlen(MESSAGE_MARKER) + SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsSize();
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 CSIZE Message<TMessage, MsgCode, ParamCnt>::ByteWidth() const
 {
-	return strlen(MESSAGE_MARKER) + SIZEOF(MessageCode) + SIZEOF(CSIZE) + this->ParamsStringSize();
+	return strlen(MESSAGE_MARKER) + SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsStringSize();
 }
 		
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 {
 	CSIZE size = this->Size();
@@ -119,8 +114,8 @@ PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER));
 	bufferPtr += strlen(MESSAGE_MARKER);
 
-	MessageCode msgCode = MsgCode;
-	memcpy(bufferPtr++, &msgCode, SIZEOF(MessageCode));
+	CBYTE msgCode = MsgCode;
+	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 	
 	CSIZE paramsSize = this->ParamsSize();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
@@ -142,7 +137,7 @@ PCBYTE Message<TMessage, MsgCode, ParamCnt>::ToBytes() const
 	return __message_buffer;
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 {
 	CSIZE size = this->ByteWidth();
@@ -157,8 +152,8 @@ PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER) - 1);
 	bufferPtr += strlen(MESSAGE_MARKER) - 1;
 
-	MessageCode msgCode = MsgCode;
-	memcpy(bufferPtr++, &msgCode, SIZEOF(MessageCode));
+	CBYTE msgCode = MsgCode;
+	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 	
 	CSIZE paramsSize = this->ParamsStringSize();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
@@ -184,20 +179,20 @@ PCCHAR Message<TMessage, MsgCode, ParamCnt>::ToString() const
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromBytes(PCBYTE data)
 {
 	//_DataType = static_cast<DataType>(*data++);
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 VOID Message<TMessage, MsgCode, ParamCnt>::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 }
 
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 SIZE Message<TMessage, MsgCode, ParamCnt>::printTo(Print& printer) const
 {
 	SIZE printed = printer.print(MESSAGE_MARKER);
@@ -213,7 +208,7 @@ SIZE Message<TMessage, MsgCode, ParamCnt>::printTo(Print& printer) const
 
 // HELPER METHODS
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsSize() const
 {
 	SIZE size = 0;
@@ -224,7 +219,7 @@ CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsSize() const
 	return size;
 }
 
-template<class TMessage, MessageCode MsgCode, CSIZE ParamCnt>
+template<class TMessage, CBYTE MsgCode, CSIZE ParamCnt>
 CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsStringSize() const
 {
 	SIZE size = 0;
