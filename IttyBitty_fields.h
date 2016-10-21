@@ -25,11 +25,14 @@ IGNORE_WARNING(-Wunknown-pragma)
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
+
+	EXTERN CBYTE DATA_SIZE_MASK;
 		
 	// Field::ToBytes() / ToString() BUFFER POINTER
 	EXTERN PBYTE __field_buffer;
 
 #pragma endregion
+
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
@@ -133,8 +136,6 @@ namespace IttyBitty
 		LONG_FIELD		= FOUR_BYTES | 0x2,
 		FLOAT_FIELD		= FOUR_BYTES | 0x4
 	};
-
-	STATIC CONST BYTE DATA_SIZE_MASK = 0xF0;
 
 #pragma endregion
 

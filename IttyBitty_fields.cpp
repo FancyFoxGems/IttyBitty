@@ -10,6 +10,15 @@
 using namespace IttyBitty;
 
 
+#pragma region GLOBAL CONSTANTS & VARIABLES
+
+CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
+
+PBYTE IttyBitty::__field_buffer;
+
+#pragma endregion
+
+
 #pragma region Datum DEFINITION
 
 // CONSTRUCTORS
@@ -268,11 +277,6 @@ VOID Datum::FreeData()
 
 
 #pragma region FieldBase DEFINITION
-
-// GLOBAL VARIABLES
-
-PBYTE IttyBitty::__field_buffer;
-
 
 // DESTRUCTOR
 

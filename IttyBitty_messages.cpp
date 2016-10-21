@@ -11,11 +11,14 @@
 using namespace IttyBitty;
 
 
-#pragma region Message DEFINITION
-
-// GLOBAL VARIABLES
+#pragma region GLOBAL CONSTANTS & VARIABLES
 
 PCCHAR IttyBitty::MESSAGE_MARKER = "!!";
+
+#pragma endregion
+
+
+#pragma region Message DEFINITION
 
 
 // STATIC CONSTEXPR METHODS
