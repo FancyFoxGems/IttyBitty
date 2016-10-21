@@ -17,11 +17,6 @@
 using namespace IttyBitty;
 
 
-/* SUPRESS COMPILER WARNINGS RELATED TO region #pragmas */
-
-IGNORE_WARNING(-Wunknown-pragma)
-
-
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
