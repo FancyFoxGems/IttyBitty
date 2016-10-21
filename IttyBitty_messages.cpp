@@ -13,7 +13,7 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-PCCHAR IttyBitty::MESSAGE_MARKER = "!!";
+PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 
 #pragma endregion
 
