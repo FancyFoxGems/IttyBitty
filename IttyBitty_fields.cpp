@@ -266,10 +266,7 @@ VOID Datum::FreePtr()
 VOID Datum::FreeData()
 {
 	if (this->Bytes)
-	{
-		delete [] this->Bytes;
-		delete this->Bytes;
-	}
+		delete[] this->Bytes;
 }
 
 #pragma endregion
@@ -562,26 +559,23 @@ Field::operator RFLOAT()
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthField::VarLengthField(CSIZE length, DataType dataType) : Field(dataType)
+VarLengthField::VarLengthField(DataType dataType, CSIZE length) : Field(dataType), _Length(length)
 {
 	switch (dataType)
 	{
 	case DataType::BYTES_FIELD:
 		_Dispose = TRUE;
 		_Value = new BYTE[length];
-		_Length = length;
 		break;
 
 	case DataType::STRING_FIELD:
 		_Dispose = TRUE;
 		_Value = new CHAR[length];
-		_Length = length;
 		break;
 
 	case DataType::BIT_FIELD:
 		_Dispose = TRUE;
 		_Value = new BITPACK[length];
-		_Length = length;
 		break;
 
 	default:
@@ -600,20 +594,19 @@ VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
 
 VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 {	
-	new (this) VarLengthField(other._Value, other._DataType);
+	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RCDATUM value, DataType dataType) : Field(value, dataType)
-{
-	if (dataType == DataType::BYTES_FIELD || dataType == DataType::STRING_FIELD || dataType == DataType::BIT_FIELD)
-		_Length = SIZEOF(*(PBYTE)_Value);
-}
+VarLengthField::VarLengthField(RCDATUM value, DataType dataType, CSIZE length) : Field(value, dataType), _Length(length) { }
 
 VarLengthField::VarLengthField(PBYTE value, CSIZE length) : Field(DataType::BYTES_FIELD), _Length(length) { }
 
 VarLengthField::VarLengthField(PCHAR value) : Field(DataType::STRING_FIELD)
 {
-	_Length = strlen(MAKE_CONST(value));
+	if (value == NULL)
+		_Length = 0;
+	else
+		_Length = strlen(MAKE_CONST(value));
 }
 
 VarLengthField::VarLengthField(PBITPACK value, CSIZE length) : Field(DataType::BIT_FIELD), _Length(length) { }

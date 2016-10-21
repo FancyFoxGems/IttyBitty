@@ -382,12 +382,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		VarLengthField(CSIZE = 0, DataType = DataType::BYTES_FIELD);
+		VarLengthField(DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		VarLengthField(RCDATUM, DataType = DataType::BYTES_FIELD);
+		VarLengthField(RCDATUM, DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
@@ -694,9 +694,16 @@ namespace IttyBitty
 			_DataType = VarLengthTypedField<T>::FindDataType();
 
 			if (_DataType == DataType::STRING_FIELD)
-				_Length = strlen((PCCHAR)_Value);
+			{
+				if (value.String == NULL)
+					_Length = 0;
+				else
+					_Length = strlen((PCCHAR)_Value);
+			}
 			else
+			{
 				_Length = length;
+			}
 		}
 
 		EXPLICIT VarLengthTypedField(T & value)
