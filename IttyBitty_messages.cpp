@@ -4,6 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#ifndef EXCLUDE_ITTYBITTY_MESSAGES
 
 #include "IttyBitty_messages.h"
 
@@ -236,3 +237,5 @@ CSIZE Message<TMessage, MsgCode, ParamCnt>::ParamsStringSize() const
 }
 
 #pragma endregion
+
+#endif // #ifndef EXCLUDE_ITTYBITTY_MESSAGES

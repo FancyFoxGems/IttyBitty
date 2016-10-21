@@ -151,6 +151,15 @@
 #endif
 
 
+/* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES */
+
+#ifndef EXCLUDE_ITTYBITTY_MESSAGES
+	#include "IttyBitty_messages.h"
+#elif !defined(EXCLUDE_ITTYBITTY_MESSAGES)
+	#define EXCLUDE_ITTYBITTY_MESSAGES
+#endif
+
+
 #endif	// __AVR__
 
 #endif
