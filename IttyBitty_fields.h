@@ -14,8 +14,6 @@
 
 #include "IttyBitty_bits.h"
 
-using namespace IttyBitty;
-
 
 namespace IttyBitty
 {
