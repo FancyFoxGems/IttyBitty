@@ -72,10 +72,14 @@ namespace IttyBitty
 	{
 	public:
 
+		// DESTRUCTOR
+
+		VIRTUAL ~IMessage() { }
+
 		// OPERATORS
 
-		VIRTUAL RCIFIELD operator[](CBYTE) const = 0;
-		VIRTUAL RIFIELD operator[](CBYTE) = 0;
+		VIRTUAL PCIFIELD operator[](CBYTE) const = 0;
+		VIRTUAL PIFIELD operator[](CBYTE) = 0;
 		
 
 		// ACCESSORS
@@ -117,8 +121,8 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RCIFIELD operator[](CBYTE) const;
-		VIRTUAL RIFIELD operator[](CBYTE);
+		VIRTUAL PCIFIELD operator[](CBYTE) const;
+		VIRTUAL PIFIELD operator[](CBYTE);
 		
 
 		// ACCESSORS

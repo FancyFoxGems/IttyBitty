@@ -17,6 +17,8 @@ CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
 
 PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 
+PBYTE IttyBitty::__message_buffer;
+
 #pragma endregion
 
 
@@ -52,14 +54,14 @@ Message::~Message()
 
 // OPERATORS
 
-RCIFIELD Message::operator[](CBYTE i) const
+PCIFIELD Message::operator[](CBYTE i) const
 {
-	return *_Params[i];
+	return _Params[i];
 }
 
-RIFIELD Message::operator[](CBYTE i)
+PIFIELD Message::operator[](CBYTE i)
 {
-	return this->Param(i);
+	return _Params[i];
 }
 
 

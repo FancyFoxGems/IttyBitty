@@ -241,6 +241,9 @@ namespace IttyBitty
 	{
 	public:
 
+		// DESTRUCTOR
+		VIRTUAL ~ISerializable() { }
+
 		// INTERFACE METHODS
 
 		VIRTUAL CSIZE Size() const = 0;		
@@ -263,6 +266,10 @@ namespace IttyBitty
 	INTERFACE IField : public ISerializable
 	{
 	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IField() { }
 
 		// INTERFACE METHODS
 
