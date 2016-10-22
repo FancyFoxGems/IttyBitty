@@ -241,8 +241,8 @@ namespace IttyBitty
 
 	#define BOOTSZ0 _BV(1)
 	#define BOOTSZ1 _BV(2)
-
-	STATIC BYTE __hFuseByte;
+	
+	EXTERN BYTE __fuse_byte_high_or_extended;
 	
 	INLINE CWORD BootloaderAllocatedSize()
 	{
@@ -253,13 +253,19 @@ namespace IttyBitty
 		#else
 
 			STATIC WORD BOOTLOADER_SIZE = 0;
+	
+		#if defined (__AVR_ATmega88__) || defined (__AVR_ATmega168__)
+			#define BOOTSIZE_FACTOR_FUSE_BYTE	GET_EXTENDED_FUSE_BITS
+			#define BOOTSIZE_FACTOR_FACTOR		5
+		#else
+			#define BOOTSIZE_FACTOR_FUSE_BYTE	GET_HIGH_FUSE_BITS
+			#define BOOTSIZE_FACTOR_FACTOR		4
+		#endif
+			
+			__fuse_byte_high_or_extended = boot_lock_fuse_bits_get(BOOTSIZE_FACTOR_FUSE_BYTE);
+			STATIC BYTE bootSizeFactor = CHECK_BITS(__fuse_byte_high_or_extended, BOOTSZ1 OR BOOTSZ0) SHR 1;
 
-			if (BOOTLOADER_SIZE  == 0)
-
-			__hFuseByte = boot_lock_fuse_bits_get(GET_EXTENDED_FUSE_BITS);
-			STATIC BYTE bootSizeFactor = CHECK_BITS(__hFuseByte, BOOTSZ1 OR BOOTSZ0) SHR 1;
-
-			BOOTLOADER_SIZE = 2 ^ (5 - bootSizeFactor) * SPM_PAGESIZE;
+			BOOTLOADER_SIZE = 2 ^ (BOOTSIZE_FACTOR_FACTOR - bootSizeFactor) * SPM_PAGESIZE;
 
 			return static_cast<CWORD>(BOOTLOADER_SIZE);
 

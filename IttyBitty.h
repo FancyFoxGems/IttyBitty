@@ -151,7 +151,7 @@
 #endif
 
 
-/* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES */
+/* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC */
 
 #ifndef EXCLUDE_ITTYBITTY_MESSAGES
 	#include "IttyBitty_messages.h"

@@ -130,6 +130,11 @@ namespace IttyBitty
 		FLOAT_FIELD		= FOUR_BYTES | 0x4
 	};
 
+	INLINE DataSize DataTypeToDataSize(DataType dataType)
+	{
+		return static_cast<DataSize>(MASK(dataType, DATA_SIZE_MASK));
+	}
+
 #pragma endregion
 
 

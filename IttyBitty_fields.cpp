@@ -351,7 +351,7 @@ SIZE FieldBase::printTo(Print& printer) const
 
 CONST DataSize FieldBase::GetDataSize() const
 {
-	return static_cast<DataSize>(MASK(_DataType, DATA_SIZE_MASK));
+	return DataTypeToDataSize(_DataType);
 }
 
 CONST DataType FieldBase::GetDataType() const
