@@ -77,9 +77,6 @@ CBYTE Message::GetParamCount() const
 	return _ParamCount;
 }
 
-
-// USER METHODS
-
 RIFIELD Message::Param(CBYTE i)
 {
 	if (_Params == NULL)
@@ -87,6 +84,11 @@ RIFIELD Message::Param(CBYTE i)
 
 	return *_Params[i];
 }
+
+
+// USER METHODS
+
+VOID Message::Handle(PCVOID args, PVOID result) { }
 				
 
 // ISerializable IMPLEMENTATION

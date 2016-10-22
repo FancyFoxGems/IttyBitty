@@ -87,10 +87,12 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetParamCount() const = 0;
 		VIRTUAL CBYTE GetMessageCode() const = 0;
 
+		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
+
 
 		// USER METHODS
 
-		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
+		VIRTUAL VOID Handle(PCVOID, PVOID) = 0;
 
 	protected:
 
@@ -130,10 +132,12 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetMessageCode() const;
 		VIRTUAL CBYTE GetParamCount() const;
 
+		VIRTUAL RIFIELD Param(CBYTE = 0);
+
 
 		// USER METHODS
 
-		VIRTUAL RIFIELD Param(CBYTE = 0);
+		VIRTUAL VOID Handle(PCVOID, PVOID);
 		
 
 		// ISerializable IMPLEMENTATION
@@ -249,7 +253,7 @@ namespace IttyBitty
 
 #pragma region MESSAGE PARSING METHODS
 	
-	typedef void (* MessageHandler)(PIMESSAGE);
+	typedef VOID (* MessageHandler)(PIMESSAGE);
 	
 
 	INLINE CBOOL ReadMessage(Stream & stream, PIMESSAGE message)
