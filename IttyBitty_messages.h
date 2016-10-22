@@ -109,8 +109,8 @@ namespace IttyBitty
 		// CONSTRUCTORS/DESTRUCTOR
 
 		Message(CBYTE, CBYTE);
-		Message(CBYTE, CBYTE, RIFIELD);
 		Message(CBYTE, CBYTE, PIFIELD);
+		Message(CBYTE, CBYTE, PPIFIELD);
 
 		VIRTUAL ~Message();
 
@@ -153,7 +153,7 @@ namespace IttyBitty
 		
 		CBYTE _MessageCode;
 		CBYTE _ParamCount;
-		PIFIELD _Params;
+		PPIFIELD _Params;
 		
 		// HELPER METHODS
 

@@ -27,21 +27,26 @@ PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 
 Message::Message(CBYTE messageCode, CBYTE paramCount) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	_Params = new Field[paramCount];
+	_Params = new PIFIELD[paramCount];
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, RIFIELD param) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
+Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD param) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	_Params = new Field[paramCount];
+	_Params = new PIFIELD[paramCount];
 	_Params[0] = param;
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD params) : _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
+Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params) : _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
 Message::~Message()
 {
 	if (_Dispose && _Params != NULL)
+	{
+		for (BYTE i = 0; i < this->GetParamCount(); i++)
+			delete _Params[i];
+		
 		delete[] _Params;
+	}
 }
 
 
@@ -49,7 +54,7 @@ Message::~Message()
 
 RCIFIELD Message::operator[](CBYTE i) const
 {
-	return _Params[i];
+	return *_Params[i];
 }
 
 RIFIELD Message::operator[](CBYTE i)
@@ -78,7 +83,7 @@ RIFIELD Message::Param(CBYTE i)
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
 
-	return _Params[i];
+	return *_Params[i];
 }
 				
 
@@ -126,7 +131,7 @@ PCBYTE Message::ToBytes() const
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
-		param = &_Params[i];
+		param = _Params[i];
 		paramSize = param->Size();
 
 		memcpy(bufferPtr, param->ToBytes(), paramSize);
@@ -168,7 +173,7 @@ PCCHAR Message::ToString() const
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
-		param = &_Params[i];
+		param = _Params[i];
 		paramSize = param->ByteWidth();
 		if (param->GetDataType() == DataType::STRING_FIELD)
 			paramSize -= 1;
@@ -188,7 +193,7 @@ VOID Message::LoadFromBytes(PCBYTE data)
 	data += SIZEOF(CSIZE);
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		_Params[i] = *BuildField(data);
+		_Params[i] = BuildField(data);
 }
 
 VOID Message::LoadFromString(PCCHAR data)
@@ -206,7 +211,7 @@ SIZE Message::printTo(Print & printer) const
 	printed += printer.print(this->GetParamsStringSize());
 	
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		printed += _Params[i].printTo(printer);
+		printed += _Params[i]->printTo(printer);
 
 	return printed;
 }
@@ -219,7 +224,7 @@ CSIZE Message::GetParamsSize() const
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i].Size();
+		size += _Params[i]->Size();
 
 	return size;
 }
@@ -230,9 +235,9 @@ CSIZE Message::GetParamsStringSize() const
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
 	{
-		size += _Params[i].ByteWidth();
+		size += _Params[i]->ByteWidth();
 
-		if (_Params[i].GetDataType() == DataType::STRING_FIELD)
+		if (_Params[i]->GetDataType() == DataType::STRING_FIELD)
 			--size;
 	}
 
