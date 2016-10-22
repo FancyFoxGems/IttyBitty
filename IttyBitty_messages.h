@@ -13,6 +13,11 @@
 #include "IttyBitty_fields.h"
 
 
+/* SUPRESS COMPILER WARNINGS RELATED TO FIELD REORDERING */
+
+IGNORE_WARNING(-Wreorder)
+
+
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
@@ -29,50 +34,83 @@ namespace IttyBitty
 	
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	//  Message
+	class IMessage;
+	typedef IMessage IMESSAGE, * PIMESSAGE, & RIMESSAGE, ** PPIMESSAGE, && RRIMESSAGE;
+	typedef const IMessage CIMESSAGE, *PCIMESSAGE, & RCIMESSAGE, ** PPCIMESSAGE;
+
+	class Message;
+	typedef Message MESSAGE, * PMESSAGE, & RMESSAGE, ** PPMESSAGE, && RRMESSAGE;
+	typedef const Message CMESSAGE, *PCMESSAGE, & RCMESSAGE, ** PPCMESSAGE;
 
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	class Message;
+	class GenericMessage;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using MESSAGE = Message<MsgCode, ParamCnt>;
+	using GENERICMESSAGE = GenericMessage<MsgCode, ParamCnt>;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PMESSAGE = Message<MsgCode, ParamCnt> *;
+	using PGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> *;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RMESSAGE = Message<MsgCode, ParamCnt> &;
+	using RGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> &;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PPMESSAGE = Message<MsgCode, ParamCnt> **;
+	using PPGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> **;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RRMESSAGE = Message<MsgCode, ParamCnt> &&;
+	using RRGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> &&;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using CMESSAGE = const Message<MsgCode, ParamCnt>;
+	using CGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt>;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PCMESSAGE = const Message<MsgCode, ParamCnt> *;
+	using PCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> *;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RCMESSAGE = const Message<MsgCode, ParamCnt> &;
+	using RCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> &;
 	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PPCMESSAGE = const Message<MsgCode, ParamCnt> **;
+	using PPCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> **;
+
+#pragma endregion
+	
+
+#pragma region IMessage DEFINITION
+
+	INTERFACE IMessage : public virtual ISerializable
+	{
+	public:
+
+		// OPERATORS
+
+		VIRTUAL RCIFIELD operator[](CBYTE) const = 0;
+		VIRTUAL RIFIELD operator[](CBYTE) = 0;
+		
+
+		// ACCESSORS
+
+		VIRTUAL CBYTE GetParamCount() const = 0;
+		VIRTUAL CBYTE GetMessageCode() const = 0;
+
+
+		// USER METHODS
+
+		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
+
+	protected:
+
+		VIRTUAL CSIZE ParamsSize() const = 0;
+		VIRTUAL CSIZE ParamsStringSize() const = 0;
+
+		IMessage() { }
+	};
 
 #pragma endregion
 	
 
 #pragma region Message DECLARATION
 
-	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
-	CLASS Message : public ISerializable
+	CLASS Message : public virtual IMessage
 	{
 	public:
-
-		// STATIC CONSTEXPR METHODS
-
-		STATIC CONSTEXPR CBYTE MESSAGE_CODE();
-		STATIC CONSTEXPR CSIZE PARAM_COUNT();
 
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Message();
-		Message(RIFIELD);
-		Message(PIFIELD);
+		Message(CBYTE, CBYTE);
+		Message(CBYTE, CBYTE, RIFIELD);
+		Message(CBYTE, CBYTE, PIFIELD);
 
 		VIRTUAL ~Message();
 
@@ -81,6 +119,12 @@ namespace IttyBitty
 
 		VIRTUAL RCIFIELD operator[](CBYTE) const;
 		VIRTUAL RIFIELD operator[](CBYTE);
+		
+
+		// ACCESSORS
+		
+		VIRTUAL CBYTE GetMessageCode() const;
+		VIRTUAL CBYTE GetParamCount() const;
 
 
 		// USER METHODS
@@ -99,14 +143,16 @@ namespace IttyBitty
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
 
-		VIRTUAL SIZE printTo(Print&) const;
+		VIRTUAL SIZE printTo(Print &) const;
 
 	protected:
 
 		// INSTANCE VARIABLES
 
 		BOOL _Dispose = FALSE;
-
+		
+		CBYTE _MessageCode;
+		CBYTE _ParamCount;
 		PIFIELD _Params;
 		
 		// HELPER METHODS
@@ -118,32 +164,56 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region PARSING METHODS
+#pragma region GenericMessage DECLARATION
+
+	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
+	CLASS GenericMessage : public Message, public virtual IMessage
+	{
+	public:
+
+		// STATIC CONSTEXPR METHODS
+
+		STATIC CONSTEXPR CBYTE MESSAGE_CODE();
+		STATIC CONSTEXPR CSIZE PARAM_COUNT();
+
+
+		// CONSTRUCTORS
+
+		GenericMessage();
+		GenericMessage(RIFIELD);
+		GenericMessage(PIFIELD);
+
+
+		// Message OVERRIDES
+		
+		VIRTUAL CBYTE GetMessageCode() const;
+		VIRTUAL CBYTE GetParamCount() const;
+
+
+	protected:
+
+		using Message::_Dispose;
+		using Message::_Params;
+	};
+
+#pragma endregion
+	
+
+#pragma region SERIAL STREAM / MESSAGE PARSING METHODS
 
 	INLINE CBOOL operator >(Stream & stream, PBYTE b)
 	{
-		if (!stream.available())
-			delay(100);
-				
-		if (!stream.available())
-			return FALSE;
-				
-		int result = stream.read();
-		if (result < 0)
-			return FALSE;
-
-		*b = (CBYTE)result;
-		return TRUE;
+		return stream.readBytes(b, 1);
 	}
 
-	INLINE CBOOL TimedRead(Stream & stream, PBYTE b, CSIZE length = 1)
+	INLINE CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length = 1)
 	{
 		SIZE i = length;
 
 		while (i-- > 0)
 		{
 			if (!stream.available())
-				delay(100);
+				delay(SERIAL_DEFAULT_TIMEOUT_MS);
 				
 			if (!stream.available())
 				return FALSE;
@@ -152,33 +222,51 @@ namespace IttyBitty
 			if (result < 0)
 				return FALSE;
 
-			b[i] = (CBYTE)result;
+			buffer[i] = (CBYTE)result;
 		}
 
 		return TRUE;
 	}
-	
-	INLINE PISERIALIZABLE ParseNextMessage(Stream & stream)
+
+	template<typename T>
+	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
 	{
-		while (!stream.available()) delay(100);
+		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
 
-		if (!stream.find(UNCONST(MESSAGE_MARKER)))
-			return NULL;
+		STATIC T NULL_T = (T)0;
+		if (!result)
+			return NULL_T;
 
-		BYTE b = 0;
-
-		if (!(stream > &b))
-			return NULL;
-		CBYTE msgSize = (CBYTE)b;
-
-		while (stream.available())
-		{
-
-		}
+		return *((T *)buffer);
 	}
 	
-	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
-	INLINE PMESSAGE<MsgCode, ParamCnt> ParseMessage(Stream &);
+	INLINE CBOOL ReadMessage(Stream & stream, PIMESSAGE message)
+	{
+		if (!stream.find(UNCONST(MESSAGE_MARKER)))
+			return FALSE;
+
+		SIZE msgSize = 0;
+		msgSize = Read<SIZE>(stream, (PBYTE)&msgSize);
+		if (msgSize == 0)
+			return FALSE;
+
+		BYTE msgCode = 0;
+		if (!(stream > &msgCode))
+			return FALSE;
+		
+		BYTE paramCnt = 0;
+		if (!(stream > &paramCnt))
+			return FALSE;
+
+		CSIZE bufferSize = msgSize - 2 * SIZEOF(CBYTE);
+		__message_buffer = new byte[bufferSize];
+		if (!ReadBuffer(stream, __message_buffer, bufferSize))
+
+		message = new Message(msgCode, paramCnt);
+		message->LoadFromBytes(__message_buffer);
+
+		return TRUE;
+	}
 
 #pragma endregion
 }

@@ -237,7 +237,7 @@ namespace IttyBitty
 
 	// ISerializable DECLARATION
 
-	CLASS ISerializable : public Printable
+	INTERFACE ISerializable : public Printable
 	{
 	public:
 
@@ -260,7 +260,7 @@ namespace IttyBitty
 
 	// IField DECLARATION
 
-	CLASS IField : public ISerializable
+	INTERFACE IField : public ISerializable
 	{
 	public:
 
@@ -299,7 +299,7 @@ namespace IttyBitty
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
 		
-		VIRTUAL SIZE printTo(Print&) const;
+		VIRTUAL SIZE printTo(Print &) const;
 
 
 		// IField IMPLEMENTATION
@@ -425,7 +425,7 @@ namespace IttyBitty
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
 
-		VIRTUAL SIZE printTo(Print&) const;
+		VIRTUAL SIZE printTo(Print &) const;
 		
 
 	protected:
@@ -802,7 +802,7 @@ namespace IttyBitty
 			TypedField<T>::LoadFromString(data);
 		}
 
-		VIRTUAL SIZE printTo(Print& printer) const
+		VIRTUAL SIZE printTo(Print & printer) const
 		{
 			SIZE printed = printer.print(_Length);
 			printed += printer.print(_DataType);

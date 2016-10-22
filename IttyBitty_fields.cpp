@@ -338,7 +338,7 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 }
 
-SIZE FieldBase::printTo(Print& printer) const
+SIZE FieldBase::printTo(Print & printer) const
 {
 	SIZE printed = printer.print(_DataType);
 	printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
@@ -729,7 +729,7 @@ VOID VarLengthField::LoadFromString(PCCHAR data)
 	Field::LoadFromString(data);
 }
 
-SIZE VarLengthField::printTo(Print& printer) const
+SIZE VarLengthField::printTo(Print & printer) const
 {
 	SIZE printed = printer.print(_Length);
 	printed += printer.print(_DataType);

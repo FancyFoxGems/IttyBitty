@@ -23,41 +23,22 @@ PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 #pragma region Message DEFINITION
 
 
-// STATIC CONSTEXPR METHODS
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CONSTEXPR CBYTE Message<MsgCode, ParamCnt>::MESSAGE_CODE()
-{
-	return MsgCode;
-}
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CONSTEXPR CSIZE Message<MsgCode, ParamCnt>::PARAM_COUNT()
-{
-	return ParamCnt;
-}
-
-
 // CONSTRUCTORS/DESTRUCTOR
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-Message<MsgCode, ParamCnt>::Message() : _Dispose(TRUE)
+Message::Message(CBYTE messageCode, CBYTE paramCount) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	_Params = new Field[ParamCnt];
+	_Params = new Field[paramCount];
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-Message<MsgCode, ParamCnt>::Message(RIFIELD param) : _Dispose(TRUE)
+Message::Message(CBYTE messageCode, CBYTE paramCount, RIFIELD param) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	_Params = new Field[ParamCnt];
+	_Params = new Field[paramCount];
 	_Params[0] = param;
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-Message<MsgCode, ParamCnt>::Message(PIFIELD params) : _Params(params) { }
+Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD params) : _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-Message<MsgCode, ParamCnt>::~Message()
+Message::~Message()
 {
 	if (_Dispose && _Params != NULL)
 		delete[] _Params;
@@ -66,23 +47,33 @@ Message<MsgCode, ParamCnt>::~Message()
 
 // OPERATORS
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-RCIFIELD Message<MsgCode, ParamCnt>::operator[](CBYTE i) const
+RCIFIELD Message::operator[](CBYTE i) const
 {
 	return _Params[i];
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-RIFIELD Message<MsgCode, ParamCnt>::operator[](CBYTE i)
+RIFIELD Message::operator[](CBYTE i)
 {
 	return this->Param(i);
 }
 
 
+// ACCESSORS
+
+CBYTE Message::GetMessageCode() const
+{
+	return _MessageCode;
+}
+
+CBYTE Message::GetParamCount() const
+{
+	return _ParamCount;
+}
+
+
 // USER METHODS
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-RIFIELD Message<MsgCode, ParamCnt>::Param(CBYTE i)
+RIFIELD Message::Param(CBYTE i)
 {
 	if (_Params == NULL)
 		return Field::NULL_OBJECT();
@@ -93,37 +84,36 @@ RIFIELD Message<MsgCode, ParamCnt>::Param(CBYTE i)
 
 // ISerializable IMPLEMENTATION
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CSIZE Message<MsgCode, ParamCnt>::Size() const
+CSIZE Message::Size() const
 {
-	return strlen(MESSAGE_MARKER) + SIZEOF(CBYTE) + SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsSize();
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsSize();
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CSIZE Message<MsgCode, ParamCnt>::ByteWidth() const
+CSIZE Message::ByteWidth() const
 {
-	return strlen(MESSAGE_MARKER) + SIZEOF(CBYTE) + SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsStringSize();
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsStringSize();
 }
 		
-template<CBYTE MsgCode, CBYTE ParamCnt>
-PCBYTE Message<MsgCode, ParamCnt>::ToBytes() const
+PCBYTE Message::ToBytes() const
 {
 	CSIZE size = this->Size();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[size];
+	__message_buffer = new BYTE[strlen(MESSAGE_MARKER) + SIZEOF(CSIZE) + size];
 
 	PBYTE bufferPtr = __message_buffer;
 		
 	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER));
 	bufferPtr += strlen(MESSAGE_MARKER);
 
-	CBYTE msgCode = MsgCode;
+	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
+
+	CBYTE msgCode = this->GetMessageCode();
 	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 	
-	CBYTE paramCount = ParamCnt;
+	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 	
 	CSIZE paramsSize = this->ParamsSize();
@@ -134,7 +124,7 @@ PCBYTE Message<MsgCode, ParamCnt>::ToBytes() const
 	SIZE paramSize = 0;
 	
 
-	for (SIZE i = 0; i < PARAM_COUNT(); i++)
+	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = &_Params[i];
 		paramSize = param->Size();
@@ -146,25 +136,26 @@ PCBYTE Message<MsgCode, ParamCnt>::ToBytes() const
 	return __message_buffer;
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-PCCHAR Message<MsgCode, ParamCnt>::ToString() const
+PCCHAR Message::ToString() const
 {
 	CSIZE size = this->ByteWidth();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[size];
+	__message_buffer = new BYTE[strlen(MESSAGE_MARKER) + SIZEOF(CSIZE) + size];
 
 	PBYTE bufferPtr = __message_buffer;
 		
 	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER) - 1);
 	bufferPtr += strlen(MESSAGE_MARKER) - 1;
+	
+	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
 
-	CBYTE msgCode = MsgCode;
+	CBYTE msgCode = this->GetMessageCode();
 	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 	
-	CBYTE paramCount = ParamCnt;
+	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 	
 	CSIZE paramsSize = this->ParamsStringSize();
@@ -175,7 +166,7 @@ PCCHAR Message<MsgCode, ParamCnt>::ToString() const
 	SIZE paramSize = 0;
 	
 
-	for (SIZE i = 0; i < PARAM_COUNT(); i++)
+	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = &_Params[i];
 		paramSize = param->ByteWidth();
@@ -191,14 +182,13 @@ PCCHAR Message<MsgCode, ParamCnt>::ToString() const
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-VOID Message<MsgCode, ParamCnt>::LoadFromBytes(PCBYTE data)
+VOID Message::LoadFromBytes(PCBYTE data)
 {
 	//_DataType = static_cast<DataType>(*data++);
 
-	PBYTE bufferPtr = data;
+	//PBYTE bufferPtr = data;
 
-	for (SIZE i = 0; i < PARAM_COUNT; i++)
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
 	{
 		_Params[i] = Field();
 	}
@@ -206,21 +196,21 @@ VOID Message<MsgCode, ParamCnt>::LoadFromBytes(PCBYTE data)
 	//SIZE paramsSize = 
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-VOID Message<MsgCode, ParamCnt>::LoadFromString(PCCHAR data)
+VOID Message::LoadFromString(PCCHAR data)
 {
 	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
 }
 
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-SIZE Message<MsgCode, ParamCnt>::printTo(Print& printer) const
+SIZE Message::printTo(Print & printer) const
 {
 	SIZE printed = printer.print(MESSAGE_MARKER);
-	printed += printer.print(MsgCode);
+	printed += printer.print(this->Size());
+	printed += printer.print(this->GetMessageCode());
+	printed += printer.print(this->GetParamCount());
 	printed += printer.print(this->ParamsStringSize());
 	
-	for (SIZE i = 0; i < PARAM_COUNT(); i++)
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
 		printed += _Params[i].printTo(printer);
 
 	return printed;
@@ -229,23 +219,21 @@ SIZE Message<MsgCode, ParamCnt>::printTo(Print& printer) const
 
 // HELPER METHODS
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CSIZE Message<MsgCode, ParamCnt>::ParamsSize() const
+CSIZE Message::ParamsSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < PARAM_COUNT(); i++)
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
 		size += _Params[i].Size();
 
 	return size;
 }
 
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CSIZE Message<MsgCode, ParamCnt>::ParamsStringSize() const
+CSIZE Message::ParamsStringSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < PARAM_COUNT(); i++)
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
 	{
 		size += _Params[i].ByteWidth();
 
@@ -254,6 +242,65 @@ CSIZE Message<MsgCode, ParamCnt>::ParamsStringSize() const
 	}
 
 	return size;
+}
+
+#pragma endregion
+
+
+#pragma region GenericMessage DEFINITION
+
+
+// STATIC CONSTEXPR METHODS
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+CONSTEXPR CBYTE GenericMessage<MsgCode, ParamCnt>::MESSAGE_CODE()
+{
+	return MsgCode;
+}
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+CONSTEXPR CSIZE GenericMessage<MsgCode, ParamCnt>::PARAM_COUNT()
+{
+	return ParamCnt;
+}
+
+
+// CONSTRUCTORS/DESTRUCTOR
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+GenericMessage<MsgCode, ParamCnt>::GenericMessage()
+{
+	_Dispose = TRUE;
+	_Params = new Field[ParamCnt];
+}
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+GenericMessage<MsgCode, ParamCnt>::GenericMessage(RIFIELD param)
+{
+	_Dispose = TRUE;
+	_Params = new Field[ParamCnt];
+	_Params[0] = param;
+}
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+GenericMessage<MsgCode, ParamCnt>::GenericMessage(PIFIELD params)
+{
+	_Params = params;
+}
+
+
+// MESSAGE OVERRIDES
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+CBYTE GenericMessage<MsgCode, ParamCnt>::GetParamCount() const
+{
+	return PARAM_COUNT();
+}
+
+template<CBYTE MsgCode, CBYTE ParamCnt>
+CBYTE GenericMessage<MsgCode, ParamCnt>::GetMessageCode() const
+{
+	return MESSAGE_CODE();
 }
 
 #pragma endregion
