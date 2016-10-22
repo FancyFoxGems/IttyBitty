@@ -92,7 +92,7 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		VIRTUAL VOID Handle(PCVOID, PVOID) = 0;
+		//VIRTUAL VOID Handle(...) = 0;
 
 	protected:
 
@@ -137,7 +137,7 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		VIRTUAL VOID Handle(PCVOID, PVOID);
+		VIRTUAL VOID Handle(...);
 		
 
 		// ISerializable IMPLEMENTATION
