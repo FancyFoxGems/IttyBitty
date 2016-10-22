@@ -288,14 +288,14 @@ FieldBase::~FieldBase()
 
 CSIZE FieldBase::Size() const
 {
-	return SIZEOF(DataType) + this->ByteWidth();
+	return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
 }
 
 CSIZE FieldBase::ByteWidth() const
 {
 	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
-		
+
 PCBYTE FieldBase::ToBytes() const
 {
 	CSIZE size = this->Size();
@@ -304,9 +304,17 @@ PCBYTE FieldBase::ToBytes() const
 		delete[] __field_buffer;
 
 	__field_buffer = new BYTE[size];
+	PBYTE bufferPtr = __field_buffer;
 	
-	memcpy(__field_buffer, &_DataType, SIZEOF(DataType));
-	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, this->ByteWidth());
+	CSIZE byteWidth = this->ByteWidth();
+	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
+	bufferPtr += SIZEOF(byteWidth);
+
+	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
+	bufferPtr += SIZEOF(DataType);
+
+	if (byteWidth > 0)
+		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
 
 	return __field_buffer;
 }
@@ -329,6 +337,7 @@ PCCHAR FieldBase::ToString() const
 
 VOID FieldBase::LoadFromBytes(PCBYTE data)
 {
+	data += SIZEOF(CSIZE);
 	_DataType = static_cast<DataType>(*data++);
 	_Value = data;
 }
@@ -367,7 +376,7 @@ CONST DataType FieldBase::GetDataType() const
 
 // CONSTRUCTORS
 
-Field::Field(DataType dataType)
+Field::Field(CONST DataType dataType)
 {
 	_Dispose = TRUE;
 	
@@ -387,7 +396,7 @@ Field::Field(RRFIELD other)
 	new (this) Field(other._Value, other._DataType);
 }
 
-Field::Field(RCDATUM value, DataType dataType)
+Field::Field(RCDATUM value, CONST DataType dataType)
 {
 	_Value = value;
 	_DataType = dataType;
@@ -559,7 +568,7 @@ Field::operator RFLOAT()
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthField::VarLengthField(DataType dataType, CSIZE length) : Field(dataType), _Length(length)
+VarLengthField::VarLengthField(CONST DataType dataType, CSIZE length) : Field(dataType), _Length(length)
 {
 	switch (dataType)
 	{
@@ -597,7 +606,7 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RCDATUM value, DataType dataType, CSIZE length) : Field(value, dataType), _Length(length) { }
+VarLengthField::VarLengthField(RCDATUM value, CONST DataType dataType, CSIZE length) : Field(value, dataType), _Length(length) { }
 
 VarLengthField::VarLengthField(PBYTE value, CSIZE length) : Field(DataType::BYTES_FIELD), _Length(length) { }
 
@@ -676,34 +685,12 @@ CSIZE VarLengthField::ByteWidth() const
 	if (_Length > 0)
 		return _Length;
 
-	return Field::Size();
+	return Field::ByteWidth();
 }
 
 CSIZE VarLengthField::Size() const
 {
 	return sizeof(_Length) + Field::Size();
-}
-
-PCBYTE VarLengthField::ToBytes() const
-{
-	CSIZE size = this->Size();
-
-	if (__field_buffer)
-		delete[] __field_buffer;
-
-	__field_buffer = new BYTE[size];
-	PBYTE bufferPtr = __field_buffer;
-	
-	memcpy(bufferPtr, &_Length, SIZEOF(_Length));
-	bufferPtr += SIZEOF(_Length);
-
-	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
-	bufferPtr += SIZEOF(DataType);
-
-	if (_Value.Bytes != NULL)
-		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
-
-	return __field_buffer;
 }
 
 PCCHAR VarLengthField::ToString() const
@@ -719,13 +706,13 @@ PCCHAR VarLengthField::ToString() const
 
 VOID VarLengthField::LoadFromBytes(PCBYTE data)
 {
-	_Length = static_cast<SIZE>(*data++);
+	_Length = static_cast<SIZE>(*((PCSIZE)data));
 	Field::LoadFromBytes(data);
 }
 
 VOID VarLengthField::LoadFromString(PCCHAR data)
 {
-	_Length = static_cast<SIZE>(*data++);
+	_Length = static_cast<SIZE>(*((PCSIZE)data));
 	Field::LoadFromString(data);
 }
 

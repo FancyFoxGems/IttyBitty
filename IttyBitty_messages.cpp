@@ -86,12 +86,12 @@ RIFIELD Message::Param(CBYTE i)
 
 CSIZE Message::Size() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsSize();
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsSize();
 }
 
 CSIZE Message::ByteWidth() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->ParamsStringSize();
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsStringSize();
 }
 		
 PCBYTE Message::ToBytes() const
@@ -116,11 +116,11 @@ PCBYTE Message::ToBytes() const
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 	
-	CSIZE paramsSize = this->ParamsSize();
+	CSIZE paramsSize = this->GetParamsSize();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
-	PIFIELD param;
+	PIFIELD param = NULL;
 	SIZE paramSize = 0;
 	
 
@@ -158,11 +158,11 @@ PCCHAR Message::ToString() const
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 	
-	CSIZE paramsSize = this->ParamsStringSize();
+	CSIZE paramsSize = this->GetParamsStringSize();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 	
-	PIFIELD param;
+	PIFIELD param = NULL;
 	SIZE paramSize = 0;
 	
 
@@ -184,16 +184,11 @@ PCCHAR Message::ToString() const
 
 VOID Message::LoadFromBytes(PCBYTE data)
 {
-	//_DataType = static_cast<DataType>(*data++);
-
-	//PBYTE bufferPtr = data;
+	//CSIZE paramsSize = static_cast<CSIZE>(*((PCSIZE)data));
+	data += SIZEOF(CSIZE);
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-	{
-		_Params[i] = Field();
-	}
-
-	//SIZE paramsSize = 
+		_Params[i] = *BuildField(data);
 }
 
 VOID Message::LoadFromString(PCCHAR data)
@@ -208,7 +203,7 @@ SIZE Message::printTo(Print & printer) const
 	printed += printer.print(this->Size());
 	printed += printer.print(this->GetMessageCode());
 	printed += printer.print(this->GetParamCount());
-	printed += printer.print(this->ParamsStringSize());
+	printed += printer.print(this->GetParamsStringSize());
 	
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
 		printed += _Params[i].printTo(printer);
@@ -219,7 +214,7 @@ SIZE Message::printTo(Print & printer) const
 
 // HELPER METHODS
 
-CSIZE Message::ParamsSize() const
+CSIZE Message::GetParamsSize() const
 {
 	SIZE size = 0;
 
@@ -229,7 +224,7 @@ CSIZE Message::ParamsSize() const
 	return size;
 }
 
-CSIZE Message::ParamsStringSize() const
+CSIZE Message::GetParamsStringSize() const
 {
 	SIZE size = 0;
 

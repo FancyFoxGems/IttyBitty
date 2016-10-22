@@ -329,12 +329,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Field(DataType = DataType::BYTE_FIELD);
+		Field(CONST DataType = DataType::BYTE_FIELD);
 
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		Field(RCDATUM, DataType = DataType::BYTE_FIELD);
+		Field(RCDATUM, CONST DataType = DataType::BYTE_FIELD);
 
 		EXPLICIT Field(RCHAR);
 		EXPLICIT Field(RBYTE);
@@ -387,12 +387,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		VarLengthField(DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		VarLengthField(CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		VarLengthField(RCDATUM, DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		VarLengthField(RCDATUM, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
@@ -418,8 +418,7 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE Size() const;
 		VIRTUAL CSIZE ByteWidth() const;
-		
-		VIRTUAL PCBYTE ToBytes() const;
+
 		VIRTUAL PCCHAR ToString() const;
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
@@ -754,29 +753,7 @@ namespace IttyBitty
 			if (_Length > 0)
 				return _Length;
 
-			return TypedField<T>::Size();
-		}
-
-		VIRTUAL PCCHAR ToBytes() const
-		{
-			CSIZE size = this->Size();
-
-			if (__field_buffer)
-				delete[] __field_buffer;
-
-			__field_buffer = new BYTE[size];
-			PBYTE bufferPtr = __field_buffer;
-	
-			memcpy(bufferPtr, &_Length, SIZEOF(_Length));
-			bufferPtr += SIZEOF(_Length);
-
-			memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
-			bufferPtr += SIZEOF(DataType);
-
-			if (_Value.Bytes != NULL)
-				memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
-
-			return __field_buffer;
+			return TypedField<T>::ByteWidth();
 		}
 
 		VIRTUAL PCCHAR ToString() const
@@ -792,13 +769,13 @@ namespace IttyBitty
 		
 		VIRTUAL VOID LoadFromBytes(PCBYTE data)
 		{
-			_Length = static_cast<SIZE>(*data++);
+			_Length = static_cast<SIZE>(*((PCSIZE)data));
 			TypedField<T>::LoadFromBytes(data);
 		}
 		
 		VIRTUAL VOID LoadFromString(PCCHAR data)
 		{
-			_Length = static_cast<SIZE>(*data++);
+			_Length = static_cast<SIZE>(*((PCSIZE)data));
 			TypedField<T>::LoadFromString(data);
 		}
 
@@ -878,6 +855,31 @@ namespace IttyBitty
 				return DataType::BIT_FIELD;
 			}
 	};
+
+#pragma endregion
+	
+
+#pragma region FIELD PARSING METHODS
+	
+	INLINE PIFIELD BuildField(PCBYTE data)
+	{
+		PIFIELD field = NULL;
+		PCBYTE bufferPtr = data;
+		
+		//CSIZE fieldLength = static_cast<CSIZE>(*((PCSIZE)bufferPtr));
+		bufferPtr += SIZEOF(CSIZE);
+
+		DataType dataType = static_cast<CONST DataType>(*bufferPtr);
+
+		if (dataType == DataType::BYTES_FIELD || dataType == DataType::STRING_FIELD || dataType == DataType::BIT_FIELD)
+			field = new VarLengthField();
+		else
+			field = new Field();
+
+		field->LoadFromBytes(data);
+
+		return field;
+	}
 
 #pragma endregion
 }

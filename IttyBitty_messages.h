@@ -90,8 +90,8 @@ namespace IttyBitty
 
 	protected:
 
-		VIRTUAL CSIZE ParamsSize() const = 0;
-		VIRTUAL CSIZE ParamsStringSize() const = 0;
+		VIRTUAL CSIZE GetParamsSize() const = 0;
+		VIRTUAL CSIZE GetParamsStringSize() const = 0;
 
 		IMessage() { }
 	};
@@ -157,8 +157,8 @@ namespace IttyBitty
 		
 		// HELPER METHODS
 
-		VIRTUAL CSIZE ParamsSize() const;
-		VIRTUAL CSIZE ParamsStringSize() const;
+		VIRTUAL CSIZE GetParamsSize() const;
+		VIRTUAL CSIZE GetParamsStringSize() const;
 	};
 
 #pragma endregion
@@ -264,6 +264,8 @@ namespace IttyBitty
 
 		message = new Message(msgCode, paramCnt);
 		message->LoadFromBytes(__message_buffer);
+
+		delete[] __message_buffer;
 
 		return TRUE;
 	}
