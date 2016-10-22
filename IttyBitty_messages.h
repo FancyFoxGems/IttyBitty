@@ -203,7 +203,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region SERIAL STREAM / MESSAGE PARSING METHODS
+#pragma region SERIAL/STREAM READING METHODS
 
 	INLINE CBOOL operator >(Stream & stream, PBYTE b)
 	{
@@ -243,7 +243,15 @@ namespace IttyBitty
 
 		return *((T *)buffer);
 	}
+
+#pragma endregion
 	
+
+#pragma region MESSAGE PARSING METHODS
+	
+	typedef void (* MessageHandler)(PIMESSAGE);
+	
+
 	INLINE CBOOL ReadMessage(Stream & stream, PIMESSAGE message)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER)))
@@ -272,6 +280,18 @@ namespace IttyBitty
 		delete[] __message_buffer;
 
 		return TRUE;
+	}
+	
+	INLINE VOID WaitForEvent(Stream & stream, MessageHandler handler)
+	{
+		PIMESSAGE message = NULL;
+
+		if (!ReadMessage(stream, message))
+			return;
+
+		handler(message);
+
+		delete message;
 	}
 
 #pragma endregion
