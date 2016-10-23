@@ -213,17 +213,8 @@ VOID Message::FromBytes(PCBYTE data)
 
 VOID Message::FromString(PCCHAR data)
 {
-	CHAR valStr[3];
-	
-	memcpy(valStr, "00", 3);
-	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-	_MessageCode = static_cast<CBYTE>(strtol(valStr, NULL, 0x10));
-	data += 2 * SIZEOF(CBYTE);
-	
-	memcpy(valStr, "00", 3);
-	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-	_ParamCount = static_cast<DataType>(strtol(valStr, NULL, 0x10));
-	data += 2 * SIZEOF(CBYTE);
+	data = StringReadValue<BYTE>(_MessageCode, data);
+	data = StringReadValue<BYTE>(_ParamCount, data);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 		_Params[i] = FieldFromString(data);

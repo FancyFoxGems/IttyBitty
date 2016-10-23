@@ -555,6 +555,9 @@ namespace IttyBitty
 #pragma region VarLengthTypedField DEFINITION
 
 	template<typename T>
+	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
+
+	template<typename T>
 	CLASS VarLengthTypedField : public TypedField<T>
 	{
 	public:
@@ -671,25 +674,13 @@ namespace IttyBitty
 		
 		VIRTUAL VOID FromString(PCCHAR data)
 		{
-			CHAR valStr[5];
-			
-			memcpy(valStr, "00", 3);
-			memcpy(valStr, data, 2 * SIZEOF(CSIZE));
-			_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
-			data += 2 * SIZEOF(CSIZE);
-			
-			memcpy(valStr, "00", 3);
-			memcpy(valStr, data, 2 * SIZEOF(DataType));
-			_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
-			data += 2 * SIZEOF(DataType);
+			data = StringReadValue<SIZE>(_Length, data);
+			data = StringReadValue<DataType>(_DataType, data);
 	
+			BYTE bytes[this->ByteWidth()];
+
 			for (BYTE i = 0; i < this->ByteWidth(); i++)
-			{
-				memcpy(valStr, "00", 3);
-				memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-				_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
-				data += 2 * SIZEOF(CBYTE);
-			}
+				data = StringReadValue<BYTE>(bytes[i], data);
 		}
 
 
@@ -785,6 +776,22 @@ namespace IttyBitty
 		memcpy(bufferPtr, valStr, 2 * T_SIZE);
 		bufferPtr += 2 * T_SIZE;
 
+		return bufferPtr;
+	}
+
+	template<typename T>
+	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
+	{
+		PCCHAR bufferPtr = data;
+		CHAR valStr[2 * T_SIZE + 1];
+
+		memcpy(valStr, "0000", 2 * T_SIZE + 1);
+
+		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
+		value = static_cast<T>(strtol(valStr, NULL, 0x10));
+
+		data += 2 * T_SIZE;
+		
 		return bufferPtr;
 	}
 

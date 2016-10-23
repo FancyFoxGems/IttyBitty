@@ -176,12 +176,8 @@ VOID FieldBase::FromString(PCCHAR data)
 	data += 2 * SIZEOF(CSIZE);
 
 	CBYTE byteWidth = this->ByteWidth();
-	CHAR valStr[3];
-	
-	memcpy(valStr, "00", 3);
-	memcpy(valStr, data, 2 * SIZEOF(DataType));
-	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
-	data += 2 * SIZEOF(DataType);
+
+	data = StringReadValue<DataType>(_DataType, data);
 
 	PBYTE bytes = NULL;
 
@@ -211,12 +207,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	default:
 
 		for (BYTE i = 0; i < byteWidth; i++)
-		{
-			memcpy(valStr, "00", 3);
-			memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-			bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
-			data += 2 * SIZEOF(CBYTE);
-		}
+			data = StringReadValue<BYTE>(bytes[i], data);
 
 		_Value = bytes;
 
@@ -224,12 +215,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	}
 
 	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
-	{
-		memcpy(valStr, "00", 3);
-		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-		bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
-		data += 2 * SIZEOF(CBYTE);
-	}
+		data = StringReadValue<BYTE>(bytes[i], data);
 
 	_Value = bytes;
 }
@@ -561,29 +547,47 @@ VOID VarLengthField::FromBytes(PCBYTE data)
 
 VOID VarLengthField::FromString(PCCHAR data)
 {
-	CHAR valStr[5];
+	CBYTE byteWidth = this->ByteWidth();
 	
-	memcpy(valStr, "0000", 5);
-	memcpy(valStr, data, 2 * SIZEOF(CSIZE));
-	_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
-	data += 2 * SIZEOF(CSIZE);
-	
-	memcpy(valStr, "0000", 5);
-	memcpy(valStr, data, 2 * SIZEOF(DataType));
-	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
-	data += 2 * SIZEOF(DataType);
-	
-	BYTE bytes[this->ByteWidth()];
+	data = StringReadValue<SIZE>(_Length, data);
 
-	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	PBYTE bytes = NULL;
+
+	switch (_DataType)
 	{
-		memcpy(valStr, "0000", 5);
-		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-		bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
-		data += 2 * SIZEOF(CBYTE);
+	case DataType::CHAR_FIELD:
+	case DataType::BYTE_FIELD:
+	case DataType::BOOL_FIELD:
+
+		bytes = (PBYTE)&(_Value.Byte);
+		break;
+		
+	case DataType::SHORT_FIELD:
+	case DataType::WORD_FIELD:
+		
+
+		bytes = (PBYTE)&(_Value.Word);
+		break;
+
+	case DataType::LONG_FIELD:		
+	case DataType::DWORD_FIELD:
+	case DataType::FLOAT_FIELD:
+
+		bytes = (PBYTE)&(_Value.DWord);
+		break;
+
+	default:
+
+		for (BYTE i = 0; i < byteWidth; i++)
+			data = StringReadValue<BYTE>(bytes[i], data);
+
+		_Value = bytes;
+
+		return;
 	}
 
-	_Value = bytes;
+	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
+		data = StringReadValue<BYTE>(bytes[i], data);
 }
 
 #pragma endregion
