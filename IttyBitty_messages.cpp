@@ -234,7 +234,7 @@ SIZE Message::printTo(Print & printer) const
 {
 	SIZE size = printer.print(MESSAGE_MARKER);
 	
-#ifdef TRUE
+#ifdef _DEBUG
 	SIZE msgSize = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else

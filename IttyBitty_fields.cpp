@@ -333,6 +333,7 @@ PCBYTE FieldBase::ToBytes() const
 PCCHAR FieldBase::ToString() const
 {
 	CSIZE size = this->StringSize();
+	CSIZE byteWidth = this->ByteWidth();
 
 	if (__field_buffer)
 		delete[] __field_buffer;
@@ -341,10 +342,10 @@ PCCHAR FieldBase::ToString() const
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
 
-	bufferPtr = StringInsertValue<CSIZE>(this->ByteWidth(), bufferPtr);	
+	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
 
-	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	for (SIZE i = 0; i < byteWidth; i++)
 		bufferPtr = StringInsertValue<CBYTE>(_Value.Bytes[i], bufferPtr);
 	
 	__field_buffer[size - 1] = '\0';
@@ -383,7 +384,7 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 
 SIZE FieldBase::printTo(Print & printer) const
 {
-#ifdef TRUE
+#ifdef _DEBUG
 	SIZE size = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else

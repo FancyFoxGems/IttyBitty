@@ -340,7 +340,7 @@ namespace IttyBitty
 	{
 		PIMESSAGE message = NULL;
 
-	#ifdef DEBUG
+	#ifdef _DEBUG
 		if (!MessageFromString(stream, message))
 	#else
 		if (!MessageFromBytes(stream, message))
