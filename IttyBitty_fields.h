@@ -793,19 +793,19 @@ namespace IttyBitty
 			valStr[8] = '\0';
 	
 			memcpy(valStr, data, 2 * SIZEOF(CSIZE));
-			_Length = static_cast<CSIZE>(strtol(data, NULL, 0x10));
+			_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
 			data += 2 * SIZEOF(CSIZE);
 			
 			valStr[2] = '\0';
 
 			memcpy(valStr, data, 2 * SIZEOF(DataType));
-			_DataType = static_cast<DataType>(strtol(data, NULL, 0x10));
+			_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 			data += 2 * SIZEOF(DataType);
 	
 			for (BYTE i = 0; i < this->ByteWidth(); i++)
 			{
 				memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-				_Value.Bytes[i] = static_cast<BYTE>(strtol(data, NULL, 0x10));
+				_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 				data += 2 * SIZEOF(CBYTE);
 			}
 		}
@@ -884,9 +884,8 @@ namespace IttyBitty
 	INLINE PIFIELD FieldFromBytes(PCBYTE data)
 	{
 		PIFIELD field = NULL;
-		PCBYTE bufferPtr = data + SIZEOF(CSIZE);
 
-		CSIZE length = static_cast<CSIZE>(*bufferPtr);
+		CSIZE length = static_cast<CSIZE>(*data);
 
 		if (length == 0 || length > 4)
 			field = new VarLengthField();
@@ -901,14 +900,12 @@ namespace IttyBitty
 	INLINE PIFIELD FieldFromString(PCCHAR data)
 	{
 		PIFIELD field = NULL;
-		PCCHAR bufferPtr = data + 2 * SIZEOF(CSIZE);
 		
 		CHAR valStr[9];
 		valStr[8] = '\0';
 
 		memcpy(valStr, data, 2 * SIZEOF(CSIZE));
-		CSIZE length = static_cast<DataType>(strtol(data, NULL, 0x10));
-		data += 2 * SIZEOF(CSIZE);
+		CSIZE length = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 		
 		if (length == 0 || length > 4)
 			field = new VarLengthField();

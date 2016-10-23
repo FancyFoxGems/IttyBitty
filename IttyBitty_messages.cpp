@@ -103,12 +103,12 @@ VOID Message::Handle(...)
 
 CSIZE Message::ByteSize() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsByteSize();
+	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->GetParamsByteSize();
 }
 
 CSIZE Message::StringSize() const
 {
-	return 4 * SIZEOF(CBYTE) + 2 * SIZEOF(CSIZE) + this->GetParamsStringSize() + 1;
+	return 2 * SIZEOF(CSIZE) + 4 * SIZEOF(CBYTE) + this->GetParamsStringSize() + 1;
 }
 
 CSIZE Message::ByteWidth() const
@@ -213,9 +213,6 @@ PCCHAR Message::ToString() const
 
 VOID Message::LoadFromBytes(PCBYTE data)
 {
-	//CSIZE paramsSize = static_cast<CSIZE>(*((PCSIZE)data));
-	data += SIZEOF(CSIZE);
-
 	_MessageCode = *data++;
 	_ParamCount = *data++;
 
@@ -225,17 +222,15 @@ VOID Message::LoadFromBytes(PCBYTE data)
 
 VOID Message::LoadFromString(PCCHAR data)
 {
-	data += 2 * SIZEOF(CSIZE);
-
 	CHAR valStr[3];
 	valStr[2] = '\0';
 	
 	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-	_MessageCode = static_cast<CBYTE>(strtol(data, NULL, 0x10));
+	_MessageCode = static_cast<CBYTE>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CBYTE);
 	
 	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-	_ParamCount = static_cast<DataType>(strtol(data++, NULL, 0x10));
+	_ParamCount = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CBYTE);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)

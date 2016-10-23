@@ -280,7 +280,7 @@ namespace IttyBitty
 			return FALSE;
 		*/
 
-		CSIZE bufferSize = msgSize;
+		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 
@@ -297,12 +297,16 @@ namespace IttyBitty
 		if (!stream.find(UNCONST(MESSAGE_MARKER)))
 			return FALSE;
 
-		SIZE msgSize = 0;
-		msgSize = Read<CSIZE>(stream, (PBYTE)&msgSize);
+		CHAR valStr[9];
+		valStr[8] = '\0';
+
+		ReadBuffer(stream, reinterpret_cast<PBYTE>(valStr), 2 * SIZEOF(CSIZE));
+		SIZE msgSize = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
+
 		if (msgSize == 0)
 			return FALSE;
 
-		CSIZE bufferSize = msgSize - 2 * SIZEOF(CBYTE);
+		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 
