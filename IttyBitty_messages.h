@@ -97,7 +97,7 @@ namespace IttyBitty
 	protected:
 
 		VIRTUAL CSIZE GetParamsSize() const = 0;
-		VIRTUAL CSIZE GetParamsStringSize() const = 0;
+		VIRTUAL CSIZE GetParamsByteWidth() const = 0;
 
 		IMessage() { }
 	};
@@ -143,7 +143,9 @@ namespace IttyBitty
 		// ISerializable IMPLEMENTATION
 
 		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
+		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -167,6 +169,8 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE GetParamsSize() const;
 		VIRTUAL CSIZE GetParamsStringSize() const;
+		VIRTUAL CSIZE GetParamsByteWidth() const;
+		VIRTUAL CSIZE GetParamsStringLength() const;
 	};
 
 #pragma endregion

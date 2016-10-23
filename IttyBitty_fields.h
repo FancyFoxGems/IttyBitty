@@ -246,8 +246,10 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSIZE Size() const = 0;		
+		VIRTUAL CSIZE Size() const = 0;
+		VIRTUAL CSIZE StringSize() const = 0;
 		VIRTUAL CSIZE ByteWidth() const = 0;
+		VIRTUAL CSIZE StringLength() const = 0;
 
 		VIRTUAL PCBYTE ToBytes() const = 0;
 		VIRTUAL PCCHAR ToString() const = 0;
@@ -297,8 +299,10 @@ namespace IttyBitty
 		
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE Size() const;		
+		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
+		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -423,15 +427,13 @@ namespace IttyBitty
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE Size() const;				
+		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
-
-		VIRTUAL PCCHAR ToString() const;
+		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL VOID LoadFromBytes(PCBYTE);
 		VIRTUAL VOID LoadFromString(PCCHAR);
-
-		VIRTUAL SIZE printTo(Print &) const;
 		
 
 	protected:
@@ -754,6 +756,11 @@ namespace IttyBitty
 		{
 			return sizeof(_Length) + TypedField<T>::Size();
 		}
+				
+		VIRTUAL CSIZE StringSize() const
+		{
+			return 2 * sizeof(_Length) + TypedField<T>::StringSize();
+		}
 
 		VIRTUAL CSIZE ByteWidth() const
 		{
@@ -763,38 +770,44 @@ namespace IttyBitty
 			return TypedField<T>::ByteWidth();
 		}
 
-		VIRTUAL PCCHAR ToString() const
+		VIRTUAL CSIZE StringLength() const
 		{
-			if (_Value.Bytes == NULL)
-				return "";
-
 			if (_DataType == DataType::STRING_FIELD)
-				return _Value.String;
-			
-			return Field::ToString();
+				return _Length;
+
+			return TypedField<T>::StringLength();
 		}
 		
 		VIRTUAL VOID LoadFromBytes(PCBYTE data)
 		{
-			_Length = static_cast<SIZE>(*((PCSIZE)data));
-			TypedField<T>::LoadFromBytes(data);
+			_Length = static_cast<DataType>(*data);
+			data += SIZEOF(CSIZE);
+
+			_DataType = static_cast<DataType>(*data++);
+
+			_Value = data;
 		}
 		
 		VIRTUAL VOID LoadFromString(PCCHAR data)
 		{
-			_Length = static_cast<SIZE>(*((PCSIZE)data));
-			TypedField<T>::LoadFromString(data);
-		}
-
-		VIRTUAL SIZE printTo(Print & printer) const
-		{
-			SIZE printed = printer.print(_Length);
-			printed += printer.print(_DataType);
-			
-			if (_Value.Bytes != NULL)
-				printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
+			CHAR valStr[3];
 	
-			return printed;
+			memcpy(valStr, data, 2 * SIZEOF(BYTE));
+			valStr[2] = '\0';
+			_Length = static_cast<CSIZE>(strtol(data, NULL, 0x10));
+			data += 2 * SIZEOF(CSIZE);
+
+			memcpy(valStr, data, 2 * SIZEOF(BYTE));
+			valStr[2] = '\0';
+			_DataType = static_cast<DataType>(strtol(data++, NULL, 0x10));
+	
+			for (BYTE i = 0; i < this->ByteWidth(); i++)
+			{
+				itoa(_Value.Bytes[i], valStr, 0x10);
+				memcpy(valStr, data, 2 * SIZEOF(BYTE));
+				_Value.Bytes[i] = static_cast<BYTE>(strtol(data, NULL, 0x10));
+				data += 2 * SIZEOF(CSIZE);
+			}
 		}
 
 

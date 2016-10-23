@@ -103,9 +103,19 @@ CSIZE Message::Size() const
 	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsSize();
 }
 
-CSIZE Message::ByteWidth() const
+CSIZE Message::StringSize() const
 {
 	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsStringSize();
+}
+
+CSIZE Message::ByteWidth() const
+{
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsByteWidth();
+}
+
+CSIZE Message::StringLength() const
+{
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsStringLength();
 }
 		
 PCBYTE Message::ToBytes() const
@@ -152,7 +162,7 @@ PCBYTE Message::ToBytes() const
 
 PCCHAR Message::ToString() const
 {
-	CSIZE size = this->ByteWidth();
+	CSIZE size = this->StringLength();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
@@ -172,18 +182,17 @@ PCCHAR Message::ToString() const
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 	
-	CSIZE paramsSize = this->GetParamsStringSize();
+	CSIZE paramsSize = this->GetParamsStringLength();
 	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 	
 	PIFIELD param = NULL;
 	SIZE paramSize = 0;
 	
-
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
-		paramSize = param->ByteWidth();
+		paramSize = param->StringLength();
 		if (param->GetDataType() == DataType::STRING_FIELD)
 			paramSize -= 1;
 
@@ -217,7 +226,7 @@ SIZE Message::printTo(Print & printer) const
 	printed += printer.print(this->Size());
 	printed += printer.print(this->GetMessageCode());
 	printed += printer.print(this->GetParamCount());
-	printed += printer.print(this->GetParamsStringSize());
+	printed += printer.print(this->GetParamsByteWidth());
 	
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
 		printed += _Params[i]->printTo(printer);
@@ -243,8 +252,33 @@ CSIZE Message::GetParamsStringSize() const
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
+		size += _Params[i]->StringSize();
+
+	return size;
+}
+
+CSIZE Message::GetParamsByteWidth() const
+{
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
 	{
 		size += _Params[i]->ByteWidth();
+
+		if (_Params[i]->GetDataType() == DataType::STRING_FIELD)
+			--size;
+	}
+
+	return size;
+}
+
+CSIZE Message::GetParamsStringLength() const
+{
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
+	{
+		size += _Params[i]->StringLength();
 
 		if (_Params[i]->GetDataType() == DataType::STRING_FIELD)
 			--size;

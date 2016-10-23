@@ -291,9 +291,19 @@ CSIZE FieldBase::Size() const
 	return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
 }
 
+CSIZE FieldBase::StringSize() const
+{
+	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
+}
+
 CSIZE FieldBase::ByteWidth() const
 {
 	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
+}
+
+CSIZE FieldBase::StringLength() const
+{
+	return 2 * this->ByteWidth();
 }
 
 PCBYTE FieldBase::ToBytes() const
@@ -310,8 +320,8 @@ PCBYTE FieldBase::ToBytes() const
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
 	bufferPtr += SIZEOF(byteWidth);
 
-	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
-	bufferPtr += SIZEOF(DataType);
+	memcpy(bufferPtr, &_DataType, SIZEOF(_DataType));
+	bufferPtr += SIZEOF(_DataType);
 
 	if (byteWidth > 0)
 		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
@@ -321,16 +331,31 @@ PCBYTE FieldBase::ToBytes() const
 
 PCCHAR FieldBase::ToString() const
 {
-	CSIZE size = this->ByteWidth();
+	CSIZE size = this->StringSize();
 
 	if (__field_buffer)
 		delete[] __field_buffer;
 
-	__field_buffer = new BYTE[size + 1];
+	__field_buffer = new BYTE[size];
+	PBYTE bufferPtr = __field_buffer;
 	
-	memcpy(__field_buffer, &_DataType, SIZEOF(DataType));
-	memcpy(&__field_buffer[SIZEOF(DataType)], _Value.Bytes, size);
-	__field_buffer[size] = '\0';
+	CHAR valStr[3];
+
+	itoa(this->StringLength(), valStr, 0x10);
+	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
+	bufferPtr += 2 * SIZEOF(CBYTE);
+	
+	memcpy(bufferPtr, valStr, 2 * SIZEOF(_DataType));
+	bufferPtr += 2 * SIZEOF(_DataType);
+	
+	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	{
+		itoa(_Value.Bytes[i], valStr, 0x10);
+		memcpy(bufferPtr, valStr, 2 * SIZEOF(BYTE));
+		bufferPtr += 2 * SIZEOF(_DataType);
+	}
+	
+	__field_buffer[size - 1] = '\0';
 
 	return reinterpret_cast<PCCHAR>(__field_buffer);
 }
@@ -338,21 +363,35 @@ PCCHAR FieldBase::ToString() const
 VOID FieldBase::LoadFromBytes(PCBYTE data)
 {
 	data += SIZEOF(CSIZE);
+
 	_DataType = static_cast<DataType>(*data++);
+
 	_Value = data;
 }
 
 VOID FieldBase::LoadFromString(PCCHAR data)
 {
-	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+	CHAR valStr[3];
+
+	data += 2 * SIZEOF(CSIZE);
+
+	memcpy(valStr, data, 2 * SIZEOF(BYTE));
+	valStr[2] = '\0';
+	_DataType = static_cast<DataType>(strtol(data, NULL, 0x10));
+	data += 2 * SIZEOF(CSIZE);
+	
+	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	{
+		itoa(_Value.Bytes[i], valStr, 0x10);
+		memcpy(valStr, data++, 2 * SIZEOF(BYTE));
+		_Value.Bytes[i] = static_cast<BYTE>(strtol(data, NULL, 0x10));
+		data += 2 * SIZEOF(CSIZE);
+	}
 }
 
 SIZE FieldBase::printTo(Print & printer) const
 {
-	SIZE printed = printer.print(_DataType);
-	printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
-	
-	return printed;
+	return printer.print(this->ToString());
 }
 
 
@@ -680,6 +719,16 @@ VarLengthField::operator PBITPACK()
 
 // Field OVERRIDES
 
+CSIZE VarLengthField::Size() const
+{
+	return sizeof(_Length) + Field::Size();
+}
+
+CSIZE VarLengthField::StringSize() const
+{
+	return 2 * sizeof(_Length) + Field::StringSize();
+}
+
 CSIZE VarLengthField::ByteWidth() const
 {
 	if (_Length > 0)
@@ -688,43 +737,44 @@ CSIZE VarLengthField::ByteWidth() const
 	return Field::ByteWidth();
 }
 
-CSIZE VarLengthField::Size() const
+CSIZE VarLengthField::StringLength() const
 {
-	return sizeof(_Length) + Field::Size();
-}
-
-PCCHAR VarLengthField::ToString() const
-{
-	if (_Value.Bytes == NULL)
-		return "";
-
 	if (_DataType == DataType::STRING_FIELD)
-		return _Value.String;
+		return _Length;
 			
-	return Field::ToString();
+	return Field::StringLength();
 }
 
 VOID VarLengthField::LoadFromBytes(PCBYTE data)
 {
-	_Length = static_cast<SIZE>(*((PCSIZE)data));
-	Field::LoadFromBytes(data);
+	_Length = static_cast<DataType>(*data);
+	data += SIZEOF(CSIZE);
+
+	_DataType = static_cast<DataType>(*data++);
+
+	_Value = data;
 }
 
 VOID VarLengthField::LoadFromString(PCCHAR data)
 {
-	_Length = static_cast<SIZE>(*((PCSIZE)data));
-	Field::LoadFromString(data);
-}
+	CHAR valStr[3];
+	
+	memcpy(valStr, data, 2 * SIZEOF(BYTE));
+	valStr[2] = '\0';
+	_Length = static_cast<CSIZE>(strtol(data, NULL, 0x10));
+	data += 2 * SIZEOF(CSIZE);
 
-SIZE VarLengthField::printTo(Print & printer) const
-{
-	SIZE printed = printer.print(_Length);
-	printed += printer.print(_DataType);
+	memcpy(valStr, data, 2 * SIZEOF(BYTE));
+	valStr[2] = '\0';
+	_DataType = static_cast<DataType>(strtol(data++, NULL, 0x10));
 	
-	if (_Value.Bytes != NULL)
-		printed += printer.print(reinterpret_cast<PCCHAR>(_Value.Bytes));
-	
-	return printed;
+	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	{
+		itoa(_Value.Bytes[i], valStr, 0x10);
+		memcpy(valStr, data, 2 * SIZEOF(BYTE));
+		_Value.Bytes[i] = static_cast<BYTE>(strtol(data, NULL, 0x10));
+		data += 2 * SIZEOF(CSIZE);
+	}
 }
 
 #pragma endregion
