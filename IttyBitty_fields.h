@@ -244,6 +244,7 @@ namespace IttyBitty
 		// DESTRUCTOR
 		VIRTUAL ~ISerializable() { }
 
+
 		// INTERFACE METHODS
 
 		VIRTUAL CSIZE ByteSize() const = 0;
@@ -789,7 +790,7 @@ namespace IttyBitty
 		
 		VIRTUAL VOID LoadFromString(PCCHAR data)
 		{
-			CHAR valStr[9];
+			CHAR valStr[5];
 			
 			memcpy(valStr, "00", 3);
 			memcpy(valStr, data, 2 * SIZEOF(CSIZE));
@@ -879,6 +880,36 @@ namespace IttyBitty
 #pragma endregion
 	
 
+#pragma region HELPER METHODS
+
+	template<typename T>
+	INLINE PCHAR StringInsertValue(CONST T value, PCHAR buffer, CBYTE radix = 0x10)
+	{
+		PCHAR bufferPtr = buffer;
+		CHAR valStr[2 * T_SIZE + 1];
+		valStr[2 * T_SIZE] = '\0';
+
+		for (SIZE i = 0; i < T_SIZE; i++)
+			memcpy(&valStr[2 * i], "00", 2);
+
+		itoa(value, valStr, radix);
+
+		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
+		for (SIZE i = 0; i < lenDiff; i++)
+		{
+			valStr[i + lenDiff] = valStr[i];
+			valStr[i] = '0';
+		}
+
+		memcpy(bufferPtr, valStr, 2 * T_SIZE);
+		bufferPtr += 2 * T_SIZE;
+
+		return bufferPtr;
+	}
+
+#pragma endregion
+	
+
 #pragma region FIELD PARSING METHODS
 	
 	INLINE PIFIELD FieldFromBytes(PCBYTE data)
@@ -900,9 +931,9 @@ namespace IttyBitty
 	INLINE PIFIELD FieldFromString(PCCHAR data)
 	{
 		PIFIELD field = NULL;
-		CHAR valStr[9];
+		CHAR valStr[5];
 		
-		memcpy(valStr, "00000000", 9);
+		memcpy(valStr, "0000", 5);
 		memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 		CSIZE length = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 		

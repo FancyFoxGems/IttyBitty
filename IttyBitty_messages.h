@@ -316,8 +316,7 @@ namespace IttyBitty
 		if (!stream.find(UNCONST(MESSAGE_MARKER)))
 			return FALSE;
 
-		CHAR valStr[9];
-		valStr[8] = '\0';
+		CHAR valStr[5] = "0000";
 
 		ReadBuffer(stream, reinterpret_cast<PBYTE>(valStr), 2 * SIZEOF(CSIZE));
 		SIZE msgSize = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));

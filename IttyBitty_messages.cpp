@@ -176,23 +176,11 @@ PCCHAR Message::ToString() const
 
 	__message_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __message_buffer;
-	CHAR valStr[9];
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
 	
-	memcpy(valStr, "00000000", 9);
-	ltoa(size, valStr, 0x10);
-	memcpy(bufferPtr, valStr, 2 * SIZEOF(CSIZE));
-	bufferPtr += 2 * SIZEOF(CSIZE);
-	
-	memcpy(valStr, "00000000", 9);
-	itoa(this->GetMessageCode(), valStr, 0x10);
-	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
-	bufferPtr += 2 * SIZEOF(CBYTE);
-	
-	memcpy(valStr, "00000000", 9);
-	itoa(paramCount, valStr, 0x10);
-	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
-	bufferPtr += 2 * SIZEOF(CBYTE);
+	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);	
+	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);	
+	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
 	
 	PIFIELD param = NULL;
 	SIZE paramSize = 0;

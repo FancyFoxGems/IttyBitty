@@ -339,25 +339,13 @@ PCCHAR FieldBase::ToString() const
 
 	__field_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __field_buffer;	
-	CHAR valStr[9];
-	
-	memcpy(valStr, "00000000", 9);
-	ltoa(this->StringLength(), valStr, 0x10);
-	memcpy(bufferPtr, valStr, 2 * SIZEOF(CSIZE));
-	bufferPtr += 2 * SIZEOF(CSIZE);
-	
-	memcpy(valStr, "00000000", 9);
-	memcpy(bufferPtr, valStr, 2 * SIZEOF(_DataType));
-	bufferPtr += 2 * SIZEOF(_DataType);
-	
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
+
+	bufferPtr = StringInsertValue<CSIZE>(this->ByteWidth(), bufferPtr);	
+	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
+
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
-	{
-		memcpy(valStr, "00000000", 9);
-		itoa(_Value.Bytes[i], valStr, 0x10);
-		memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
-		bufferPtr += 2 * SIZEOF(CBYTE);
-	}
+		bufferPtr = StringInsertValue<CBYTE>(_Value.Bytes[i], bufferPtr);
 	
 	__field_buffer[size - 1] = '\0';
 
@@ -395,7 +383,7 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 
 SIZE FieldBase::printTo(Print & printer) const
 {
-#ifdef DEBUG
+#ifdef TRUE
 	SIZE size = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else
@@ -777,21 +765,21 @@ VOID VarLengthField::LoadFromBytes(PCBYTE data)
 
 VOID VarLengthField::LoadFromString(PCCHAR data)
 {
-	CHAR valStr[9];
+	CHAR valStr[5];
 	
-	memcpy(valStr, "00000000", 9);
+	memcpy(valStr, "0000", 5);
 	memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 	_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CSIZE);
 	
-	memcpy(valStr, "00000000", 9);
+	memcpy(valStr, "0000", 5);
 	memcpy(valStr, data, 2 * SIZEOF(DataType));
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
-		memcpy(valStr, "00000000", 9);
+		memcpy(valStr, "0000", 5);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 		_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 		data += 2 * SIZEOF(CBYTE);
