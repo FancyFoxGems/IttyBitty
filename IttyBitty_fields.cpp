@@ -341,16 +341,19 @@ PCCHAR FieldBase::ToString() const
 
 	PBYTE bufferPtr = __field_buffer;	
 	CHAR valStr[9];
-
+	
+	memcpy(valStr, "00000000", 9);
 	ltoa(this->StringLength(), valStr, 0x10);
 	memcpy(bufferPtr, valStr, 2 * SIZEOF(CSIZE));
 	bufferPtr += 2 * SIZEOF(CSIZE);
 	
+	memcpy(valStr, "00000000", 9);
 	memcpy(bufferPtr, valStr, 2 * SIZEOF(_DataType));
 	bufferPtr += 2 * SIZEOF(_DataType);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
+		memcpy(valStr, "00000000", 9);
 		itoa(_Value.Bytes[i], valStr, 0x10);
 		memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
 		bufferPtr += 2 * SIZEOF(CBYTE);
@@ -375,14 +378,15 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 	data += 2 * SIZEOF(CSIZE);
 
 	CHAR valStr[3];
-	valStr[2] = '\0';
-
+	
+	memcpy(valStr, "00", 3);
 	memcpy(valStr, data, 2 * SIZEOF(DataType));
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
+		memcpy(valStr, "00", 3);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 		_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 		data += 2 * SIZEOF(CBYTE);
@@ -774,20 +778,20 @@ VOID VarLengthField::LoadFromBytes(PCBYTE data)
 VOID VarLengthField::LoadFromString(PCCHAR data)
 {
 	CHAR valStr[9];
-	valStr[8] = '\0';
 	
+	memcpy(valStr, "00000000", 9);
 	memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 	_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CSIZE);
 	
-	valStr[2] = '\0';
-
+	memcpy(valStr, "00000000", 9);
 	memcpy(valStr, data, 2 * SIZEOF(DataType));
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
 	
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
+		memcpy(valStr, "00000000", 9);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 		_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 		data += 2 * SIZEOF(CBYTE);

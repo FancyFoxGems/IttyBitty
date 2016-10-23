@@ -179,27 +179,46 @@ namespace IttyBitty
 #pragma region GenericMessage DECLARATION
 
 	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
-	CLASS GenericMessage : public Message, public virtual IMessage
+	CLASS GenericMessage : public Message
 	{
 	public:
 
 		// STATIC CONSTEXPR METHODS
 
-		STATIC CONSTEXPR CBYTE MESSAGE_CODE();
-		STATIC CONSTEXPR CSIZE PARAM_COUNT();
+		STATIC CONSTEXPR CBYTE MESSAGE_CODE()
+		{
+			return MsgCode;
+		}
+
+		STATIC CONSTEXPR CSIZE PARAM_COUNT()
+		{
+			return ParamCnt;
+		}
 
 
 		// CONSTRUCTORS
 
-		GenericMessage();
-		GenericMessage(RIFIELD);
-		GenericMessage(PIFIELD);
+		GenericMessage() : Message() { }
+
+		GenericMessage(PIFIELD param) : Message(param) { }
+
+		GenericMessage(PPIFIELD params) : Message(params) { }
 
 
-		// Message OVERRIDES
-		
-		VIRTUAL CBYTE GetMessageCode() const;
-		VIRTUAL CBYTE GetParamCount() const;
+		// MESSAGE OVERRIDES
+
+		VIRTUAL CBYTE GetMessageCode() const
+		{
+			return MESSAGE_CODE();
+		}
+
+		VIRTUAL CBYTE GetParamCount() const
+		{
+			return PARAM_COUNT();
+		}
+
+
+#pragma endregion
 
 
 	protected:

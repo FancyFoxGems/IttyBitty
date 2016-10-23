@@ -790,20 +790,20 @@ namespace IttyBitty
 		VIRTUAL VOID LoadFromString(PCCHAR data)
 		{
 			CHAR valStr[9];
-			valStr[8] = '\0';
-	
+			
+			memcpy(valStr, "00", 3);
 			memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 			_Length = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
 			data += 2 * SIZEOF(CSIZE);
 			
-			valStr[2] = '\0';
-
+			memcpy(valStr, "00", 3);
 			memcpy(valStr, data, 2 * SIZEOF(DataType));
 			_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 			data += 2 * SIZEOF(DataType);
 	
 			for (BYTE i = 0; i < this->ByteWidth(); i++)
 			{
+				memcpy(valStr, "00", 3);
 				memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 				_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 				data += 2 * SIZEOF(CBYTE);
@@ -900,10 +900,9 @@ namespace IttyBitty
 	INLINE PIFIELD FieldFromString(PCCHAR data)
 	{
 		PIFIELD field = NULL;
-		
 		CHAR valStr[9];
-		valStr[8] = '\0';
-
+		
+		memcpy(valStr, "00000000", 9);
 		memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 		CSIZE length = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 		

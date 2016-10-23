@@ -77,7 +77,7 @@ CBYTE Message::GetMessageCode() const
 
 CBYTE Message::GetParamCount() const
 {
-	return _ParamCount;
+	return 0;//_ParamCount;
 }
 
 RIFIELD Message::Param(CBYTE i)
@@ -176,17 +176,20 @@ PCCHAR Message::ToString() const
 
 	__message_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __message_buffer;	
+	PBYTE bufferPtr = __message_buffer;
 	CHAR valStr[9];
-
+	
+	memcpy(valStr, "00000000", 9);
 	ltoa(size, valStr, 0x10);
 	memcpy(bufferPtr, valStr, 2 * SIZEOF(CSIZE));
 	bufferPtr += 2 * SIZEOF(CSIZE);
-
+	
+	memcpy(valStr, "00000000", 9);
 	itoa(this->GetMessageCode(), valStr, 0x10);
 	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
 	bufferPtr += 2 * SIZEOF(CBYTE);
 	
+	memcpy(valStr, "00000000", 9);
 	itoa(paramCount, valStr, 0x10);
 	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
 	bufferPtr += 2 * SIZEOF(CBYTE);
@@ -223,12 +226,13 @@ VOID Message::LoadFromBytes(PCBYTE data)
 VOID Message::LoadFromString(PCCHAR data)
 {
 	CHAR valStr[3];
-	valStr[2] = '\0';
 	
+	memcpy(valStr, "00", 3);
 	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 	_MessageCode = static_cast<CBYTE>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CBYTE);
 	
+	memcpy(valStr, "00", 3);
 	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 	_ParamCount = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(CBYTE);
@@ -242,7 +246,7 @@ SIZE Message::printTo(Print & printer) const
 {
 	SIZE size = printer.print(MESSAGE_MARKER);
 	
-#ifdef DEBUG
+#ifdef TRUE
 	SIZE msgSize = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else
@@ -279,65 +283,6 @@ CSIZE Message::GetParamsStringSize() const
 		size += _Params[i]->StringSize() - 1;
 
 	return size;
-}
-
-#pragma endregion
-
-
-#pragma region GenericMessage DEFINITION
-
-
-// STATIC CONSTEXPR METHODS
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CONSTEXPR CBYTE GenericMessage<MsgCode, ParamCnt>::MESSAGE_CODE()
-{
-	return MsgCode;
-}
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CONSTEXPR CSIZE GenericMessage<MsgCode, ParamCnt>::PARAM_COUNT()
-{
-	return ParamCnt;
-}
-
-
-// CONSTRUCTORS/DESTRUCTOR
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-GenericMessage<MsgCode, ParamCnt>::GenericMessage()
-{
-	_Dispose = TRUE;
-	_Params = new Field[ParamCnt];
-}
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-GenericMessage<MsgCode, ParamCnt>::GenericMessage(RIFIELD param)
-{
-	_Dispose = TRUE;
-	_Params = new Field[ParamCnt];
-	_Params[0] = param;
-}
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-GenericMessage<MsgCode, ParamCnt>::GenericMessage(PIFIELD params)
-{
-	_Params = params;
-}
-
-
-// MESSAGE OVERRIDES
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CBYTE GenericMessage<MsgCode, ParamCnt>::GetParamCount() const
-{
-	return PARAM_COUNT();
-}
-
-template<CBYTE MsgCode, CBYTE ParamCnt>
-CBYTE GenericMessage<MsgCode, ParamCnt>::GetMessageCode() const
-{
-	return MESSAGE_CODE();
 }
 
 #pragma endregion
