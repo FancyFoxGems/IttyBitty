@@ -27,18 +27,21 @@ PBYTE IttyBitty::__message_buffer;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-Message::Message(CBYTE messageCode, CBYTE paramCount) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
+Message::Message(CBYTE messageCode, CBYTE paramCount) 
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
 	_Params = new PIFIELD[paramCount];
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD param) : _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
+Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD param) 
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
 	_Params = new PIFIELD[paramCount];
 	_Params[0] = param;
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params) : _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
+Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params) 
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
 Message::~Message()
 {
@@ -98,39 +101,46 @@ VOID Message::Handle(...)
 
 // ISerializable IMPLEMENTATION
 
-CSIZE Message::Size() const
+CSIZE Message::ByteSize() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsSize();
+	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsByteSize();
 }
 
 CSIZE Message::StringSize() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsStringSize();
+	return 4 * SIZEOF(CBYTE) + 2 * SIZEOF(CSIZE) + this->GetParamsStringSize() + 1;
 }
 
 CSIZE Message::ByteWidth() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsByteWidth();
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
+		size += _Params[i]->ByteWidth();
+
+	return size;
 }
 
 CSIZE Message::StringLength() const
 {
-	return 2 * SIZEOF(CBYTE) + SIZEOF(CSIZE) + this->GetParamsStringLength();
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->GetParamCount(); i++)
+		size += _Params[i]->StringLength();
+
+	return size;
 }
 		
 PCBYTE Message::ToBytes() const
 {
-	CSIZE size = this->Size();
+	CSIZE size = this->ByteSize();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[strlen(MESSAGE_MARKER) + SIZEOF(CSIZE) + size];
+	__message_buffer = new BYTE[size];
 
 	PBYTE bufferPtr = __message_buffer;
-		
-	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER));
-	bufferPtr += strlen(MESSAGE_MARKER);
 
 	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
 
@@ -139,10 +149,6 @@ PCBYTE Message::ToBytes() const
 	
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
-	
-	CSIZE paramsSize = this->GetParamsSize();
-	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
-	bufferPtr += SIZEOF(CSIZE);
 
 	PIFIELD param = NULL;
 	SIZE paramSize = 0;
@@ -151,7 +157,7 @@ PCBYTE Message::ToBytes() const
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
-		paramSize = param->Size();
+		paramSize = param->ByteSize();
 
 		memcpy(bufferPtr, param->ToBytes(), paramSize);
 		bufferPtr += paramSize;
@@ -162,29 +168,28 @@ PCBYTE Message::ToBytes() const
 
 PCCHAR Message::ToString() const
 {
-	CSIZE size = this->StringLength();
+	CSIZE size = this->StringSize();
+	CBYTE paramCount = this->GetParamCount();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[strlen(MESSAGE_MARKER) + SIZEOF(CSIZE) + size];
+	__message_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __message_buffer;
-		
-	memcpy(bufferPtr, &MESSAGE_MARKER, strlen(MESSAGE_MARKER) - 1);
-	bufferPtr += strlen(MESSAGE_MARKER) - 1;
-	
-	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
+	PBYTE bufferPtr = __message_buffer;	
+	CHAR valStr[9];
 
-	CBYTE msgCode = this->GetMessageCode();
-	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
+	ltoa(size, valStr, 0x10);
+	memcpy(bufferPtr, valStr, 2 * SIZEOF(CSIZE));
+	bufferPtr += 2 * SIZEOF(CSIZE);
+
+	itoa(this->GetMessageCode(), valStr, 0x10);
+	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
+	bufferPtr += 2 * SIZEOF(CBYTE);
 	
-	CBYTE paramCount = this->GetParamCount();
-	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
-	
-	CSIZE paramsSize = this->GetParamsStringLength();
-	memcpy(bufferPtr, &paramsSize, SIZEOF(CSIZE));
-	bufferPtr += SIZEOF(CSIZE);
+	itoa(paramCount, valStr, 0x10);
+	memcpy(bufferPtr, valStr, 2 * SIZEOF(CBYTE));
+	bufferPtr += 2 * SIZEOF(CBYTE);
 	
 	PIFIELD param = NULL;
 	SIZE paramSize = 0;
@@ -192,7 +197,8 @@ PCCHAR Message::ToString() const
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
-		paramSize = param->StringLength();
+		paramSize = param->StringSize();
+
 		if (param->GetDataType() == DataType::STRING_FIELD)
 			paramSize -= 1;
 
@@ -200,7 +206,7 @@ PCCHAR Message::ToString() const
 		bufferPtr += paramSize;
 	}
 
-	__message_buffer[size] = '\0';
+	__message_buffer[size - 1] = '\0';
 
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
@@ -210,39 +216,57 @@ VOID Message::LoadFromBytes(PCBYTE data)
 	//CSIZE paramsSize = static_cast<CSIZE>(*((PCSIZE)data));
 	data += SIZEOF(CSIZE);
 
+	_MessageCode = *data++;
+	_ParamCount = *data++;
+
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		_Params[i] = BuildField(data);
+		_Params[i] = FieldFromBytes(data);
 }
 
 VOID Message::LoadFromString(PCCHAR data)
 {
-	LoadFromBytes(reinterpret_cast<PCBYTE>(data));
+	data += 2 * SIZEOF(CSIZE);
+
+	CHAR valStr[3];
+	valStr[2] = '\0';
+	
+	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
+	_MessageCode = static_cast<CBYTE>(strtol(data, NULL, 0x10));
+	data += 2 * SIZEOF(CBYTE);
+	
+	memcpy(valStr, data, 2 * SIZEOF(CBYTE));
+	_ParamCount = static_cast<DataType>(strtol(data++, NULL, 0x10));
+	data += 2 * SIZEOF(CBYTE);
+	
+	for (BYTE i = 0; i < this->ByteWidth(); i++)
+		_Params[i] = FieldFromString(data);
 }
 
 
 SIZE Message::printTo(Print & printer) const
 {
-	SIZE printed = printer.print(MESSAGE_MARKER);
-	printed += printer.print(this->Size());
-	printed += printer.print(this->GetMessageCode());
-	printed += printer.print(this->GetParamCount());
-	printed += printer.print(this->GetParamsByteWidth());
-	
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		printed += _Params[i]->printTo(printer);
+	SIZE size = printer.print(MESSAGE_MARKER);
 
-	return printed;
+	SIZE msgSize = this->ByteSize();
+	PCBYTE buffer = this->ToBytes();
+
+	for (SIZE i = 0; i < msgSize; i++)
+		size += printer.print(buffer[i]);
+
+	size += msgSize;
+
+	return size;
 }
 
 
 // HELPER METHODS
 
-CSIZE Message::GetParamsSize() const
+CSIZE Message::GetParamsByteSize() const
 {
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i]->Size();
+		size += _Params[i]->ByteSize();
 
 	return size;
 }
@@ -252,37 +276,7 @@ CSIZE Message::GetParamsStringSize() const
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i]->StringSize();
-
-	return size;
-}
-
-CSIZE Message::GetParamsByteWidth() const
-{
-	SIZE size = 0;
-
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
-	{
-		size += _Params[i]->ByteWidth();
-
-		if (_Params[i]->GetDataType() == DataType::STRING_FIELD)
-			--size;
-	}
-
-	return size;
-}
-
-CSIZE Message::GetParamsStringLength() const
-{
-	SIZE size = 0;
-
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
-	{
-		size += _Params[i]->StringLength();
-
-		if (_Params[i]->GetDataType() == DataType::STRING_FIELD)
-			--size;
-	}
+		size += _Params[i]->StringSize() - 1;
 
 	return size;
 }

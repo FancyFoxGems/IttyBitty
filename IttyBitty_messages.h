@@ -96,8 +96,8 @@ namespace IttyBitty
 
 	protected:
 
-		VIRTUAL CSIZE GetParamsSize() const = 0;
-		VIRTUAL CSIZE GetParamsByteWidth() const = 0;
+		VIRTUAL CSIZE GetParamsByteSize() const = 0;
+		VIRTUAL CSIZE GetParamsStringSize() const = 0;
 
 		IMessage() { }
 	};
@@ -114,7 +114,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Message(CBYTE, CBYTE);
+		Message(CBYTE = 0, CBYTE = 0);
 		Message(CBYTE, CBYTE, PIFIELD);
 		Message(CBYTE, CBYTE, PPIFIELD);
 
@@ -142,7 +142,7 @@ namespace IttyBitty
 
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE ByteSize() const;
 		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
 		VIRTUAL CSIZE StringLength() const;
@@ -161,16 +161,16 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 		
-		CBYTE _MessageCode;
-		CBYTE _ParamCount;
+		BYTE _MessageCode;
+		BYTE _ParamCount;
+
 		PPIFIELD _Params;
+
 		
 		// HELPER METHODS
 
-		VIRTUAL CSIZE GetParamsSize() const;
+		VIRTUAL CSIZE GetParamsByteSize() const;
 		VIRTUAL CSIZE GetParamsStringSize() const;
-		VIRTUAL CSIZE GetParamsByteWidth() const;
-		VIRTUAL CSIZE GetParamsStringLength() const;
 	};
 
 #pragma endregion
@@ -260,16 +260,17 @@ namespace IttyBitty
 	typedef VOID (* MessageHandler)(PIMESSAGE);
 	
 
-	INLINE CBOOL ReadMessage(Stream & stream, PIMESSAGE message)
+	INLINE CBOOL MessageFromBytes(Stream & stream, PIMESSAGE message)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER)))
 			return FALSE;
 
 		SIZE msgSize = 0;
-		msgSize = Read<SIZE>(stream, (PBYTE)&msgSize);
+		msgSize = Read<CSIZE>(stream, (PBYTE)&msgSize);
 		if (msgSize == 0)
 			return FALSE;
 
+		/*
 		BYTE msgCode = 0;
 		if (!(stream > &msgCode))
 			return FALSE;
@@ -277,24 +278,47 @@ namespace IttyBitty
 		BYTE paramCnt = 0;
 		if (!(stream > &paramCnt))
 			return FALSE;
+		*/
+
+		CSIZE bufferSize = msgSize;
+		__message_buffer = new byte[bufferSize];
+		if (!ReadBuffer(stream, __message_buffer, bufferSize))
+
+		message = new Message();
+		message->LoadFromBytes(__message_buffer);
+
+		delete[] __message_buffer;
+
+		return TRUE;
+	}	
+
+	INLINE CBOOL MessageFromString(Stream & stream, PIMESSAGE message)
+	{
+		if (!stream.find(UNCONST(MESSAGE_MARKER)))
+			return FALSE;
+
+		SIZE msgSize = 0;
+		msgSize = Read<CSIZE>(stream, (PBYTE)&msgSize);
+		if (msgSize == 0)
+			return FALSE;
 
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CBYTE);
 		__message_buffer = new byte[bufferSize];
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 
-		message = new Message(msgCode, paramCnt);
-		message->LoadFromBytes(__message_buffer);
+		message = new Message();
+		message->LoadFromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 		delete[] __message_buffer;
 
 		return TRUE;
 	}
 	
-	INLINE VOID WaitForEvent(Stream & stream, MessageHandler handler)
+	INLINE VOID WaitForMessage(Stream & stream, MessageHandler handler)
 	{
 		PIMESSAGE message = NULL;
 
-		if (!ReadMessage(stream, message))
+		if (!MessageFromBytes(stream, message))
 			return;
 
 		handler(message);

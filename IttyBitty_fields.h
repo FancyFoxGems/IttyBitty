@@ -246,7 +246,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSIZE Size() const = 0;
+		VIRTUAL CSIZE ByteSize() const = 0;
 		VIRTUAL CSIZE StringSize() const = 0;
 		VIRTUAL CSIZE ByteWidth() const = 0;
 		VIRTUAL CSIZE StringLength() const = 0;
@@ -299,7 +299,7 @@ namespace IttyBitty
 		
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE Size() const;
+		VIRTUAL CSIZE ByteSize() const;
 		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
 		VIRTUAL CSIZE StringLength() const;
@@ -427,7 +427,7 @@ namespace IttyBitty
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE Size() const;				
+		VIRTUAL CSIZE ByteSize() const;				
 		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
 		VIRTUAL CSIZE StringLength() const;
@@ -738,7 +738,6 @@ namespace IttyBitty
 		
 		// OPERATORS
 
-
 		VIRTUAL operator CONST T() const
 		{
 			return (CONST T)_Value;
@@ -752,9 +751,9 @@ namespace IttyBitty
 
 		//  IField OVERRIDES
 				
-		VIRTUAL CSIZE Size() const
+		VIRTUAL CSIZE ByteSize() const
 		{
-			return sizeof(_Length) + TypedField<T>::Size();
+			return sizeof(_Length) + TypedField<T>::ByteSize();
 		}
 				
 		VIRTUAL CSIZE StringSize() const
@@ -780,7 +779,7 @@ namespace IttyBitty
 		
 		VIRTUAL VOID LoadFromBytes(PCBYTE data)
 		{
-			_Length = static_cast<DataType>(*data);
+			_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(data));
 			data += SIZEOF(CSIZE);
 
 			_DataType = static_cast<DataType>(*data++);
@@ -790,23 +789,24 @@ namespace IttyBitty
 		
 		VIRTUAL VOID LoadFromString(PCCHAR data)
 		{
-			CHAR valStr[3];
+			CHAR valStr[9];
+			valStr[8] = '\0';
 	
-			memcpy(valStr, data, 2 * SIZEOF(BYTE));
-			valStr[2] = '\0';
+			memcpy(valStr, data, 2 * SIZEOF(CSIZE));
 			_Length = static_cast<CSIZE>(strtol(data, NULL, 0x10));
 			data += 2 * SIZEOF(CSIZE);
-
-			memcpy(valStr, data, 2 * SIZEOF(BYTE));
+			
 			valStr[2] = '\0';
-			_DataType = static_cast<DataType>(strtol(data++, NULL, 0x10));
+
+			memcpy(valStr, data, 2 * SIZEOF(DataType));
+			_DataType = static_cast<DataType>(strtol(data, NULL, 0x10));
+			data += 2 * SIZEOF(DataType);
 	
 			for (BYTE i = 0; i < this->ByteWidth(); i++)
 			{
-				itoa(_Value.Bytes[i], valStr, 0x10);
-				memcpy(valStr, data, 2 * SIZEOF(BYTE));
+				memcpy(valStr, data, 2 * SIZEOF(CBYTE));
 				_Value.Bytes[i] = static_cast<BYTE>(strtol(data, NULL, 0x10));
-				data += 2 * SIZEOF(CSIZE);
+				data += 2 * SIZEOF(CBYTE);
 			}
 		}
 
@@ -881,22 +881,41 @@ namespace IttyBitty
 
 #pragma region FIELD PARSING METHODS
 	
-	INLINE PIFIELD BuildField(PCBYTE data)
+	INLINE PIFIELD FieldFromBytes(PCBYTE data)
 	{
 		PIFIELD field = NULL;
-		PCBYTE bufferPtr = data;
-		
-		//CSIZE fieldLength = static_cast<CSIZE>(*((PCSIZE)bufferPtr));
-		bufferPtr += SIZEOF(CSIZE);
+		PCBYTE bufferPtr = data + SIZEOF(CSIZE);
 
-		DataType dataType = static_cast<CONST DataType>(*bufferPtr);
+		CSIZE length = static_cast<CSIZE>(*bufferPtr);
 
-		if (dataType == DataType::BYTES_FIELD || dataType == DataType::STRING_FIELD || dataType == DataType::BIT_FIELD)
+		if (length == 0 || length > 4)
 			field = new VarLengthField();
 		else
 			field = new Field();
 
 		field->LoadFromBytes(data);
+
+		return field;
+	}
+	
+	INLINE PIFIELD FieldFromString(PCCHAR data)
+	{
+		PIFIELD field = NULL;
+		PCCHAR bufferPtr = data + 2 * SIZEOF(CSIZE);
+		
+		CHAR valStr[9];
+		valStr[8] = '\0';
+
+		memcpy(valStr, data, 2 * SIZEOF(CSIZE));
+		CSIZE length = static_cast<DataType>(strtol(data, NULL, 0x10));
+		data += 2 * SIZEOF(CSIZE);
+		
+		if (length == 0 || length > 4)
+			field = new VarLengthField();
+		else
+			field = new Field();
+
+		field->LoadFromString(data);
 
 		return field;
 	}
