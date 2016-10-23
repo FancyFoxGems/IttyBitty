@@ -157,8 +157,8 @@ namespace IttyBitty
 		VIRTUAL PCBYTE ToBytes() const = 0;
 		VIRTUAL PCCHAR ToString() const = 0;
 
-		VIRTUAL VOID LoadFromBytes(PCBYTE) = 0;
-		VIRTUAL VOID LoadFromString(PCCHAR) = 0;
+		VIRTUAL VOID FromBytes(PCBYTE) = 0;
+		VIRTUAL VOID FromString(PCCHAR) = 0;
 
 	protected:
 
@@ -210,8 +210,8 @@ namespace IttyBitty
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
 
-		VIRTUAL VOID LoadFromBytes(PCBYTE);
-		VIRTUAL VOID LoadFromString(PCCHAR);
+		VIRTUAL VOID FromBytes(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
 		
 		VIRTUAL SIZE printTo(Print &) const;
 
@@ -324,8 +324,8 @@ namespace IttyBitty
 		VIRTUAL CSIZE ByteWidth() const;
 		VIRTUAL CSIZE StringLength() const;
 
-		VIRTUAL VOID LoadFromBytes(PCBYTE);
-		VIRTUAL VOID LoadFromString(PCCHAR);
+		VIRTUAL VOID FromBytes(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
 		
 
 	protected:
@@ -659,7 +659,7 @@ namespace IttyBitty
 			return TypedField<T>::StringLength();
 		}
 		
-		VIRTUAL VOID LoadFromBytes(PCBYTE data)
+		VIRTUAL VOID FromBytes(PCBYTE data)
 		{
 			_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(data));
 			data += SIZEOF(CSIZE);
@@ -669,7 +669,7 @@ namespace IttyBitty
 			_Value = data;
 		}
 		
-		VIRTUAL VOID LoadFromString(PCCHAR data)
+		VIRTUAL VOID FromString(PCCHAR data)
 		{
 			CHAR valStr[5];
 			
@@ -804,7 +804,7 @@ namespace IttyBitty
 		else
 			field = new Field();
 
-		field->LoadFromBytes(data);
+		field->FromBytes(data);
 
 		return field;
 	}
@@ -823,7 +823,7 @@ namespace IttyBitty
 		else
 			field = new Field();
 
-		field->LoadFromString(data);
+		field->FromString(data);
 
 		return field;
 	}

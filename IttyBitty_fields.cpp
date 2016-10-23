@@ -91,37 +91,139 @@ PCCHAR FieldBase::ToString() const
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
 
-	for (SIZE i = 0; i < byteWidth; i++)
-		bufferPtr = StringInsertValue<CBYTE>(_Value.Bytes[i], bufferPtr);
+	PCBYTE bytes = NULL;
+
+	switch (_DataType)
+	{
+	case DataType::CHAR_FIELD:
+	case DataType::BYTE_FIELD:
+	case DataType::BOOL_FIELD:
+
+		bytes = (PBYTE)&(_Value.Byte);
+		break;
+		
+	case DataType::SHORT_FIELD:
+	case DataType::WORD_FIELD:
+		
+
+		bytes = (PBYTE)&(_Value.Word);
+		break;
+
+	case DataType::LONG_FIELD:		
+	case DataType::DWORD_FIELD:
+	case DataType::FLOAT_FIELD:
+
+		bytes = (PBYTE)&(_Value.DWord);
+		break;
+
+	default:
+
+		bytes = _Value.Bytes;
+
+		for (SIZE i = 0; i < byteWidth; i++)
+			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
+	
+		__field_buffer[size - 1] = '\0';
+
+		return reinterpret_cast<PCCHAR>(__field_buffer);
+	}
+
+	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
+		bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
 	
 	__field_buffer[size - 1] = '\0';
 
 	return reinterpret_cast<PCCHAR>(__field_buffer);
 }
 
-VOID FieldBase::LoadFromBytes(PCBYTE data)
+VOID FieldBase::FromBytes(PCBYTE data)
 {
 	data += SIZEOF(CSIZE);
 
 	_DataType = static_cast<DataType>(*data++);
 
-	_Value = data;
+	switch (_DataType)
+	{
+	case DataType::CHAR_FIELD:
+	case DataType::BYTE_FIELD:
+	case DataType::BOOL_FIELD:
+
+		_Value = *((PBYTE)data);
+		break;
+		
+	case DataType::SHORT_FIELD:
+	case DataType::WORD_FIELD:
+		
+
+		_Value = *((PWORD)data);
+		break;
+
+	case DataType::LONG_FIELD:		
+	case DataType::DWORD_FIELD:
+	case DataType::FLOAT_FIELD:
+
+		_Value = *((PDWORD)data);
+		break;
+
+	default:
+
+		_Value = data;
+	}
 }
 
-VOID FieldBase::LoadFromString(PCCHAR data)
+VOID FieldBase::FromString(PCCHAR data)
 {
 	data += 2 * SIZEOF(CSIZE);
 
+	CBYTE byteWidth = this->ByteWidth();
 	CHAR valStr[3];
 	
 	memcpy(valStr, "00", 3);
 	memcpy(valStr, data, 2 * SIZEOF(DataType));
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
-	
-	BYTE bytes[this->ByteWidth()];
 
-	for (BYTE i = 0; i < this->ByteWidth(); i++)
+	PBYTE bytes = NULL;
+
+	switch (_DataType)
+	{
+	case DataType::CHAR_FIELD:
+	case DataType::BYTE_FIELD:
+	case DataType::BOOL_FIELD:
+
+		bytes = (PBYTE)&(_Value.Byte);
+		break;
+		
+	case DataType::SHORT_FIELD:
+	case DataType::WORD_FIELD:
+		
+
+		bytes = (PBYTE)&(_Value.Word);
+		break;
+
+	case DataType::LONG_FIELD:		
+	case DataType::DWORD_FIELD:
+	case DataType::FLOAT_FIELD:
+
+		bytes = (PBYTE)&(_Value.DWord);
+		break;
+
+	default:
+
+		for (BYTE i = 0; i < byteWidth; i++)
+		{
+			memcpy(valStr, "00", 3);
+			memcpy(valStr, data, 2 * SIZEOF(CBYTE));
+			bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
+			data += 2 * SIZEOF(CBYTE);
+		}
+
+		_Value = bytes;
+
+		return;
+	}
+
+	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
 	{
 		memcpy(valStr, "00", 3);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
@@ -447,7 +549,7 @@ CSIZE VarLengthField::StringLength() const
 	return Field::StringLength();
 }
 
-VOID VarLengthField::LoadFromBytes(PCBYTE data)
+VOID VarLengthField::FromBytes(PCBYTE data)
 {
 	_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(data));
 	data += SIZEOF(CSIZE);
@@ -457,7 +559,7 @@ VOID VarLengthField::LoadFromBytes(PCBYTE data)
 	_Value = data;
 }
 
-VOID VarLengthField::LoadFromString(PCCHAR data)
+VOID VarLengthField::FromString(PCCHAR data)
 {
 	CHAR valStr[5];
 	

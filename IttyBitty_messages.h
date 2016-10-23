@@ -150,8 +150,8 @@ namespace IttyBitty
 		VIRTUAL PCBYTE ToBytes() const;
 		VIRTUAL PCCHAR ToString() const;
 
-		VIRTUAL VOID LoadFromBytes(PCBYTE);
-		VIRTUAL VOID LoadFromString(PCCHAR);
+		VIRTUAL VOID FromBytes(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
 
 		VIRTUAL SIZE printTo(Print &) const;
 
@@ -304,7 +304,7 @@ namespace IttyBitty
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 
 		message = new Message();
-		message->LoadFromBytes(__message_buffer);
+		message->FromBytes(__message_buffer);
 
 		delete[] __message_buffer;
 
@@ -329,7 +329,7 @@ namespace IttyBitty
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 
 		message = new Message();
-		message->LoadFromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 		delete[] __message_buffer;
 

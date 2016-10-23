@@ -202,7 +202,7 @@ PCCHAR Message::ToString() const
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
-VOID Message::LoadFromBytes(PCBYTE data)
+VOID Message::FromBytes(PCBYTE data)
 {
 	_MessageCode = *data++;
 	_ParamCount = *data++;
@@ -211,7 +211,7 @@ VOID Message::LoadFromBytes(PCBYTE data)
 		_Params[i] = FieldFromBytes(data);
 }
 
-VOID Message::LoadFromString(PCCHAR data)
+VOID Message::FromString(PCCHAR data)
 {
 	CHAR valStr[3];
 	
