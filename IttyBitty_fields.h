@@ -12,7 +12,7 @@
 
 #include "Printable.h"
 
-#include "IttyBitty_bits.h"
+#include "IttyBitty_values.h"
 
 
 namespace IttyBitty
@@ -28,9 +28,6 @@ namespace IttyBitty
 
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
-
-	typedef union Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
-	typedef const union Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
 
 	class ISerializable;
 	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
@@ -134,101 +131,6 @@ namespace IttyBitty
 	{
 		return static_cast<DataSize>(MASK(dataType, DATA_SIZE_MASK));
 	}
-
-#pragma endregion
-
-
-#pragma region Datum DECLARATION: UNIVERSAL 4-BYTE DATA TYPE UNION
-	
-	UNION PACKED Datum
-	{
-		// UNION MEMBERS
-
-		PBYTE Bytes;
-		PCHAR String;	
-		PBITPACK BitFields;
-		
-		PCHAR CharPtr;
-		PBYTE BytePtr;
-		PBOOL BoolPtr;
-		
-		PSHORT ShortPtr;
-		PWORD WordPtr;
-		
-		PLONG LongPtr;
-		PDWORD DWordPtr;
-		PFLOAT FloatPtr;
-
-
-		// CONSTRUCTORS
-
-		Datum();
-
-		Datum(RCDATUM other);
-		Datum(RRDATUM other);
-
-		EXPLICIT Datum(PBYTE value);
-		EXPLICIT Datum(PCHAR value);		
-		EXPLICIT Datum(PBITPACK value);
-
-		EXPLICIT Datum(RCHAR value);
-		EXPLICIT Datum(RBYTE value);
-		EXPLICIT Datum(RBOOL value);
-		EXPLICIT Datum(RSHORT value);
-		EXPLICIT Datum(RWORD value);
-		EXPLICIT Datum(RLONG value);
-		EXPLICIT Datum(RDWORD value);
-		EXPLICIT Datum(RFLOAT value);
-
-
-		//OPERATORS
-
-		RDATUM operator =(RCDATUM other);
-		RDATUM operator =(RRDATUM other);
-
-		RDATUM operator =(PBYTE other);
-		RDATUM operator =(PCHAR other);
-		RDATUM operator =(PBITPACK other);
-
-		RDATUM operator =(RCCHAR other);
-		RDATUM operator =(RCBYTE other);
-		RDATUM operator =(RCBOOL other);
-		RDATUM operator =(RCSHORT other);
-		RDATUM operator =(RCWORD other);
-		RDATUM operator =(RCLONG other);
-		RDATUM operator =(RCDWORD other);
-		RDATUM operator =(RCFLOAT other);
-		
-		operator PCBYTE() const;
-		operator PBYTE();
-		operator PCCHAR() const;
-		operator PCHAR();
-		operator PCBITPACK() const;
-		operator PBITPACK();
-
-		operator RCCHAR() const;
-		operator RCHAR();
-		operator RCBYTE() const;
-		operator RBYTE();
-		operator RCBOOL() const;
-		operator RBOOL();
-		operator RCSHORT() const;
-		operator RSHORT();
-		operator RCWORD() const;
-		operator RWORD();
-		operator RCLONG() const;
-		operator RLONG();
-		operator RCDWORD() const;
-		operator RDWORD();
-		operator RCFLOAT() const;
-		operator RFLOAT();
-
-
-		// USER METHODS
-
-		VOID FreePtr();
-		VOID FreeData();
-	};
 
 #pragma endregion
 
