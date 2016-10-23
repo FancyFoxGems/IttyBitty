@@ -241,9 +241,14 @@ VOID Message::LoadFromString(PCCHAR data)
 SIZE Message::printTo(Print & printer) const
 {
 	SIZE size = printer.print(MESSAGE_MARKER);
-
+	
+#ifdef DEBUG
+	SIZE msgSize = this->StringSize();
+	PCCHAR buffer = this->ToString();
+#else
 	SIZE msgSize = this->ByteSize();
 	PCBYTE buffer = this->ToBytes();
+#endif
 
 	for (SIZE i = 0; i < msgSize; i++)
 		size += printer.print(buffer[i]);

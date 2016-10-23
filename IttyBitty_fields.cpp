@@ -391,8 +391,13 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 
 SIZE FieldBase::printTo(Print & printer) const
 {
+#ifdef DEBUG
+	SIZE size = this->StringSize();
+	PCCHAR buffer = this->ToString();
+#else
 	SIZE size = this->ByteSize();
 	PCBYTE buffer = this->ToBytes();
+#endif
 
 	for (SIZE i = 0; i < size; i++)
 		size += printer.print(buffer[i]);

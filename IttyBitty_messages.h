@@ -322,7 +322,11 @@ namespace IttyBitty
 	{
 		PIMESSAGE message = NULL;
 
+	#ifdef DEBUG
+		if (!MessageFromString(stream, message))
+	#else
 		if (!MessageFromBytes(stream, message))
+	#endif
 			return;
 
 		handler(message);
