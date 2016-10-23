@@ -16,11 +16,6 @@ using namespace IttyBitty;
 
 Value::Value() : Bytes(0) { }
 
-//Value::Value(CBYTE byteSize)
-//{
-//	this->Bytes = new byte[byteSize];
-//}
-
 Value::Value(RCVALUE other)
 {
 	this->Bytes = other.Bytes;
@@ -31,27 +26,27 @@ Value::Value(RRVALUE other)
 	new (this) Value(other.Bytes);
 }
 
-Value::Value(PBYTE value) : Bytes(value) { }
+Value::Value(PCBYTE value) : Bytes(value) { }
 
-Value::Value(PCHAR value) : String(value) { }
+Value::Value(PCCHAR value) : String(value) { }
 
-Value::Value(PBITPACK value) : BitFields(value) { }
+Value::Value(PCBITPACK value) : BitFields(value) { }
 
-Value::Value(RCHAR value) : CharPtr(&value) { }
+Value::Value(RCCHAR value) : Char(value) { }
 
-Value::Value(RBYTE value) : BytePtr(&value) { }
+Value::Value(RCBYTE value) : Byte(value) { }
 
-Value::Value(RBOOL value) : BoolPtr(&value) { }
+Value::Value(RCBOOL value) : Bool(value) { }
 
-Value::Value(RSHORT value) : ShortPtr(&value) { }
+Value::Value(RCSHORT value) : Short(value) { }
 
-Value::Value(RWORD value) : WordPtr(&value) { }
+Value::Value(RCWORD value) : Word(value) { }
 
-Value::Value(RLONG value) : LongPtr(&value) { }
+Value::Value(RCLONG value) : Long(value) { }
 		
-Value::Value(RDWORD value) : DWordPtr(&value) { }
+Value::Value(RCDWORD value) : DWord(value) { }
 
-Value::Value(RFLOAT value) : FloatPtr(&value) { }
+Value::Value(RCFLOAT value) : Float(value) { }
 
 
 // OPERATORS
@@ -68,19 +63,19 @@ RVALUE Value::operator =(RRVALUE rValue)
 	return *this;
 }
 
-RVALUE Value::operator =(PBYTE rValue)
+RVALUE Value::operator =(PCBYTE rValue)
 {
 	this->Bytes = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(PCHAR rValue)
+RVALUE Value::operator =(PCCHAR rValue)
 {
 	this->String = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(PBITPACK rValue)
+RVALUE Value::operator =(PCBITPACK rValue)
 {
 	this->BitFields = rValue;
 	return *this;
@@ -88,161 +83,105 @@ RVALUE Value::operator =(PBITPACK rValue)
 
 RVALUE Value::operator =(RCCHAR rValue)
 {
-	*this->CharPtr = rValue;
+	this->Char = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCBYTE rValue)
 {
-	*this->BytePtr = rValue;
+	this->Byte = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCBOOL rValue)
 {
-	*this->BoolPtr = rValue;
+	this->Bool = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCSHORT rValue)
 {
-	*this->ShortPtr = rValue;
+	this->Short = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCWORD rValue)
 {
-	*this->WordPtr = rValue;
+	this->Word = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCLONG rValue)
 {
-	*this->LongPtr = rValue;
+	this->Long = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCDWORD rValue)
 {
-	*this->DWordPtr = rValue;
+	this->DWord = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCFLOAT rValue)
 {
-	*this->FloatPtr = rValue;
+	this->Float = rValue;
 	return *this;
 }
 
-
 Value::operator PCBYTE() const
-{
-	return MAKE_CONST(this->Bytes);
-}
-
-Value::operator PBYTE()
 {
 	return this->Bytes;
 }
 
 Value::operator PCCHAR() const
 {
-	return MAKE_CONST(this->String);
-}
-
-Value::operator PCHAR()
-{
 	return this->String;
 }
 
 Value::operator PCBITPACK() const
-{
-	return MAKE_CONST(this->BitFields);
-}
-
-Value::operator PBITPACK()
 {
 	return this->BitFields;
 }
 
 Value::operator RCCHAR() const
 {
-	return MAKE_CONST(*this->CharPtr);
-}
-
-Value::operator RCHAR()
-{
-	return *this->CharPtr;
+	return this->Char;
 }
 
 Value::operator RCBYTE() const
 {
-	return MAKE_CONST(*this->BytePtr);
-}
-
-Value::operator RBYTE()
-{
-	return *this->BytePtr;	
+	return this->Byte;
 }
 
 Value::operator RCBOOL() const
 {
-	return MAKE_CONST(*this->BoolPtr);
-}
-
-Value::operator RBOOL()
-{
-	return *this->BoolPtr;
+	return this->Bool;
 }
 
 Value::operator RCSHORT() const
 {
-	return MAKE_CONST(*this->ShortPtr);
-}
-
-Value::operator RSHORT()
-{
-	return *this->ShortPtr;
+	return this->Short;
 }
 
 Value::operator RCWORD() const
 {
-	return MAKE_CONST(*this->WordPtr);
-}
-
-Value::operator RWORD()
-{
-	return *this->WordPtr;
+	return this->Word;
 }
 
 Value::operator RCLONG() const
 {
-	return MAKE_CONST(*this->LongPtr);
-}
-
-Value::operator RLONG()
-{
-	return *this->LongPtr;
+	return this->Long;
 }
 
 Value::operator RCDWORD() const
 {
-	return MAKE_CONST(*this->DWordPtr);
-}
-
-Value::operator RDWORD()
-{
-	return *this->DWordPtr;
+	return this->DWord;
 }
 
 Value::operator RCFLOAT() const
 {
-	return MAKE_CONST(*this->FloatPtr);
-}
-
-Value::operator RFLOAT()
-{
-	return *this->FloatPtr;
+	return this->Float;
 }
 
 
@@ -268,11 +207,6 @@ VOID Value::FreeData()
 // CONSTRUCTORS
 
 Datum::Datum() : Bytes(0) { }
-
-//Datum::Datum(CBYTE byteSize)
-//{
-//	this->Bytes = new byte[byteSize];
-//}
 
 Datum::Datum(RCDATUM other)
 {
@@ -339,49 +273,49 @@ RDATUM Datum::operator =(PBITPACK rValue)
 	return *this;
 }
 
-RDATUM Datum::operator =(RCCHAR rValue)
+RDATUM Datum::operator =(RCHAR rValue)
 {
 	*this->CharPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCBYTE rValue)
+RDATUM Datum::operator =(RBYTE rValue)
 {
 	*this->BytePtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCBOOL rValue)
+RDATUM Datum::operator =(RBOOL rValue)
 {
 	*this->BoolPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCSHORT rValue)
+RDATUM Datum::operator =(RSHORT rValue)
 {
 	*this->ShortPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCWORD rValue)
+RDATUM Datum::operator =(RWORD rValue)
 {
 	*this->WordPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCLONG rValue)
+RDATUM Datum::operator =(RLONG rValue)
 {
 	*this->LongPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCDWORD rValue)
+RDATUM Datum::operator =(RDWORD rValue)
 {
 	*this->DWordPtr = rValue;
 	return *this;
 }
 
-RDATUM Datum::operator =(RCFLOAT rValue)
+RDATUM Datum::operator =(RFLOAT rValue)
 {
 	*this->FloatPtr = rValue;
 	return *this;

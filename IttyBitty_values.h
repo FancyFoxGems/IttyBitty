@@ -26,90 +26,79 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region Value DECLARATION: UNIVERSAL 4-BYTE DATA TYPE UNION
+#pragma region Value DECLARATION: IMMUTABLE, VALUE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
 	
 	UNION PACKED Value
 	{
 		// UNION MEMBERS
 
-		PBYTE Bytes;
-		PCHAR String;	
-		PBITPACK BitFields;
+		PCBYTE Bytes;
+		PCCHAR String;	
+		PCBITPACK BitFields;
 		
-		PCHAR CharPtr;
-		PBYTE BytePtr;
-		PBOOL BoolPtr;
+		CHAR Char;
+		BYTE Byte;
+		BOOL Bool;
 		
-		PSHORT ShortPtr;
-		PWORD WordPtr;
+		SHORT Short;
+		WORD Word;
 		
-		PLONG LongPtr;
-		PDWORD DWordPtr;
-		PFLOAT FloatPtr;
+		LONG Long;
+		DWORD DWord;
+		FLOAT Float;
 
 
 		// CONSTRUCTORS
 
 		Value();
 
-		Value(RCVALUE other);
-		Value(RRVALUE other);
+		Value(RCVALUE);
+		Value(RRVALUE);
 
-		EXPLICIT Value(PBYTE value);
-		EXPLICIT Value(PCHAR value);		
-		EXPLICIT Value(PBITPACK value);
+		EXPLICIT Value(PCBYTE);
+		EXPLICIT Value(PCCHAR);		
+		EXPLICIT Value(PCBITPACK);
 
-		EXPLICIT Value(RCHAR value);
-		EXPLICIT Value(RBYTE value);
-		EXPLICIT Value(RBOOL value);
-		EXPLICIT Value(RSHORT value);
-		EXPLICIT Value(RWORD value);
-		EXPLICIT Value(RLONG value);
-		EXPLICIT Value(RDWORD value);
-		EXPLICIT Value(RFLOAT value);
+		EXPLICIT Value(RCCHAR);
+		EXPLICIT Value(RCBYTE);
+		EXPLICIT Value(RCBOOL);
+		EXPLICIT Value(RCSHORT);
+		EXPLICIT Value(RCWORD);
+		EXPLICIT Value(RCLONG);
+		EXPLICIT Value(RCDWORD);
+		EXPLICIT Value(RCFLOAT);
 
 
 		//OPERATORS
 
-		RVALUE operator =(RCVALUE other);
-		RVALUE operator =(RRVALUE other);
+		RVALUE operator =(RCVALUE);
+		RVALUE operator =(RRVALUE);
 
-		RVALUE operator =(PBYTE other);
-		RVALUE operator =(PCHAR other);
-		RVALUE operator =(PBITPACK other);
+		RVALUE operator =(PCBYTE);
+		RVALUE operator =(PCCHAR);
+		RVALUE operator =(PCBITPACK);
 
-		RVALUE operator =(RCCHAR other);
-		RVALUE operator =(RCBYTE other);
-		RVALUE operator =(RCBOOL other);
-		RVALUE operator =(RCSHORT other);
-		RVALUE operator =(RCWORD other);
-		RVALUE operator =(RCLONG other);
-		RVALUE operator =(RCDWORD other);
-		RVALUE operator =(RCFLOAT other);
+		RVALUE operator =(RCCHAR);
+		RVALUE operator =(RCBYTE);
+		RVALUE operator =(RCBOOL);
+		RVALUE operator =(RCSHORT);
+		RVALUE operator =(RCWORD);
+		RVALUE operator =(RCLONG);
+		RVALUE operator =(RCDWORD);
+		RVALUE operator =(RCFLOAT);
 		
 		operator PCBYTE() const;
-		operator PBYTE();
 		operator PCCHAR() const;
-		operator PCHAR();
 		operator PCBITPACK() const;
-		operator PBITPACK();
 
 		operator RCCHAR() const;
-		operator RCHAR();
 		operator RCBYTE() const;
-		operator RBYTE();
 		operator RCBOOL() const;
-		operator RBOOL();
 		operator RCSHORT() const;
-		operator RSHORT();
 		operator RCWORD() const;
-		operator RWORD();
 		operator RCLONG() const;
-		operator RLONG();
 		operator RCDWORD() const;
-		operator RDWORD();
 		operator RCFLOAT() const;
-		operator RFLOAT();
 
 
 		// USER METHODS
@@ -121,7 +110,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region Datum DECLARATION: UNIVERSAL 4-BYTE DATA TYPE UNION
+#pragma region Datum DECLARATION: MUTABLE, REFERENCE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
 	
 	UNION PACKED Datum
 	{
@@ -147,40 +136,40 @@ namespace IttyBitty
 
 		Datum();
 
-		Datum(RCDATUM other);
-		Datum(RRDATUM other);
+		Datum(RCDATUM);
+		Datum(RRDATUM);
 
-		EXPLICIT Datum(PBYTE value);
-		EXPLICIT Datum(PCHAR value);		
-		EXPLICIT Datum(PBITPACK value);
+		EXPLICIT Datum(PBYTE);
+		EXPLICIT Datum(PCHAR);		
+		EXPLICIT Datum(PBITPACK);
 
-		EXPLICIT Datum(RCHAR value);
-		EXPLICIT Datum(RBYTE value);
-		EXPLICIT Datum(RBOOL value);
-		EXPLICIT Datum(RSHORT value);
-		EXPLICIT Datum(RWORD value);
-		EXPLICIT Datum(RLONG value);
-		EXPLICIT Datum(RDWORD value);
-		EXPLICIT Datum(RFLOAT value);
+		EXPLICIT Datum(RCHAR);
+		EXPLICIT Datum(RBYTE);
+		EXPLICIT Datum(RBOOL);
+		EXPLICIT Datum(RSHORT);
+		EXPLICIT Datum(RWORD);
+		EXPLICIT Datum(RLONG);
+		EXPLICIT Datum(RDWORD);
+		EXPLICIT Datum(RFLOAT);
 
 
 		//OPERATORS
 
-		RDATUM operator =(RCDATUM other);
-		RDATUM operator =(RRDATUM other);
+		RDATUM operator =(RCDATUM);
+		RDATUM operator =(RRDATUM);
 
-		RDATUM operator =(PBYTE other);
-		RDATUM operator =(PCHAR other);
-		RDATUM operator =(PBITPACK other);
+		RDATUM operator =(PBYTE);
+		RDATUM operator =(PCHAR);
+		RDATUM operator =(PBITPACK);
 
-		RDATUM operator =(RCCHAR other);
-		RDATUM operator =(RCBYTE other);
-		RDATUM operator =(RCBOOL other);
-		RDATUM operator =(RCSHORT other);
-		RDATUM operator =(RCWORD other);
-		RDATUM operator =(RCLONG other);
-		RDATUM operator =(RCDWORD other);
-		RDATUM operator =(RCFLOAT other);
+		RDATUM operator =(RCHAR);
+		RDATUM operator =(RBYTE);
+		RDATUM operator =(RBOOL);
+		RDATUM operator =(RSHORT);
+		RDATUM operator =(RWORD);
+		RDATUM operator =(RLONG);
+		RDATUM operator =(RDWORD);
+		RDATUM operator =(RFLOAT);
 		
 		operator PCBYTE() const;
 		operator PBYTE();

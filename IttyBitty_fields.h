@@ -228,7 +228,7 @@ namespace IttyBitty
 		
 		BOOL _Dispose = FALSE;
 
-		Datum _Value;
+		Value _Value;
 		DataType _DataType;
 	};
 
@@ -248,16 +248,16 @@ namespace IttyBitty
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		Field(RCDATUM, CONST DataType = DataType::BYTE_FIELD);
+		Field(RCVALUE, CONST DataType = DataType::BYTE_FIELD);
 
-		EXPLICIT Field(RCHAR);
-		EXPLICIT Field(RBYTE);
-		EXPLICIT Field(RBOOL);
-		EXPLICIT Field(RSHORT);
-		EXPLICIT Field(RWORD);
-		EXPLICIT Field(RLONG);
-		EXPLICIT Field(RDWORD);
-		EXPLICIT Field(RFLOAT);
+		EXPLICIT Field(RCCHAR);
+		EXPLICIT Field(RCBYTE);
+		EXPLICIT Field(RCBOOL);
+		EXPLICIT Field(RCSHORT);
+		EXPLICIT Field(RCWORD);
+		EXPLICIT Field(RCLONG);
+		EXPLICIT Field(RCDWORD);
+		EXPLICIT Field(RCFLOAT);
 
 
 		// STATIC FUNCTIONS
@@ -270,24 +270,16 @@ namespace IttyBitty
 		VIRTUAL RFIELD operator =(RCFIELD);
 		VIRTUAL RFIELD operator =(RRFIELD);
 
-		VIRTUAL RFIELD operator =(RCDATUM);
+		VIRTUAL RFIELD operator =(RCVALUE);
 
 		operator RCCHAR() const;
-		operator RCHAR();
 		operator RCBYTE() const;
-		operator RBYTE();
 		operator RCBOOL() const;
-		operator RBOOL();
 		operator RCSHORT() const;
-		operator RSHORT();
 		operator RCWORD() const;
-		operator RWORD();
 		operator RCLONG() const;
-		operator RLONG();
 		operator RCDWORD() const;
-		operator RDWORD();
 		operator RCFLOAT() const;
-		operator RFLOAT();
 	};
 
 #pragma endregion
@@ -306,7 +298,7 @@ namespace IttyBitty
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		VarLengthField(RCDATUM, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
@@ -321,11 +313,8 @@ namespace IttyBitty
 		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
 		
 		operator PCBYTE() const;
-		operator PBYTE();
 		operator PCCHAR() const;
-		operator PCHAR();
 		operator PCBITPACK() const;
-		operator PBITPACK();
 
 
 		// Field OVERRIDES
@@ -378,7 +367,7 @@ namespace IttyBitty
 			new (this) TypedField<T>(other._Value);
 		}
 
-		TypedField(RCDATUM value)
+		TypedField(RCVALUE value)
 		{
 			_Value = value;
 			_DataType = TypedField<T>::FindDataType();
@@ -418,7 +407,7 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCDATUM rValue)
+		VIRTUAL RTYPEDFIELD<T> operator =(RCVALUE rValue)
 		{
 			_Value = rValue;
 			return *this;
@@ -430,19 +419,9 @@ namespace IttyBitty
 			return (UNSIGNED_TYPE(CONST T&))_Value;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(T&)()
-		{
-			return (UNSIGNED_TYPE(T&))_Value;
-		}
-
 		VIRTUAL operator SIGNED_TYPE(CONST T&)() const
 		{
 			return (SIGNED_TYPE(CONST T&))_Value;
-		}
-
-		VIRTUAL operator SIGNED_TYPE(T&)()
-		{
-			return (SIGNED_TYPE(T&))_Value;
 		}
 
 
@@ -604,7 +583,7 @@ namespace IttyBitty
 			new (this) VarLengthTypedField<T>(other._Value);
 		}
 
-		VarLengthTypedField(RCDATUM value, CSIZE length = 0)
+		VarLengthTypedField(RCVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
 			_DataType = VarLengthTypedField<T>::FindDataType();

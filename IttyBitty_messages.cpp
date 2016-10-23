@@ -175,7 +175,7 @@ PCCHAR Message::ToString() const
 		delete[] __message_buffer;
 
 	__message_buffer = new BYTE[size];
-
+	memset(__message_buffer, 0, size);
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
 	
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);	
@@ -232,10 +232,10 @@ VOID Message::LoadFromString(PCCHAR data)
 
 SIZE Message::printTo(Print & printer) const
 {
-	SIZE size = printer.print(MESSAGE_MARKER);
+	SIZE size = Serial.print(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
-	SIZE msgSize = this->StringSize();
+	SIZE msgSize = this->StringSize() - 1;
 	PCCHAR buffer = this->ToString();
 #else
 	SIZE msgSize = this->ByteSize();
@@ -243,7 +243,7 @@ SIZE Message::printTo(Print & printer) const
 #endif
 
 	for (SIZE i = 0; i < msgSize; i++)
-		size += printer.print(buffer[i]);
+		printer.print(buffer[i]);
 
 	size += msgSize;
 

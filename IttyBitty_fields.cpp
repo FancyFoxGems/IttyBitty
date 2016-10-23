@@ -119,13 +119,17 @@ VOID FieldBase::LoadFromString(PCCHAR data)
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
 	
+	BYTE bytes[this->ByteWidth()];
+
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
 		memcpy(valStr, "00", 3);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-		_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
+		bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 		data += 2 * SIZEOF(CBYTE);
 	}
+
+	_Value = bytes;
 }
 
 SIZE FieldBase::printTo(Print & printer) const
@@ -185,55 +189,55 @@ Field::Field(RRFIELD other)
 	new (this) Field(other._Value, other._DataType);
 }
 
-Field::Field(RCDATUM value, CONST DataType dataType)
+Field::Field(RCVALUE value, CONST DataType dataType)
 {
 	_Value = value;
 	_DataType = dataType;
 }
 
-Field::Field(RCHAR value)
+Field::Field(RCCHAR value)
 {
 	_Value = value;
 	_DataType = DataType::CHAR_FIELD;
 }
 
-Field::Field(RBYTE value)
+Field::Field(RCBYTE value)
 {
 	_Value = value;
 	_DataType = DataType::BYTE_FIELD;
 }
 
-Field::Field(RBOOL value)
+Field::Field(RCBOOL value)
 {
 	_Value = value;
 	_DataType = DataType::BOOL_FIELD;
 }
 
-Field::Field(RSHORT value)
+Field::Field(RCSHORT value)
 {
 	_Value = value;
 	_DataType = DataType::SHORT_FIELD;
 }
 
-Field::Field(RWORD value)
+Field::Field(RCWORD value)
 {
 	_Value = value;
 	_DataType = DataType::WORD_FIELD;
 }
 
-Field::Field(RLONG value)
+Field::Field(RCLONG value)
 {
 	_Value = value;
 	_DataType = DataType::LONG_FIELD;
 }
 
-Field::Field(RDWORD value)
+Field::Field(RCDWORD value)
 {
 	_Value = value;
 	_DataType = DataType::DWORD_FIELD;
 }
 
-Field::Field(RFLOAT value)
+Field::Field(RCFLOAT value)
 {
 	_Value = value;
 	_DataType = DataType::FLOAT_FIELD;
@@ -263,7 +267,7 @@ RFIELD Field::operator =(RRFIELD rValue)
 	return *this;
 }
 
-RFIELD Field::operator =(RCDATUM rValue)
+RFIELD Field::operator =(RCVALUE rValue)
 {
 	_Value = rValue;
 	return *this;
@@ -275,17 +279,7 @@ Field::operator RCCHAR() const
 	return _Value;
 }
 
-Field::operator RCHAR()
-{
-	return _Value;
-}
-
 Field::operator RCBYTE() const
-{
-	return _Value;
-}
-
-Field::operator RBYTE()
 {
 	return _Value;
 }
@@ -294,18 +288,7 @@ Field::operator RCBOOL() const
 {
 	return _Value;
 }
-
-Field::operator RBOOL()
-{
-	return _Value;
-}
-
 Field::operator RCSHORT() const
-{
-	return _Value;
-}
-
-Field::operator RSHORT()
 {
 	return _Value;
 }
@@ -315,17 +298,7 @@ Field::operator RCWORD() const
 	return _Value;
 }
 
-Field::operator RWORD()
-{
-	return _Value;
-}
-
 Field::operator RCLONG() const
-{
-	return _Value;
-}
-
-Field::operator RLONG()
 {
 	return _Value;
 }
@@ -335,17 +308,7 @@ Field::operator RCDWORD() const
 	return _Value;
 }
 
-Field::operator RDWORD()
-{
-	return _Value;
-}
-
 Field::operator RCFLOAT() const
-{
-	return _Value;
-}
-
-Field::operator RFLOAT()
 {
 	return _Value;
 }
@@ -396,7 +359,7 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RCDATUM value, CONST DataType dataType, CSIZE length) 
+VarLengthField::VarLengthField(RCVALUE value, CONST DataType dataType, CSIZE length) 
 	: Field(value, dataType), _Length(length) { }
 
 VarLengthField::VarLengthField(PBYTE value, CSIZE length) 
@@ -446,17 +409,7 @@ VarLengthField::operator PCBYTE() const
 	return _Value;
 }
 
-VarLengthField::operator PBYTE()
-{
-	return _Value;
-}
-
 VarLengthField::operator PCCHAR() const
-{
-	return _Value;
-}
-
-VarLengthField::operator PCHAR()
 {
 	return _Value;
 }
@@ -465,12 +418,6 @@ VarLengthField::operator PCBITPACK() const
 {
 	return _Value;
 }
-
-VarLengthField::operator PBITPACK()
-{
-	return _Value;
-}
-
 
 // Field OVERRIDES
 
@@ -524,13 +471,17 @@ VOID VarLengthField::LoadFromString(PCCHAR data)
 	_DataType = static_cast<DataType>(strtol(valStr, NULL, 0x10));
 	data += 2 * SIZEOF(DataType);
 	
+	BYTE bytes[this->ByteWidth()];
+
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 	{
 		memcpy(valStr, "0000", 5);
 		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
-		_Value.Bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
+		bytes[i] = static_cast<BYTE>(strtol(valStr, NULL, 0x10));
 		data += 2 * SIZEOF(CBYTE);
 	}
+
+	_Value = bytes;
 }
 
 #pragma endregion
