@@ -300,9 +300,9 @@ namespace IttyBitty
 
 		VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
-		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
-		EXPLICIT VarLengthField(PCHAR);
-		EXPLICIT VarLengthField(PBITPACK, CSIZE = 0);
+		EXPLICIT VarLengthField(PCBYTE, CSIZE = 0);
+		EXPLICIT VarLengthField(PCCHAR);
+		EXPLICIT VarLengthField(PCBITPACK, CSIZE = 0);
 
 		VIRTUAL ~VarLengthField();
 		

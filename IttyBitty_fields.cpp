@@ -464,10 +464,10 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 VarLengthField::VarLengthField(RCVALUE value, CONST DataType dataType, CSIZE length) 
 	: Field(value, dataType), _Length(length) { }
 
-VarLengthField::VarLengthField(PBYTE value, CSIZE length) 
+VarLengthField::VarLengthField(PCBYTE value, CSIZE length) 
 	: Field(DataType::BYTES_FIELD), _Length(length) { }
 
-VarLengthField::VarLengthField(PCHAR value) 
+VarLengthField::VarLengthField(PCCHAR value) 
 	: Field(DataType::STRING_FIELD)
 {
 	if (value == NULL)
@@ -476,7 +476,7 @@ VarLengthField::VarLengthField(PCHAR value)
 		_Length = strlen(MAKE_CONST(value));
 }
 
-VarLengthField::VarLengthField(PBITPACK value, CSIZE length) 
+VarLengthField::VarLengthField(PCBITPACK value, CSIZE length) 
 	: Field(DataType::BIT_FIELD), _Length(length) { }
 
 VarLengthField::~VarLengthField()
