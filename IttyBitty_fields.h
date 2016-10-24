@@ -139,7 +139,7 @@ namespace IttyBitty
 
 	// ISerializable DECLARATION
 
-	INTERFACE ISerializable : public Printable
+	INTERFACE ISerializable : public virtual Printable
 	{
 	public:
 
@@ -820,8 +820,7 @@ namespace IttyBitty
 		SIZE length = 0;
 
 		StringReadValue<SIZE>(length, data);
-	while (!Serial.availableForWrite()) delay(100);
-		Serial.println(length);
+
 		if (length == 0 || length > 4)
 			field = new VarLengthField();
 		else

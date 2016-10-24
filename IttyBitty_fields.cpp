@@ -95,22 +95,22 @@ PCCHAR FieldBase::ToString() const
 
 	switch (_DataType)
 	{
-	case DataType::CHAR_FIELD:
 	case DataType::BYTE_FIELD:
+	case DataType::CHAR_FIELD:
 	case DataType::BOOL_FIELD:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::SHORT_FIELD:
 	case DataType::WORD_FIELD:
+	case DataType::SHORT_FIELD:
 		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
-
-	case DataType::LONG_FIELD:		
+			
 	case DataType::DWORD_FIELD:
+	case DataType::LONG_FIELD:	
 	case DataType::FLOAT_FIELD:
 
 		bytes = (PBYTE)&(_Value.DWord);
@@ -144,22 +144,22 @@ VOID FieldBase::FromBytes(PCBYTE data)
 
 	switch (_DataType)
 	{
-	case DataType::CHAR_FIELD:
 	case DataType::BYTE_FIELD:
+	case DataType::CHAR_FIELD:
 	case DataType::BOOL_FIELD:
 
 		_Value = *((PBYTE)data);
 		break;
 		
-	case DataType::SHORT_FIELD:
 	case DataType::WORD_FIELD:
+	case DataType::SHORT_FIELD:
 		
 
 		_Value = *((PWORD)data);
 		break;
-
-	case DataType::LONG_FIELD:		
+		
 	case DataType::DWORD_FIELD:
+	case DataType::LONG_FIELD:		
 	case DataType::FLOAT_FIELD:
 
 		_Value = *((PDWORD)data);
@@ -175,30 +175,30 @@ VOID FieldBase::FromString(PCCHAR data)
 {
 	data += 2 * SIZEOF(CSIZE);
 
-	CBYTE byteWidth = this->ByteWidth();
-
 	data = StringReadValue<DataType>(_DataType, data);
+
+	CBYTE byteWidth = this->ByteWidth();
 
 	PBYTE bytes = NULL;
 
 	switch (_DataType)
 	{
-	case DataType::CHAR_FIELD:
 	case DataType::BYTE_FIELD:
+	case DataType::CHAR_FIELD:
 	case DataType::BOOL_FIELD:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::SHORT_FIELD:
 	case DataType::WORD_FIELD:
+	case DataType::SHORT_FIELD:
 		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
-
-	case DataType::LONG_FIELD:		
+		
 	case DataType::DWORD_FIELD:
+	case DataType::LONG_FIELD:		
 	case DataType::FLOAT_FIELD:
 
 		bytes = (PBYTE)&(_Value.DWord);
@@ -213,11 +213,9 @@ VOID FieldBase::FromString(PCCHAR data)
 
 		return;
 	}
-
-	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
-		data = StringReadValue<BYTE>(bytes[i], data);
-
-	_Value = bytes;
+	
+	for (SIZE i = 0 ; i < byteWidth; i++)
+		data = StringReadValue<BYTE>(bytes[byteWidth - i - 1], data);
 }
 
 SIZE FieldBase::printTo(Print & printer) const
@@ -555,23 +553,23 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 	switch (_DataType)
 	{
-	case DataType::CHAR_FIELD:
 	case DataType::BYTE_FIELD:
+	case DataType::CHAR_FIELD:
 	case DataType::BOOL_FIELD:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::SHORT_FIELD:
 	case DataType::WORD_FIELD:
+	case DataType::SHORT_FIELD:
 		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
-
+		
+	case DataType::FLOAT_FIELD:
 	case DataType::LONG_FIELD:		
 	case DataType::DWORD_FIELD:
-	case DataType::FLOAT_FIELD:
 
 		bytes = (PBYTE)&(_Value.DWord);
 		break;

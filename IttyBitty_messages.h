@@ -320,7 +320,6 @@ namespace IttyBitty
 			return FALSE;
 
 	#ifdef _DEBUG
-		Serial.println();
 		Serial.print("MESSAGE INCOMING [SIZE=");
 	#endif
 
