@@ -783,14 +783,12 @@ namespace IttyBitty
 	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
 	{
 		PCCHAR bufferPtr = data;
-		CHAR valStr[2 * T_SIZE + 1];
+		CHAR valStr[2 * T_SIZE];
 
-		memcpy(valStr, "0000", 2 * T_SIZE + 1);
-
-		memcpy(valStr, data, 2 * SIZEOF(CBYTE));
+		memcpy(valStr, data, 2 * T_SIZE);
 		value = static_cast<T>(strtol(valStr, NULL, 0x10));
 
-		data += 2 * T_SIZE;
+		bufferPtr += 2 * T_SIZE;
 		
 		return bufferPtr;
 	}
@@ -819,12 +817,11 @@ namespace IttyBitty
 	INLINE PIFIELD FieldFromString(PCCHAR data)
 	{
 		PIFIELD field = NULL;
-		CHAR valStr[5];
-		
-		memcpy(valStr, "0000", 5);
-		memcpy(valStr, data, 2 * SIZEOF(CSIZE));
-		CSIZE length = static_cast<DataType>(strtol(valStr, NULL, 0x10));
-		
+		SIZE length = 0;
+
+		StringReadValue<SIZE>(length, data);
+	while (!Serial.availableForWrite()) delay(100);
+		Serial.println(length);
 		if (length == 0 || length > 4)
 			field = new VarLengthField();
 		else

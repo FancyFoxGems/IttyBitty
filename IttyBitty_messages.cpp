@@ -206,8 +206,10 @@ VOID Message::FromBytes(PCBYTE data)
 {
 	_MessageCode = *data++;
 	_ParamCount = *data++;
-
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
+	
+	while (!Serial.availableForWrite()) delay(100);
+	Serial.println(_ParamCount);
+	for (SIZE i = 0; i < _ParamCount; i++)
 		_Params[i] = FieldFromBytes(data);
 }
 
@@ -215,7 +217,7 @@ VOID Message::FromString(PCCHAR data)
 {
 	data = StringReadValue<BYTE>(_MessageCode, data);
 	data = StringReadValue<BYTE>(_ParamCount, data);
-	
+
 	for (BYTE i = 0; i < this->ByteWidth(); i++)
 		_Params[i] = FieldFromString(data);
 }

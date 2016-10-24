@@ -241,19 +241,21 @@ namespace IttyBitty
 	{
 		SIZE i = length;
 
-		while (i-- > 0)
+		while (i > 0)
 		{
 			if (!stream.available())
+			{
 				delay(SERIAL_DEFAULT_TIMEOUT_MS);
 				
-			if (!stream.available())
-				return FALSE;
+				if (!stream.available())
+					return FALSE;
+			}
 				
-			int result = stream.read();
+			INT result = stream.read();
 			if (result < 0)
 				return FALSE;
 
-			buffer[i] = (CBYTE)result;
+			buffer[length - i--] = (CBYTE)result;
 		}
 
 		return TRUE;
@@ -263,7 +265,7 @@ namespace IttyBitty
 	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
 	{
 		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
-
+		
 		STATIC T NULL_T = (T)0;
 		if (!result)
 			return NULL_T;
@@ -281,7 +283,7 @@ namespace IttyBitty
 
 	INLINE CBOOL MessageFromBytes(Stream & stream, PIMESSAGE message)
 	{
-		if (!stream.find(UNCONST(MESSAGE_MARKER)))
+		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
 			return FALSE;
 
 		SIZE msgSize = 0;
@@ -301,7 +303,8 @@ namespace IttyBitty
 
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
-		if (!ReadBuffer(stream, __message_buffer, bufferSize))
+		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
+			return FALSE;
 
 		message = new Message();
 		message->FromBytes(__message_buffer);
@@ -313,23 +316,52 @@ namespace IttyBitty
 
 	INLINE CBOOL MessageFromString(Stream & stream, PIMESSAGE message)
 	{
-		if (!stream.find(UNCONST(MESSAGE_MARKER)))
+		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
 			return FALSE;
 
-		CHAR valStr[5] = "0000";
+	#ifdef _DEBUG
+		Serial.println();
+		Serial.print("MESSAGE INCOMING [SIZE=");
+	#endif
 
+		CHAR valStr[4];
 		ReadBuffer(stream, reinterpret_cast<PBYTE>(valStr), 2 * SIZEOF(CSIZE));
-		SIZE msgSize = static_cast<CSIZE>(strtol(valStr, NULL, 0x10));
-
+		
+		SIZE msgSize = 0;
+		StringReadValue<SIZE>(msgSize, valStr);
 		if (msgSize == 0)
 			return FALSE;
 
+	#ifdef _DEBUG
+		Serial.print(msgSize);
+		Serial.println("].");
+	#endif
+		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
-		if (!ReadBuffer(stream, __message_buffer, bufferSize))
+		__message_buffer[bufferSize] = '\0';
+
+	#ifdef _DEBUG
+		Serial.print(bufferSize);
+		Serial.println(" BYTES ALLOCATED.  READING DATA...");
+	#endif
+
+		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
+			return FALSE;
+
+	#ifdef _DEBUG
+		Serial.print("RAW DATA: ");
+		Serial.println((PCCHAR)__message_buffer);
+		Serial.println("BUFFER FILLED.  LOADING...");
+	#endif
 
 		message = new Message();
 		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+
+	#ifdef _DEBUG
+		Serial.println("MESSAGE LOADED.");
+		Serial.println();
+	#endif
 
 		delete[] __message_buffer;
 
