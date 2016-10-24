@@ -281,45 +281,45 @@ namespace IttyBitty
 	typedef VOID (* MessageHandler)(PIMESSAGE);
 	
 
-	INLINE CBOOL MessageFromBytes(Stream & stream, PIMESSAGE message)
+	INLINE PIMESSAGE MessageFromBytes(Stream & stream)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
-			return FALSE;
+			return NULL;
 
 		SIZE msgSize = 0;
 		msgSize = Read<CSIZE>(stream, (PBYTE)&msgSize);
 		if (msgSize == 0)
-			return FALSE;
+			return NULL;
 
 		/*
 		BYTE msgCode = 0;
 		if (!(stream > &msgCode))
-			return FALSE;
+			return NULL;
 		
 		BYTE paramCnt = 0;
 		if (!(stream > &paramCnt))
-			return FALSE;
+			return NULL;
 		*/
 
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
-			return FALSE;
+			return NULL;
 
-		message = new Message();
+		PIMESSAGE  message = new Message();
 		message->FromBytes(__message_buffer);
 
 		delete[] __message_buffer;
 
-		return TRUE;
+		return message;
 	}	
 
-	INLINE CBOOL MessageFromString(Stream & stream, PIMESSAGE message)
+	INLINE PIMESSAGE MessageFromString(Stream & stream)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
-			return FALSE;
+			return NULL;
 
-	#ifdef _DEBUG
+	#ifdef DEBUG_MESSAGES
 		Serial.print("MESSAGE INCOMING [SIZE=");
 	#endif
 
@@ -329,9 +329,9 @@ namespace IttyBitty
 		SIZE msgSize = 0;
 		StringReadValue<SIZE>(msgSize, valStr);
 		if (msgSize == 0)
-			return FALSE;
+			return NULL;
 
-	#ifdef _DEBUG
+	#ifdef DEBUG_MESSAGES
 		Serial.print(msgSize);
 		Serial.println("].");
 	#endif
@@ -340,31 +340,31 @@ namespace IttyBitty
 		__message_buffer = new byte[bufferSize];
 		__message_buffer[bufferSize] = '\0';
 
-	#ifdef _DEBUG
+	#ifdef DEBUG_MESSAGES
 		Serial.print(bufferSize);
 		Serial.println(" BYTES ALLOCATED.  READING DATA...");
 	#endif
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
-			return FALSE;
+			return NULL;
 
-	#ifdef _DEBUG
+	#ifdef DEBUG_MESSAGES
 		Serial.print("RAW DATA: ");
 		Serial.println((PCCHAR)__message_buffer);
 		Serial.println("BUFFER FILLED.  LOADING...");
 	#endif
 
-		message = new Message();
+		PIMESSAGE message = new Message();
 		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
-	#ifdef _DEBUG
+	#ifdef DEBUG_MESSAGES
 		Serial.println("MESSAGE LOADED.");
 		Serial.println();
 	#endif
 
 		delete[] __message_buffer;
 
-		return TRUE;
+		return message;
 	}
 	
 	INLINE VOID WaitForMessage(Stream & stream, MessageHandler handler)
@@ -372,12 +372,14 @@ namespace IttyBitty
 		PIMESSAGE message = NULL;
 
 	#ifdef _DEBUG
-		if (!MessageFromString(stream, message))
+		message = MessageFromString(stream);
 	#else
-		if (!MessageFromBytes(stream, message))
+		message = MessageFromBytes(stream);
 	#endif
-			return;
 
+		if (message == NULL)
+			return;
+		
 		handler(message);
 
 		delete message;

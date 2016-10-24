@@ -223,7 +223,7 @@ VOID Message::FromString(PCCHAR data)
 
 SIZE Message::printTo(Print & printer) const
 {
-	SIZE size = Serial.print(MESSAGE_MARKER);
+	SIZE size = printer.print(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize() - 1;
