@@ -207,6 +207,8 @@ namespace IttyBitty
 
 		// MESSAGE OVERRIDES
 
+		VIRTUAL VOID Handle(...) { }
+
 		VIRTUAL CBYTE GetMessageCode() const
 		{
 			return MESSAGE_CODE();
@@ -334,6 +336,7 @@ namespace IttyBitty
 	#ifdef DEBUG_MESSAGES
 		Serial.print(msgSize);
 		Serial.println("].");
+		Serial.flush();
 	#endif
 		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
@@ -343,6 +346,7 @@ namespace IttyBitty
 	#ifdef DEBUG_MESSAGES
 		Serial.print(bufferSize);
 		Serial.println(" BYTES ALLOCATED.  READING DATA...");
+		Serial.flush();
 	#endif
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
@@ -352,6 +356,7 @@ namespace IttyBitty
 		Serial.print("RAW DATA: ");
 		Serial.println((PCCHAR)__message_buffer);
 		Serial.println("BUFFER FILLED.  LOADING...");
+		Serial.flush();
 	#endif
 
 		PIMESSAGE message = new Message();
@@ -360,6 +365,7 @@ namespace IttyBitty
 	#ifdef DEBUG_MESSAGES
 		Serial.println("MESSAGE LOADED.");
 		Serial.println();
+		Serial.flush();
 	#endif
 
 		delete[] __message_buffer;

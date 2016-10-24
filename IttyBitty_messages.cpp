@@ -93,11 +93,10 @@ RIFIELD Message::Param(CBYTE i)
 
 VOID Message::Handle(...)
 {
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
+	Serial.println("BASE HANDLER");
+	Serial.flush();
 }
-				
+
 
 // ISerializable IMPLEMENTATION
 
