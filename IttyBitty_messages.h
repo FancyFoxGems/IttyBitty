@@ -66,7 +66,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region IMessage DEFINITION
+#pragma region IMessage & IMessageCommand DEFINITIONS
 
 	INTERFACE IMessage : public virtual ISerializable
 	{
