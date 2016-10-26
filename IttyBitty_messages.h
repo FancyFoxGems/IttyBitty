@@ -68,7 +68,7 @@ namespace IttyBitty
 
 #pragma region IMessage & IMessageCommand DEFINITIONS
 
-	INTERFACE IMessage : public virtual ISerializable
+	INTERFACE IMessage : public ISerializable
 	{
 	public:
 
@@ -107,7 +107,7 @@ namespace IttyBitty
 
 #pragma region Message DECLARATION
 
-	CLASS Message : public virtual IMessage
+	CLASS Message : public IMessage
 	{
 	public:
 
@@ -350,7 +350,7 @@ namespace IttyBitty
 	#endif
 
 		PIMESSAGE message = new Message();
-		message->FromString(reinterpret_cast<PCCHAR>("2001000221012c"));
+		message->FromString(reinterpret_cast<PCCHAR>(F("2001000221012c")));
 		//message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES

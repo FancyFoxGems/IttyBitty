@@ -139,7 +139,7 @@ namespace IttyBitty
 
 	// ISerializable DECLARATION
 
-	INTERFACE ISerializable : public virtual Printable
+	INTERFACE ISerializable : public Printable
 	{
 	public:
 
@@ -191,7 +191,7 @@ namespace IttyBitty
 
 #pragma region FieldBase DECLARATION
 
-	CLASS FieldBase : public virtual IField
+	CLASS FieldBase : public IField
 	{
 	public:
 
