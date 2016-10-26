@@ -176,7 +176,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	data += 2 * SIZEOF(CSIZE);
 
 	data = StringReadValue<DataType>(_DataType, data);
-
+	
 	CBYTE byteWidth = this->ByteWidth();
 
 	PBYTE bytes = NULL;
@@ -216,10 +216,6 @@ VOID FieldBase::FromString(PCCHAR data)
 	
 	for (SIZE i = 0 ; i < byteWidth; i++)
 		data = StringReadValue<BYTE>(bytes[byteWidth - i - 1], data);
-
-		/*Serial.println("F");
-		Serial.println((int)(RCWORD)_Value);
-		Serial.flush();*/
 }
 
 SIZE FieldBase::printTo(Print & printer) const
@@ -548,10 +544,10 @@ VOID VarLengthField::FromBytes(PCBYTE data)
 }
 
 VOID VarLengthField::FromString(PCCHAR data)
-{
-	CBYTE byteWidth = this->ByteWidth();
-	
+{	
 	data = StringReadValue<SIZE>(_Length, data);
+
+	CBYTE byteWidth = this->ByteWidth();
 
 	PBYTE bytes = NULL;
 

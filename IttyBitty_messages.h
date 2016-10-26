@@ -350,7 +350,7 @@ namespace IttyBitty
 	#endif
 
 		PIMESSAGE message = new Message();
-		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		message->FromString(reinterpret_cast<PCCHAR>("2001000221012c"));
 
 	#ifdef DEBUG_MESSAGES
 		Serial.println(F("MESSAGE LOADED."));

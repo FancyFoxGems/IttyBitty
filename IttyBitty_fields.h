@@ -783,16 +783,13 @@ namespace IttyBitty
 		PCCHAR bufferPtr = data;
 		CHAR valStr[2 * T_SIZE + 1];
 
-		//memset(valStr, '0', 2 * T_SIZE);
 		valStr[2 * T_SIZE] = '\0';
 
 		memcpy(valStr, data, 2 * T_SIZE);
 		valStr[2 * T_SIZE] = '\0';
 
 		value = static_cast<T>(strtol(valStr, NULL, 0x10));
-		Serial.println(valStr);
-		Serial.println(value);
-		Serial.flush();
+
 		bufferPtr += 2 * T_SIZE;
 		
 		return bufferPtr;
@@ -830,6 +827,8 @@ namespace IttyBitty
 			field = new VarLengthField();
 		else
 			field = new Field();
+
+		field->FromString(data);
 
 		return field;
 	}

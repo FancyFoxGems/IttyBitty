@@ -217,24 +217,11 @@ VOID Message::FromBytes(PCBYTE data)
 
 VOID Message::FromString(PCCHAR data)
 {
-	Serial.println();
-	CHAR val[3];
-	val[2] = '\0';
-
 	data = StringReadValue<BYTE>(_MessageCode, data);
 	data = StringReadValue<BYTE>(_ParamCount, data);
-	for (char i = -4; i < 4; i++)
-		Serial.println(data[i]);
-	Serial.flush();
-	//Serial.println(_MessageCode);
-	//Serial.println(_ParamCount);
-	//Serial.flush();
 
 	for (BYTE i = 0; i < _ParamCount; i++)
 		_Params[i] = FieldFromString(data);
-	
-	/*Serial.println((int)(RCWORD)*reinterpret_cast<PCFIELD>(this->Param(0)));
-	Serial.flush();*/
 }
 
 
