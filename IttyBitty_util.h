@@ -31,6 +31,12 @@
 
 #define ASM(expr) __asm__(expr)
 
+#define NOP() __asm__ __volatile__("nop")
+
+#define COMPILER_BARRIER() __asm__ __volatile__ ("" : : : "memory")
+#define MEMORY_BARRIER() COMPILER_BARRIER()
+#define BARRIER() COMPILER_BARRIER()
+
 #define PREFETCH(addr, ARGS...) VA_MACRO(PREFETCH, addr, ##ARGS)
 #define PREFETCH_1(addr) __builtin_prefetch (addr)
 #define PREFETCH_2(addr, rw) __builtin_prefetch (addr, rw)
@@ -46,6 +52,10 @@
 #define CODE_FILE_NAME() _builtin_FILE()
 #define CODE_FUNCTION_NAME() _builtin_FUNCTION()
 #define CODE_LINE_NUMBER() _builtin_LINE()
+
+#define CODE_FILE_NAME_P() F(CODE_FILE_NAME())
+#define CODE_FUNCTION_NAME_P() F(CODE_FUNCTION_NAME())
+#define CODE_LINE_NUMBER_P() F(CODE_LINE_NUMBER())
 
 #define VAR_NAME_VALUE(var) #var " = " EXPAND_STR(var)
 #define PRINT_VAR(var) PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))

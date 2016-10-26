@@ -49,9 +49,9 @@ Message::~Message()
 	{
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
 			delete _Params[i];
-		
-		delete[] _Params;
 	}
+		
+	delete[] _Params;
 }
 
 
@@ -151,15 +151,19 @@ PCBYTE Message::ToBytes() const
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
 	PIFIELD param = NULL;
+	PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
 	
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
+		paramBytes = param->ToBytes();
 		paramSize = param->ByteSize();
 
-		memcpy(bufferPtr, param->ToBytes(), paramSize);
+		memcpy(bufferPtr, paramBytes, paramSize);
+		delete[] paramBytes;
+
 		bufferPtr += paramSize;
 	}
 
@@ -175,7 +179,6 @@ PCCHAR Message::ToString() const
 		delete[] __message_buffer;
 
 	__message_buffer = new BYTE[size];
-	memset(__message_buffer, '0', size);
 	__message_buffer[size - 1] = '\0';
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
@@ -230,7 +233,7 @@ SIZE Message::printTo(Print & printer) const
 	SIZE size = strlen(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
-	SIZE msgSize = this->StringSize() - 1;
+	SIZE msgSize = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else
 	SIZE msgSize = this->ByteSize();
@@ -239,9 +242,13 @@ SIZE Message::printTo(Print & printer) const
 	
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
-	
-	for (SIZE i = 0; i < msgSize; i++)
+
+	for (SIZE i = 0; i < msgSize - 1; i++)
 		printer.print(buffer[i]);
+
+	printer.print('\0');
+	
+	delete[] __message_buffer;
 
 	size += msgSize;
 

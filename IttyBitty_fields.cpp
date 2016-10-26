@@ -221,15 +221,19 @@ VOID FieldBase::FromString(PCCHAR data)
 SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
-	SIZE size = this->StringSize() - 1;
+	SIZE size = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else
 	SIZE size = this->ByteSize();
 	PCBYTE buffer = this->ToBytes();
 #endif
 
-	for (SIZE i = 0; i < size; i++)
+	for (SIZE i = 0; i < size - 1; i++)
 		printer.print(buffer[i]);
+
+	printer.print('\0');
+	
+	delete[] __field_buffer;
 
 	return size;
 }
@@ -412,17 +416,17 @@ VarLengthField::VarLengthField(CONST DataType dataType, CSIZE length)
 	switch (dataType)
 	{
 	case DataType::BYTES_FIELD:
-		_Dispose = TRUE;
+
 		_Value = new BYTE[length];
 		break;
 
 	case DataType::STRING_FIELD:
-		_Dispose = TRUE;
+
 		_Value = new CHAR[length];
 		break;
 
 	case DataType::BIT_FIELD:
-		_Dispose = TRUE;
+
 		_Value = new BITPACK[length];
 		break;
 
@@ -441,7 +445,8 @@ VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
 }
 
 VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
-{	
+{
+	this->~VarLengthField();
 	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 

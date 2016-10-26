@@ -351,6 +351,7 @@ namespace IttyBitty
 
 		PIMESSAGE message = new Message();
 		message->FromString(reinterpret_cast<PCCHAR>("2001000221012c"));
+		//message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		Serial.println(F("MESSAGE LOADED."));
@@ -375,11 +376,17 @@ namespace IttyBitty
 
 		if (message == NULL)
 			return;
-
-		/*Serial.println(F("W"));
-		Serial.println((RCWORD)*reinterpret_cast<PCFIELD>(message->Param(0)));
-		Serial.flush();*/
-		handler(message);
+		Serial.println(F("W"));
+		Serial.flush();
+		//message->printTo(Serial);
+		PCCHAR buffer = message->ToString();
+		Serial.println(buffer);
+		Serial.flush();
+		delete buffer;
+		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
+	Serial.println(m);
+	Serial.flush();
+		//handler(message);
 
 		delete message;
 	}

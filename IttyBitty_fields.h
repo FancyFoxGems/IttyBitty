@@ -564,10 +564,8 @@ namespace IttyBitty
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		VarLengthTypedField(CSIZE length = 0)
+		VarLengthTypedField(CSIZE length = 0) : TypedField<T>()
 		{
-			_Dispose = TRUE;
-
 			_Value = new T[length];
 			_DataType = VarLengthTypedField<T>::FindDataType();
 			_Length = length;
@@ -579,10 +577,12 @@ namespace IttyBitty
 
 			_Value = other._Value;
 			_DataType = other._DataType;
+			_Length = other._Length;
 		}
 
 		VarLengthTypedField(RRVARLENGTHTYPEDFIELD<T> other)
 		{
+			this->~VarLengthTypedField<T>();
 			new (this) VarLengthTypedField<T>(other._Value);
 		}
 

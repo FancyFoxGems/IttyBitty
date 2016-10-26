@@ -23,6 +23,7 @@ _BitPack::_BitPack(_BitPack const & other)
 
 _BitPack::_BitPack(_BitPack && other)
 {
+	this->~_BitPack();
 	new (this) _BitPack(reinterpret_cast<RBYTE>(other));
 }
 
