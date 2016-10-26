@@ -10,11 +10,14 @@
 #define _ITTYBITTY_INFO_H
 
 
+#include <Arduino.h>
+
 #include <avr/boot.h>
 #include <avr/eeprom.h>
+#include <avr/pgmspace.h>
 
 #ifndef _AVR_CPU_NAME_
-#include "avr_cpunames.h"
+	#include "avr_cpunames.h"
 #endif
 
 #include "IttyBitty_bits.h"

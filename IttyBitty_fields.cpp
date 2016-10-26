@@ -25,7 +25,10 @@ PBYTE IttyBitty::__field_buffer;
 
 FieldBase::~FieldBase()
 {
-	if (_Dispose)
+	if (!_Dispose)
+		return;
+
+	if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
 		_Value.FreePtr();
 }
 				
@@ -85,6 +88,7 @@ PCCHAR FieldBase::ToString() const
 		delete[] __field_buffer;
 
 	__field_buffer = new BYTE[size];
+	__field_buffer[size - 1] = '\0';
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
 
@@ -122,17 +126,13 @@ PCCHAR FieldBase::ToString() const
 
 		for (SIZE i = 0; i < byteWidth; i++)
 			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
-	
-		__field_buffer[size - 1] = '\0';
 
 		return reinterpret_cast<PCCHAR>(__field_buffer);
 	}
-
-	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
-		bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
 	
-	__field_buffer[size - 1] = '\0';
-
+	for (SIZE i = 0; i < 4 - byteWidth; i++)
+		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
+	
 	return reinterpret_cast<PCCHAR>(__field_buffer);
 }
 
@@ -216,12 +216,16 @@ VOID FieldBase::FromString(PCCHAR data)
 	
 	for (SIZE i = 0 ; i < byteWidth; i++)
 		data = StringReadValue<BYTE>(bytes[byteWidth - i - 1], data);
+
+		/*Serial.println("F");
+		Serial.println((int)(RCWORD)_Value);
+		Serial.flush();*/
 }
 
 SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
-	SIZE size = this->StringSize();
+	SIZE size = this->StringSize() - 1;
 	PCCHAR buffer = this->ToString();
 #else
 	SIZE size = this->ByteSize();
@@ -229,7 +233,7 @@ SIZE FieldBase::printTo(Print & printer) const
 #endif
 
 	for (SIZE i = 0; i < size; i++)
-		size += printer.print(buffer[i]);
+		printer.print(buffer[i]);
 
 	return size;
 }
@@ -465,13 +469,13 @@ VarLengthField::VarLengthField(PCBITPACK value, CSIZE length)
 
 VarLengthField::~VarLengthField()
 {
-	if (_Dispose)
-	{
-		if (_Length > 0)
-			_Value.FreeData();
-		else
-			_Value.FreePtr();
-	}
+	if (!_Dispose)
+		return;
+
+	if (_Length > 0)
+		_Value.FreeData();
+	else if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
+		_Value.FreePtr();
 }
 
 
@@ -530,7 +534,7 @@ CSIZE VarLengthField::StringLength() const
 	if (_DataType == DataType::STRING_FIELD)
 		return _Length;
 			
-	return Field::StringLength();
+	return 2 * this->ByteWidth();
 }
 
 VOID VarLengthField::FromBytes(PCBYTE data)
@@ -583,9 +587,9 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 		return;
 	}
-
-	for (SIZE i = 4 - byteWidth; i < byteWidth; i++)
-		data = StringReadValue<BYTE>(bytes[i], data);
+	
+	for (SIZE i = 0 ; i < byteWidth; i++)
+		data = StringReadValue<BYTE>(bytes[byteWidth - i - 1], data);
 }
 
 #pragma endregion

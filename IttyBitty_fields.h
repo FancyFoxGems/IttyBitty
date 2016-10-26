@@ -611,13 +611,13 @@ namespace IttyBitty
 
 		VIRTUAL ~VarLengthTypedField()
 		{
-			if (_Dispose)
-			{
-				if (_Length > 0)
-					_Value.FreeData();
-				else
-					_Value.FreePtr();
-			}
+			if (!_Dispose)
+				return;
+
+			if (_Length > 0)
+				_Value.FreeData();
+			else if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
+				_Value.FreePtr();
 		}
 		
 		
@@ -658,8 +658,8 @@ namespace IttyBitty
 		{
 			if (_DataType == DataType::STRING_FIELD)
 				return _Length;
-
-			return TypedField<T>::StringLength();
+			
+			return 2 * this->ByteWidth();
 		}
 		
 		VIRTUAL VOID FromBytes(PCBYTE data)
@@ -696,7 +696,7 @@ namespace IttyBitty
 
 		STATIC CONSTEXPR const DataType FindDataType()
 		{
-			return DataType::BYTES_FIELD;
+			return TypedField<T>::FindDataType();
 		}
 
 
@@ -759,11 +759,9 @@ namespace IttyBitty
 	{
 		PCHAR bufferPtr = buffer;
 		CHAR valStr[2 * T_SIZE + 1];
+		
 		valStr[2 * T_SIZE] = '\0';
-
-		for (SIZE i = 0; i < T_SIZE; i++)
-			memcpy(&valStr[2 * i], "00", 2);
-
+		
 		itoa(value, valStr, radix);
 
 		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
@@ -783,11 +781,18 @@ namespace IttyBitty
 	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
 	{
 		PCCHAR bufferPtr = data;
-		CHAR valStr[2 * T_SIZE];
+		CHAR valStr[2 * T_SIZE + 1];
+
+		//memset(valStr, '0', 2 * T_SIZE);
+		valStr[2 * T_SIZE] = '\0';
 
 		memcpy(valStr, data, 2 * T_SIZE);
-		value = static_cast<T>(strtol(valStr, NULL, 0x10));
+		valStr[2 * T_SIZE] = '\0';
 
+		value = static_cast<T>(strtol(valStr, NULL, 0x10));
+		Serial.println(valStr);
+		Serial.println(value);
+		Serial.flush();
 		bufferPtr += 2 * T_SIZE;
 		
 		return bufferPtr;
@@ -802,7 +807,7 @@ namespace IttyBitty
 	{
 		PIFIELD field = NULL;
 
-		CSIZE length = static_cast<CSIZE>(*data);
+		SIZE length = static_cast<SIZE>(*data);
 
 		if (length == 0 || length > 4)
 			field = new VarLengthField();
@@ -825,8 +830,6 @@ namespace IttyBitty
 			field = new VarLengthField();
 		else
 			field = new Field();
-
-		field->FromString(data);
 
 		return field;
 	}

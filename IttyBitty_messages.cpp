@@ -77,15 +77,15 @@ CBYTE Message::GetMessageCode() const
 
 CBYTE Message::GetParamCount() const
 {
-	return 0;//_ParamCount;
+	return _ParamCount;
 }
 
-RIFIELD Message::Param(CBYTE i)
+PIFIELD Message::Param(CBYTE i)
 {
 	if (_Params == NULL)
-		return Field::NULL_OBJECT();
+		return NULL;
 
-	return *_Params[i];
+	return _Params[i];
 }
 
 
@@ -96,9 +96,6 @@ VOID Message::Handle(...)
 	//va_list args;
 	//va_start(args, 0);
 	//va_end(args);
-
-	Serial.println("BASE HANDLER");
-	Serial.flush();
 }
 
 
@@ -178,29 +175,33 @@ PCCHAR Message::ToString() const
 		delete[] __message_buffer;
 
 	__message_buffer = new BYTE[size];
-	memset(__message_buffer, 0, size);
+	memset(__message_buffer, '0', size);
+	__message_buffer[size - 1] = '\0';
+
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
-	
+
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);	
-	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);	
+	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
-	
+
 	PIFIELD param = NULL;
+	PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
 	
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
-		paramSize = param->StringSize();
+		paramStr = param->ToString();
+		paramSize = param->StringSize() - 1;
+		
+		memcpy(bufferPtr, paramStr, paramSize);
+		delete[] paramStr;
+		
+		if (i == 0)
+			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
 
-		if (param->GetDataType() == DataType::STRING_FIELD)
-			paramSize -= 1;
-
-		memcpy(bufferPtr, param->ToString(), paramSize);
 		bufferPtr += paramSize;
 	}
-
-	__message_buffer[size - 1] = '\0';
 
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
@@ -216,17 +217,30 @@ VOID Message::FromBytes(PCBYTE data)
 
 VOID Message::FromString(PCCHAR data)
 {
+	Serial.println();
+	CHAR val[3];
+	val[2] = '\0';
+
 	data = StringReadValue<BYTE>(_MessageCode, data);
 	data = StringReadValue<BYTE>(_ParamCount, data);
-	
+	for (char i = -4; i < 4; i++)
+		Serial.println(data[i]);
+	Serial.flush();
+	//Serial.println(_MessageCode);
+	//Serial.println(_ParamCount);
+	//Serial.flush();
+
 	for (BYTE i = 0; i < _ParamCount; i++)
 		_Params[i] = FieldFromString(data);
+	
+	/*Serial.println((int)(RCWORD)*reinterpret_cast<PCFIELD>(this->Param(0)));
+	Serial.flush();*/
 }
 
 
 SIZE Message::printTo(Print & printer) const
 {
-	SIZE size = printer.print(MESSAGE_MARKER);
+	SIZE size = strlen(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize() - 1;
@@ -235,7 +249,10 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->ByteSize();
 	PCBYTE buffer = this->ToBytes();
 #endif
-
+	
+	for (BYTE i = 0; i < size; i++)
+		printer.print(MESSAGE_MARKER[i]);
+	
 	for (SIZE i = 0; i < msgSize; i++)
 		printer.print(buffer[i]);
 

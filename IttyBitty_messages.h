@@ -87,7 +87,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetParamCount() const = 0;
 		VIRTUAL CBYTE GetMessageCode() const = 0;
 
-		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
+		VIRTUAL PIFIELD Param(CBYTE = 0) = 0;
 
 
 		// USER METHODS
@@ -132,7 +132,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetMessageCode() const;
 		VIRTUAL CBYTE GetParamCount() const;
 
-		VIRTUAL RIFIELD Param(CBYTE = 0);
+		VIRTUAL PIFIELD Param(CBYTE = 0);
 
 
 		// USER METHODS
@@ -293,16 +293,6 @@ namespace IttyBitty
 		if (msgSize == 0)
 			return NULL;
 
-		/*
-		BYTE msgCode = 0;
-		if (!(stream > &msgCode))
-			return NULL;
-		
-		BYTE paramCnt = 0;
-		if (!(stream > &paramCnt))
-			return NULL;
-		*/
-
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
@@ -322,7 +312,7 @@ namespace IttyBitty
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print("MESSAGE INCOMING [SIZE=");
+		Serial.print(F("MESSAGE INCOMING [SIZE="));
 	#endif
 
 		CHAR valStr[4];
@@ -341,11 +331,11 @@ namespace IttyBitty
 		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
-		__message_buffer[bufferSize] = '\0';
+		__message_buffer[bufferSize - 1] = '\0';
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(bufferSize);
-		Serial.println(" BYTES ALLOCATED.  READING DATA...");
+		Serial.println(F(" BYTES ALLOCATED.  READING DATA..."));
 		Serial.flush();
 	#endif
 
@@ -353,9 +343,9 @@ namespace IttyBitty
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print("RAW DATA: ");
+		Serial.print(F("RAW DATA: "));
 		Serial.println((PCCHAR)__message_buffer);
-		Serial.println("BUFFER FILLED.  LOADING...");
+		Serial.println(F("BUFFER FILLED.  LOADING..."));
 		Serial.flush();
 	#endif
 
@@ -363,7 +353,7 @@ namespace IttyBitty
 		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
-		Serial.println("MESSAGE LOADED.");
+		Serial.println(F("MESSAGE LOADED."));
 		Serial.println();
 		Serial.flush();
 	#endif
@@ -385,7 +375,10 @@ namespace IttyBitty
 
 		if (message == NULL)
 			return;
-		
+
+		/*Serial.println(F("W"));
+		Serial.println((RCWORD)*reinterpret_cast<PCFIELD>(message->Param(0)));
+		Serial.flush();*/
 		handler(message);
 
 		delete message;
