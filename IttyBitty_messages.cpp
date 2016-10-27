@@ -272,6 +272,8 @@ SIZE Message::printTo(Print & printer) const
 	
 	delete[] __message_buffer;
 	__message_buffer = NULL;
+
+	buffer = NULL;
 	
 	size += msgSize;
 

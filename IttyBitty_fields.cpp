@@ -226,10 +226,12 @@ SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
 	SIZE size = this->StringSize();
-	STATIC PCCHAR buffer = this->ToString();
+	STATIC PCCHAR buffer = NULL;
+	buffer = this->ToString();
 #else
 	SIZE size = this->ByteSize();
-	STATIC PCBYTE buffer = this->ToBytes();
+	STATIC PCBYTE buffer = NULL;
+	buffer = this->ToBytes();
 #endif
 
 	for (SIZE i = 0; i < size; i++)
@@ -237,6 +239,8 @@ SIZE FieldBase::printTo(Print & printer) const
 
 	delete[] __field_buffer;
 	__field_buffer = NULL;
+
+	buffer = NULL;
 
 	return size;
 }
