@@ -90,7 +90,7 @@ PCCHAR FieldBase::ToString() const
 	__field_buffer = new BYTE[size];
 	__field_buffer[size - 1] = '\0';
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
+	STATIC PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
@@ -126,12 +126,16 @@ PCCHAR FieldBase::ToString() const
 
 		for (SIZE i = 0; i < byteWidth; i++)
 			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
+		
+		bufferPtr = NULL;
 
 		return reinterpret_cast<PCCHAR>(__field_buffer);
 	}
 	
 	for (SIZE i = 0; i < 4 - byteWidth; i++)
 		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
+
+	bufferPtr = NULL;
 	
 	return reinterpret_cast<PCCHAR>(__field_buffer);
 }
@@ -222,14 +226,17 @@ SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
 	SIZE size = this->StringSize();
-	PCCHAR buffer = this->ToString();
+	STATIC PCCHAR buffer = this->ToString();
 #else
 	SIZE size = this->ByteSize();
-	PCBYTE buffer = this->ToBytes();
+	STATIC PCBYTE buffer = this->ToBytes();
 #endif
 
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
+
+	delete[] __field_buffer;
+	__field_buffer = NULL;
 
 	return size;
 }

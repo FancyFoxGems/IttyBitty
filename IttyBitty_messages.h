@@ -302,6 +302,7 @@ namespace IttyBitty
 		message->FromBytes(__message_buffer);
 
 		delete[] __message_buffer;
+		__message_buffer = NULL;
 
 		return message;
 	}	
@@ -360,6 +361,7 @@ namespace IttyBitty
 	#endif
 
 		delete[] __message_buffer;
+		__message_buffer = NULL;
 
 		return message;
 	}
@@ -382,10 +384,14 @@ namespace IttyBitty
 		PCCHAR buffer = message->ToString();
 		Serial.println(buffer);
 		Serial.flush();
-		delete buffer;
+
+		delete[] __message_buffer;
+		__message_buffer = NULL;
+
 		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
 	Serial.println(m);
 	Serial.flush();
+
 		//handler(message);
 
 		delete message;

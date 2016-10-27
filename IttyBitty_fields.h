@@ -189,7 +189,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region FieldBase DECLARATION
+#pragma region FieldBase DECLARATION - TAGGED UNION BASE
 
 	CLASS FieldBase : public IField
 	{
@@ -235,7 +235,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region Field DECLARATION
+#pragma region Field DECLARATION - TAGGED UNION
 
 	CLASS Field : public FieldBase
 	{
@@ -285,7 +285,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region VarLengthField DECLARATION
+#pragma region VarLengthField DECLARATION - VARIABLE-LENGTH TAGGED UNION
 
 	CLASS VarLengthField : public Field
 	{
@@ -338,7 +338,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region TypedField DEFINITION
+#pragma region TypedField DEFINITION - TEMPLATED TAGGED UNION
 	
 	template<typename T>
 	CLASS TypedField : public FieldBase
@@ -555,7 +555,7 @@ namespace IttyBitty
 #pragma endregion
 
 	
-#pragma region VarLengthTypedField DEFINITION
+#pragma region VarLengthTypedField DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
 	template<typename T>
 	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
@@ -775,15 +775,13 @@ namespace IttyBitty
 		}
 
 		memcpy(bufferPtr, valStr, 2 * T_SIZE);
-		bufferPtr += 2 * T_SIZE;
 
-		return bufferPtr;
+		return (PCHAR)(bufferPtr + 2 * T_SIZE);
 	}
 
 	template<typename T>
 	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
 	{
-		PCCHAR bufferPtr = data;
 		CHAR valStr[2 * T_SIZE + 1];
 
 		valStr[2 * T_SIZE] = '\0';
@@ -792,10 +790,8 @@ namespace IttyBitty
 		valStr[2 * T_SIZE] = '\0';
 
 		value = static_cast<T>(strtol(valStr, NULL, 0x10));
-
-		bufferPtr += 2 * T_SIZE;
 		
-		return bufferPtr;
+		return (PCCHAR)(data + 2 * T_SIZE);
 	}
 
 #pragma endregion

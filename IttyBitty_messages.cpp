@@ -140,7 +140,8 @@ PCBYTE Message::ToBytes() const
 
 	__message_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __message_buffer;
+	STATIC PBYTE bufferPtr = NULL;
+	bufferPtr = __message_buffer;
 
 	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
 
@@ -151,7 +152,7 @@ PCBYTE Message::ToBytes() const
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
 	PIFIELD param = NULL;
-	PCBYTE paramBytes = NULL;
+	STATIC PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
 	
 
@@ -162,10 +163,14 @@ PCBYTE Message::ToBytes() const
 		paramSize = param->ByteSize();
 
 		memcpy(bufferPtr, paramBytes, paramSize);
+
 		delete[] paramBytes;
+		paramBytes = NULL;
 
 		bufferPtr += paramSize;
 	}
+
+	bufferPtr = NULL;
 
 	return __message_buffer;
 }
@@ -184,31 +189,26 @@ PCCHAR Message::ToString() const
 
 	if (__message_buffer)
 	{
-	Serial.print("delete: ");
-	Serial.println(ram());
-	Serial.flush();
+		Serial.println(ram());
+		Serial.flush();
 		delete[] __message_buffer;
+		Serial.println("deleted");
+		Serial.println(ram());
+		Serial.flush();
 	}
 	
-	Serial.print("new: ");
-	Serial.println(ram());
-	Serial.flush();
 	__message_buffer = new BYTE[size];
-	Serial.print("allocated: ");
-	Serial.println(ram());
-	Serial.flush();
 	__message_buffer[size - 1] = '\0';
-	Serial.println("0ed");
-	Serial.flush();
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
+	STATIC PCHAR bufferPtr = NULL;
+	bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
+
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
-	//bufferPtr += 2;
 
 	PIFIELD param = NULL;
-	PCCHAR paramStr = NULL;
+	STATIC PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
 	
 	for (SIZE i = 0; i < paramCount; i++)
@@ -216,23 +216,12 @@ PCCHAR Message::ToString() const
 
 		param = _Params[i];
 		paramStr = param->ToString();
-	//Serial.println(ram());
-	//Serial.flush();
-		paramStr = param->ToString();
-		paramStr = param->ToString();
-	//Serial.println(ram());
-	//Serial.flush();
 		paramSize = param->StringSize() - 1;
 		
 		memcpy(bufferPtr, paramStr, paramSize);
-
-	Serial.println(ram());
-	Serial.flush();
 		
-		//delete[] paramStr;
-
-	Serial.println(ram());
-	Serial.flush();
+		delete[] paramStr;
+		paramStr = NULL;
 		
 		if (i == 0)
 			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
@@ -264,39 +253,26 @@ VOID Message::FromString(PCCHAR data)
 
 SIZE Message::printTo(Print & printer) const
 {
-	Serial.println("P");
-	Serial.flush();
 	SIZE size = strlen(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize();
-	Serial.println(msgSize);
-	Serial.flush();
-	PCCHAR buffer = this->ToString();
-	Serial.println(buffer);
-	Serial.flush();
+	STATIC PCCHAR buffer = NULL;
+	buffer = this->ToString();
 #else
 	SIZE msgSize = this->ByteSize();
-	PCBYTE buffer = this->ToBytes();
+	STATIC PCBYTE buffer = this->ToBytes();
 #endif
 	
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
-	
-	Serial.println();
-	Serial.print("printing: ");
-	Serial.println(ram());
+
 	for (SIZE i = 0; i < msgSize; i++)
 		printer.print(buffer[i]);
 	
-	Serial.print("deleting: ");
-	Serial.println(ram());
-	Serial.flush();
 	delete[] __message_buffer;
-	Serial.print("deleted: ");
-	Serial.println(ram());
-	Serial.flush();
-
+	__message_buffer = NULL;
+	
 	size += msgSize;
 
 	return size;
