@@ -364,6 +364,7 @@ namespace IttyBitty
 
 		TypedField(RRTYPEDFIELD<T> other)
 		{
+			this->~FieldBase();
 			new (this) TypedField<T>(other._Value);
 		}
 
@@ -375,11 +376,13 @@ namespace IttyBitty
 
 		EXPLICIT TypedField(T & value)
 		{
+			this->~FieldBase();
 			new (this) TypedField<T>(value);
 		}
 
 		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
 		{
+			this->~FieldBase();
 			new (this) TypedField<T>(value);
 		}
 
@@ -689,7 +692,7 @@ namespace IttyBitty
 		using TypedField<T>::_Dispose;
 		using TypedField<T>::_Value;
 		using TypedField<T>::_DataType;
-		using TypedField<T>::__field_buffer;
+		using TypedField<T>::IttyBitty::__field_buffer;
 
 		
 		// PROTECTED STATIC FUNCTIONS

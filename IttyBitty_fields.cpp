@@ -14,7 +14,7 @@ using namespace IttyBitty;
 
 CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
 
-PBYTE IttyBitty::__field_buffer;
+PBYTE IttyBitty::__field_buffer = NULL;
 
 #pragma endregion
 
@@ -228,12 +228,8 @@ SIZE FieldBase::printTo(Print & printer) const
 	PCBYTE buffer = this->ToBytes();
 #endif
 
-	for (SIZE i = 0; i < size - 1; i++)
+	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
-
-	printer.print('\0');
-	
-	delete[] __field_buffer;
 
 	return size;
 }
@@ -276,6 +272,7 @@ Field::Field(RCFIELD other)
 
 Field::Field(RRFIELD other)
 {	
+	this->~FieldBase();
 	new (this) Field(other._Value, other._DataType);
 }
 

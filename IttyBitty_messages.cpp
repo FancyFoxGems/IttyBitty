@@ -17,7 +17,7 @@ CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
 
 PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 
-PBYTE IttyBitty::__message_buffer;
+PBYTE IttyBitty::__message_buffer = NULL;
 
 #pragma endregion
 
@@ -170,22 +170,42 @@ PCBYTE Message::ToBytes() const
 	return __message_buffer;
 }
 
+int ram()
+{
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+}
+
 PCCHAR Message::ToString() const
 {
 	CSIZE size = this->StringSize();
 	CBYTE paramCount = this->GetParamCount();
 
 	if (__message_buffer)
+	{
+	Serial.print("delete: ");
+	Serial.println(ram());
+	Serial.flush();
 		delete[] __message_buffer;
-
+	}
+	
+	Serial.print("new: ");
+	Serial.println(ram());
+	Serial.flush();
 	__message_buffer = new BYTE[size];
+	Serial.print("allocated: ");
+	Serial.println(ram());
+	Serial.flush();
 	__message_buffer[size - 1] = '\0';
+	Serial.println("0ed");
+	Serial.flush();
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
-
-	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);	
+	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
+	//bufferPtr += 2;
 
 	PIFIELD param = NULL;
 	PCCHAR paramStr = NULL;
@@ -193,16 +213,30 @@ PCCHAR Message::ToString() const
 	
 	for (SIZE i = 0; i < paramCount; i++)
 	{
+
 		param = _Params[i];
 		paramStr = param->ToString();
+	//Serial.println(ram());
+	//Serial.flush();
+		paramStr = param->ToString();
+		paramStr = param->ToString();
+	//Serial.println(ram());
+	//Serial.flush();
 		paramSize = param->StringSize() - 1;
 		
 		memcpy(bufferPtr, paramStr, paramSize);
-		delete[] paramStr;
+
+	Serial.println(ram());
+	Serial.flush();
+		
+		//delete[] paramStr;
+
+	Serial.println(ram());
+	Serial.flush();
 		
 		if (i == 0)
 			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
-
+		
 		bufferPtr += paramSize;
 	}
 
@@ -230,11 +264,17 @@ VOID Message::FromString(PCCHAR data)
 
 SIZE Message::printTo(Print & printer) const
 {
+	Serial.println("P");
+	Serial.flush();
 	SIZE size = strlen(MESSAGE_MARKER);
 	
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize();
+	Serial.println(msgSize);
+	Serial.flush();
 	PCCHAR buffer = this->ToString();
+	Serial.println(buffer);
+	Serial.flush();
 #else
 	SIZE msgSize = this->ByteSize();
 	PCBYTE buffer = this->ToBytes();
@@ -242,13 +282,20 @@ SIZE Message::printTo(Print & printer) const
 	
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
-
-	for (SIZE i = 0; i < msgSize - 1; i++)
-		printer.print(buffer[i]);
-
-	printer.print('\0');
 	
+	Serial.println();
+	Serial.print("printing: ");
+	Serial.println(ram());
+	for (SIZE i = 0; i < msgSize; i++)
+		printer.print(buffer[i]);
+	
+	Serial.print("deleting: ");
+	Serial.println(ram());
+	Serial.flush();
 	delete[] __message_buffer;
+	Serial.print("deleted: ");
+	Serial.println(ram());
+	Serial.flush();
 
 	size += msgSize;
 
