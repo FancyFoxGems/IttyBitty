@@ -27,31 +27,42 @@ PBYTE IttyBitty::__message_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-Message::Message(CBYTE messageCode, CBYTE paramCount) 
+Message::Message(CBYTE messageCode, CBYTE paramCount)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	_Params = new PIFIELD[paramCount];
+	Serial.println("()");
+	Serial.flush();
+	if (paramCount > 0)
+		_Params = new PIFIELD[paramCount];
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PIFIELD param) 
-	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
+Message::Message(CBYTE messageCode, PIFIELD param)
+	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
 {
-	_Params = new PIFIELD[paramCount];
+	Serial.println("(PIFIELD)");
+	Serial.flush();
+	_Params = new PIFIELD[1];
 	_Params[0] = param;
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params) 
+Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
 Message::~Message()
 {
-	if (_Dispose && _Params != NULL)
+	if (_Params == NULL)
+		return;
+
+	if (_Dispose)
 	{
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
 			delete _Params[i];
+			delete[] _Params;
 	}
-		
-	delete[] _Params;
+	else
+	{
+		_Params = NULL;
+	}
 }
 
 
@@ -59,12 +70,15 @@ Message::~Message()
 
 PCIFIELD Message::operator[](CBYTE i) const
 {
+	if (_Params == NULL)
+		return NULL;
+
 	return _Params[i];
 }
 
 PIFIELD Message::operator[](CBYTE i)
 {
-	return _Params[i];
+	return this->Param(i);
 }
 
 
@@ -130,7 +144,7 @@ CSIZE Message::StringLength() const
 
 	return size;
 }
-		
+
 PCBYTE Message::ToBytes() const
 {
 	CSIZE size = this->ByteSize();
@@ -147,14 +161,14 @@ PCBYTE Message::ToBytes() const
 
 	CBYTE msgCode = this->GetMessageCode();
 	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
-	
+
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
 	PIFIELD param = NULL;
 	STATIC PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
-	
+
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
@@ -177,9 +191,9 @@ PCBYTE Message::ToBytes() const
 
 int ram()
 {
-  extern int __heap_start, *__brkval; 
-  int v; 
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval); 
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
 PCCHAR Message::ToString() const
@@ -196,7 +210,7 @@ PCCHAR Message::ToString() const
 		Serial.println(ram());
 		Serial.flush();
 	}
-	
+
 	__message_buffer = new BYTE[size];
 	__message_buffer[size - 1] = '\0';
 
@@ -210,22 +224,22 @@ PCCHAR Message::ToString() const
 	PIFIELD param = NULL;
 	STATIC PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
-	
+
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 
 		param = _Params[i];
 		paramStr = param->ToString();
 		paramSize = param->StringSize() - 1;
-		
+
 		memcpy(bufferPtr, paramStr, paramSize);
-		
+
 		delete[] paramStr;
 		paramStr = NULL;
-		
+
 		if (i == 0)
 			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
-		
+
 		bufferPtr += paramSize;
 	}
 
@@ -236,25 +250,35 @@ VOID Message::FromBytes(PCBYTE data)
 {
 	_MessageCode = *data++;
 	_ParamCount = *data++;
-	
+
 	for (SIZE i = 0; i < _ParamCount; i++)
 		_Params[i] = FieldFromBytes(data);
 }
 
 VOID Message::FromString(PCCHAR data)
 {
+	Serial.println(data);
+	Serial.flush();
 	data = StringReadValue<BYTE>(_MessageCode, data);
+	Serial.println(data);
+	Serial.flush();
 	data = StringReadValue<BYTE>(_ParamCount, data);
+	Serial.println(data);
+	Serial.println(_MessageCode);
+	Serial.println(_ParamCount);
+	Serial.flush();
 
 	for (BYTE i = 0; i < _ParamCount; i++)
 		_Params[i] = FieldFromString(data);
+	Serial.println((int)(RCWORD)_Params[0]);
+	Serial.flush();
 }
 
 
 SIZE Message::printTo(Print & printer) const
 {
 	SIZE size = strlen(MESSAGE_MARKER);
-	
+
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize();
 	STATIC PCCHAR buffer = NULL;
@@ -263,18 +287,18 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->ByteSize();
 	STATIC PCBYTE buffer = this->ToBytes();
 #endif
-	
+
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
 
 	for (SIZE i = 0; i < msgSize; i++)
 		printer.print(buffer[i]);
-	
+
 	delete[] __message_buffer;
 	__message_buffer = NULL;
 
 	buffer = NULL;
-	
+
 	size += msgSize;
 
 	return size;

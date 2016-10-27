@@ -114,8 +114,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Message(CBYTE = 0, CBYTE = 0);
-		Message(CBYTE, CBYTE, PIFIELD);
+		Message(CBYTE messageCode = 0, CBYTE paramCount = 0);
+		EXPLICIT Message(CBYTE, PIFIELD);
 		Message(CBYTE, CBYTE, PPIFIELD);
 
 		VIRTUAL ~Message();
@@ -175,7 +175,7 @@ namespace IttyBitty
 
 #pragma endregion
 	
-
+	/*
 #pragma region GenericMessage DECLARATION
 
 	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
@@ -198,11 +198,11 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		GenericMessage() : Message() { }
+		GenericMessage() : Message(MsgCode, ParamCnt) { }
 
-		GenericMessage(PIFIELD param) : Message(param) { }
+		GenericMessage(PIFIELD param) : Message(MsgCode, param) { }
 
-		GenericMessage(PPIFIELD params) : Message(params) { }
+		GenericMessage(PPIFIELD params) : Message(MsgCode, ParamCnt, params) { }
 
 
 		// MESSAGE OVERRIDES
@@ -220,9 +220,6 @@ namespace IttyBitty
 		}
 
 
-#pragma endregion
-
-
 	protected:
 
 		using Message::_Dispose;
@@ -230,7 +227,7 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+	*/
 
 #pragma region SERIAL/STREAM READING METHODS
 
@@ -295,16 +292,17 @@ namespace IttyBitty
 
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
+
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
 			return NULL;
 
-		PIMESSAGE  message = new Message();
-		message->FromBytes(__message_buffer);
+		PIMESSAGE newMsg = new Message();
+		newMsg->FromBytes(__message_buffer);
 
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return message;
+		return newMsg;
 	}	
 
 	INLINE PIMESSAGE MessageFromString(Stream & stream)
@@ -342,17 +340,23 @@ namespace IttyBitty
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
 			return NULL;
+		memcpy(__message_buffer, "2001000221012c", bufferSize - 1);
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(F("RAW DATA: "));
 		Serial.println((PCCHAR)__message_buffer);
 		Serial.println(F("BUFFER FILLED.  LOADING..."));
 		Serial.flush();
-	#endif
+	#endif		
+		
+		/*STATIC MESSAGE msg = NULL;
+		msg = new Message();*/
+		//msg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		//msg->FromString(reinterpret_cast<PCCHAR>(F("2001000221012c")));
 
-		PIMESSAGE message = new Message();
-		message->FromString(reinterpret_cast<PCCHAR>(F("2001000221012c")));
-		//message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		
+		STATIC MESSAGE msg;
+		msg.FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		Serial.println(F("MESSAGE LOADED."));
@@ -363,12 +367,12 @@ namespace IttyBitty
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return message;
+		return &msg;
 	}
 	
-	INLINE VOID WaitForMessage(Stream & stream, MessageHandler handler)
+	INLINE VOID WaitForMessage(Stream & stream, MessageHandler msgHandler)
 	{
-		PIMESSAGE message = NULL;
+		STATIC PIMESSAGE message = NULL;
 
 	#ifdef _DEBUG
 		message = MessageFromString(stream);
@@ -378,23 +382,28 @@ namespace IttyBitty
 
 		if (message == NULL)
 			return;
+
 		Serial.println(F("W"));
 		Serial.flush();
+
 		//message->printTo(Serial);
-		PCCHAR buffer = message->ToString();
-		Serial.println(buffer);
-		Serial.flush();
+		//PCCHAR buffer = message->ToString();
+		//Serial.println(buffer);
+		//Serial.flush();
 
 		delete[] __message_buffer;
 		__message_buffer = NULL;
+
+		//buffer = NULL;
 
 		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
 	Serial.println(m);
 	Serial.flush();
 
-		//handler(message);
+		//msgHandler(message);
 
-		delete message;
+		//delete message;
+		message = NULL;
 	}
 
 #pragma endregion
