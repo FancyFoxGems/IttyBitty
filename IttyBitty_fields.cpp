@@ -4,6 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#ifndef EXCLUDE_ITTYBITTY_FIELDS
 
 #include "IttyBitty_fields.h"
 
@@ -606,3 +607,7 @@ VOID VarLengthField::FromString(PCCHAR data)
 }
 
 #pragma endregion
+
+#elif !defined(EXCLUDE_ITTYBITTY_VALUES)
+	#define EXCLUDE_ITTYBITTY_VALUES
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FIELDS

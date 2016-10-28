@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_fields.h]: UNIVERSAL DATA STRUCTURES FOR STORING SETTINGS & MESSAGE FIELDS
+* [IttyBitty_values.h]: UNIVERSAL TYPE (TAGGED) UNIONS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.

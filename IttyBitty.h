@@ -45,6 +45,8 @@
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
+* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
+*
 * [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
 *	NOTE: ^-- In Slim bundle, no structure-based abstractions
 *
@@ -84,11 +86,19 @@
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
-*	NOTE: ^-- Slim bundle excludes data structures for larger blocks
+*	NOTE: ^-- Base bundle excludes data structures for larger blocks
 *
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
 * [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
+*
+* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
+*
+* [IttyBitty_values.h]: UNIVERSAL TYPE (TAGGED) UNIONS
+*
+* [IttyBitty_fields.h]: UNIVERSAL DATA STRUCTURES FOR STORING SETTINGS & MESSAGE FIELDS
+*
+* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -151,12 +161,19 @@
 #endif
 
 
+/* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS */
+
+#ifndef EXCLUDE_ITTYBITTY_PRINT
+	#include "IttyBitty_print.h"
+#endif
+
+
 /* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC */
 
 #ifndef EXCLUDE_ITTYBITTY_MESSAGES
 	#include "IttyBitty_messages.h"
-#elif !defined(EXCLUDE_ITTYBITTY_MESSAGES)
-	#define EXCLUDE_ITTYBITTY_MESSAGES
+#elif !defined(EXCLUDE_ITTYBITTY_FIELDS)
+	#define EXCLUDE_ITTYBITTY_FIELDS
 #endif
 
 

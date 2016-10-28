@@ -72,6 +72,7 @@
     <ClInclude Include="..\IttyBitty_interrupts.h" />
     <ClInclude Include="..\IttyBitty_led.h" />
     <ClInclude Include="..\IttyBitty_messages.h" />
+    <ClInclude Include="..\IttyBitty_print.h" />
     <ClInclude Include="..\IttyBitty_registers.h" />
     <ClInclude Include="..\IttyBitty_signals.h" />
     <ClInclude Include="..\IttyBitty_slim.h" />
@@ -88,6 +89,7 @@
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
     <ClCompile Include="..\IttyBitty_led.cpp" />
     <ClCompile Include="..\IttyBitty_messages.cpp" />
+    <ClCompile Include="..\IttyBitty_print.cpp" />
     <ClCompile Include="..\IttyBitty_signals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

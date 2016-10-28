@@ -40,6 +40,9 @@
     <ClInclude Include="..\IttyBitty_led.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_print.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_registers.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -111,6 +114,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_messages.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_print.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_signals.cpp">

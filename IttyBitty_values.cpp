@@ -4,6 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#ifndef EXCLUDE_ITTYBITTY_VALUES
 
 #include "IttyBitty_values.h"
 
@@ -448,3 +449,5 @@ VOID Datum::FreeData()
 }
 
 #pragma endregion
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_VALUES
