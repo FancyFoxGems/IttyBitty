@@ -123,6 +123,15 @@ namespace IttyBitty
 		VIRTUAL ~Message();
 
 
+	protected:
+		
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+		
 		// OPERATORS
 
 		VIRTUAL PCIFIELD operator[](CBYTE) const;
@@ -390,11 +399,9 @@ namespace IttyBitty
 		//message->printTo(Serial);
 		//Serial.flush();
 
-		return;
-
-		if (__message_buffer != NULL)
+		/*if (__message_buffer != NULL)
 			delete[] __message_buffer;
-		__message_buffer = NULL;
+		__message_buffer = NULL;*/
 
 	//	PCCHAR buffer = message->ToString();
 	//	Serial.println(buffer);
@@ -406,14 +413,15 @@ namespace IttyBitty
 		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
 	Serial.println(m);
 	Serial.flush();
-		CWORD w = (CWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PCMESSAGE>(message))[0]);
+	//delay(500);
+		CWORD w = (CWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PMESSAGE>(message))[0]);
 	Serial.println((int)w);
 	Serial.flush();
-	delay(500);
+	//delay(500);
 		//msgHandler(message);
 
 		delete message;
-		message = NULL;
+		//message = NULL;
 	}
 
 #pragma endregion

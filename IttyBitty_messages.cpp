@@ -24,36 +24,32 @@ PBYTE IttyBitty::__message_buffer = NULL;
 
 #pragma region Message DEFINITION
 
-
-int ram()
-{
-  extern int __heap_start, *__brkval;
-  int v;
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-}
-
-
 // CONSTRUCTORS/DESTRUCTOR
 
 Message::Message(CBYTE messageCode, CBYTE paramCount)
-	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE), _Params(NULL)
 {
 	if (_ParamCount > 0)
 		_Params = new PIFIELD[_ParamCount];
 }
 
 Message::Message(CBYTE messageCode, PIFIELD param)
-	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
+	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {
 	_Params = new PIFIELD[_ParamCount];
 	_Params[0] = param;
 }
 
 Message::Message(CBYTE messageCode, RCIFIELD param)
-	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
+	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {
 	_Params = new PIFIELD[_ParamCount];
+
+#ifdef _DEBUG
+	_Params[0] = FieldFromString(param.ToString());
+#else
 	_Params[0] = FieldFromBytes(param.ToBytes());
+#endif
 }
 
 Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
@@ -61,25 +57,45 @@ Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
 
 Message::~Message()
 {
+	this->Dispose();
+}
+
+VOID Message::Dispose()
+{
 	if (_Params == NULL)
 		return;
 
+	Serial.println("~");
+	Serial.flush();
 	if (_Dispose)
 	{
+		Serial.println("D");
+		Serial.flush();
+		Serial.println(this->GetParamCount());
+		Serial.flush();
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
 		{
+			Serial.println(i);
+			Serial.flush();
 			if (_Params[i])
+			{
 				delete _Params[i];
+				Serial.println("DD");
+				Serial.flush();
+				//_Params[i] = NULL;
+			}
 
-			_Params[i] = NULL;
 		}
 
-		delete[] _Params;
+		Serial.println("D[]");
+		Serial.flush();
+		//delete[] _Params;
 	}
-	else
-	{
-		_Params = NULL;
-	}
+
+	Serial.println("DN");
+	Serial.flush();
+	_Params = NULL;
+	delay(500);
 }
 
 
@@ -260,7 +276,7 @@ VOID Message::FromBytes(PCBYTE data)
 	_MessageCode = *bufferPtr++;
 	_ParamCount = *bufferPtr++;
 
-	this->~Message();
+	this->Dispose();
 
 	if (_ParamCount > 0)
 		_Params = new PIFIELD[_ParamCount];
@@ -283,26 +299,7 @@ VOID Message::FromString(PCCHAR data)
 	bufferPtr = StringReadValue<BYTE>(_MessageCode, bufferPtr);
 	bufferPtr = StringReadValue<BYTE>(_ParamCount, bufferPtr);
 
-	//this->~Message();
-	if (_Params != NULL)
-	{
-		if (_Dispose)
-		{
-			for (BYTE i = 0; i < this->GetParamCount(); i++)
-			{
-				if (_Params[i])
-					delete _Params[i];
-
-				_Params[i] = NULL;
-			}
-
-			delete[] _Params;
-		}
-		else
-		{
-			_Params = NULL;
-		}
-	}
+	this->Dispose();
 
 	if (_ParamCount > 0)
 		_Params = new PIFIELD[_ParamCount];
@@ -315,12 +312,6 @@ VOID Message::FromString(PCCHAR data)
 
 		bufferPtr += _Params[i]->StringSize() - 1;
 	}
-	
-	delay(500);
-	Serial.println((CWORD)*(PFIELD)_Params[0]);
-	Serial.flush();
-	
-	delay(500);
 }
 
 
