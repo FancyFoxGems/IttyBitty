@@ -65,37 +65,20 @@ VOID Message::Dispose()
 	if (_Params == NULL)
 		return;
 
-	Serial.println("~");
-	Serial.flush();
 	if (_Dispose)
 	{
-		Serial.println("D");
-		Serial.flush();
-		Serial.println(this->GetParamCount());
-		Serial.flush();
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
 		{
-			Serial.println(i);
-			Serial.flush();
-			if (_Params[i])
+			if (_Params[i] != NULL)
 			{
 				delete _Params[i];
-				Serial.println("DD");
-				Serial.flush();
-				//_Params[i] = NULL;
+				_Params[i] = NULL;
 			}
-
 		}
-
-		Serial.println("D[]");
-		Serial.flush();
-		//delete[] _Params;
 	}
 
-	Serial.println("DN");
-	Serial.flush();
+	delete[] _Params;
 	_Params = NULL;
-	delay(500);
 }
 
 
