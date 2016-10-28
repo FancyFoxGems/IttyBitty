@@ -1,8 +1,8 @@
-/***********************************************************************************************
+﻿/***********************************************************************************************
 * [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC
 *
 * This file is part of the Itty Bitty Arduino library.
-* Copyright � 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
@@ -116,6 +116,13 @@ namespace IttyBitty
 		// CONSTRUCTORS/DESTRUCTOR
 
 		Message(CBYTE messageCode = 0, CBYTE paramCount = 0);
+
+		Message(RCMESSAGE);
+		Message(RRMESSAGE);
+
+		EXPLICIT Message(PCBYTE);
+		EXPLICIT Message(PCCHAR);
+
 		EXPLICIT Message(CBYTE, PIFIELD);
 		EXPLICIT Message(CBYTE, RCIFIELD);
 		Message(CBYTE, CBYTE, PPIFIELD);
@@ -354,7 +361,6 @@ namespace IttyBitty
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
 			return NULL;
-		//memcpy(__message_buffer, "2001000221012c", bufferSize - 1);
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(F("RAW DATA: "));
@@ -365,8 +371,7 @@ namespace IttyBitty
 		
 		STATIC PIMESSAGE stringMsg = NULL;
 		stringMsg = new Message();
-		stringMsg->FromString("2001000221012c");
-		//msg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		Serial.println(F("MESSAGE LOADED."));
@@ -393,35 +398,17 @@ namespace IttyBitty
 		if (message == NULL)
 			return;
 
-		Serial.println(F("W"));
-		Serial.flush();
-
-		//message->printTo(Serial);
-		//Serial.flush();
-
-		/*if (__message_buffer != NULL)
+		if (__message_buffer != NULL)
 			delete[] __message_buffer;
-		__message_buffer = NULL;*/
+		__message_buffer = NULL;
 
-	//	PCCHAR buffer = message->ToString();
-	//	Serial.println(buffer);
-	//	Serial.flush();
-
-	//	delete buffer;
-	//	buffer = NULL;
-
-		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
-	Serial.println(m);
-	Serial.flush();
-	//delay(500);
 		CWORD w = (CWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PMESSAGE>(message))[0]);
 	Serial.println((int)w);
 	Serial.flush();
-	//delay(500);
-		//msgHandler(message);
+	delay(500);
+		msgHandler(message);
 
 		delete message;
-		//message = NULL;
 	}
 
 #pragma endregion

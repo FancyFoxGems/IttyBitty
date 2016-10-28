@@ -126,12 +126,7 @@ RIFIELD Message::Param(CBYTE i)
 
 // USER METHODS
 
-VOID Message::Handle(...)
-{
-	//va_list args;
-	//va_start(args, 0);
-	//va_end(args);
-}
+VOID Message::Handle(...) { }
 
 
 // ISerializable IMPLEMENTATION

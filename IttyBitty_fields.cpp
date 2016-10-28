@@ -28,8 +28,9 @@ FieldBase::~FieldBase()
 	if (!_Dispose)
 		return;
 	
-	//if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
-		//_Value.FreePtr();
+	return;
+	if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
+		_Value.FreePtr();
 }
 				
 

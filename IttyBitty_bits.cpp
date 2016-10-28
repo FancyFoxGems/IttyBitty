@@ -16,26 +16,26 @@ using namespace IttyBitty;
 
 _BitPack::_BitPack() { }
 
-_BitPack::_BitPack(_BitPack const & other)
+_BitPack::_BitPack(RCBITPACK other)
 {
-	*(reinterpret_cast<PBYTE>(this)) = reinterpret_cast<RCBYTE>(other);
+	*(reinterpret_cast<PVBYTE>((_BitPack *)this)) = reinterpret_cast<RCVBYTE>(other);
 }
 
-_BitPack::_BitPack(_BitPack && other)
+_BitPack::_BitPack(RRBITPACK other)
 {
 	this->~_BitPack();
-	new (this) _BitPack(reinterpret_cast<RBYTE>(other));
+	new (this) _BitPack(reinterpret_cast<RCVBYTE>(other));
 }
 
-_BitPack::_BitPack(RCBYTE value)
+_BitPack::_BitPack(RCVBYTE value)
 {
-	*(reinterpret_cast<PBYTE>(this)) = value;
+	*(reinterpret_cast<PVBYTE>(this)) = value;
 }
 
 
-_BitPack & _BitPack::NULL_OBJECT()
+RCBITPACK _BitPack::NULL_OBJECT()
 {
-	STATIC _BitPack NULL_BITPACK;
+	STATIC BITPACK NULL_BITPACK;
 	return NULL_BITPACK;
 }
 
@@ -45,19 +45,19 @@ CSIZE _BitPack::BitSize()
 }
 
 
-_BitPack & _BitPack::operator =(_BitPack const & rValue)
+_BitPack & _BitPack::operator =(RCBITPACK rValue)
 {
 	*this = _BitPack(rValue);
 	return *this;
 }
 
-_BitPack & _BitPack::operator =(_BitPack && rValue)
+_BitPack & _BitPack::operator =(RRBITPACK rValue)
 {
 	*this = _BitPack(rValue);
 	return *this;
 }
 
-_BitPack & _BitPack::operator =(RCBYTE rValue)
+_BitPack & _BitPack::operator =(RCVBYTE rValue)
 {
 	*this = _BitPack(rValue);
 	return *this;

@@ -426,7 +426,7 @@ namespace IttyBitty
 
 	struct _BitPack;
 	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK, && RRBITPACK;
-	typedef const struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
+	typedef const volatile struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
 
 	BITFIELD_STRUCT _BitPack
 	{
@@ -434,19 +434,19 @@ namespace IttyBitty
 		
 		_BitPack();
 
-		EXPLICIT _BitPack(_BitPack const &);
-		EXPLICIT _BitPack(_BitPack &&);
+		EXPLICIT _BitPack(RCBITPACK);
+		EXPLICIT _BitPack(RRBITPACK);
 
-		EXPLICIT _BitPack(RCBYTE);
+		EXPLICIT _BitPack(RCVBYTE);
 
-		STATIC _BitPack & NULL_OBJECT();
+		STATIC RCBITPACK NULL_OBJECT();
 
 		STATIC CSIZE BitSize();
 		
-		_BitPack & operator =(_BitPack const &);
-		_BitPack & operator =(_BitPack &&);
+		_BitPack & operator =(RCBITPACK);
+		_BitPack & operator =(RRBITPACK);
 		
-		_BitPack & operator =(RCBYTE);
+		_BitPack & operator =(RCVBYTE);
 
 		BIT operator[](SIZE i) const;
 

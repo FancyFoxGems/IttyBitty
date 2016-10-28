@@ -72,6 +72,7 @@ typedef volatile char V8, VCHAR, * PVCHAR, & RVCHAR, ** PPVCHAR;
 typedef unsigned char UINT8, U8, BYTE, * PBYTE, & RBYTE, ** PPBYTE, PROGMEM BYTE_P;
 typedef const unsigned char CBYTE, * PCBYTE, & RCBYTE, ** PPCBYTE;
 typedef volatile unsigned char VU8, VBYTE, * PVBYTE, & RVBYTE, ** PPVBYTE;
+typedef const volatile unsigned char CVU8, CVBYTE, * PCVBYTE, & RCVBYTE, ** PPCVBYTE;
 
 typedef short INT16, I16, SHORT, * PSHORT, & RSHORT, ** PPSHORT, PROGMEM SHORT_P;
 typedef const short CSHORT, * PCSHORT, & RCSHORT, ** PPCSHORT;
