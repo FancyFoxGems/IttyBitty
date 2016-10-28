@@ -117,6 +117,7 @@ namespace IttyBitty
 
 		Message(CBYTE messageCode = 0, CBYTE paramCount = 0);
 		EXPLICIT Message(CBYTE, PIFIELD);
+		EXPLICIT Message(CBYTE, RCIFIELD);
 		Message(CBYTE, CBYTE, PPIFIELD);
 
 		VIRTUAL ~Message();
@@ -166,7 +167,7 @@ namespace IttyBitty
 		BYTE _MessageCode;
 		BYTE _ParamCount;
 
-		PIFIELD _Params[5];
+		PPIFIELD _Params;
 
 		
 		// HELPER METHODS
@@ -177,9 +178,9 @@ namespace IttyBitty
 
 #pragma endregion
 	
-	/*
-#pragma region GenericMessage DECLARATION
 
+#pragma region GenericMessage DECLARATION
+	
 	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
 	CLASS GenericMessage : public Message
 	{
@@ -204,6 +205,8 @@ namespace IttyBitty
 
 		GenericMessage(PIFIELD param) : Message(MsgCode, param) { }
 
+		GenericMessage(RCIFIELD param) : Message(MsgCode, param) { }
+
 		GenericMessage(PPIFIELD params) : Message(MsgCode, ParamCnt, params) { }
 
 
@@ -227,9 +230,9 @@ namespace IttyBitty
 		using Message::_Dispose;
 		using Message::_Params;
 	};
-
+	
 #pragma endregion
-	*/
+
 
 #pragma region SERIAL/STREAM READING METHODS
 
@@ -351,8 +354,9 @@ namespace IttyBitty
 		Serial.flush();
 	#endif		
 		
-		STATIC PIMESSAGE msg = new Message();
-		msg->FromString("2001000221012c");
+		STATIC PIMESSAGE stringMsg = NULL;
+		stringMsg = new Message();
+		stringMsg->FromString("2001000221012c");
 		//msg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
@@ -364,12 +368,12 @@ namespace IttyBitty
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return msg;
+		return stringMsg;
 	}
 	
 	INLINE VOID WaitForMessage(Stream & stream, MessageHandler msgHandler)
 	{
-		STATIC PIMESSAGE message = NULL;
+		PIMESSAGE message = NULL;
 
 	#ifdef _DEBUG
 		message = MessageFromString(stream);
@@ -384,20 +388,29 @@ namespace IttyBitty
 		Serial.flush();
 
 		//message->printTo(Serial);
-		//PCCHAR buffer = message->ToString();
-		//Serial.println(buffer);
 		//Serial.flush();
 
-		delete[] __message_buffer;
+		return;
+
+		if (__message_buffer != NULL)
+			delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		//buffer = NULL;
+	//	PCCHAR buffer = message->ToString();
+	//	Serial.println(buffer);
+	//	Serial.flush();
+
+	//	delete buffer;
+	//	buffer = NULL;
 
 		BYTE m = reinterpret_cast<PMESSAGE>(message)->GetMessageCode();
 	Serial.println(m);
 	Serial.flush();
-
-		msgHandler(message);
+		CWORD w = (CWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PCMESSAGE>(message))[0]);
+	Serial.println((int)w);
+	Serial.flush();
+	delay(500);
+		//msgHandler(message);
 
 		delete message;
 		message = NULL;

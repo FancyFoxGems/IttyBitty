@@ -667,23 +667,27 @@ namespace IttyBitty
 		
 		VIRTUAL VOID FromBytes(PCBYTE data)
 		{
-			_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(data));
-			data += SIZEOF(CSIZE);
+			PCBYTE bufferPtr = data;
 
-			_DataType = static_cast<DataType>(*data++);
+			_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(bufferPtr));
+			bufferPtr += SIZEOF(CSIZE);
 
-			_Value = data;
+			_DataType = static_cast<DataType>(*bufferPtr++);
+
+			_Value = bufferPtr;
 		}
 		
 		VIRTUAL VOID FromString(PCCHAR data)
 		{
-			data = StringReadValue<SIZE>(_Length, data);
-			data = StringReadValue<DataType>(_DataType, data);
+			PCCHAR bufferPtr = data;
+
+			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
+			bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
 	
 			BYTE bytes[this->ByteWidth()];
 
 			for (BYTE i = 0; i < this->ByteWidth(); i++)
-				data = StringReadValue<BYTE>(bytes[i], data);
+				bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 		}
 
 

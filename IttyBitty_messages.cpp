@@ -38,43 +38,47 @@ int ram()
 Message::Message(CBYTE messageCode, CBYTE paramCount)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	//Serial.println("()");
-	//Serial.println(ram());
-	//Serial.flush();
-	//BARRIER();
-	//if (paramCount > 0)
-	//	_Params = (PPIFIELD)new PFIELD[paramCount];
-	//BARRIER();
-	//Serial.println(ram());
-	//Serial.flush();
+	if (_ParamCount > 0)
+		_Params = new PIFIELD[_ParamCount];
 }
 
 Message::Message(CBYTE messageCode, PIFIELD param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
 {
-	//Serial.println("(PIFIELD)");
-	//Serial.flush();
-	//_Params = new PIFIELD[1];
+	_Params = new PIFIELD[_ParamCount];
 	_Params[0] = param;
 }
 
+Message::Message(CBYTE messageCode, RCIFIELD param)
+	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
+{
+	_Params = new PIFIELD[_ParamCount];
+	_Params[0] = FieldFromBytes(param.ToBytes());
+}
+
 Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
-	: _MessageCode(messageCode), _ParamCount(paramCount) {}//, _Params(params) { }
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
 Message::~Message()
 {
 	if (_Params == NULL)
 		return;
-
+	
 	if (_Dispose)
 	{
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
-			delete _Params[i];
-			delete[] _Params;
+		{
+			//if (_Params[i])
+				//delete _Params[i];
+
+			_Params[i] = NULL;
+		}
+
+		delete[] _Params;
 	}
 	else
 	{
-		//_Params = NULL;
+		_Params = NULL;
 	}
 }
 
@@ -202,8 +206,6 @@ PCBYTE Message::ToBytes() const
 		bufferPtr += paramSize;
 	}
 
-	bufferPtr = NULL;
-
 	return __message_buffer;
 }
 
@@ -213,14 +215,7 @@ PCCHAR Message::ToString() const
 	CBYTE paramCount = this->GetParamCount();
 
 	if (__message_buffer)
-	{
-		Serial.println(ram());
-		Serial.flush();
 		delete[] __message_buffer;
-		Serial.println("deleted");
-		Serial.println(ram());
-		Serial.flush();
-	}
 
 	__message_buffer = new BYTE[size];
 	__message_buffer[size - 1] = '\0';
@@ -259,47 +254,54 @@ PCCHAR Message::ToString() const
 
 VOID Message::FromBytes(PCBYTE data)
 {
-	_MessageCode = *data++;
-	_ParamCount = *data++;
+	STATIC PCBYTE bufferPtr = NULL;
+	bufferPtr = data;
+
+	_MessageCode = *bufferPtr++;
+	_ParamCount = *bufferPtr++;
+
+	this->~Message();
+
+	if (_ParamCount > 0)
+		_Params = new PIFIELD[_ParamCount];
+
+	_Dispose = TRUE;
 
 	for (SIZE i = 0; i < _ParamCount; i++)
-		_Params[i] = FieldFromBytes(data);
+	{
+		_Params[i] = FieldFromBytes(bufferPtr);
+
+		bufferPtr += _Params[i]->ByteWidth();
+	}
 }
 
 VOID Message::FromString(PCCHAR data)
 {
-	Serial.println();
-	Serial.println(data);
-	Serial.flush();
-	data = StringReadValue<BYTE>(_MessageCode, data);
-	Serial.println(data);
-	Serial.flush();
-	data = StringReadValue<BYTE>(_ParamCount, data);
-	Serial.println(data);
-	Serial.println(_MessageCode);
-	Serial.println(_ParamCount);
-	Serial.println();
-	Serial.flush();
+	STATIC PCCHAR bufferPtr = NULL;
+	bufferPtr = data;
+
+	bufferPtr = StringReadValue<BYTE>(_MessageCode, bufferPtr);
+	bufferPtr = StringReadValue<BYTE>(_ParamCount, bufferPtr);
+
+	this->~Message();
+
+	if (_ParamCount > 0)
+		_Params = new PIFIELD[_ParamCount];
+
+	_Dispose = TRUE;
 
 	for (BYTE i = 0; i < _ParamCount; i++)
 	{
-		*(PPIFIELD)(_Params + i) = FieldFromString(data);		
-		Serial.println((int)((PFIELD)*_Params)->GetDataType());
-		Serial.flush();
-		Serial.println((int)(CWORD)*((PFIELD)*_Params));
-		Serial.flush();
-		Serial.println(F("F"));
-		Serial.flush();
-		Serial.println((int)((PFIELD)_Params[i])->GetDataType());
-		Serial.println((int)(CWORD)*(PFIELD)_Params[i]);
-		Serial.flush();
+		_Params[i] = FieldFromString(bufferPtr);
 
-		data += _Params[i]->StringSize() - 1;
+		bufferPtr += _Params[i]->StringSize() - 1;
 	}
-
-	Serial.println(F("P"));
-		Serial.println((int)(CWORD)*(PFIELD)_Params[0]);
+	
+	delay(500);
+	Serial.println((CWORD)*(PFIELD)_Params[0]);
 	Serial.flush();
+	
+	delay(500);
 }
 
 
@@ -313,7 +315,8 @@ SIZE Message::printTo(Print & printer) const
 	buffer = this->ToString();
 #else
 	SIZE msgSize = this->ByteSize();
-	STATIC PCBYTE buffer = this->ToBytes();
+	STATIC PCBYTE buffer = NULL;
+	buffer = this->ToBytes();
 #endif
 
 	for (BYTE i = 0; i < size; i++)
@@ -324,8 +327,6 @@ SIZE Message::printTo(Print & printer) const
 
 	delete[] __message_buffer;
 	__message_buffer = NULL;
-
-	buffer = NULL;
 
 	size += msgSize;
 
