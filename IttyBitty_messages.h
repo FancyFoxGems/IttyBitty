@@ -405,10 +405,6 @@ namespace IttyBitty
 			delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		CWORD w = (CWORD)*reinterpret_cast<PCFIELD>((*reinterpret_cast<PMESSAGE>(message))[0]);
-	Serial.println((int)w);
-	Serial.flush();
-	delay(500);
 		msgHandler(message);
 
 		delete message;
