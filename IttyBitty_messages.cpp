@@ -63,13 +63,13 @@ Message::~Message()
 {
 	if (_Params == NULL)
 		return;
-	
+
 	if (_Dispose)
 	{
 		for (BYTE i = 0; i < this->GetParamCount(); i++)
 		{
-			//if (_Params[i])
-				//delete _Params[i];
+			if (_Params[i])
+				delete _Params[i];
 
 			_Params[i] = NULL;
 		}
@@ -283,7 +283,26 @@ VOID Message::FromString(PCCHAR data)
 	bufferPtr = StringReadValue<BYTE>(_MessageCode, bufferPtr);
 	bufferPtr = StringReadValue<BYTE>(_ParamCount, bufferPtr);
 
-	this->~Message();
+	//this->~Message();
+	if (_Params != NULL)
+	{
+		if (_Dispose)
+		{
+			for (BYTE i = 0; i < this->GetParamCount(); i++)
+			{
+				if (_Params[i])
+					delete _Params[i];
+
+				_Params[i] = NULL;
+			}
+
+			delete[] _Params;
+		}
+		else
+		{
+			_Params = NULL;
+		}
+	}
 
 	if (_ParamCount > 0)
 		_Params = new PIFIELD[_ParamCount];
