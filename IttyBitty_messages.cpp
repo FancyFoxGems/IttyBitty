@@ -33,6 +33,34 @@ Message::Message(CBYTE messageCode, CBYTE paramCount)
 		_Params = new PIFIELD[_ParamCount];
 }
 
+Message::Message(RCMESSAGE other)
+{
+	this->~Message();
+
+#ifdef _DEBUG
+	_Params[0] = FieldFromString(other.ToString());
+#else
+	_Params[0] = FieldFromBytes(other.ToBytes());
+#endif
+}
+
+Message::Message(RRMESSAGE other)
+{
+	this->~Message();
+	
+	new (this) Message(other._MessageCode, other._ParamCount, other._Params);
+}
+
+Message::Message(PCBYTE data)
+{
+	this->FromBytes(data);
+}
+
+Message::Message(PCCHAR data)
+{
+	this->FromString(data);
+}
+
 Message::Message(CBYTE messageCode, PIFIELD param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {
@@ -83,6 +111,20 @@ VOID Message::Dispose()
 
 
 // OPERATORS
+
+RMESSAGE Message::operator=(RRMESSAGE other)
+{
+	*this = Message(other);
+
+	return *this;
+}
+
+RMESSAGE Message::operator=(RCMESSAGE other)
+{
+	*this = Message(other);
+
+	return *this;
+}
 
 PCIFIELD Message::operator[](CBYTE i) const
 {

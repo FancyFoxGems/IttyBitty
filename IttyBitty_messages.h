@@ -141,6 +141,9 @@ namespace IttyBitty
 		
 		// OPERATORS
 
+		VIRTUAL RMESSAGE operator=(RCMESSAGE);
+		VIRTUAL RMESSAGE operator=(RRMESSAGE);
+
 		VIRTUAL PCIFIELD operator[](CBYTE) const;
 		VIRTUAL PIFIELD operator[](CBYTE);
 		
