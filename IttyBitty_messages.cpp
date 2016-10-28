@@ -25,28 +25,41 @@ PBYTE IttyBitty::__message_buffer = NULL;
 #pragma region Message DEFINITION
 
 
+int ram()
+{
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+
 // CONSTRUCTORS/DESTRUCTOR
 
 Message::Message(CBYTE messageCode, CBYTE paramCount)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE)
 {
-	Serial.println("()");
-	Serial.flush();
-	if (paramCount > 0)
-		_Params = new PIFIELD[paramCount];
+	//Serial.println("()");
+	//Serial.println(ram());
+	//Serial.flush();
+	//BARRIER();
+	//if (paramCount > 0)
+	//	_Params = (PPIFIELD)new PFIELD[paramCount];
+	//BARRIER();
+	//Serial.println(ram());
+	//Serial.flush();
 }
 
 Message::Message(CBYTE messageCode, PIFIELD param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE)
 {
-	Serial.println("(PIFIELD)");
-	Serial.flush();
-	_Params = new PIFIELD[1];
+	//Serial.println("(PIFIELD)");
+	//Serial.flush();
+	//_Params = new PIFIELD[1];
 	_Params[0] = param;
 }
 
 Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
-	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
+	: _MessageCode(messageCode), _ParamCount(paramCount) {}//, _Params(params) { }
 
 Message::~Message()
 {
@@ -61,7 +74,7 @@ Message::~Message()
 	}
 	else
 	{
-		_Params = NULL;
+		//_Params = NULL;
 	}
 }
 
@@ -78,7 +91,10 @@ PCIFIELD Message::operator[](CBYTE i) const
 
 PIFIELD Message::operator[](CBYTE i)
 {
-	return this->Param(i);
+	if (_Params == NULL)
+		return NULL;
+
+	return _Params[i];
 }
 
 
@@ -94,12 +110,14 @@ CBYTE Message::GetParamCount() const
 	return _ParamCount;
 }
 
-PIFIELD Message::Param(CBYTE i)
+RCIFIELD Message::Param(CBYTE i) const
 {
-	if (_Params == NULL)
-		return NULL;
+	return *this->operator[](i);
+}
 
-	return _Params[i];
+RIFIELD Message::Param(CBYTE i)
+{
+	return *this->operator[](i);
 }
 
 
@@ -189,13 +207,6 @@ PCBYTE Message::ToBytes() const
 	return __message_buffer;
 }
 
-int ram()
-{
-  extern int __heap_start, *__brkval;
-  int v;
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-}
-
 PCCHAR Message::ToString() const
 {
 	CSIZE size = this->StringSize();
@@ -257,6 +268,7 @@ VOID Message::FromBytes(PCBYTE data)
 
 VOID Message::FromString(PCCHAR data)
 {
+	Serial.println();
 	Serial.println(data);
 	Serial.flush();
 	data = StringReadValue<BYTE>(_MessageCode, data);
@@ -266,11 +278,27 @@ VOID Message::FromString(PCCHAR data)
 	Serial.println(data);
 	Serial.println(_MessageCode);
 	Serial.println(_ParamCount);
+	Serial.println();
 	Serial.flush();
 
 	for (BYTE i = 0; i < _ParamCount; i++)
-		_Params[i] = FieldFromString(data);
-	Serial.println((int)(RCWORD)_Params[0]);
+	{
+		*(PPIFIELD)(_Params + i) = FieldFromString(data);		
+		Serial.println((int)((PFIELD)*_Params)->GetDataType());
+		Serial.flush();
+		Serial.println((int)(CWORD)*((PFIELD)*_Params));
+		Serial.flush();
+		Serial.println(F("F"));
+		Serial.flush();
+		Serial.println((int)((PFIELD)_Params[i])->GetDataType());
+		Serial.println((int)(CWORD)*(PFIELD)_Params[i]);
+		Serial.flush();
+
+		data += _Params[i]->StringSize() - 1;
+	}
+
+	Serial.println(F("P"));
+		Serial.println((int)(CWORD)*(PFIELD)_Params[0]);
 	Serial.flush();
 }
 

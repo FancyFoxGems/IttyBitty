@@ -272,14 +272,14 @@ namespace IttyBitty
 
 		VIRTUAL RFIELD operator =(RCVALUE);
 
-		operator RCCHAR() const;
-		operator RCBYTE() const;
-		operator RCBOOL() const;
-		operator RCSHORT() const;
-		operator RCWORD() const;
-		operator RCLONG() const;
-		operator RCDWORD() const;
-		operator RCFLOAT() const;
+		VIRTUAL operator RCCHAR() const;
+		VIRTUAL operator RCBYTE() const;
+		VIRTUAL operator RCBOOL() const;
+		VIRTUAL operator RCSHORT() const;
+		VIRTUAL operator RCWORD() const;
+		VIRTUAL operator RCLONG() const;
+		VIRTUAL operator RCDWORD() const;
+		VIRTUAL operator RCFLOAT() const;
 	};
 
 #pragma endregion
@@ -312,9 +312,9 @@ namespace IttyBitty
 		VIRTUAL RVARLENGTHFIELD operator =(RCVARLENGTHFIELD);
 		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
 		
-		operator PCBYTE() const;
-		operator PCCHAR() const;
-		operator PCBITPACK() const;
+		VIRTUAL operator PCBYTE() const;
+		VIRTUAL operator PCCHAR() const;
+		VIRTUAL operator PCBITPACK() const;
 
 
 		// Field OVERRIDES
@@ -760,7 +760,6 @@ namespace IttyBitty
 	template<typename T>
 	INLINE PCHAR StringInsertValue(CONST T value, PCHAR buffer, CBYTE radix = 0x10)
 	{
-		PCHAR bufferPtr = buffer;
 		CHAR valStr[2 * T_SIZE + 1];
 		
 		valStr[2 * T_SIZE] = '\0';
@@ -774,9 +773,9 @@ namespace IttyBitty
 			valStr[i] = '0';
 		}
 
-		memcpy(bufferPtr, valStr, 2 * T_SIZE);
+		memcpy(buffer, valStr, 2 * T_SIZE);
 
-		return (PCHAR)(bufferPtr + 2 * T_SIZE);
+		return (PCHAR)(buffer + 2 * T_SIZE);
 	}
 
 	template<typename T>

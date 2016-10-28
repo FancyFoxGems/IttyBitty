@@ -86,8 +86,9 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE GetParamCount() const = 0;
 		VIRTUAL CBYTE GetMessageCode() const = 0;
-
-		VIRTUAL PIFIELD Param(CBYTE = 0) = 0;
+		
+		VIRTUAL RCIFIELD Param(CBYTE = 0) const = 0;
+		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
 
 
 		// USER METHODS
@@ -131,8 +132,9 @@ namespace IttyBitty
 		
 		VIRTUAL CBYTE GetMessageCode() const;
 		VIRTUAL CBYTE GetParamCount() const;
-
-		VIRTUAL PIFIELD Param(CBYTE = 0);
+		
+		VIRTUAL RCIFIELD Param(CBYTE = 0) const;
+		VIRTUAL RIFIELD Param(CBYTE = 0);
 
 
 		// USER METHODS
@@ -164,7 +166,7 @@ namespace IttyBitty
 		BYTE _MessageCode;
 		BYTE _ParamCount;
 
-		PPIFIELD _Params;
+		PIFIELD _Params[5];
 
 		
 		// HELPER METHODS
@@ -340,7 +342,7 @@ namespace IttyBitty
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
 			return NULL;
-		memcpy(__message_buffer, "2001000221012c", bufferSize - 1);
+		//memcpy(__message_buffer, "2001000221012c", bufferSize - 1);
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(F("RAW DATA: "));
@@ -349,14 +351,9 @@ namespace IttyBitty
 		Serial.flush();
 	#endif		
 		
-		/*STATIC MESSAGE msg = NULL;
-		msg = new Message();*/
+		STATIC PIMESSAGE msg = new Message();
+		msg->FromString("2001000221012c");
 		//msg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
-		//msg->FromString(reinterpret_cast<PCCHAR>(F("2001000221012c")));
-
-		
-		STATIC MESSAGE msg;
-		msg.FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		Serial.println(F("MESSAGE LOADED."));
@@ -367,7 +364,7 @@ namespace IttyBitty
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return &msg;
+		return msg;
 	}
 	
 	INLINE VOID WaitForMessage(Stream & stream, MessageHandler msgHandler)
@@ -400,9 +397,9 @@ namespace IttyBitty
 	Serial.println(m);
 	Serial.flush();
 
-		//msgHandler(message);
+		msgHandler(message);
 
-		//delete message;
+		delete message;
 		message = NULL;
 	}
 

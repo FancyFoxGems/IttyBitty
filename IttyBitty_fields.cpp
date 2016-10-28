@@ -177,9 +177,11 @@ VOID FieldBase::FromBytes(PCBYTE data)
 
 VOID FieldBase::FromString(PCCHAR data)
 {
-	data += 2 * SIZEOF(CSIZE);
+	PCCHAR bufferPtr = data;
 
-	data = StringReadValue<DataType>(_DataType, data);
+	bufferPtr += 2 * SIZEOF(CSIZE);
+
+	bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
 	
 	CBYTE byteWidth = this->ByteWidth();
 
@@ -211,7 +213,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	default:
 
 		for (BYTE i = 0; i < byteWidth; i++)
-			data = StringReadValue<BYTE>(bytes[i], data);
+			bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 
 		_Value = bytes;
 
@@ -219,7 +221,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	}
 	
 	for (SIZE i = 0 ; i < byteWidth; i++)
-		data = StringReadValue<BYTE>(bytes[byteWidth - i - 1], data);
+		bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
 }
 
 SIZE FieldBase::printTo(Print & printer) const
@@ -283,7 +285,7 @@ Field::Field(RCFIELD other)
 
 Field::Field(RRFIELD other)
 {	
-	this->~FieldBase();
+	//this->~FieldBase();
 	new (this) Field(other._Value, other._DataType);
 }
 
