@@ -6,6 +6,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
+#if !defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_PRINT)
+	#define EXCLUDE_ITTYBITTY_PRINT
+#endif
+
+#if ARDUINO
 #ifndef _ITTYBITTY_PRINT_H
 #define _ITTYBITTY_PRINT_H
 
@@ -50,5 +55,7 @@ namespace IttyBitty
 	VOID PrintAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
 	VOID PrintLineAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
 }
+
+#endif
 
 #endif

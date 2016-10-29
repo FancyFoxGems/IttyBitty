@@ -179,8 +179,11 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBytes(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-
+		
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
+	#endif
+
 
 	protected:
 
@@ -256,7 +259,9 @@ namespace IttyBitty
 	};
 	
 #pragma endregion
-
+	
+	
+#ifdef ARDUINO
 
 #pragma region SERIAL/STREAM READING METHODS
 
@@ -307,7 +312,7 @@ namespace IttyBitty
 #pragma region MESSAGE PARSING METHODS
 	
 	typedef VOID (* MessageHandler)(PIMESSAGE);
-	
+
 
 	INLINE PIMESSAGE MessageFromBytes(Stream & stream)
 	{
@@ -411,6 +416,8 @@ namespace IttyBitty
 	}
 
 #pragma endregion
+
+#endif	// #ifdef ARDUINO
 }
 
 

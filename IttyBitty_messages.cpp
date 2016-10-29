@@ -346,6 +346,8 @@ VOID Message::FromString(PCCHAR data)
 }
 
 
+#ifdef ARDUINO
+
 SIZE Message::printTo(Print & printer) const
 {
 	SIZE size = strlen(MESSAGE_MARKER);
@@ -373,6 +375,8 @@ SIZE Message::printTo(Print & printer) const
 
 	return size;
 }
+
+#endif	// #ifdef ARDUINO
 
 
 // HELPER METHODS

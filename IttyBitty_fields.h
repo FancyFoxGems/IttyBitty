@@ -10,7 +10,10 @@
 #define _ITTYBITTY_FIELDS_H
 
 
-#include "Printable.h"
+		
+#ifdef ARDUINO
+	#include "Printable.h"
+#endif
 
 #include "IttyBitty_values.h"
 
@@ -139,7 +142,10 @@ namespace IttyBitty
 
 	// [ISerializable] DEFINITION
 
-	INTERFACE ISerializable : public Printable
+	INTERFACE ISerializable 
+	#ifdef ARDUINO
+		: public Printable
+	#endif
 	{
 	public:
 
@@ -212,8 +218,10 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBytes(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
+				
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
+	#endif
 
 
 		// IField IMPLEMENTATION

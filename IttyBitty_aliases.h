@@ -9,12 +9,21 @@
 #ifndef _ITTYBITTY_ALIASES_H
 #define _ITTYBITTY_ALIASES_H
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
 
+#ifdef ARDUINO
+	#if ARDUINO >= 100
+		#include "Arduino.h"
+	#else
+		#include "WProgram.h"
+	#endif
+#else
+	#include <stdlib.h>
+	#include <stddef.h>
+	#include <inttypes.h>
+	#include <string.h>
+	#include <avr/pgmspace.h>
+	typedef decltype(nullptr) nullptr_t;
+#endif
 
 //using namespace std;
 

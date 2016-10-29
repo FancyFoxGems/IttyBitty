@@ -225,6 +225,8 @@ VOID FieldBase::FromString(PCCHAR data)
 		bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
 }
 
+#ifdef ARDUINO
+
 SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
@@ -245,6 +247,8 @@ SIZE FieldBase::printTo(Print & printer) const
 
 	return size;
 }
+
+#endif	// #ifdef ARDUINO
 
 
 // IField IMPLEMENTATION
