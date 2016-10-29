@@ -319,13 +319,13 @@ namespace IttyBitty
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE ByteSize() const;				
-		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
+		CSIZE ByteSize() const;				
+		CSIZE StringSize() const;
+		CSIZE ByteWidth() const;
+		CSIZE StringLength() const;
 
-		VIRTUAL VOID FromBytes(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
+		VOID FromBytes(PCBYTE);
+		VOID FromString(PCCHAR);
 		
 
 	protected:
@@ -398,13 +398,13 @@ namespace IttyBitty
 		
 		// OPERATORS
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCVARLENGTHFIELD rValue)
+		VIRTUAL RTYPEDFIELD<T> operator =(RCTYPEDFIELD<T> rValue)
 		{
 			*this = TypedField<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RRVARLENGTHFIELD rValue)
+		VIRTUAL RTYPEDFIELD<T> operator =(RRTYPEDFIELD<T> rValue)
 		{
 			*this = TypedField<T>(rValue);
 			return *this;
@@ -639,17 +639,17 @@ namespace IttyBitty
 
 		//  IField OVERRIDES
 				
-		VIRTUAL CSIZE ByteSize() const
+		CSIZE ByteSize() const
 		{
 			return sizeof(_Length) + TypedField<T>::ByteSize();
 		}
 				
-		VIRTUAL CSIZE StringSize() const
+		CSIZE StringSize() const
 		{
 			return 2 * sizeof(_Length) + TypedField<T>::StringSize();
 		}
 
-		VIRTUAL CSIZE ByteWidth() const
+		CSIZE ByteWidth() const
 		{
 			if (_Length > 0)
 				return _Length;
@@ -657,7 +657,7 @@ namespace IttyBitty
 			return TypedField<T>::ByteWidth();
 		}
 
-		VIRTUAL CSIZE StringLength() const
+		CSIZE StringLength() const
 		{
 			if (_DataType == DataType::STRING_FIELD)
 				return _Length;
@@ -665,7 +665,7 @@ namespace IttyBitty
 			return 2 * this->ByteWidth();
 		}
 		
-		VIRTUAL VOID FromBytes(PCBYTE data)
+		VOID FromBytes(PCBYTE data)
 		{
 			PCBYTE bufferPtr = data;
 
@@ -677,7 +677,7 @@ namespace IttyBitty
 			_Value = bufferPtr;
 		}
 		
-		VIRTUAL VOID FromString(PCCHAR data)
+		VOID FromString(PCCHAR data)
 		{
 			PCCHAR bufferPtr = data;
 

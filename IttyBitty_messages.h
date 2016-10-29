@@ -236,14 +236,14 @@ namespace IttyBitty
 
 		// MESSAGE OVERRIDES
 
-		VIRTUAL VOID Handle(...) { }
+		VOID Handle(...) { }
 
-		VIRTUAL CBYTE GetMessageCode() const
+		CBYTE GetMessageCode() const
 		{
 			return MESSAGE_CODE();
 		}
 
-		VIRTUAL CBYTE GetParamCount() const
+		CBYTE GetParamCount() const
 		{
 			return PARAM_COUNT();
 		}

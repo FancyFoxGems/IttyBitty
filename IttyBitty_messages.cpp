@@ -168,7 +168,12 @@ RIFIELD Message::Param(CBYTE i)
 
 // USER METHODS
 
-VOID Message::Handle(...) { }
+VOID Message::Handle(...)
+{
+#ifdef DEBUG_MESSAGES
+	PrintLineAndFlush(F("Message::Handle"));
+#endif
+}
 
 
 // ISerializable IMPLEMENTATION
