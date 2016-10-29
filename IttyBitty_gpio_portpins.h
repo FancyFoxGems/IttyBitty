@@ -17,23 +17,23 @@
 
 #define PORT_PIN_PAIR(port_ref, pin_number) port_ref, pin_number	// NOTE: For use with XXXXXX_PAIR bit manipulation macros
 
-#define CHECK_PIN(port_ref, pin_number) CHECK_SET(port_ref, pin_number)
-#define CHECK_PIN_SET(port_ref, pin_number) CHECK_PIN(port_ref, pin_number)
-#define CHECK_PIN_UNSET(port_ref, pin_number) CHECK_UNSET(port_ref, pin_number)
+#define CHECK_PIN(port_ref, pin_number)				CHECK_SET(port_ref, pin_number)
+#define CHECK_PIN_SET(port_ref, pin_number)			CHECK_PIN(port_ref, pin_number)
+#define CHECK_PIN_UNSET(port_ref, pin_number)		CHECK_UNSET(port_ref, pin_number)
 
-#define SET_PIN(port_ref, pin_number) SET_BIT(port_ref, pin_number)
-#define CLEAR_PIN(port_ref, pin_number) CLEAR_BIT(port_ref, pin_number)
-#define TOGGLE_PIN(port_ref, pin_number) TOGGLE_BIT(port_ref, pin_number)
+#define SET_PIN(port_ref, pin_number)				SET_BIT(port_ref, pin_number)
+#define CLEAR_PIN(port_ref, pin_number)				CLEAR_BIT(port_ref, pin_number)
+#define TOGGLE_PIN(port_ref, pin_number)			TOGGLE_BIT(port_ref, pin_number)
 
-#define PIN_IN_CHECK(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
-#define PIN_IN_CHECK_SET(port_letter, pin_number) CHECK_SET(PIN##port_letter, pin_number)
-#define PIN_IN_CHECK_UNSET(port_letter, pin_number) CHECK_UNSET(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK(port_letter, pin_number)		CHECK_SET(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK_SET(port_letter, pin_number)	CHECK_SET(PIN##port_letter, pin_number)
+#define PIN_IN_CHECK_UNSET(port_letter, pin_number)	CHECK_UNSET(PIN##port_letter, pin_number)
 
-#define PIN_OUT_SET(port_letter, pin_number) SET_BIT(PORT##port_letter, pin_number)
-#define PIN_OUT_CLEAR(port_letter, pin_number) CLEAR_BIT(PORT##port_letter, pin_number)
-#define PIN_OUT_TOGGLE(port_letter, pin_number) TOGGLE_BIT(PIN##port_letter, pin_number)
+#define PIN_OUT_SET(port_letter, pin_number)		SET_BIT(PORT##port_letter, pin_number)
+#define PIN_OUT_CLEAR(port_letter, pin_number)		CLEAR_BIT(PORT##port_letter, pin_number)
+#define PIN_OUT_TOGGLE(port_letter, pin_number)		TOGGLE_BIT(PIN##port_letter, pin_number)
 
-#define PIN_RESET(port_letter, pin_number)	\
+#define PIN_RESET(port_letter, pin_number)		\
 	SET_PIN(PORT##port_letter, pin_number);		\
 	SET_PIN(DDR##port_letter, pin_number);		\
 	CLEAR_PIN(PORT##port_letter, pin_number);	\
