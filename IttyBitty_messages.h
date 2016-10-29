@@ -13,6 +13,11 @@
 #include "IttyBitty_fields.h"
 
 
+#ifdef DEBUG_MESSAGES
+	#include "IttyBitty_print.h"
+#endif
+
+
 /* SUPRESS COMPILER WARNINGS RELATED TO FIELD REORDERING */
 
 IGNORE_WARNING(-Wreorder)
@@ -348,8 +353,7 @@ namespace IttyBitty
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(msgSize);
-		Serial.println("].");
-		Serial.flush();
+		PrintLineAndFlush("].");
 	#endif
 		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
@@ -358,8 +362,7 @@ namespace IttyBitty
 
 	#ifdef DEBUG_MESSAGES
 		Serial.print(bufferSize);
-		Serial.println(F(" BYTES ALLOCATED.  READING DATA..."));
-		Serial.flush();
+		PrintLineAndFlush(F(" BYTES ALLOCATED.  READING DATA..."));
 	#endif
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
@@ -368,8 +371,7 @@ namespace IttyBitty
 	#ifdef DEBUG_MESSAGES
 		Serial.print(F("RAW DATA: "));
 		Serial.println((PCCHAR)__message_buffer);
-		Serial.println(F("BUFFER FILLED.  LOADING..."));
-		Serial.flush();
+		PrintLineAndFlush(F("BUFFER FILLED.  LOADING..."));
 	#endif		
 		
 		STATIC PIMESSAGE stringMsg = NULL;
@@ -377,9 +379,7 @@ namespace IttyBitty
 		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
-		Serial.println(F("MESSAGE LOADED."));
-		Serial.println();
-		Serial.flush();
+		PrintLineAndFlush(F("MESSAGE LOADED.\n"));
 	#endif
 
 		delete[] __message_buffer;

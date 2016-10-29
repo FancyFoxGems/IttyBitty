@@ -61,44 +61,44 @@
 typedef void VOID, * PTR, * PVOID, ** PPVOID, * PROGMEM VOID_P;
 typedef const void * PCVOID, ** PPCVOID;
 
-typedef bool BIT, * PBIT, & RBIT, ** PPBIT, BOOL, * PBOOL, & RBOOL, ** PPBOOL, PROGMEM BOOL_P;
+typedef bool bit, BIT, * PBIT, & RBIT, ** PPBIT, BOOL, * PBOOL, & RBOOL, ** PPBOOL, PROGMEM BOOL_P;
 typedef const bool CBIT, * PCBIT, & RCBIT, ** PPCBIT, CBOOL, * PCBOOL, & RCBOOL, ** PPCBOOL;
 typedef volatile bool VBIT, * PVBIT, & RVBIT, ** PPVBIT, VBOOL, * PVBOOL, & RVBOOL, ** PPVBOOL;
 
-typedef char INT8, I8, CHAR, * PCHAR, & RCHAR, ** PPCHAR, PROGMEM CHAR_P;
+typedef char int8, INT8, i8, I8, CHAR, * PCHAR, & RCHAR, ** PPCHAR, PROGMEM CHAR_P;
 typedef const char CCHAR, * PCCHAR, & RCCHAR, ** PPCCHAR, * PROGMEM CSTR_P;
 typedef volatile char V8, VCHAR, * PVCHAR, & RVCHAR, ** PPVCHAR;
 
-typedef unsigned char UINT8, U8, BYTE, * PBYTE, & RBYTE, ** PPBYTE, PROGMEM BYTE_P;
+typedef unsigned char uint8, UINT8, u8, U8, BYTE, * PBYTE, & RBYTE, ** PPBYTE, PROGMEM BYTE_P;
 typedef const unsigned char CBYTE, * PCBYTE, & RCBYTE, ** PPCBYTE;
 typedef volatile unsigned char VU8, VBYTE, * PVBYTE, & RVBYTE, ** PPVBYTE;
 typedef const volatile unsigned char CVU8, CVBYTE, * PCVBYTE, & RCVBYTE, ** PPCVBYTE;
 
-typedef short INT16, I16, SHORT, * PSHORT, & RSHORT, ** PPSHORT, PROGMEM SHORT_P;
+typedef short int16, INT16, i16, I16, SHORT, * PSHORT, & RSHORT, ** PPSHORT, PROGMEM SHORT_P;
 typedef const short CSHORT, * PCSHORT, & RCSHORT, ** PPCSHORT;
 typedef volatile short V16, VSHORT, * PVSHORT, & RVSHORT, ** PPVSHORT;
 
-typedef unsigned short UINT16, U16, WORD, * PWORD, & RWORD, ** PPWORD, PROGMEM WORD_P;
+typedef unsigned short uint16, UINT16, u16, U16, WORD, * PWORD, & RWORD, ** PPWORD, PROGMEM WORD_P;
 typedef const unsigned short CWORD, * PCWORD, & RCWORD, ** PPCWORD;
 typedef volatile unsigned short VU16, VWORD, * PVWORD, & RVWORD, ** PPVWORD;
 
-typedef wchar_t WCHAR, * PWCHAR, & RWCHAR, ** PPWCHAR, PROGMEM WCHAR_P;
+typedef wchar_t wchar, WCHAR, * PWCHAR, & RWCHAR, ** PPWCHAR, PROGMEM WCHAR_P;
 typedef const wchar_t CWCHAR, * PCWCHAR, & RCWCHAR, ** PPCWCHAR;
 typedef volatile wchar_t VWCHAR, * PVWCHAR, & RVWCHAR, ** PPVWCHAR;
 
-typedef long INT32, I32, LONG, * PLONG, & RLONG, ** PPLONG, PROGMEM LONG_P;
+typedef long int32, INT32, i32, I32, LONG, * PLONG, & RLONG, ** PPLONG, PROGMEM LONG_P;
 typedef const long CLONG, * PCLONG, & RCLONG, ** PPCLONG;
 typedef volatile long V32, VLONG, * PVLONG, & RVLONG, ** PPVLONG;
 
-typedef unsigned long UINT32, U32, DWORD, * PDWORD, & RDWORD, ** PPDWORD, PROGMEM DWORD_P;
+typedef unsigned long uint32, UINT32, u32, U32, dword, DWORD, * PDWORD, & RDWORD, ** PPDWORD, PROGMEM DWORD_P;
 typedef const unsigned long CDWORD, * PCDWORD, & RCDWORD, ** PPCDWORD;
 typedef volatile unsigned long VU32, VDWORD, * PVDWORD, & RVDWORD, ** PPVDWORD;
 
-typedef long long INT64, I64, LONGLONG, * PLONGLONG, & RLONGLONG, ** PPLONGLONG, PROGMEM LONGLONG_P;
+typedef long long int64, INT64, i64, I64, verylong, VERYLONG, longlong, LONGLONG, * PLONGLONG, & RLONGLONG, ** PPLONGLONG, PROGMEM LONGLONG_P;
 typedef const long long CLONGLONG, * PCLONGLONG, & RCLONGLONG, ** PPCLONGLONG;
 typedef volatile long long V64, VLONGLONG, * PVLONGLONG, & RVLONGLONG, ** PPVLONGLONG;
 
-typedef unsigned long long UINT64, U64, QWORD, * PQWORD, & RQWORD, ** PPQWORD, PROGMEM QWORD_P;
+typedef unsigned long long uint64, UINT64, u64, U64, qword, QWORD, * PQWORD, & RQWORD, ** PPQWORD, PROGMEM QWORD_P;
 typedef const unsigned long long CQWORD, * PCQWORD, & RCQWORD, ** PPCQWORD;
 typedef volatile unsigned long long VU64, VQWORD, * PVQWORD, & RVQWORD, ** PPVQWORD;
 

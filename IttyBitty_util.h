@@ -188,6 +188,12 @@ using std::extent;
 #define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
 #define _CSTR_P(string_addr) FLASH_STRING(string_addr)
 
+
+#ifndef F
+	class __FlashStringHelper;
+	#define F(const_c_string) (reinterpret_cast<const __FlashStringHelper *>(PSTR(const_c_string)))
+#endif
+
 template<typename T, T N>
 struct overflow { char operator()() { return N + 256; } };
 
