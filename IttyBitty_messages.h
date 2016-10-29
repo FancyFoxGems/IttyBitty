@@ -312,7 +312,7 @@ namespace IttyBitty
 
 #pragma region MESSAGE PARSING METHODS
 	
-	typedef VOID (* MessageHandler)(PIMESSAGE);
+	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
 
 
 	INLINE PIMESSAGE MessageFromBytes(Stream & stream)
@@ -394,7 +394,7 @@ namespace IttyBitty
 		return stringMsg;
 	}
 	
-	INLINE VOID WaitForMessage(Stream & stream, MessageHandler msgHandler)
+	INLINE VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler)
 	{
 		PIMESSAGE message = NULL;
 
