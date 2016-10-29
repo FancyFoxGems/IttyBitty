@@ -59,7 +59,7 @@ typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 
 #endif
 
-#define NEW_REG8(reg_addr) (new ByteField((PBYTE)reg_addr))
+#define NEW_REG8(reg_addr) (new REG8((PVBYTE)reg_addr))
 
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES

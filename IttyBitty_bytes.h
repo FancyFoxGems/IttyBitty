@@ -247,10 +247,10 @@ namespace IttyBitty
 		VIRTUAL operator SIGNED_TYPE(CONST T)() const = 0;
 
 		VIRTUAL operator PCBYTE() const = 0;
-		VIRTUAL operator PPBYTE() = 0;
+		VIRTUAL operator PPVBYTE() = 0;
 
 		VIRTUAL operator PCCHAR() const = 0;
-		VIRTUAL operator PPCHAR() = 0;
+		VIRTUAL operator PPVCHAR() = 0;
 
 		VIRTUAL operator PBYTEFIELD() const = 0;
 		VIRTUAL operator PPBYTEFIELD() = 0;
@@ -275,8 +275,8 @@ namespace IttyBitty
 		VIRTUAL VOID SetValue(T) = 0;
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<T>) = 0;
 
-		VIRTUAL T * Pointer() const = 0;
-		VIRTUAL VOID PointTo(T *) = 0;
+		VIRTUAL VOLATILE T * Pointer() const = 0;
+		VIRTUAL VOID PointTo(VOLATILE T *) = 0;
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<T>) = 0;
 
 		VIRTUAL T Mask(T) const = 0;
@@ -301,7 +301,7 @@ namespace IttyBitty
 
 	/* [IBYTEFIELD]: SPECIALIZED TEMPLATE IMPLEMENTATION FOR BIT-PACKED SINGLE-BYTE REFERENCES */
 
-	INTERFACE IByteField : public virtual IBitField<BYTE>
+	INTERFACE IByteField : public IBitField<BYTE>
 	{
 	public:
 
@@ -313,10 +313,10 @@ namespace IttyBitty
 		VIRTUAL operator CCHAR() const = 0;
 
 		VIRTUAL operator PCBYTE() const = 0;
-		VIRTUAL operator PPBYTE() = 0;
+		VIRTUAL operator PPVBYTE() = 0;
 
 		VIRTUAL operator PCCHAR() const = 0;
-		VIRTUAL operator PPCHAR() = 0;
+		VIRTUAL operator PPVCHAR() = 0;
 
 		VIRTUAL operator PBYTEFIELD() const = 0;
 		VIRTUAL operator PPBYTEFIELD() = 0;
@@ -341,8 +341,8 @@ namespace IttyBitty
 		VIRTUAL VOID SetValue(BYTE) = 0;
 		VIRTUAL VOID CopyFrom(RCIBYTEFIELD) = 0;
 
-		VIRTUAL PBYTE Pointer() const = 0;
-		VIRTUAL VOID PointTo(PBYTE) = 0;
+		VIRTUAL PVBYTE Pointer() const = 0;
+		VIRTUAL VOID PointTo(PVBYTE) = 0;
 		VIRTUAL VOID ReferenceFrom(RCIBYTEFIELD) = 0;
 
 		VIRTUAL BYTE Mask(BYTE) const = 0;
@@ -356,11 +356,11 @@ namespace IttyBitty
 		RIBYTEFIELD operator =(RRIBYTEFIELD) { return *this; };
 		RIBYTEFIELD operator =(RCIBYTEFIELD) { return *this; };
 
-		VIRTUAL operator PBYTE() = 0;
-		VIRTUAL operator RBYTE() = 0;
+		VIRTUAL operator PVBYTE() = 0;
+		VIRTUAL operator RVBYTE() = 0;
 
-		VIRTUAL operator PCHAR() = 0;
-		VIRTUAL operator RCHAR() = 0;
+		VIRTUAL operator PVCHAR() = 0;
+		VIRTUAL operator RVCHAR() = 0;
 
 		VIRTUAL operator PCBITPACK() const = 0;
 		VIRTUAL operator PBITPACK() = 0;
@@ -398,8 +398,8 @@ namespace IttyBitty
 		RIMANYBITFIELD<T> operator =(RRIMANYBITFIELD<T>) { return *this; };
 		RIMANYBITFIELD<T> operator =(RCIMANYBITFIELD<T>) { return *this; };
 
-		VIRTUAL operator PPWORD() const = 0;
-		VIRTUAL operator PPSHORT() const = 0;
+		VIRTUAL operator PPVWORD() const = 0;
+		VIRTUAL operator PPVSHORT() const = 0;
 
 		VIRTUAL SIZE WordSize() const = 0;
 
@@ -438,8 +438,8 @@ namespace IttyBitty
 
 		ByteField();
 		EXPLICIT ByteField(RCBYTE);
-		EXPLICIT ByteField(RBYTE);
-		EXPLICIT ByteField(PBYTE);
+		EXPLICIT ByteField(RVBYTE);
+		EXPLICIT ByteField(PVBYTE);
 
 		ByteField(RRBYTEFIELD);
 		ByteField(RCBYTEFIELD);
@@ -457,10 +457,10 @@ namespace IttyBitty
 		VIRTUAL operator CCHAR() const;
 
 		VIRTUAL operator PCBYTE() const;
-		VIRTUAL operator PPBYTE();
+		VIRTUAL operator PPVBYTE();
 
 		VIRTUAL operator PCCHAR() const;
-		VIRTUAL operator PPCHAR();
+		VIRTUAL operator PPVCHAR();
 
 		VIRTUAL operator PBYTEFIELD() const;
 		VIRTUAL operator PPBYTEFIELD();
@@ -493,8 +493,8 @@ namespace IttyBitty
 		VIRTUAL VOID CopyFrom(RCBYTEFIELD);
 	#endif
 
-		VIRTUAL PBYTE Pointer() const;
-		VIRTUAL VOID PointTo(PBYTE);
+		VIRTUAL PVBYTE Pointer() const;
+		VIRTUAL VOID PointTo(PVBYTE);
 	#ifndef ITTYBITTY_BASE
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
 	#else
@@ -510,11 +510,11 @@ namespace IttyBitty
 
 		// IByteField
 
-		VIRTUAL operator PBYTE();
-		VIRTUAL operator RBYTE();
+		VIRTUAL operator PVBYTE();
+		VIRTUAL operator RVBYTE();
 
-		VIRTUAL operator PCHAR();
-		VIRTUAL operator RCHAR();
+		VIRTUAL operator PVCHAR();
+		VIRTUAL operator RVCHAR();
 
 		VIRTUAL operator PCBITPACK() const;
 		VIRTUAL operator PBITPACK();
@@ -546,9 +546,9 @@ namespace IttyBitty
 		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
 		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 
-		VOLATILE UNION PACKED
+		UNION
 		{
-			PBYTE _pByte;
+			PVBYTE _pByte;
 			PBITPACK _pBitPack;
 		};
 
@@ -588,9 +588,9 @@ namespace IttyBitty
 			{
 				if (i < byteWidth)
 			#if IS_BIG_ENDIAN
-					_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + T_SIZE - 1 - i);
+					_ByteFieldPtrs[i] = new ByteField((PVBYTE)memAddr + T_SIZE - 1 - i);
 			#else
-					_ByteFieldPtrs[i] = new ByteField((PBYTE)memAddr + i);
+					_ByteFieldPtrs[i] = new ByteField((PVBYTE)memAddr + i);
 			#endif
 				else
 					_ByteFieldPtrs[i] = new ByteField((BYTE)0);
@@ -606,7 +606,7 @@ namespace IttyBitty
 				_ByteFieldPtrs[i] = new ByteField((BYTE)byteVals[i]);
 		}
 
-		BitField(PBYTE bytePtrs[T_SIZE])
+		BitField(PVBYTE bytePtrs[T_SIZE])
 			: _DisposalLevel(DisposalLevel::FieldData)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
@@ -709,9 +709,9 @@ namespace IttyBitty
 			return bytes;
 		}
 
-		VIRTUAL operator PPBYTE()
+		VIRTUAL operator PPVBYTE()
 		{
-			STATIC PPBYTE bytePtrs[T_SIZE];
+			STATIC PPVBYTE bytePtrs[T_SIZE];
 
 			for (SIZE i = 0; i < T_SIZE; i ++)
 				(*bytePtrs)[i] = _ByteFieldPtrs[i]->Pointer();
@@ -724,9 +724,9 @@ namespace IttyBitty
 			return (PCCHAR)this->operator PCBYTE();
 		}
 
-		VIRTUAL operator PPCHAR()
+		VIRTUAL operator PPVCHAR()
 		{
-			return (PPCHAR)this->operator PPBYTE();
+			return (PPVCHAR)this->operator PPVBYTE();
 		}
 
 		VIRTUAL operator PBYTEFIELD() const
@@ -824,9 +824,9 @@ namespace IttyBitty
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
 			#if IS_BIG_ENDIAN
-				_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + T_SIZE - 1 - i));
+				_ByteFieldPtrs[i] = new ByteField(*((PVBYTE)&tVal + T_SIZE - 1 - i));
 			#else
-				_ByteFieldPtrs[i] = new ByteField(*((PBYTE)&tVal + i));
+				_ByteFieldPtrs[i] = new ByteField(*((PVBYTE)&tVal + i));
 			#endif
 
 			_DisposalLevel = DisposalLevel::FieldData;
@@ -837,12 +837,12 @@ namespace IttyBitty
 			this->SetValue(other.Value());
 		}
 
-		T * Pointer() const
+		VOLATILE T * Pointer() const
 		{
 			return (T *)_ByteFieldPtrs[0]->Pointer();
 		}
 
-		VIRTUAL VOID PointTo(T * tPtr)
+		VIRTUAL VOID PointTo(VOLATILE T * tPtr)
 		{
 			this->~BitField<T>();
 
@@ -850,9 +850,9 @@ namespace IttyBitty
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
 			#if IS_BIG_ENDIAN
-				_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + T_SIZE - 1 - i);
+				_ByteFieldPtrs[i] = new ByteField((PVBYTE)tPtr + T_SIZE - 1 - i);
 			#else
-				_ByteFieldPtrs[i] = new ByteField((PBYTE)tPtr + i);
+				_ByteFieldPtrs[i] = new ByteField((PVBYTE)tPtr + i);
 			#endif
 
 			_DisposalLevel = DisposalLevel::FieldData;
@@ -1005,7 +1005,7 @@ namespace IttyBitty
 			this->InitWordFields();
 		}
 
-		ManyBitField(T tVal) : BitField<T>((PBYTE)&tVal)
+		ManyBitField(T tVal) : BitField<T>((PVBYTE)&tVal)
 		{
 			this->InitWordFields();
 		}
@@ -1020,7 +1020,7 @@ namespace IttyBitty
 			this->InitWordFields();
 		}
 
-		ManyBitField(PBYTE bytePtrs[T_SIZE]) : BitField<T>(bytePtrs)
+		ManyBitField(PVBYTE bytePtrs[T_SIZE]) : BitField<T>(bytePtrs)
 		{
 			this->InitWordFields();
 		}
@@ -1114,9 +1114,9 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL operator PPWORD() const
+		VIRTUAL operator PPVWORD() const
 		{
-			STATIC PPWORD wordPtrs[T_SIZE];
+			STATIC PPVWORD wordPtrs[T_SIZE];
 
 			for (SIZE i = 0; i < T_SIZE; i ++)
 				(*wordPtrs)[i] = _WordFieldPtrs[i]->Pointer();
@@ -1124,9 +1124,9 @@ namespace IttyBitty
 			return *wordPtrs;
 		}
 
-		VIRTUAL operator PPSHORT() const
+		VIRTUAL operator PPVSHORT() const
 		{
-			return (PPSHORT)this->operator PPWORD();
+			return (PPVSHORT)this->operator PPVWORD();
 		}
 
 		VIRTUAL SIZE WordSize() const

@@ -26,7 +26,7 @@ using namespace IttyBitty;
 		RBITPACK P##port_letter##_DDR	= *(PACK_BYTE_REF((RVBYTE)DDR##port_letter));	\
 		RBITPACK P##port_letter##_PORT	= *(PACK_BYTE_REF((RVBYTE)PORT##port_letter));	\
 		RBITPACK P##port_letter##_PIN	= *(PACK_BYTE_REF((RVBYTE)PIN##port_letter));	\
-		PORT Port##port_letter((RVBYTE)DDR##port_letter, (RVBYTE)PORT##port_letter, (RVBYTE)PIN##port_letter);
+		PORT Port##port_letter((PVBYTE)&DDR##port_letter, (PVBYTE)&PORT##port_letter, (PVBYTE)&PIN##port_letter);
 
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 

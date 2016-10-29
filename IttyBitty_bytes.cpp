@@ -87,16 +87,20 @@ ByteField::ByteField()
 ByteField::ByteField(RCBYTE byteVal)
 	: _pByte(new BYTE(byteVal)), _DisposeByte(true) { }
 
-ByteField::ByteField(RBYTE byteRef)
+ByteField::ByteField(RVBYTE byteRef)
 	: _pByte(&byteRef), _DisposeByte(false) { }
 
-ByteField::ByteField(PBYTE pByte)
-	: _pByte(pByte), _DisposeByte(false) { }
+ByteField::ByteField(PVBYTE pByte)
+	: _pByte(pByte), _DisposeByte(false) {
+			Serial.begin(115200);
+			Serial.println((CWORD)pByte);
+			Serial.flush();
+			delay(100); }
 
 ByteField::ByteField(RRBYTEFIELD other)
 {
 	this->~ByteField();
-	new (this) ByteField((RBYTE)other);
+	new (this) ByteField((RVBYTE)other);
 
 	other._DisposeByte = false;
 }
@@ -104,7 +108,7 @@ ByteField::ByteField(RRBYTEFIELD other)
 ByteField::ByteField(RCBYTEFIELD other)
 {
 	this->~ByteField();
-	new (this) ByteField((RBYTE)other);
+	new (this) ByteField((RVBYTE)other);
 }
 
 ByteField::~ByteField()
@@ -148,7 +152,7 @@ ByteField::operator PCBYTE() const
 	return MAKE_CONST(_pByte);
 }
 
-ByteField::operator PPBYTE()
+ByteField::operator PPVBYTE()
 {
 	return &_pByte;
 }
@@ -158,9 +162,9 @@ ByteField::operator PCCHAR() const
 	return (PCCHAR)this->operator PCBYTE();
 }
 
-ByteField::operator PPCHAR()
+ByteField::operator PPVCHAR()
 {
-	return (PPCHAR)this->operator PPBYTE();
+	return (PPVCHAR)this->operator PPVBYTE();
 }
 
 ByteField::operator PBYTEFIELD() const
@@ -260,12 +264,12 @@ VOID ByteField::CopyFrom(RCBYTEFIELD other)
 	*_pByte = other.Value();
 }
 
-PBYTE ByteField::Pointer() const
+PVBYTE ByteField::Pointer() const
 {
 	return _pByte;
 }
 
-VOID ByteField::PointTo(PBYTE pByte)
+VOID ByteField::PointTo(PVBYTE pByte)
 {
 	_pByte = pByte;
 }
@@ -293,24 +297,24 @@ BYTE ByteField::Mask(RCBYTEFIELD other) const
 	return MASK(this->Value(), other.Value());
 }
 
-ByteField::operator PBYTE()
+ByteField::operator PVBYTE()
 {
 	return _pByte;
 }
 
-ByteField::operator RBYTE()
+ByteField::operator RVBYTE()
 {
 	return *_pByte;
 }
 
-ByteField::operator PCHAR()
+ByteField::operator PVCHAR()
 {
-	return (PCHAR)_pByte;
+	return (PVCHAR)_pByte;
 }
 
-ByteField::operator RCHAR()
+ByteField::operator RVCHAR()
 {
-	return (RCHAR)*_pByte;
+	return (RVCHAR)*_pByte;
 }
 
 ByteField::operator PCBITPACK() const

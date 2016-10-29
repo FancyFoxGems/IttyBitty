@@ -73,7 +73,7 @@ namespace IttyBitty
 	{
 	private:
 
-		_PortRegisters()  : DirectionReg(ByteField::NULL_OBJECT()), OutputReg(ByteField::NULL_OBJECT()), InputReg(ByteField::NULL_OBJECT()) { }
+		_PortRegisters() : DirectionReg(ByteField::NULL_OBJECT()), OutputReg(ByteField::NULL_OBJECT()), InputReg(ByteField::NULL_OBJECT()) { }
 
 
 	public:
@@ -81,14 +81,14 @@ namespace IttyBitty
 		_PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 			: DirectionReg(directionReg), OutputReg(outputReg), InputReg(inputReg) { }
 
-		_PortRegisters(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr)
+		_PortRegisters(PVBYTE directionRegAddr, PVBYTE outputRegAddr, PVBYTE inputRegAddr)
 		{
-			this->DirectionReg	= ByteField((RBYTE)directionRegAddr);
-			this->OutputReg 	= ByteField((RBYTE)outputRegAddr);
-			this->InputReg		= ByteField((RBYTE)inputRegAddr);
+			this->DirectionReg	= REG8(directionRegAddr);
+			this->OutputReg 	= REG8(outputRegAddr);
+			this->InputReg		= REG8(inputRegAddr);
 		}
 
-		_PortRegisters(RCPORTREG other)  : DirectionReg(other.DirectionReg), OutputReg(other.OutputReg), InputReg(other.InputReg) { }
+		_PortRegisters(RCPORTREG other) : DirectionReg(other.DirectionReg), OutputReg(other.OutputReg), InputReg(other.InputReg) { }
 
 		VIRTUAL ~_PortRegisters() { }
 
@@ -109,7 +109,7 @@ namespace IttyBitty
 
 
 		RREG8 DirectionReg	= ByteField::NULL_OBJECT();
-		RREG8 OutputReg 	= ByteField::NULL_OBJECT();
+		RREG8 OutputReg 	= REG8::NULL_OBJECT();
 		RREG8 InputReg		= ByteField::NULL_OBJECT();
 	};
 
@@ -122,17 +122,17 @@ namespace IttyBitty
 
 		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 		{
-			 this->_Registers = PortReg(directionReg, outputReg, inputReg);
+			 _Registers = PortReg(directionReg, outputReg, inputReg);
 		}
 
-		_Port(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr)
+		_Port(PVBYTE directionRegAddr, PVBYTE outputRegAddr, PVBYTE inputRegAddr)
 		{
-			 this->_Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
+			_Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
 		}
 
 		_Port(RCPORT other)
 		{
-			this->_Registers = other._Registers;
+			_Registers = other._Registers;
 		}
 
 		VIRTUAL ~_Port() { }
@@ -145,7 +145,7 @@ namespace IttyBitty
 
 		VIRTUAL RPORT operator=(RCPORT other)
 		{
-			this->_Registers = other._Registers;
+			_Registers = other._Registers;
 
 			return *this;
 		}
