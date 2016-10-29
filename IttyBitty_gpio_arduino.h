@@ -60,9 +60,9 @@
 
 CSIZE NUM_PORTS = __COUNTER__;
 
-EXTERN PVBYTE ARDUINO_MODE_PORTS[NUM_PORTS];
-EXTERN PVBYTE ARDUINO_OUT_PORTS[NUM_PORTS];
-EXTERN PVBYTE ARDUINO_IN_PORTS[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_PORT_TO_MODE[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_PORT_TO_OUTPUT[NUM_PORTS];
+EXTERN PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
 
 EXTERN BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
@@ -79,9 +79,9 @@ INLINE VOID _InitializePortTables()
 	for (SIZE i = 0; i < NUM_PORTS; i++)
 	{
 		if (i == 9) ++i;
-		ARDUINO_MODE_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		ARDUINO_OUT_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		ARDUINO_IN_PORTS[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_PORT_TO_MODE[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_PORT_TO_OUTPUT[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		ARDUINO_PORT_TO_INPUT[i] = reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
 	}
 }
 
@@ -105,9 +105,9 @@ namespace IttyBitty
 }
 
 
-#define ARDUINO_PIN_MODE_REF(arduino_pin) (*ARDUINO_MODE_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
-#define ARDUINO_PIN_OUT_REF(arduino_pin) (*ARDUINO_OUT_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
-#define ARDUINO_PIN_IN_REF(arduino_pin) (*ARDUINO_IN_PORTS[ARDUINO_PIN_TO_PORT[arduino_pin]])
+#define ARDUINO_PIN_MODE_REF(arduino_pin) (*ARDUINO_PORT_TO_MODE[ARDUINO_PIN_TO_PORT[arduino_pin]])
+#define ARDUINO_PIN_OUT_REF(arduino_pin) (*ARDUINO_PORT_TO_OUTPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
+#define ARDUINO_PIN_IN_REF(arduino_pin) (*ARDUINO_PORT_TO_INPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 
 #define CHECK_ARDUINO_PIN(arduino_pin)  CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 #define CHECK_ARDUINO_PIN_SET(arduino_pin)  CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])

@@ -27,7 +27,7 @@
 #endif
 
 #ifndef DEFAULT_SERIAL
-	#define DEFAULT_SERIAL				Serial
+	#define DEFAULT_SERIAL				SERIAL_PORT_MONITOR
 #endif
 
 
