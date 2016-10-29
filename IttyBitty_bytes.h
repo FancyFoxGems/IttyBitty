@@ -437,9 +437,9 @@ namespace IttyBitty
 	public:
 
 		ByteField();
-		ByteField(RCBYTE);
-		ByteField(RBYTE);
-		ByteField(PBYTE);
+		EXPLICIT ByteField(RCBYTE);
+		EXPLICIT ByteField(RBYTE);
+		EXPLICIT ByteField(PBYTE);
 
 		ByteField(RRBYTEFIELD);
 		ByteField(RCBYTEFIELD);

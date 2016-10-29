@@ -9,7 +9,6 @@
 #ifndef _ITTYBITTY_FIELDS_H
 #define _ITTYBITTY_FIELDS_H
 
-
 		
 #ifdef ARDUINO
 	#include "Printable.h"

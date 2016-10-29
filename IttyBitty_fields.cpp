@@ -612,6 +612,4 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 #pragma endregion
 
-#elif !defined(EXCLUDE_ITTYBITTY_VALUES)
-	#define EXCLUDE_ITTYBITTY_VALUES
 #endif	// #ifndef EXCLUDE_ITTYBITTY_FIELDS

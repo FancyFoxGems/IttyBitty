@@ -192,7 +192,7 @@ CSIZE ByteField::Size() const
 
 SIZE ByteField::BitWidth() const
 {
-	return this->ByteSize() * BitPack::BitSize();
+	return this->ByteSize() * _BitPack::BitSize();
 }
 
 SIZE ByteField::ByteSize() const

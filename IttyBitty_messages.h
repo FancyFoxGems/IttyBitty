@@ -12,9 +12,10 @@
 
 #include "IttyBitty_fields.h"
 
-
 #ifdef DEBUG_MESSAGES
 	#include "IttyBitty_print.h"
+#elif defined(ARDUINO)
+	#include "Stream.h"
 #endif
 
 

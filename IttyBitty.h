@@ -58,6 +58,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ***********************************************************************************/
 
+#if defined(ITTYBITTY_SLIM) && !defined(ITTYBITTY_BASE)
+	#define ITTYBITTY_BASE
+#endif
+
 #if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
 	#define EXCLUDE_ITTYBITTY_BYTES
 #endif
@@ -115,7 +119,11 @@
 //#include "IttyBitty_util.h"			// Included by [IttyBitty_bits.h]
 
 
-#include "IttyBitty_info.h"
+/* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
+
+#ifndef EXCLUDE_ITTYBITTY_INFO
+	#include "IttyBitty_info.h"
+#endif
 
 
 /* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
