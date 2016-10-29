@@ -12,6 +12,8 @@
 
 #include "IttyBitty_type_traits.h"
 
+#include <avr/wdt.h>
+
 
 /* MACRO EXPANSION MACROS (META-MACROS) */
 
@@ -177,31 +179,35 @@ using std::extent;
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
 
+#define ever (;;)
+#define forever for ever
+
 #define T_SIZE SIZEOF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
 #define _CONSTRUCT(constructor_expr) FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
-
-#define ever (;;)
-#define forever for ever
-
-#define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
-#define _CSTR_P(string_addr) FLASH_STRING(string_addr)
-
 
 #ifndef F
 	class __FlashStringHelper;
 	#define F(const_c_string) (reinterpret_cast<const __FlashStringHelper *>(PSTR(const_c_string)))
 #endif
 
-template<typename T, T N>
-struct overflow { char operator()() { return N + 256; } };
+#define FLASH_STRING(string_addr) ((CSTR_P)(string_addr))
+#define _CSTR_P(string_addr) FLASH_STRING(string_addr)
+
+#define FLASH_FUNCTION_VARIATION(func) func ## _P
+#define PASS_FLASH_STRING(func, flash_string) (FLASH_FUNCTION_VARIATION(func)(PSTR(#flash_string)))
 
 #define PRINT_COMPILE_CONST(var) char(overflow<TYPEOF(var), var>())
 
-// TODO: NEW
-#define FLASH_FUNCTION_VARIATION(func) func ## _P
-#define PASS_FLASH_STRING(func, flash_string) (FLASH_FUNCTION_VARIATION(func)(PSTR(#flash_string)))
+#define SOFT_RESET()			\
+	do                          \
+	{                           \
+		wdt_enable(WDTO_15MS);  \
+		for(;;)                 \
+		{                       \
+		}                       \
+	} while(0)
 
 
 /* PLACEMENT NEW IMPLEMENTATION */
@@ -223,6 +229,9 @@ struct overflow { char operator()() { return N + 256; } };
 
 /* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */
 
+template<typename T, T N>
+struct overflow { char operator()() { return N + 256; } };
+
 template<typename T, typename R = VOID, typename ... args>
 INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 {
@@ -230,11 +239,11 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 }
 
 // TODO: NEW
-#include <avr/wdt.h>
 /*
-void wdt_init() __attribute__((naked)) __attribute__((section(".init3")));
 
-void wdt_init()
+VOID InitWDT() __attribute__((naked)) __attribute__((section(".init3")));
+
+VOID InitWDT()
 {
 	MCUSR = 0;
 	wdt_disable();
@@ -243,14 +252,17 @@ void wdt_init()
 }
 */
 
-#define soft_reset()			\
-	do                          \
-	{                           \
-		wdt_enable(WDTO_15MS);  \
-		for(;;)                 \
-		{                       \
-		}                       \
-	} while(0)
+/*
+void my_init_portb (void) __attribute__ ((naked)) \
+	__attribute__ ((section (".init3")));
+
+void
+my_init_portb (void)
+{
+		PORTB = 0xff;
+		DDRB = 0xff;
+}
+*/
 
 
 /*
@@ -264,18 +276,6 @@ void wdt_init()
 		out _SFR_IO_ADDR(MCUCR),r16
 
 ;; end xram.S
-*/
-
-/*
-void my_init_portb (void) __attribute__ ((naked)) \
-	__attribute__ ((section (".init3")));
-
-void
-my_init_portb (void)
-{
-		PORTB = 0xff;
-		DDRB = 0xff;
-}
 */
 
 #endif

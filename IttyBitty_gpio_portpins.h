@@ -31,12 +31,20 @@
 
 #define PIN_OUT_SET(port_letter, pin_number) SET_BIT(PORT##port_letter, pin_number)
 #define PIN_OUT_CLEAR(port_letter, pin_number) CLEAR_BIT(PORT##port_letter, pin_number)
-#define PIN_OUT_TOGGLE(port_letter, pin_number) TOGGLE_BIT(PORT##port_letter, pin_number)
+#define PIN_OUT_TOGGLE(port_letter, pin_number) TOGGLE_BIT(PIN##port_letter, pin_number)
 
-#define PIN_GET_MODE(port_letter, pin_number) ((PinMode)(CHECK_SET(DDR##port_letter, pin_number) OR CHECK_SET(PORT##port_letter, pin_number) SHL 1))
-#define PIN_SET_MODE(port_letter, pin_number, mode) \
-	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(DDR##port_letter, pin_number) else CLEAR_PIN(DDR##port_letter, pin_number); \
-	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_PIN(POR##port_letter, pin_number) else CLEAR_PIN(POR##port_letter, pin_number);
+#define PIN_RESET(port_letter, pin_number)	\
+	SET_PIN(PORT##port_letter, pin_number);		\
+	SET_PIN(DDR##port_letter, pin_number);		\
+	CLEAR_PIN(PORT##port_letter, pin_number);	\
+	CLEAR_PIN(DDR##port_letter, pin_number)
+
+#define PIN_GET_MODE(port_letter, pin_number)	\
+	((PinMode)(CHECK_SET(DDR##port_letter, pin_number) OR CHECK_SET(PORT##port_letter, pin_number) SHL 1))
+
+#define PIN_SET_MODE(port_letter, pin_number, mode)	\
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(DDR##port_letter, pin_number) else CLEAR_PIN(DDR##port_letter, pin_number);		\
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_PIN(POR##port_letter, pin_number) else CLEAR_PIN(POR##port_letter, pin_number)
 
 
 #ifdef PORTA
@@ -320,6 +328,15 @@
 	#define PA6_TOGGLE PIN_OUT_TOGGLE(A, 5)
 	#define PA7_TOGGLE PIN_OUT_TOGGLE(A, 6)
 	#define PA8_TOGGLE PIN_OUT_TOGGLE(A, 7)
+
+	#define PA1_RESET PIN_RESET(A, 0)
+	#define PA2_RESET PIN_RESET(A, 1)
+	#define PA3_RESET PIN_RESET(A, 2)
+	#define PA4_RESET PIN_RESET(A, 3)
+	#define PA5_RESET PIN_RESET(A, 4)
+	#define PA6_RESET PIN_RESET(A, 5)
+	#define PA7_RESET PIN_RESET(A, 6)
+	#define PA8_RESET PIN_RESET(A, 7)
 
 	#define PA1_GET_MODE PIN_GET_MODE(A, 0)
 	#define PA2_GET_MODE PIN_GET_MODE(A, 1)
@@ -625,6 +642,15 @@
 	#define PB7_TOGGLE PIN_OUT_TOGGLE(B, 6)
 	#define PB8_TOGGLE PIN_OUT_TOGGLE(B, 7)
 
+	#define PB1_RESET PIN_RESET(B, 0)
+	#define PB2_RESET PIN_RESET(B, 1)
+	#define PB3_RESET PIN_RESET(B, 2)
+	#define PB4_RESET PIN_RESET(B, 3)
+	#define PB5_RESET PIN_RESET(B, 4)
+	#define PB6_RESET PIN_RESET(B, 5)
+	#define PB7_RESET PIN_RESET(B, 6)
+	#define PB8_RESET PIN_RESET(B, 7)
+
 	#define PB1_GET_MODE PIN_GET_MODE(B, 0)
 	#define PB2_GET_MODE PIN_GET_MODE(B, 1)
 	#define PB3_GET_MODE PIN_GET_MODE(B, 2)
@@ -928,6 +954,15 @@
 	#define PC6_TOGGLE PIN_OUT_TOGGLE(C, 5)
 	#define PC7_TOGGLE PIN_OUT_TOGGLE(C, 6)
 	#define PC8_TOGGLE PIN_OUT_TOGGLE(C, 7)
+
+	#define PC1_RESET PIN_RESET(C, 0)
+	#define PC2_RESET PIN_RESET(C, 1)
+	#define PC3_RESET PIN_RESET(C, 2)
+	#define PC4_RESET PIN_RESET(C, 3)
+	#define PC5_RESET PIN_RESET(C, 4)
+	#define PC6_RESET PIN_RESET(C, 5)
+	#define PC7_RESET PIN_RESET(C, 6)
+	#define PC8_RESET PIN_RESET(C, 7)
 
 	#define PC1_GET_MODE PIN_GET_MODE(C, 0)
 	#define PC2_GET_MODE PIN_GET_MODE(C, 1)
@@ -1233,6 +1268,15 @@
 	#define PD7_TOGGLE PIN_OUT_TOGGLE(D, 6)
 	#define PD8_TOGGLE PIN_OUT_TOGGLE(D, 7)
 
+	#define PD1_RESET PIN_RESET(D, 0)
+	#define PD2_RESET PIN_RESET(D, 1)
+	#define PD3_RESET PIN_RESET(D, 2)
+	#define PD4_RESET PIN_RESET(D, 3)
+	#define PD5_RESET PIN_RESET(D, 4)
+	#define PD6_RESET PIN_RESET(D, 5)
+	#define PD7_RESET PIN_RESET(D, 6)
+	#define PD8_RESET PIN_RESET(D, 7)
+
 	#define PD1_GET_MODE PIN_GET_MODE(D, 0)
 	#define PD2_GET_MODE PIN_GET_MODE(D, 1)
 	#define PD3_GET_MODE PIN_GET_MODE(D, 2)
@@ -1536,6 +1580,15 @@
 	#define PE6_TOGGLE PIN_OUT_TOGGLE(E, 5)
 	#define PE7_TOGGLE PIN_OUT_TOGGLE(E, 6)
 	#define PE8_TOGGLE PIN_OUT_TOGGLE(E, 7)
+
+	#define PE1_RESET PIN_RESET(E, 0)
+	#define PE2_RESET PIN_RESET(E, 1)
+	#define PE3_RESET PIN_RESET(E, 2)
+	#define PE4_RESET PIN_RESET(E, 3)
+	#define PE5_RESET PIN_RESET(E, 4)
+	#define PE6_RESET PIN_RESET(E, 5)
+	#define PE7_RESET PIN_RESET(E, 6)
+	#define PE8_RESET PIN_RESET(E, 7)
 
 	#define PE1_GET_MODE PIN_GET_MODE(E, 0)
 	#define PE2_GET_MODE PIN_GET_MODE(E, 1)
@@ -1841,6 +1894,15 @@
 	#define PF7_TOGGLE PIN_OUT_TOGGLE(F, 6)
 	#define PF8_TOGGLE PIN_OUT_TOGGLE(F, 7)
 
+	#define PF1_RESET PIN_RESET(F, 0)
+	#define PF2_RESET PIN_RESET(F, 1)
+	#define PF3_RESET PIN_RESET(F, 2)
+	#define PF4_RESET PIN_RESET(F, 3)
+	#define PF5_RESET PIN_RESET(F, 4)
+	#define PF6_RESET PIN_RESET(F, 5)
+	#define PF7_RESET PIN_RESET(F, 6)
+	#define PF8_RESET PIN_RESET(F, 7)
+
 	#define PF1_GET_MODE PIN_GET_MODE(F, 0)
 	#define PF2_GET_MODE PIN_GET_MODE(F, 1)
 	#define PF3_GET_MODE PIN_GET_MODE(F, 2)
@@ -2144,6 +2206,15 @@
 	#define PG6_TOGGLE PIN_OUT_TOGGLE(G, 5)
 	#define PG7_TOGGLE PIN_OUT_TOGGLE(G, 6)
 	#define PG8_TOGGLE PIN_OUT_TOGGLE(G, 7)
+
+	#define PG1_RESET PIN_RESET(G, 0)
+	#define PG2_RESET PIN_RESET(G, 1)
+	#define PG3_RESET PIN_RESET(G, 2)
+	#define PG4_RESET PIN_RESET(G, 3)
+	#define PG5_RESET PIN_RESET(G, 4)
+	#define PG6_RESET PIN_RESET(G, 5)
+	#define PG7_RESET PIN_RESET(G, 6)
+	#define PG8_RESET PIN_RESET(G, 7)
 
 	#define PG1_GET_MODE PIN_GET_MODE(G, 0)
 	#define PG2_GET_MODE PIN_GET_MODE(G, 1)
@@ -2449,6 +2520,15 @@
 	#define PH7_TOGGLE PIN_OUT_TOGGLE(H, 6)
 	#define PH8_TOGGLE PIN_OUT_TOGGLE(H, 7)
 
+	#define PH1_RESET PIN_RESET(H, 0)
+	#define PH2_RESET PIN_RESET(H, 1)
+	#define PH3_RESET PIN_RESET(H, 2)
+	#define PH4_RESET PIN_RESET(H, 3)
+	#define PH5_RESET PIN_RESET(H, 4)
+	#define PH6_RESET PIN_RESET(H, 5)
+	#define PH7_RESET PIN_RESET(H, 6)
+	#define PH8_RESET PIN_RESET(H, 7)
+
 	#define PH1_GET_MODE PIN_GET_MODE(H, 0)
 	#define PH2_GET_MODE PIN_GET_MODE(H, 1)
 	#define PH3_GET_MODE PIN_GET_MODE(H, 2)
@@ -2752,6 +2832,15 @@
 	#define PJ6_TOGGLE PIN_OUT_TOGGLE(J, 5)
 	#define PJ7_TOGGLE PIN_OUT_TOGGLE(J, 6)
 	#define PJ8_TOGGLE PIN_OUT_TOGGLE(J, 7)
+
+	#define PJ1_RESET PIN_RESET(J, 0)
+	#define PJ2_RESET PIN_RESET(J, 1)
+	#define PJ3_RESET PIN_RESET(J, 2)
+	#define PJ4_RESET PIN_RESET(J, 3)
+	#define PJ5_RESET PIN_RESET(J, 4)
+	#define PJ6_RESET PIN_RESET(J, 5)
+	#define PJ7_RESET PIN_RESET(J, 6)
+	#define PJ8_RESET PIN_RESET(J, 7)
 
 	#define PJ1_GET_MODE PIN_GET_MODE(J, 0)
 	#define PJ2_GET_MODE PIN_GET_MODE(J, 1)
@@ -3057,6 +3146,15 @@
 	#define PK7_TOGGLE PIN_OUT_TOGGLE(K, 6)
 	#define PK8_TOGGLE PIN_OUT_TOGGLE(K, 7)
 
+	#define PK1_RESET PIN_RESET(K, 0)
+	#define PK2_RESET PIN_RESET(K, 1)
+	#define PK3_RESET PIN_RESET(K, 2)
+	#define PK4_RESET PIN_RESET(K, 3)
+	#define PK5_RESET PIN_RESET(K, 4)
+	#define PK6_RESET PIN_RESET(K, 5)
+	#define PK7_RESET PIN_RESET(K, 6)
+	#define PK8_RESET PIN_RESET(K, 7)
+
 	#define PK1_GET_MODE PIN_GET_MODE(K, 0)
 	#define PK2_GET_MODE PIN_GET_MODE(K, 1)
 	#define PK3_GET_MODE PIN_GET_MODE(K, 2)
@@ -3360,6 +3458,15 @@
 	#define PL6_TOGGLE PIN_OUT_TOGGLE(L, 5)
 	#define PL7_TOGGLE PIN_OUT_TOGGLE(L, 6)
 	#define PL8_TOGGLE PIN_OUT_TOGGLE(L, 7)
+
+	#define PL1_RESET PIN_RESET(L, 0)
+	#define PL2_RESET PIN_RESET(L, 1)
+	#define PL3_RESET PIN_RESET(L, 2)
+	#define PL4_RESET PIN_RESET(L, 3)
+	#define PL5_RESET PIN_RESET(L, 4)
+	#define PL6_RESET PIN_RESET(L, 5)
+	#define PL7_RESET PIN_RESET(L, 6)
+	#define PL8_RESET PIN_RESET(L, 7)
 
 	#define PL1_GET_MODE PIN_GET_MODE(L, 0)
 	#define PL2_GET_MODE PIN_GET_MODE(L, 1)

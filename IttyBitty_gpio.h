@@ -15,11 +15,11 @@
 
 #define TRISTATE_INPUT INPUT
 
-#define L LOW		// I/O low state; 0x0
-#define H HIGH		// I/O high state; 0x1
+#define	L	LOW		// I/O low state; 0x0
+#define H	HIGH	// I/O high state; 0x1
 
-#define HIGH_Z 0x0	// (Tri-state) input high impedance / disconnected state
-#define DISCONNECTED HIGH_Z
+#define HIGH_Z			0x0		// (Tri-state) input high impedance / disconnected state
+#define DISCONNECTED	HIGH_Z
 
 
 #ifdef EXCLUDE_ITTYBITTY_BYTES
@@ -118,21 +118,21 @@ namespace IttyBitty
 	{
 	public:
 
-		_Port() : Registers(PortReg::NULL_OBJECT()) { }
+		_Port() : _Registers(PortReg::NULL_OBJECT()) { }
 
 		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 		{
-			 this->Registers = PortReg(directionReg, outputReg, inputReg);
+			 this->_Registers = PortReg(directionReg, outputReg, inputReg);
 		}
 
 		_Port(RVBYTE directionRegAddr, RVBYTE outputRegAddr, RVBYTE inputRegAddr)
 		{
-			 this->Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
+			 this->_Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
 		}
 
 		_Port(RCPORT other)
 		{
-			this->Registers = other.Registers;
+			this->_Registers = other._Registers;
 		}
 
 		VIRTUAL ~_Port() { }
@@ -145,7 +145,7 @@ namespace IttyBitty
 
 		VIRTUAL RPORT operator=(RCPORT other)
 		{
-			this->Registers = other.Registers;
+			this->_Registers = other._Registers;
 
 			return *this;
 		}
@@ -162,13 +162,13 @@ namespace IttyBitty
 
 		VIRTUAL PinMode GetPinMode(PIN_NUMBER p) const
 		{
-			return (PinMode)((BIT)Registers.DirectionReg[p] OR (BIT)Registers.OutputReg[p] SHL 1);
+			return (PinMode)((BIT)_Registers.DirectionReg[p] OR (BIT)_Registers.OutputReg[p] SHL 1);
 		}
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)
 		{
-			Registers.DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
-			Registers.OutputReg[p]		= MASK((BYTE)mode, INPUT_PULLUP);
+			_Registers.DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
+			_Registers.OutputReg[p]		= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
 		VIRTUAL VOID SetPinModeBasic(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
@@ -178,48 +178,51 @@ namespace IttyBitty
 
 		VIRTUAL BIT CheckPin(PIN_NUMBER p) const
 		{
-			return Registers.InputReg[p];
+			return _Registers.InputReg[p];
 		}
 
 		VIRTUAL BIT CheckPinSet(PIN_NUMBER p) const
 		{
-			return Registers.InputReg[p];
+			return _Registers.InputReg[p];
 		}
 
 		VIRTUAL BIT CheckPinUnset(PIN_NUMBER p) const
 		{
-			return ~Registers.InputReg[p];
+			return ~_Registers.InputReg[p];
 		}
 
 		VIRTUAL BITREF PinState(PIN_NUMBER p) const
 		{
-			return Registers.OutputReg[p];
+			return _Registers.OutputReg[p];
 		}
 
 		VIRTUAL VOID SetPin(PIN_NUMBER p)
 		{
-			Registers.OutputReg[p] = 1;
+			_Registers.OutputReg[p] = 1;
+		}
+
+		VIRTUAL VOID ClearPin(PIN_NUMBER p)
+		{
+			_Registers.OutputReg[p] = 0;
+		}
+
+		VIRTUAL VOID TogglePin(PIN_NUMBER p)
+		{
+			_Registers.InputReg[p] = !this->CheckPin(p);
 		}
 
 		VIRTUAL VOID ResetPin(PIN_NUMBER p)
 		{
-			Registers.OutputReg[p] = 0;
+			_Registers.OutputReg[p] = 1;
+			_Registers.DirectionReg[p] = 1;
+			_Registers.OutputReg[p] = 0;
+			_Registers.DirectionReg[p] = 0;
 		}
-
-		// TODO: NEW
-		//Reset pin to default state
-		/* PORTB |= (1 << 4);
-		DDRB |= (1 << 4);
-		PORTB &= ~(1 << 4);
-		DDRB &= ~(1 << 4);*/
-
-		// TogglePin
-		// PINB |= (1 <<4)
 
 
 	protected:
 
-		RPORTREG Registers = PortReg::NULL_OBJECT();
+		RPORTREG _Registers = PortReg::NULL_OBJECT();
 	};
 
 	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
@@ -292,12 +295,17 @@ namespace IttyBitty
 			return port->SetPin(pin_number);
 		}
 
-		STATIC VOID Reset()
+		STATIC VOID Clear()
 		{
-			return port->ResetPin(pin_number);
+			return port->ClearPin(pin_number);
 		}
 
-		STATIC VOID Clear()
+		STATIC VOID Toggle()
+		{
+			return port->TogglePin(pin_number);
+		}
+
+		STATIC VOID Reset()
 		{
 			return port->ResetPin(pin_number);
 		}

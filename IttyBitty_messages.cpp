@@ -22,7 +22,7 @@ PBYTE IttyBitty::__message_buffer = NULL;
 #pragma endregion
 
 
-#pragma region Message IMPLEMENTATION
+#pragma region [Message] IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
 
