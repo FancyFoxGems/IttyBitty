@@ -9,7 +9,7 @@
 using namespace IttyBitty;
 
 
-/* [BITPACK] DEFINITION */
+/* [_BitPack] DEFINITION */
 
 #define __BIT(i) (this->b##i)
 

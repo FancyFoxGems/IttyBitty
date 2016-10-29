@@ -11,7 +11,7 @@
 using namespace IttyBitty;
 
 
-#pragma region Value DEFINITION
+#pragma region [Value] IMPLEMENTATION
 
 // CONSTRUCTORS
 
@@ -203,7 +203,7 @@ VOID Value::FreeData()
 #pragma endregion
 
 
-#pragma region Datum DEFINITION
+#pragma region [Datum] IMPLEMENTATION
 
 // CONSTRUCTORS
 

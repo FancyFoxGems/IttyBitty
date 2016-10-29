@@ -20,7 +20,7 @@ PBYTE IttyBitty::__field_buffer = NULL;
 #pragma endregion
 
 
-#pragma region FieldBase DEFINITION
+#pragma region [FieldBase] IMPLEMENTATION
 
 // DESTRUCTOR
 
@@ -263,7 +263,7 @@ CONST DataType FieldBase::GetDataType() const
 
 
 
-#pragma region Field DEFINITION
+#pragma region [Field] IMPLEMENTATION
 
 // CONSTRUCTORS
 
@@ -415,7 +415,7 @@ Field::operator RCFLOAT() const
 #pragma endregion
 
 
-#pragma region VarLengthField DEFINITION
+#pragma region [VarLengthField] IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
 

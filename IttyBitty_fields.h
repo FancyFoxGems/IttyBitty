@@ -135,9 +135,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region INTERFACES
+#pragma region INTERFACE DEFINITIONS
 
-	// ISerializable DECLARATION
+	// [ISerializable] DEFINITION
 
 	INTERFACE ISerializable : public Printable
 	{
@@ -166,7 +166,7 @@ namespace IttyBitty
 	};
 
 
-	// IField DECLARATION
+	// [IField] DEFINITION
 
 	INTERFACE IField : public ISerializable
 	{
@@ -189,7 +189,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region FieldBase DECLARATION - TAGGED UNION BASE
+#pragma region [FieldBase] DEFINITION - TAGGED UNION BASE
 
 	CLASS FieldBase : public IField
 	{
@@ -235,7 +235,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region Field DECLARATION - TAGGED UNION
+#pragma region [Field] DEFINITION - TAGGED UNION
 
 	CLASS Field : public FieldBase
 	{
@@ -338,7 +338,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region TypedField DEFINITION - TEMPLATED TAGGED UNION
+#pragma region [TypedField] DEFINITION - TEMPLATED TAGGED UNION
 	
 	template<typename T>
 	CLASS TypedField : public FieldBase
@@ -555,7 +555,7 @@ namespace IttyBitty
 #pragma endregion
 
 	
-#pragma region VarLengthTypedField DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
+#pragma region [VarLengthTypedField] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
 	template<typename T>
 	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);

@@ -422,7 +422,7 @@ IGNORE_WARNING(-Wstrict-aliasing)
 
 namespace IttyBitty
 {
-	/* [BITPACK]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
+	/* [_BitPack]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
 
 	struct _BitPack;
 	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK, && RRBITPACK;

@@ -71,7 +71,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region IMessage & IMessageCommand DEFINITIONS
+#pragma region [IMessage] DEFINITION
 
 	INTERFACE IMessage : public ISerializable
 	{
@@ -98,7 +98,7 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		//VIRTUAL VOID Handle(...) = 0;
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) = 0;
 
 	protected:
 
@@ -111,7 +111,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region Message DECLARATION
+#pragma region [Message] DEFINITION
 
 	CLASS Message : public IMessage
 	{
@@ -164,7 +164,7 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		VIRTUAL VOID Handle(...);
+		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 		
 
 		// ISerializable IMPLEMENTATION
@@ -203,7 +203,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region GenericMessage DECLARATION
+#pragma region [GenericMessage] DEFINITION
 	
 	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
 	CLASS GenericMessage : public Message

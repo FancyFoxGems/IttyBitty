@@ -22,7 +22,7 @@ PBYTE IttyBitty::__message_buffer = NULL;
 #pragma endregion
 
 
-#pragma region Message DEFINITION
+#pragma region Message IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
 
@@ -168,11 +168,17 @@ RIFIELD Message::Param(CBYTE i)
 
 // USER METHODS
 
-VOID Message::Handle(...)
+//VOID Message::Handle(...)
+BOOL Message::Handle(PVOID results, PCVOID state)
 {
+	//va_list args;
+	//va_start(args, 0);
+	//va_end(args);
 #ifdef DEBUG_MESSAGES
 	PrintLineAndFlush(F("Message::Handle"));
 #endif
+
+	return TRUE;
 }
 
 
