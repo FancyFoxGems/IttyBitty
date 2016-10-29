@@ -28,6 +28,18 @@ namespace IttyBitty
 		FlushAndDelay();
 	}
 
+	VOID PrintAndFlush(CBOOL data, Stream & printer)
+	{
+		printer.print(data ? TRUE_STRING : FALSE_STRING);
+		FlushAndDelay();
+	}
+
+	VOID PrintLineAndFlush(CBOOL data, Stream & printer)
+	{
+		printer.println(data ? TRUE_STRING : FALSE_STRING);
+		FlushAndDelay();
+	}
+
 	VOID PrintAndFlush(CBYTE data, Stream & printer)
 	{
 		printer.print(data);

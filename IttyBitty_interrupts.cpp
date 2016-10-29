@@ -9,7 +9,5 @@
 
 #include "IttyBitty_interrupts.h"
 
-using namespace IttyBitty;
-
 
 #endif // #ifndef EXCLUDE_ITTYBITTY_INTERRUPTS

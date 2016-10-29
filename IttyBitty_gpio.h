@@ -379,7 +379,11 @@ namespace IttyBitty
 }
 
 
-	#define _DECLARE_PORT_STRUCTS(port_letter) EXTERN IttyBitty::PORT Port##port_letter;
+	#define _DECLARE_PORT_STRUCTS(port_letter)	\
+		EXTERN IttyBitty::RBITPACK P##port_letter##_DDR;	\
+		EXTERN IttyBitty::RBITPACK P##port_letter##_PORT;	\
+		EXTERN IttyBitty::RBITPACK P##port_letter##_PIN;	\
+		EXTERN IttyBitty::PORT Port##port_letter;
 
 
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
@@ -388,8 +392,9 @@ namespace IttyBitty
 	#include "IttyBitty_bits.h"
 
 
-	#define _DECLARE_PORT_STRUCTS(port_letter) EXTERN IttyBitty::RBITPACK P##port_letter##_DDR; \
-		EXTERN IttyBitty::RBITPACK P##port_letter##_PORT; \
+	#define _DECLARE_PORT_STRUCTS(port_letter)	\
+		EXTERN IttyBitty::RBITPACK P##port_letter##_DDR;	\
+		EXTERN IttyBitty::RBITPACK P##port_letter##_PORT;	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_PIN;
 
 

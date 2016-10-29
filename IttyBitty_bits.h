@@ -463,11 +463,4 @@ namespace IttyBitty
 	};
 }
 
-
-#ifdef EXCLUDE_ITTYBITTY_BYTES
-
-
-#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
-
-
 #endif

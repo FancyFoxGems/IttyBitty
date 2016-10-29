@@ -12,7 +12,6 @@
 
 #include "IttyBitty_signals.h"
 
-using namespace IttyBitty;
 
 
 #endif // #ifndef EXCLUDE_ITTYBITTY_SIGNALS

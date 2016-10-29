@@ -31,6 +31,9 @@
 	#define DEFAULT_SERIAL				SERIAL_PORT_MONITOR
 #endif
 
+#define TRUE_STRING						"TRUE"
+#define FALSE_STRING					"FALSE"
+
 
 namespace IttyBitty
 {
@@ -39,19 +42,23 @@ namespace IttyBitty
 	VOID PrintBytes(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
 	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(PCCHAR, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(PCCHAR, Stream & = DEFAULT_SERIAL);
+	VOID PrintAndFlush(CBOOL, Stream & = DEFAULT_SERIAL);
+	VOID PrintLineAndFlush(CBOOL, Stream & = DEFAULT_SERIAL);
+
+	VOID PrintAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
+	VOID PrintLineAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
+
+	VOID PrintAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintLineAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
+
+	VOID PrintAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
+	VOID PrintLineAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
 
 	VOID PrintAndFlush(CFLOAT, Stream & = DEFAULT_SERIAL);
 	VOID PrintLineAndFlush(CFLOAT, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
-	VOID PrintAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
-
-	VOID PrintAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
+	VOID PrintAndFlush(PCCHAR, Stream & = DEFAULT_SERIAL);
+	VOID PrintLineAndFlush(PCCHAR = "", Stream & = DEFAULT_SERIAL);
 
 	VOID PrintAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
 	VOID PrintLineAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
