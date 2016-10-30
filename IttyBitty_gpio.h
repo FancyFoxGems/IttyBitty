@@ -183,6 +183,11 @@ namespace IttyBitty
 			this->SetPinMode(p, (PinMode)basicMode);
 		}
 
+		VIRTUAL BIT ReadPin(PIN_NUMBER p) const
+		{
+			return _Registers->InputReg[p];
+		}
+
 		VIRTUAL BIT CheckPin(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
@@ -215,7 +220,7 @@ namespace IttyBitty
 
 		VIRTUAL VOID TogglePin(PIN_NUMBER p)
 		{
-			_Registers->InputReg[p] = !this->CheckPin(p);
+			_Registers->InputReg[p] = !this->ReadPin(p);
 		}
 
 		VIRTUAL VOID ResetPin(PIN_NUMBER p)
@@ -240,22 +245,6 @@ namespace IttyBitty
 	using Pin = struct _Pin<PinNum, PortPtr>;
 	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
 	using PIN = struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PPIN = struct _Pin<PinNum, PortPtr> *;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using RPIN = struct _Pin<PinNum, PortPtr> &;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PPPIN = struct _Pin<PinNum, PortPtr> **;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using RRPIN = struct _Pin<PinNum, PortPtr> &&;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using CPIN = const struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PCPIN = const struct _Pin<PinNum, PortPtr> *;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using RCPIN = const struct _Pin<PinNum, PortPtr> &;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PPCPIN = const struct _Pin<PinNum, PortPtr> **;
 
 
 	template<PIN_NUMBER PinNum, PPORT PortPtr>
@@ -283,6 +272,11 @@ namespace IttyBitty
 		}
 
 		STATIC BIT Read()
+		{
+			return PortPtr->ReadPin(PinNum);
+		}
+
+		STATIC BIT Check()
 		{
 			return PortPtr->CheckPin(PinNum);
 		}
@@ -317,83 +311,6 @@ namespace IttyBitty
 			return PortPtr->ResetPin(PinNum);
 		}
 	};
-
-
-	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
-
-	//#define _GPIO_TYPEDEF_PINS(port_letter)						\
-	//	typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
-	//	typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
-	//	typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
-	//	typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
-	//	typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
-	//	typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
-	//	typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
-	//	typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
-
-	STRUCT _GPIO FINAL
-	{
-	private:
-
-		_GPIO() { }
-
-
-	public:
-
-		~_GPIO() { }
-
-		STATIC RCGPIO Instance()
-		{
-			STATIC GPIO INSTANCE;
-			return INSTANCE;
-		}
-
-
-	#ifdef PORTA
-		_GPIO_DECLARE_PORT_STRUCTS(A)
-		_GPIO_TYPEDEF_PINS(A)
-	#endif
-
-	#ifdef PORTB
-		_GPIO_DECLARE_PORT_STRUCTS(B)
-	#endif
-
-	#ifdef PORTC
-		_GPIO_DECLARE_PORT_STRUCTS(C)
-	#endif
-
-	#ifdef PORTD
-		_GPIO_DECLARE_PORT_STRUCTS(D)
-	#endif
-
-	#ifdef PORTE
-		_GPIO_DECLARE_PORT_STRUCTS(E)
-	#endif
-
-	#ifdef PORTF
-		_GPIO_DECLARE_PORT_STRUCTS(F)
-	#endif
-
-	#ifdef PORTG
-		_GPIO_DECLARE_PORT_STRUCTS(G)
-	#endif
-
-	#ifdef PORTH
-		_GPIO_DECLARE_PORT_STRUCTS(H)
-	#endif
-
-	#ifdef PORTJ
-		_GPIO_DECLARE_PORT_STRUCTS(J)
-	#endif
-
-	#ifdef PORTK
-		_GPIO_DECLARE_PORT_STRUCTS(K)
-	#endif
-
-	#ifdef PORTL
-		_GPIO_DECLARE_PORT_STRUCTS(L)
-	#endif
-	};
 }
 
 
@@ -406,9 +323,7 @@ namespace IttyBitty
 		EXTERN IttyBitty::REG8 PIN##port_letter##_REG;		\
 		EXTERN IttyBitty::PORT Port##port_letter;
 
-
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
-
 
 	#include "IttyBitty_bits.h"
 
@@ -417,7 +332,6 @@ namespace IttyBitty
 		EXTERN IttyBitty::RBITPACK P##port_letter##_DDR;	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_PORT;	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_PIN;
-
 
 #endif
 
@@ -466,64 +380,100 @@ namespace IttyBitty
 	_DECLARE_PORT_STRUCTS(L)
 #endif
 
-//
-//#ifndef EXCLUDE_ITTYBITTY_BYTES
-//
-//	#define _TYPEDEF_PINS(port_letter)										\
-//		typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##0;	\
-//		typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##1;	\
-//		typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##2;	\
-//		typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##3;	\
-//		typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##4;	\
-//		typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##5;	\
-//		typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##6;	\
-//		typedef IttyBitty::PIN<7, &Port##port_letter> Pin##port_letter##7;
-//
-//	#ifdef PORTA
-//		_TYPEDEF_PINS(A)
-//	#endif
-//
-//	#ifdef PORTB
-//		_TYPEDEF_PINS(B)
-//	#endif
-//
-//	#ifdef PORTC
-//		_TYPEDEF_PINS(C)
-//	#endif
-//
-//	#ifdef PORTD
-//		_TYPEDEF_PINS(D)
-//	#endif
-//
-//	#ifdef PORTE
-//		_TYPEDEF_PINS(E)
-//	#endif
-//
-//	#ifdef PORTF
-//		_TYPEDEF_PINS(F)
-//	#endif
-//
-//	#ifdef PORTG
-//		_TYPEDEF_PINS(G)
-//	#endif
-//
-//	#ifdef PORTH
-//		_TYPEDEF_PINS(H)
-//	#endif
-//
-//	#ifdef PORTJ
-//		_TYPEDEF_PINS(J)
-//	#endif
-//
-//	#ifdef PORTK
-//		_TYPEDEF_PINS(K)
-//	#endif
-//
-//	#ifdef PORTL
-//		_TYPEDEF_PINS(L)
-//	#endif
-//
-//#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+namespace IttyBitty
+{
+	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
+
+	#define _GPIO_TYPEDEF_PINS(port_letter)				\
+		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
+
+
+	STRUCT _GPIO FINAL
+	{
+	private:
+
+		_GPIO() { }
+
+
+	public:
+
+		~_GPIO() { }
+
+		STATIC RCGPIO Instance()
+		{
+			STATIC GPIO INSTANCE;
+			return INSTANCE;
+		}
+
+
+	#ifdef PORTA
+		_GPIO_DECLARE_PORT_STRUCTS(A)
+		_GPIO_TYPEDEF_PINS(A)
+	#endif
+
+	#ifdef PORTB
+		_GPIO_DECLARE_PORT_STRUCTS(B)
+		_GPIO_TYPEDEF_PINS(B)
+	#endif
+
+	#ifdef PORTC
+		_GPIO_DECLARE_PORT_STRUCTS(C)
+		_GPIO_TYPEDEF_PINS(C)
+	#endif
+
+	#ifdef PORTD
+		_GPIO_DECLARE_PORT_STRUCTS(D)
+		_GPIO_TYPEDEF_PINS(D)
+	#endif
+
+	#ifdef PORTE
+		_GPIO_DECLARE_PORT_STRUCTS(E)
+		_GPIO_TYPEDEF_PINS(E)
+	#endif
+
+	#ifdef PORTF
+		_GPIO_DECLARE_PORT_STRUCTS(F)
+		_GPIO_TYPEDEF_PINS(F)
+	#endif
+
+	#ifdef PORTG
+		_GPIO_DECLARE_PORT_STRUCTS(G)
+		_GPIO_TYPEDEF_PINS(G)
+	#endif
+
+	#ifdef PORTH
+		_GPIO_DECLARE_PORT_STRUCTS(H)
+		_GPIO_TYPEDEF_PINS(H)
+	#endif
+
+	#ifdef PORTJ
+		_GPIO_DECLARE_PORT_STRUCTS(J)
+		_GPIO_TYPEDEF_PINS(J)
+	#endif
+
+	#ifdef PORTK
+		_GPIO_DECLARE_PORT_STRUCTS(K)
+		_GPIO_TYPEDEF_PINS(K)
+	#endif
+
+	#ifdef PORTL
+		_GPIO_DECLARE_PORT_STRUCTS(L)
+		_GPIO_TYPEDEF_PINS(L)
+	#endif
+	};
+}
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
 #include "IttyBitty_gpio_arduino.h"

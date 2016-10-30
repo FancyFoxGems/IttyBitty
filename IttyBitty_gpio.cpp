@@ -13,11 +13,21 @@
 	#define EXCLUDE_ITTYBITTY_BYTES
 #endif
 
+
 #ifndef EXCLUDE_ITTYBITTY_GPIO
+
 
 #include "IttyBitty_gpio.h"
 
 using namespace IttyBitty;
+
+
+PVBYTE ARDUINO_PORT_TO_MODE[NUM_PORTS];
+PVBYTE ARDUINO_PORT_TO_OUTPUT[NUM_PORTS];
+PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
+
+BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
+BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
@@ -86,90 +96,9 @@ using namespace IttyBitty;
 #endif
 
 
-PVBYTE ARDUINO_PORT_TO_MODE[NUM_PORTS];
-PVBYTE ARDUINO_PORT_TO_OUTPUT[NUM_PORTS];
-PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
-
-BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
-BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
-
-
-#ifndef EXCLUDE_ITTYBITTY_BYTES
-
-
-namespace IttyBitty
-{
-	#define _TYPEDEF_PINS(port_letter)							\
-		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
-		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
-		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
-		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
-		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
-		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
-		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
-		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
-
-	#ifdef PORTA
-		_TYPEDEF_PINS(A)
-	#endif
-
-	#ifdef PORTB
-		_TYPEDEF_PINS(B)
-	#endif
-
-	#ifdef PORTC
-		_TYPEDEF_PINS(C)
-	#endif
-
-	#ifdef PORTD
-		_TYPEDEF_PINS(D)
-	#endif
-
-	#ifdef PORTE
-		_TYPEDEF_PINS(E)
-	#endif
-
-	#ifdef PORTF
-		_TYPEDEF_PINS(F)
-	#endif
-
-	#ifdef PORTG
-		_TYPEDEF_PINS(G)
-	#endif
-
-	#ifdef PORTH
-		_TYPEDEF_PINS(H)
-	#endif
-
-	#ifdef PORTJ
-		_TYPEDEF_PINS(J)
-	#endif
-
-	#ifdef PORTK
-		_TYPEDEF_PINS(K)
-	#endif
-
-	#ifdef PORTL
-		_TYPEDEF_PINS(L)
-	#endif
-}
-
-#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
-
-
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 	#define _GPIO_INITIALIZE_PORT(port_letter) RPORT GPIO::P##port_letter = Port##port_letter;
-
-	#define _GPIO_TYPEDEF_PINS(port_letter)						\
-		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
-		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
-		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
-		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
-		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
-		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
-		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
-		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
 
 	#ifdef PORTA
 		_GPIO_INITIALIZE_PORT(A)

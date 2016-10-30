@@ -74,7 +74,7 @@ EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 #endif
 
 
-INLINE VOID _InitializePortTables()
+INLINE VOID _InitializeArduinoPortTables()
 {
 	for (SIZE i = 0; i < NUM_PORTS; i++)
 	{
@@ -99,7 +99,7 @@ namespace IttyBitty
 {
 	INLINE VOID InitGPIO()
 	{
-		_InitializePortTables();
+		_InitializeArduinoPortTables();
 		_InitializeArduinoPinTables();
 	}
 }
