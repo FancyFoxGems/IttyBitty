@@ -213,6 +213,11 @@ namespace IttyBitty
 			return _Registers->OutputReg[p];
 		}
 
+		VIRTUAL VOID WritePin(PIN_NUMBER p, RCBIT state)
+		{
+			_Registers->OutputReg[p] = state;
+		}
+
 		VIRTUAL VOID SetPin(PIN_NUMBER p)
 		{
 			_Registers->OutputReg[p] = 1;
@@ -299,6 +304,11 @@ namespace IttyBitty
 		STATIC CBIT CheckUnset()
 		{
 			return PortPtr->CheckPinUnset(PinNum);
+		}
+
+		STATIC VOID Write(RCBIT state)
+		{
+			return PortPtr->WritePin(PinNum, state);
 		}
 
 		STATIC VOID Set()
