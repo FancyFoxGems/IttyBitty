@@ -174,22 +174,17 @@ namespace IttyBitty
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)
 		{
-			PrintLineAndFlush((CBYTE)mode);
 			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
 			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
 		{
-			PrintLineAndFlush((CBYTE)basicMode);
 			this->SetPinMode(p, (PinMode)basicMode);
 		}
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode = OUTPUT)
 		{
-			PrintLineAndFlush((CBYTE)arduinoMode);
-			PrintLineAndFlush((CBYTE)(PinModeBasic)arduinoMode);
-			PrintLineAndFlush((CBYTE)(PinMode)arduinoMode);
 			this->SetPinMode(p, (PinModeBasic)arduinoMode);
 		}
 
