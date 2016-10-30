@@ -412,7 +412,8 @@ namespace IttyBitty
 
 		msgHandler(message);
 
-		delete message;
+		if (message)
+			delete message;
 	}
 
 #pragma endregion
