@@ -33,7 +33,7 @@ namespace IttyBitty
 	{
 		Input	= INPUT,
 		Output	= OUTPUT,
-		PullUp	= INPUT_PULLUP
+		PullUp	= 0x2//INPUT_PULLUP
 	};
 
 	ENUM PinMode : BYTE
@@ -174,31 +174,41 @@ namespace IttyBitty
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)
 		{
+			PrintLineAndFlush((CBYTE)mode);
 			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
 			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
-		VIRTUAL VOID SetPinModeBasic(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
 		{
+			PrintLineAndFlush((CBYTE)basicMode);
 			this->SetPinMode(p, (PinMode)basicMode);
 		}
 
-		VIRTUAL BIT ReadPin(PIN_NUMBER p) const
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode = OUTPUT)
+		{
+			PrintLineAndFlush((CBYTE)arduinoMode);
+			PrintLineAndFlush((CBYTE)(PinModeBasic)arduinoMode);
+			PrintLineAndFlush((CBYTE)(PinMode)arduinoMode);
+			this->SetPinMode(p, (PinModeBasic)arduinoMode);
+		}
+
+		VIRTUAL CBIT ReadPin(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
 		}
 
-		VIRTUAL BIT CheckPin(PIN_NUMBER p) const
+		VIRTUAL CBIT CheckPin(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
 		}
 
-		VIRTUAL BIT CheckPinSet(PIN_NUMBER p) const
+		VIRTUAL CBIT CheckPinSet(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
 		}
 
-		VIRTUAL BIT CheckPinUnset(PIN_NUMBER p) const
+		VIRTUAL CBIT CheckPinUnset(PIN_NUMBER p) const
 		{
 			return ~_Registers->InputReg[p];
 		}
@@ -261,32 +271,37 @@ namespace IttyBitty
 			return PortPtr->GetPinMode(PinNum);
 		}
 
-		STATIC VOID Mode(PinMode mode)
+		STATIC VOID SetMode(PinMode mode)
 		{
 			PortPtr->SetPinMode(PinNum, mode);
 		}
 
-		STATIC VOID BasicMode(PinModeBasic basicMode)
+		STATIC VOID SetMode(PinModeBasic basicMode)
 		{
-			PortPtr->SetPinModeBasic(PinNum, basicMode);
+			PortPtr->SetPinMode(PinNum, basicMode);
 		}
 
-		STATIC BIT Read()
+		STATIC VOID SetMode(RCBYTE arduinoMode)
+		{
+			PortPtr->SetPinMode(PinNum, (PinModeBasic)arduinoMode);
+		}
+
+		STATIC CBIT Read()
 		{
 			return PortPtr->ReadPin(PinNum);
 		}
 
-		STATIC BIT Check()
+		STATIC CBIT Check()
 		{
 			return PortPtr->CheckPin(PinNum);
 		}
 
-		STATIC BIT CheckSet()
+		STATIC CBIT CheckSet()
 		{
 			return PortPtr->CheckPinSet(PinNum);
 		}
 
-		STATIC BIT CheckUnset()
+		STATIC CBIT CheckUnset()
 		{
 			return PortPtr->CheckPinUnset(PinNum);
 		}
@@ -385,6 +400,62 @@ namespace IttyBitty
 
 namespace IttyBitty
 {
+	#define _TYPEDEF_PINS(port_letter)				\
+		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
+
+
+	#ifdef PORTA
+		_TYPEDEF_PINS(A)
+	#endif
+
+	#ifdef PORTB
+		_TYPEDEF_PINS(B)
+	#endif
+
+	#ifdef PORTC
+		_TYPEDEF_PINS(C)
+	#endif
+
+	#ifdef PORTD
+		_TYPEDEF_PINS(D)
+	#endif
+
+	#ifdef PORTE
+		_TYPEDEF_PINS(E)
+	#endif
+
+	#ifdef PORTF
+		_TYPEDEF_PINS(F)
+	#endif
+
+	#ifdef PORTG
+		_TYPEDEF_PINS(G)
+	#endif
+
+	#ifdef PORTH
+		_TYPEDEF_PINS(H)
+	#endif
+
+	#ifdef PORTJ
+		_TYPEDEF_PINS(J)
+	#endif
+
+	#ifdef PORTK
+		_TYPEDEF_PINS(K)
+	#endif
+
+	#ifdef PORTL
+		_TYPEDEF_PINS(L)
+	#endif
+
+
 	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
 
 	#define _GPIO_TYPEDEF_PINS(port_letter)				\
