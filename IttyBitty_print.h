@@ -31,6 +31,9 @@
 	#define DEFAULT_SERIAL				SERIAL_PORT_MONITOR
 #endif
 
+#define ON_STRING						"1"
+#define OFF_STRING						"0"
+
 #define TRUE_STRING						"TRUE"
 #define FALSE_STRING					"FALSE"
 
@@ -42,26 +45,29 @@ namespace IttyBitty
 	VOID PrintBytes(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
 	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CBOOL, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CBOOL, Stream & = DEFAULT_SERIAL);
+	VOID PrintBit(RCBIT, Stream & = DEFAULT_SERIAL);
+	VOID PrintBitLine(RCBIT, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CBYTE, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCBOOL, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCBOOL, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCBYTE, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCBYTE, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CLONG, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCWORD, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(CFLOAT, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(CFLOAT, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCLONG, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCLONG, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(PCCHAR, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(PCCHAR = "", Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCFLOAT, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCFLOAT, Stream & = DEFAULT_SERIAL);
 
-	VOID PrintAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
-	VOID PrintLineAndFlush(const __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
+	VOID PrintString(PCCHAR, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(PCCHAR = "", Stream & = DEFAULT_SERIAL);
+
+	VOID PrintString(CONST __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(CONST __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
 }
 
 #endif

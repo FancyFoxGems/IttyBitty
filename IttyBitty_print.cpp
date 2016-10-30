@@ -28,85 +28,90 @@ namespace IttyBitty
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(CBOOL data, Stream & printer)
+
+	VOID PrintBit(RCBIT data, Stream & printer)
 	{
-		printer.print(data ? TRUE_STRING : FALSE_STRING);
+		printer.print(data ? ON_STRING : OFF_STRING);
+	}
+
+	VOID PrintBitLine(RCBIT data, Stream & printer)
+	{
+		printer.println(data ? ON_STRING : OFF_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(CBOOL data, Stream & printer)
+	VOID PrintVal(RCBOOL data, Stream & printer)
+	{
+		printer.print(data ? TRUE_STRING : FALSE_STRING);
+	}
+
+	VOID PrintLine(RCBOOL data, Stream & printer)
 	{
 		printer.println(data ? TRUE_STRING : FALSE_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(CBYTE data, Stream & printer)
+	VOID PrintVal(RCBYTE data, Stream & printer)
 	{
 		printer.print(data);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(CBYTE data, Stream & printer)
+	VOID PrintLine(RCBYTE data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(CWORD data, Stream & printer)
+	VOID PrintVal(RCWORD data, Stream & printer)
 	{
 		printer.print(data);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(CWORD data, Stream & printer)
+	VOID PrintLine(RCWORD data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(CLONG data, Stream & printer)
+	VOID PrintVal(RCLONG data, Stream & printer)
 	{
 		printer.print(data);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(CLONG data, Stream & printer)
+	VOID PrintLine(RCLONG data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(CFLOAT data, Stream & printer)
+	VOID PrintVal(RCFLOAT data, Stream & printer)
 	{
 		printer.print(data);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(CFLOAT data, Stream & printer)
+	VOID PrintLine(RCFLOAT data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(PCCHAR buffer, Stream & printer)
+	VOID PrintString(PCCHAR buffer, Stream & printer)
 	{
 		printer.print(buffer);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(PCCHAR buffer, Stream & printer)
+	VOID PrintLine(PCCHAR buffer, Stream & printer)
 	{
 		printer.println(buffer);
 		FlushAndDelay();
 	}
 
-	VOID PrintAndFlush(const __FlashStringHelper * flashBuffer, Stream & printer)
+	VOID PrintString(CONST __FlashStringHelper * flashBuffer, Stream & printer)
 	{
 		printer.print(flashBuffer);
-		FlushAndDelay();
 	}
 
-	VOID PrintLineAndFlush(const __FlashStringHelper * flashBuffer, Stream & printer)
+	VOID PrintLine(CONST __FlashStringHelper * flashBuffer, Stream & printer)
 	{
 		printer.println(flashBuffer);
 		FlushAndDelay();

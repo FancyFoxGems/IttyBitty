@@ -346,7 +346,7 @@ namespace IttyBitty
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print(F("MESSAGE INCOMING [SIZE="));
+		PrintString(F("MESSAGE INCOMING [SIZE="));
 	#endif
 
 		CHAR valStr[4];
@@ -358,8 +358,8 @@ namespace IttyBitty
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print(msgSize);
-		PrintLineAndFlush("].");
+		PrintVal(msgSize);
+		PrintLine("].");
 	#endif
 		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
@@ -367,17 +367,17 @@ namespace IttyBitty
 		__message_buffer[bufferSize - 1] = '\0';
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print(bufferSize);
-		PrintLineAndFlush(F(" BYTES ALLOCATED.  READING DATA..."));
+		PrintVal(bufferSize);
+		PrintLine(F(" BYTES ALLOCATED.  READING DATA..."));
 	#endif
 
 		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		Serial.print(F("RAW DATA: "));
-		Serial.println((PCCHAR)__message_buffer);
-		PrintLineAndFlush(F("BUFFER FILLED.  LOADING..."));
+		PrintString(F("RAW DATA: "));
+		PrintLine((PCCHAR)__message_buffer);
+		PrintLine(F("BUFFER FILLED.  LOADING..."));
 	#endif		
 		
 		STATIC PIMESSAGE stringMsg = NULL;
@@ -385,7 +385,7 @@ namespace IttyBitty
 		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
-		PrintLineAndFlush(F("MESSAGE LOADED.\n"));
+		PrintLine(F("MESSAGE LOADED.\n"));
 	#endif
 
 		delete[] __message_buffer;
