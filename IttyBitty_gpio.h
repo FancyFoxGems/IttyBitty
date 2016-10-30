@@ -33,7 +33,7 @@ namespace IttyBitty
 	{
 		Input	= INPUT,
 		Output	= OUTPUT,
-		PullUp	= 0x2//INPUT_PULLUP
+		PullUp	= INPUT_PULLUP
 	};
 
 	ENUM PinMode : BYTE

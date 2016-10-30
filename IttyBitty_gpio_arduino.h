@@ -90,7 +90,7 @@ INLINE VOID _InitializeArduinoPinTables()
 	for (SIZE i = 0; i < NUM_DIGITAL_PINS; i++)
 	{
 		ARDUINO_PIN_TO_PORT[i] = pgm_read_byte(&digital_pin_to_port_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
-		ARDUINO_PIN_TO_MASK[i] = pgm_read_byte(&digital_pin_to_bit_mask_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
+		ARDUINO_PIN_TO_MASK[i] = pgm_read_byte(&digital_pin_to_bit_mask_PGM[i]);
 	}
 }
 
@@ -109,13 +109,13 @@ namespace IttyBitty
 #define ARDUINO_PIN_OUT_REF(arduino_pin)		(*ARDUINO_PORT_TO_OUTPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 #define ARDUINO_PIN_IN_REF(arduino_pin)			(*ARDUINO_PORT_TO_INPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 
-#define CHECK_ARDUINO_PIN(arduino_pin)			CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define CHECK_ARDUINO_PIN_SET(arduino_pin)		CHECK_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define CHECK_ARDUINO_PIN_UNSET(arduino_pin)	CHECK_UNSET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN(arduino_pin)			CHECK_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN_SET(arduino_pin)		CHECK_BITS_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN_UNSET(arduino_pin)	CHECK_BITS_UNSET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
-#define SET_ARDUINO_PIN(arduino_pin)			SET_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define CLEAR_ARDUINO_PIN(arduino_pin)			CLEAR_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BIT(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define SET_ARDUINO_PIN(arduino_pin)			SET_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CLEAR_ARDUINO_PIN(arduino_pin)			CLEAR_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
 #define RESET_ARDUINO_PIN(arduino_pin)  \
 	SET_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\
