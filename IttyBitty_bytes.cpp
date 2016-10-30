@@ -85,17 +85,13 @@ ByteField::ByteField()
 }
 
 ByteField::ByteField(RCBYTE byteVal)
-	: _pByte(new BYTE(byteVal)), _DisposeByte(true) { }
+	: _pByte(new byte(byteVal)), _DisposeByte(false) { }
 
 ByteField::ByteField(RVBYTE byteRef)
 	: _pByte(&byteRef), _DisposeByte(false) { }
 
 ByteField::ByteField(PVBYTE pByte)
-	: _pByte(pByte), _DisposeByte(false) {
-			Serial.begin(115200);
-			Serial.println((CWORD)pByte);
-			Serial.flush();
-			delay(100); }
+	: _pByte(pByte), _DisposeByte(false) { }
 
 ByteField::ByteField(RRBYTEFIELD other)
 {
@@ -113,13 +109,16 @@ ByteField::ByteField(RCBYTEFIELD other)
 
 ByteField::~ByteField()
 {
-	if (_DisposeByte)
-		delete _pByte;
+	if (_DisposeByte && _pByte)
+	{
+		//delete _pByte;
+		_pByte = NULL;
+	}
 }
 
 RBYTEFIELD ByteField::NULL_OBJECT()
 {
-	STATIC BYTEFIELD NULL_BYTEFIELD((BYTE)0);
+	STATIC BYTEFIELD NULL_BYTEFIELD;
 	return NULL_BYTEFIELD;
 }
 

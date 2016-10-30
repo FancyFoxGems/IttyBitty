@@ -9,8 +9,6 @@
 
 #include "IttyBitty_led.h"
 
-using namespace IttyBitty;
-
 
 #endif // #ifndef EXCLUDE_ITTYBITTY_LED
 

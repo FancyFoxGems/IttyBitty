@@ -31,7 +31,7 @@
 
 	SEE: http://www.nongnu.org/avr-libc/user-manual/FAQ.html#faq_regbind
 */
-#define REG_VAR(type, var_name, register_num) REG type var_name asm("r" #register_num)
+#define REG_VAR(type, var_name, register_num) REGISTER type var_name asm("r" #register_num)
 #define REG_CHAR(var_name, register_num) REG_VAR(CHAR, var_name, register_num)
 #define REG_BYTE(var_name, register_num) REG_VAR(BYTE, var_name, register_num)
 
@@ -44,23 +44,21 @@
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
-
 #include "IttyBitty_bytes.h"
 
+namespace IttyBitty
+{
+	/* BIT-PACKED REGISTER TYPE ALIASES */
 
-/* BIT-PACKED REGISTER TYPE ALIASES */
-
-typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
+	typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
 
 #ifndef ITTYBITTY_BASE
-
-typedef IttyBitty::WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16, && RRREG16;
-typedef IttyBitty::DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
-
+	typedef WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16, && RRREG16;
+	typedef DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 #endif
 
-#define NEW_REG8(reg_addr) (new REG8((PVBYTE)reg_addr))
-
+	#define NEW_REG8(reg_addr) (new REG8((PVBYTE)reg_addr))
+}
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 

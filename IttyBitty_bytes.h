@@ -546,13 +546,13 @@ namespace IttyBitty
 		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
 		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 
-		UNION
+		VOLATILE UNION PACKED
 		{
 			PVBYTE _pByte;
 			PBITPACK _pBitPack;
 		};
 
-		BOOL _DisposeByte;
+		BOOL _DisposeByte = FALSE;
 	};
 
 

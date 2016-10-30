@@ -78,8 +78,11 @@ namespace IttyBitty
 
 	public:
 
-		_PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
+		EXPLICIT _PortRegisters(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 			: DirectionReg(directionReg), OutputReg(outputReg), InputReg(inputReg) { }
+
+		EXPLICIT _PortRegisters(PREG8 directionReg, PREG8 outputReg, PREG8 inputReg)
+			: DirectionReg(*directionReg), OutputReg(*outputReg), InputReg(*inputReg) { }
 
 		_PortRegisters(PVBYTE directionRegAddr, PVBYTE outputRegAddr, PVBYTE inputRegAddr)
 		{
@@ -88,7 +91,11 @@ namespace IttyBitty
 			this->InputReg		= REG8(inputRegAddr);
 		}
 
-		_PortRegisters(RCPORTREG other) : DirectionReg(other.DirectionReg), OutputReg(other.OutputReg), InputReg(other.InputReg) { }
+		_PortRegisters(RCPORTREG other)
+		{
+			this->~_PortRegisters();
+			new (this) _PortRegisters((RREG8)other.DirectionReg, (RREG8)other.OutputReg, (RREG8)other.InputReg);
+		}
 
 		VIRTUAL ~_PortRegisters() { }
 
@@ -100,17 +107,14 @@ namespace IttyBitty
 
 		VIRTUAL RPORTREG operator=(RCPORTREG other)
 		{
-			this->DirectionReg	= ByteField(other.DirectionReg);
-			this->OutputReg 	= ByteField(other.OutputReg);
-			this->InputReg		= ByteField(other.InputReg);
-
+			*this = _PortRegisters(other);
 			return *this;
 		}
 
 
-		RREG8 DirectionReg	= ByteField::NULL_OBJECT();
-		RREG8 OutputReg 	= REG8::NULL_OBJECT();
-		RREG8 InputReg		= ByteField::NULL_OBJECT();
+		RREG8 DirectionReg	= REG8::NULL_OBJECT();
+		RREG8 OutputReg		= REG8::NULL_OBJECT();
+		RREG8 InputReg		= REG8::NULL_OBJECT();
 	};
 
 
@@ -118,24 +122,28 @@ namespace IttyBitty
 	{
 	public:
 
-		_Port() : _Registers(PortReg::NULL_OBJECT()) { }
+		_Port() : _Registers(NULL) { }
 
-		_Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
+		EXPLICIT _Port(RREG8 directionReg, RREG8 outputReg, RREG8 inputReg)
 		{
-			 _Registers = PortReg(directionReg, outputReg, inputReg);
+			 _Registers = new PortReg(directionReg, outputReg, inputReg);
 		}
 
 		_Port(PVBYTE directionRegAddr, PVBYTE outputRegAddr, PVBYTE inputRegAddr)
 		{
-			_Registers = PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
+			_Registers = new PortReg(directionRegAddr, outputRegAddr, inputRegAddr);
 		}
 
 		_Port(RCPORT other)
 		{
-			_Registers = other._Registers;
+			this->~_Port();
+			_Registers = new PortReg(*other._Registers);
 		}
 
-		VIRTUAL ~_Port() { }
+		VIRTUAL ~_Port()
+		{
+			delete _Registers;
+		}
 
 		STATIC RPORT NULL_OBJECT()
 		{
@@ -145,8 +153,7 @@ namespace IttyBitty
 
 		VIRTUAL RPORT operator=(RCPORT other)
 		{
-			_Registers = other._Registers;
-
+			*this = _Port(other);
 			return *this;
 		}
 
@@ -162,13 +169,13 @@ namespace IttyBitty
 
 		VIRTUAL PinMode GetPinMode(PIN_NUMBER p) const
 		{
-			return (PinMode)((BIT)_Registers.DirectionReg[p] OR (BIT)_Registers.OutputReg[p] SHL 1);
+			return (PinMode)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 1);
 		}
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)
 		{
-			_Registers.DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
-			_Registers.OutputReg[p]		= MASK((BYTE)mode, INPUT_PULLUP);
+			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
+			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
 		VIRTUAL VOID SetPinModeBasic(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
@@ -178,80 +185,80 @@ namespace IttyBitty
 
 		VIRTUAL BIT CheckPin(PIN_NUMBER p) const
 		{
-			return _Registers.InputReg[p];
+			return _Registers->InputReg[p];
 		}
 
 		VIRTUAL BIT CheckPinSet(PIN_NUMBER p) const
 		{
-			return _Registers.InputReg[p];
+			return _Registers->InputReg[p];
 		}
 
 		VIRTUAL BIT CheckPinUnset(PIN_NUMBER p) const
 		{
-			return ~_Registers.InputReg[p];
+			return ~_Registers->InputReg[p];
 		}
 
-		VIRTUAL BITREF PinState(PIN_NUMBER p) const
+		VIRTUAL BITREF PinState(PIN_NUMBER p)
 		{
-			return _Registers.OutputReg[p];
+			return _Registers->OutputReg[p];
 		}
 
 		VIRTUAL VOID SetPin(PIN_NUMBER p)
 		{
-			_Registers.OutputReg[p] = 1;
+			_Registers->OutputReg[p] = 1;
 		}
 
 		VIRTUAL VOID ClearPin(PIN_NUMBER p)
 		{
-			_Registers.OutputReg[p] = 0;
+			_Registers->OutputReg[p] = 0;
 		}
 
 		VIRTUAL VOID TogglePin(PIN_NUMBER p)
 		{
-			_Registers.InputReg[p] = !this->CheckPin(p);
+			_Registers->InputReg[p] = !this->CheckPin(p);
 		}
 
 		VIRTUAL VOID ResetPin(PIN_NUMBER p)
 		{
-			_Registers.OutputReg[p] = 1;
-			_Registers.DirectionReg[p] = 1;
-			_Registers.OutputReg[p] = 0;
-			_Registers.DirectionReg[p] = 0;
+			_Registers->OutputReg[p]	= 1;
+			_Registers->DirectionReg[p]	= 1;
+			_Registers->OutputReg[p]	= 0;
+			_Registers->DirectionReg[p]	= 0;
 		}
 
 
 	protected:
 
-		RPORTREG _Registers = PortReg::NULL_OBJECT();
+		PPORTREG _Registers = NULL;
 	};
 
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
 	struct _Pin;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using _pin_t = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using Pin = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using PIN = struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using PPIN = struct _Pin<pin_number, port> *;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using RPIN = struct _Pin<pin_number, port> &;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using PPPIN = struct _Pin<pin_number, port> **;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using RRPIN = struct _Pin<pin_number, port> &&;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using CPIN = const struct _Pin<pin_number, port>;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using PCPIN = const struct _Pin<pin_number, port> *;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using RCPIN = const struct _Pin<pin_number, port> &;
-	template<PIN_NUMBER pin_number = 0x0, PPORT port = NULL>
-	using PPCPIN = const struct _Pin<pin_number, port> **;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using _pin_t = struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using Pin = struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PIN = struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PPIN = struct _Pin<PinNum, PortPtr> *;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using RPIN = struct _Pin<PinNum, PortPtr> &;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PPPIN = struct _Pin<PinNum, PortPtr> **;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using RRPIN = struct _Pin<PinNum, PortPtr> &&;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using CPIN = const struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PCPIN = const struct _Pin<PinNum, PortPtr> *;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using RCPIN = const struct _Pin<PinNum, PortPtr> &;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PPCPIN = const struct _Pin<PinNum, PortPtr> **;
 
 
-	template<PIN_NUMBER pin_number, PPORT port>
+	template<PIN_NUMBER PinNum, PPORT PortPtr>
 	STRUCT _Pin
 	{
 	public:
@@ -262,57 +269,67 @@ namespace IttyBitty
 
 		STATIC PinMode Mode()
 		{
-			return port->GetPinMode(pin_number);
+			return PortPtr->GetPinMode(PinNum);
 		}
 
 		STATIC VOID Mode(PinMode mode)
 		{
-			port->SetPinMode(pin_number, mode);
+			PortPtr->SetPinMode(PinNum, mode);
 		}
 
 		STATIC VOID BasicMode(PinModeBasic basicMode)
 		{
-			port->SetPinModeBasic(pin_number, basicMode);
+			PortPtr->SetPinModeBasic(PinNum, basicMode);
 		}
 
 		STATIC BIT Read()
 		{
-			return port->CheckPin(pin_number);
+			return PortPtr->CheckPin(PinNum);
 		}
 
 		STATIC BIT CheckSet()
 		{
-			return port->CheckPinSet(pin_number);
+			return PortPtr->CheckPinSet(PinNum);
 		}
 
 		STATIC BIT CheckUnset()
 		{
-			return port->CheckPinUnset(pin_number);
+			return PortPtr->CheckPinUnset(PinNum);
 		}
 
 		STATIC VOID Set()
 		{
-			return port->SetPin(pin_number);
+			return PortPtr->SetPin(PinNum);
 		}
 
 		STATIC VOID Clear()
 		{
-			return port->ClearPin(pin_number);
+			return PortPtr->ClearPin(PinNum);
 		}
 
 		STATIC VOID Toggle()
 		{
-			return port->TogglePin(pin_number);
+			return PortPtr->TogglePin(PinNum);
 		}
 
 		STATIC VOID Reset()
 		{
-			return port->ResetPin(pin_number);
+			return PortPtr->ResetPin(PinNum);
 		}
 	};
 
 
 	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
+
+	//#define _GPIO_TYPEDEF_PINS(port_letter)						\
+	//	typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+	//	typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+	//	typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+	//	typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+	//	typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+	//	typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+	//	typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+	//	typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
 
 	STRUCT _GPIO FINAL
 	{
@@ -327,13 +344,14 @@ namespace IttyBitty
 
 		STATIC RCGPIO Instance()
 		{
-			STATIC GPIO INSTANCE = _GPIO();
+			STATIC GPIO INSTANCE;
 			return INSTANCE;
 		}
 
 
 	#ifdef PORTA
 		_GPIO_DECLARE_PORT_STRUCTS(A)
+		_GPIO_TYPEDEF_PINS(A)
 	#endif
 
 	#ifdef PORTB
@@ -383,6 +401,9 @@ namespace IttyBitty
 		EXTERN IttyBitty::RBITPACK P##port_letter##_DDR;	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_PORT;	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_PIN;	\
+		EXTERN IttyBitty::REG8 DDR##port_letter##_REG;		\
+		EXTERN IttyBitty::REG8 PORT##port_letter##_REG;		\
+		EXTERN IttyBitty::REG8 PIN##port_letter##_REG;		\
 		EXTERN IttyBitty::PORT Port##port_letter;
 
 
@@ -445,64 +466,64 @@ namespace IttyBitty
 	_DECLARE_PORT_STRUCTS(L)
 #endif
 
-
-#ifndef EXCLUDE_ITTYBITTY_BYTES
-
-	#define _TYPEDEF_PINS(port_letter)										\
-		typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##1;	\
-		typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##2;	\
-		typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##3;	\
-		typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##4;	\
-		typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##5;	\
-		typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##6;	\
-		typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##7;	\
-		typedef IttyBitty::PIN<7, &Port##port_letter> Pin##port_letter##8;
-
-	#ifdef PORTA
-		_TYPEDEF_PINS(A)
-	#endif
-
-	#ifdef PORTB
-		_TYPEDEF_PINS(B)
-	#endif
-
-	#ifdef PORTC
-		_TYPEDEF_PINS(C)
-	#endif
-
-	#ifdef PORTD
-		_TYPEDEF_PINS(D)
-	#endif
-
-	#ifdef PORTE
-		_TYPEDEF_PINS(E)
-	#endif
-
-	#ifdef PORTF
-		_TYPEDEF_PINS(F)
-	#endif
-
-	#ifdef PORTG
-		_TYPEDEF_PINS(G)
-	#endif
-
-	#ifdef PORTH
-		_TYPEDEF_PINS(H)
-	#endif
-
-	#ifdef PORTJ
-		_TYPEDEF_PINS(J)
-	#endif
-
-	#ifdef PORTK
-		_TYPEDEF_PINS(K)
-	#endif
-
-	#ifdef PORTL
-		_TYPEDEF_PINS(L)
-	#endif
-
-#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+//
+//#ifndef EXCLUDE_ITTYBITTY_BYTES
+//
+//	#define _TYPEDEF_PINS(port_letter)										\
+//		typedef IttyBitty::PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+//		typedef IttyBitty::PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+//		typedef IttyBitty::PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+//		typedef IttyBitty::PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+//		typedef IttyBitty::PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+//		typedef IttyBitty::PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+//		typedef IttyBitty::PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+//		typedef IttyBitty::PIN<7, &Port##port_letter> Pin##port_letter##7;
+//
+//	#ifdef PORTA
+//		_TYPEDEF_PINS(A)
+//	#endif
+//
+//	#ifdef PORTB
+//		_TYPEDEF_PINS(B)
+//	#endif
+//
+//	#ifdef PORTC
+//		_TYPEDEF_PINS(C)
+//	#endif
+//
+//	#ifdef PORTD
+//		_TYPEDEF_PINS(D)
+//	#endif
+//
+//	#ifdef PORTE
+//		_TYPEDEF_PINS(E)
+//	#endif
+//
+//	#ifdef PORTF
+//		_TYPEDEF_PINS(F)
+//	#endif
+//
+//	#ifdef PORTG
+//		_TYPEDEF_PINS(G)
+//	#endif
+//
+//	#ifdef PORTH
+//		_TYPEDEF_PINS(H)
+//	#endif
+//
+//	#ifdef PORTJ
+//		_TYPEDEF_PINS(J)
+//	#endif
+//
+//	#ifdef PORTK
+//		_TYPEDEF_PINS(K)
+//	#endif
+//
+//	#ifdef PORTL
+//		_TYPEDEF_PINS(L)
+//	#endif
+//
+//#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
 
 #include "IttyBitty_gpio_arduino.h"

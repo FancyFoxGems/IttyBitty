@@ -26,7 +26,10 @@ using namespace IttyBitty;
 		RBITPACK P##port_letter##_DDR	= *(PACK_BYTE_REF((RVBYTE)DDR##port_letter));	\
 		RBITPACK P##port_letter##_PORT	= *(PACK_BYTE_REF((RVBYTE)PORT##port_letter));	\
 		RBITPACK P##port_letter##_PIN	= *(PACK_BYTE_REF((RVBYTE)PIN##port_letter));	\
-		PORT Port##port_letter((PVBYTE)&DDR##port_letter, (PVBYTE)&PORT##port_letter, (PVBYTE)&PIN##port_letter);
+		REG8 DDR##port_letter##_REG(&DDR##port_letter);									\
+		REG8 PORT##port_letter##_REG(&PORT##port_letter);								\
+		REG8 PIN##port_letter##_REG(&PIN##port_letter);									\
+		PORT Port##port_letter(DDR##port_letter##_REG, PORT##port_letter##_REG, PIN##port_letter##_REG);
 
 #else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
 
@@ -93,7 +96,80 @@ BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
+
+namespace IttyBitty
+{
+	#define _TYPEDEF_PINS(port_letter)							\
+		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
+
+	#ifdef PORTA
+		_TYPEDEF_PINS(A)
+	#endif
+
+	#ifdef PORTB
+		_TYPEDEF_PINS(B)
+	#endif
+
+	#ifdef PORTC
+		_TYPEDEF_PINS(C)
+	#endif
+
+	#ifdef PORTD
+		_TYPEDEF_PINS(D)
+	#endif
+
+	#ifdef PORTE
+		_TYPEDEF_PINS(E)
+	#endif
+
+	#ifdef PORTF
+		_TYPEDEF_PINS(F)
+	#endif
+
+	#ifdef PORTG
+		_TYPEDEF_PINS(G)
+	#endif
+
+	#ifdef PORTH
+		_TYPEDEF_PINS(H)
+	#endif
+
+	#ifdef PORTJ
+		_TYPEDEF_PINS(J)
+	#endif
+
+	#ifdef PORTK
+		_TYPEDEF_PINS(K)
+	#endif
+
+	#ifdef PORTL
+		_TYPEDEF_PINS(L)
+	#endif
+}
+
+#endif	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+
 	#define _GPIO_INITIALIZE_PORT(port_letter) RPORT GPIO::P##port_letter = Port##port_letter;
+
+	#define _GPIO_TYPEDEF_PINS(port_letter)						\
+		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
+		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
+		typedef PIN<2, &Port##port_letter> Pin##port_letter##2;	\
+		typedef PIN<3, &Port##port_letter> Pin##port_letter##3;	\
+		typedef PIN<4, &Port##port_letter> Pin##port_letter##4;	\
+		typedef PIN<5, &Port##port_letter> Pin##port_letter##5;	\
+		typedef PIN<6, &Port##port_letter> Pin##port_letter##6;	\
+		typedef PIN<7, &Port##port_letter> Pin##port_letter##7;
 
 	#ifdef PORTA
 		_GPIO_INITIALIZE_PORT(A)
