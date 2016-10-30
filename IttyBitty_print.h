@@ -51,14 +51,26 @@ namespace IttyBitty
 	VOID PrintVal(RCBOOL, Stream & = DEFAULT_SERIAL);
 	VOID PrintLine(RCBOOL, Stream & = DEFAULT_SERIAL);
 
+	VOID PrintVal(RCCHAR, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCCHAR, Stream & = DEFAULT_SERIAL);
+
 	VOID PrintVal(RCBYTE, Stream & = DEFAULT_SERIAL);
 	VOID PrintLine(RCBYTE, Stream & = DEFAULT_SERIAL);
+
+	VOID PrintVal(RCSHORT, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCSHORT, Stream & = DEFAULT_SERIAL);
 
 	VOID PrintVal(RCWORD, Stream & = DEFAULT_SERIAL);
 	VOID PrintLine(RCWORD, Stream & = DEFAULT_SERIAL);
 
+	VOID PrintVal(RCSIZE, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCSIZE, Stream & = DEFAULT_SERIAL);
+
 	VOID PrintVal(RCLONG, Stream & = DEFAULT_SERIAL);
 	VOID PrintLine(RCLONG, Stream & = DEFAULT_SERIAL);
+
+	VOID PrintVal(RCDWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintLine(RCDWORD, Stream & = DEFAULT_SERIAL);
 
 	VOID PrintVal(RCFLOAT, Stream & = DEFAULT_SERIAL);
 	VOID PrintLine(RCFLOAT, Stream & = DEFAULT_SERIAL);

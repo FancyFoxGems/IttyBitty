@@ -117,8 +117,7 @@ namespace IttyBitty
 	CLASS Message : public IMessage
 	{
 	public:
-
-
+		
 		// CONSTRUCTORS/DESTRUCTOR
 
 		Message(CBYTE messageCode = 0, CBYTE paramCount = 0);

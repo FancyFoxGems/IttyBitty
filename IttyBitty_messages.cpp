@@ -175,7 +175,7 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 	//va_start(args, 0);
 	//va_end(args);
 #ifdef DEBUG_MESSAGES
-	PrintLineAndFlush(F("Message::Handle"));
+	PrintLine(F("Message::Handle"));
 #endif
 
 	return TRUE;

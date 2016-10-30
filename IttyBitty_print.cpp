@@ -51,12 +51,34 @@ namespace IttyBitty
 		FlushAndDelay();
 	}
 
+	VOID PrintVal(RCCHAR data, Stream & printer)
+	{
+		printer.print(data);
+	}
+
+	VOID PrintLine(RCCHAR data, Stream & printer)
+	{
+		printer.println(data);
+		FlushAndDelay();
+	}
+
 	VOID PrintVal(RCBYTE data, Stream & printer)
 	{
 		printer.print(data);
 	}
 
 	VOID PrintLine(RCBYTE data, Stream & printer)
+	{
+		printer.println(data);
+		FlushAndDelay();
+	}
+
+	VOID PrintVal(RCSHORT data, Stream & printer)
+	{
+		printer.print(data);
+	}
+
+	VOID PrintLine(RCSHORT data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
@@ -73,12 +95,34 @@ namespace IttyBitty
 		FlushAndDelay();
 	}
 
+	VOID PrintVal(RCSIZE data, Stream & printer)
+	{
+		printer.print(data);
+	}
+
+	VOID PrintLine(RCSIZE data, Stream & printer)
+	{
+		printer.println(data);
+		FlushAndDelay();
+	}
+
 	VOID PrintVal(RCLONG data, Stream & printer)
 	{
 		printer.print(data);
 	}
 
 	VOID PrintLine(RCLONG data, Stream & printer)
+	{
+		printer.println(data);
+		FlushAndDelay();
+	}
+
+	VOID PrintVal(RCDWORD data, Stream & printer)
+	{
+		printer.print(data);
+	}
+
+	VOID PrintLine(RCDWORD data, Stream & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
