@@ -669,7 +669,7 @@ namespace IttyBitty
 
 			FieldBase::FromString(data);
 			
-	// TODO
+			// TODO
 			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
 	
 			//BYTE bytes[this->ByteWidth()];

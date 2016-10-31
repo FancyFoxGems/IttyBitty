@@ -273,7 +273,7 @@ PCCHAR Message::ToString() const
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
-
+	
 	PIFIELD param = NULL;
 	STATIC PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
@@ -281,8 +281,6 @@ PCCHAR Message::ToString() const
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
-		if (i == 2)
-			memcpy(bufferPtr, "00011000", 8);
 		param = _Params[i];
 		paramStr = param->ToString();
 		paramSize = param->StringSize() - 1;
@@ -292,18 +290,13 @@ PCCHAR Message::ToString() const
 		// TODO
 		//dataType = param->GetDataType();
 		//if (dataType != DataType::BYTES_FIELD && dataType != DataType::STRING_FIELD && dataType != DataType::BIT_FIELD)
-		//	delete[] paramStr;
+			delete[] paramStr;
 		//paramStr = NULL;
 		//param = NULL;
-		
-		//if (i == 0)
-		//	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
 
 		bufferPtr += paramSize;
 	}
-		//*(bufferPtr) = '\0';
-		//PrintLine(reinterpret_cast<PCCHAR>(__message_buffer));
-	PrintBytesAndFlush(__message_buffer, 42);
+
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
@@ -364,9 +357,6 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->StringSize();
 	STATIC PCCHAR buffer = NULL;
 	buffer = this->ToString();
-	Serial.println("printTo");
-	Serial.flush();
-	return 0;
 #else
 	SIZE msgSize = this->ByteSize();
 	STATIC PCBYTE buffer = NULL;
