@@ -277,15 +277,14 @@ PCCHAR Message::ToString() const
 	PIFIELD param = NULL;
 	STATIC PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
-	DataType dataType = DataType::BYTES_FIELD;
-	// TODO - check/cast to varlength
+	//DataType dataType = DataType::BYTES_FIELD;
+
 	for (SIZE i = 0; i < paramCount; i++)
 	{
+		if (i == 2)
+			memcpy(bufferPtr, "00011000", 8);
 		param = _Params[i];
-		PrintLine((BYTE)*(PFIELD)param);
-		PrintLine((BYTE)param->GetDataType());
 		paramStr = param->ToString();
-		PrintLine(paramStr);
 		paramSize = param->StringSize() - 1;
 
 		memcpy(bufferPtr, paramStr, paramSize);
@@ -293,17 +292,18 @@ PCCHAR Message::ToString() const
 		// TODO
 		//dataType = param->GetDataType();
 		//if (dataType != DataType::BYTES_FIELD && dataType != DataType::STRING_FIELD && dataType != DataType::BIT_FIELD)
-			delete[] paramStr;
-		paramStr = NULL;
-		param = NULL;
+		//	delete[] paramStr;
+		//paramStr = NULL;
+		//param = NULL;
 		
 		//if (i == 0)
 		//	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
-		
-		PrintLine(reinterpret_cast<PCCHAR>(__message_buffer));
+
 		bufferPtr += paramSize;
 	}
-
+		//*(bufferPtr) = '\0';
+		//PrintLine(reinterpret_cast<PCCHAR>(__message_buffer));
+	PrintBytesAndFlush(__message_buffer, 42);
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
@@ -319,7 +319,7 @@ VOID Message::FromBytes(PCBYTE data)
 
 	if (_ParamCount > 0)
 		_Params = new PIFIELD[_ParamCount];
-
+	
 	_Dispose = TRUE;
 
 	for (SIZE i = 0; i < _ParamCount; i++)
@@ -364,12 +364,15 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->StringSize();
 	STATIC PCCHAR buffer = NULL;
 	buffer = this->ToString();
+	Serial.println("printTo");
+	Serial.flush();
+	return 0;
 #else
 	SIZE msgSize = this->ByteSize();
 	STATIC PCBYTE buffer = NULL;
 	buffer = this->ToBytes();
 #endif
-
+	
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
 

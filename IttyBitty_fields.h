@@ -103,7 +103,7 @@ namespace IttyBitty
 		WHO_KNOWS	= 0x0,
 		ONE_BYTE	= 0x10,
 		TWO_BYTES	= 0x20,
-		//THREE_BYTES	= 0x40,
+		THREE_BYTES	= 0x40,
 		FOUR_BYTES	= 0x80
 	};
 
@@ -116,20 +116,20 @@ namespace IttyBitty
 
 	enum DataType : BYTE
 	{
-		BYTES_FIELD		= 0,//WHO_KNOWS | UNSIGNED_DATA_TYPE,
-		STRING_FIELD	= 1,//WHO_KNOWS | SIGNED_DATA_TYPE,
-		BIT_FIELD		= 2,//WHO_KNOWS | SPECIAL_DATA_TYPE,
+		BYTES_FIELD		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
+		STRING_FIELD	= WHO_KNOWS | SIGNED_DATA_TYPE,
+		BIT_FIELD		= WHO_KNOWS | SPECIAL_DATA_TYPE,
 
-		BYTE_FIELD		= 16,//ONE_BYTE | UNSIGNED_DATA_TYPE,
-		CHAR_FIELD		= 17,//ONE_BYTE | SIGNED_DATA_TYPE,
-		BOOL_FIELD		= 18,//ONE_BYTE | SPECIAL_DATA_TYPE,
+		BYTE_FIELD		= ONE_BYTE | UNSIGNED_DATA_TYPE,
+		CHAR_FIELD		= ONE_BYTE | SIGNED_DATA_TYPE,
+		BOOL_FIELD		= ONE_BYTE | SPECIAL_DATA_TYPE,
 
-		WORD_FIELD		= 64,//TWO_BYTES | UNSIGNED_DATA_TYPE,
-		SHORT_FIELD		= 65,//TWO_BYTES | SIGNED_DATA_TYPE,
+		WORD_FIELD		= TWO_BYTES | UNSIGNED_DATA_TYPE,
+		SHORT_FIELD		= TWO_BYTES | SIGNED_DATA_TYPE,
 
-		DWORD_FIELD		= 128,//FOUR_BYTES | UNSIGNED_DATA_TYPE,
-		LONG_FIELD		= 129,//FOUR_BYTES | SIGNED_DATA_TYPE,
-		FLOAT_FIELD		= 130//FOUR_BYTES | SPECIAL_DATA_TYPE
+		DWORD_FIELD		= FOUR_BYTES | UNSIGNED_DATA_TYPE,
+		LONG_FIELD		= FOUR_BYTES | SIGNED_DATA_TYPE,
+		FLOAT_FIELD		= FOUR_BYTES | SPECIAL_DATA_TYPE
 	};
 
 	INLINE DataSize DataTypeToDataSize(DataType dataType)
@@ -329,9 +329,7 @@ namespace IttyBitty
 
 		// Field OVERRIDES
 
-		VIRTUAL CSIZE ByteSize() const;
-		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
+		VIRTUAL CSIZE ByteWidth() const final;
 
 		VIRTUAL VOID FromBytes(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
@@ -645,18 +643,8 @@ namespace IttyBitty
 
 
 		//  IField OVERRIDES
-				
-		VIRTUAL CSIZE ByteSize() const
-		{
-			return sizeof(_Length) + FieldBase::ByteSize();
-		}
-				
-		VIRTUAL CSIZE StringSize() const
-		{
-			return 2 * sizeof(_Length) + FieldBase::StringSize();
-		}
 
-		VIRTUAL CSIZE ByteWidth() const
+		VIRTUAL CSIZE ByteWidth() const final
 		{
 			if (_Length > 0)
 				return _Length;
@@ -664,7 +652,7 @@ namespace IttyBitty
 			return FieldBase::ByteWidth();
 		}
 		
-		VIRTUAL VOID FromBytes(PCBYTE data)
+		VIRTUAL VOID FromBytes(PCBYTE data) final
 		{
 			PCBYTE bufferPtr = data;
 
@@ -676,7 +664,7 @@ namespace IttyBitty
 			_Value = bufferPtr;
 		}
 		
-		VIRTUAL VOID FromString(PCCHAR data)
+		VIRTUAL VOID FromString(PCCHAR data) final
 		{
 			PCCHAR bufferPtr = data;
 

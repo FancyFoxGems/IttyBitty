@@ -76,8 +76,8 @@ PCBYTE FieldBase::ToBytes() const
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
 	bufferPtr += SIZEOF(byteWidth);
 
-	memcpy(bufferPtr, &_DataType, SIZEOF(_DataType));
-	bufferPtr += SIZEOF(_DataType);
+	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
+	bufferPtr += SIZEOF(DataType);
 
 	if (byteWidth > 0)
 		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
@@ -553,16 +553,6 @@ VarLengthField::operator PCBITPACK() const
 
 
 // Field OVERRIDES
-
-CSIZE VarLengthField::ByteSize() const
-{
-	return SIZEOF(_Length) + FieldBase::ByteSize();
-}
-
-CSIZE VarLengthField::StringSize() const
-{
-	return 2 * SIZEOF(_Length) + 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
-}
 
 CSIZE VarLengthField::ByteWidth() const
 {
