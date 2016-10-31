@@ -277,22 +277,30 @@ PCCHAR Message::ToString() const
 	PIFIELD param = NULL;
 	STATIC PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
-
+	DataType dataType = DataType::BYTES_FIELD;
+	// TODO - check/cast to varlength
 	for (SIZE i = 0; i < paramCount; i++)
 	{
-
 		param = _Params[i];
+		PrintLine((BYTE)*(PFIELD)param);
+		PrintLine((BYTE)param->GetDataType());
 		paramStr = param->ToString();
+		PrintLine(paramStr);
 		paramSize = param->StringSize() - 1;
 
 		memcpy(bufferPtr, paramStr, paramSize);
-
-		delete[] paramStr;
+		
+		// TODO
+		//dataType = param->GetDataType();
+		//if (dataType != DataType::BYTES_FIELD && dataType != DataType::STRING_FIELD && dataType != DataType::BIT_FIELD)
+			delete[] paramStr;
 		paramStr = NULL;
-
-		if (i == 0)
-			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
-
+		param = NULL;
+		
+		//if (i == 0)
+		//	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
+		
+		PrintLine(reinterpret_cast<PCCHAR>(__message_buffer));
 		bufferPtr += paramSize;
 	}
 

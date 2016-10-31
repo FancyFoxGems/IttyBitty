@@ -47,10 +47,6 @@ namespace IttyBitty
 	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
 	typedef const Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
 
-	class VarLengthFieldBase;
-	typedef VarLengthFieldBase VARLENGTHFIELDBASE, * PVARLENGTHFIELDBASE, & RVARLENGTHFIELDBASE, ** PPVARLENGTHFIELDBASE, && RRVARLENGTHFIELDBASE;
-	typedef const VarLengthFieldBase CVARLENGTHFIELDBASE, * PCVARLENGTHFIELDBASE, & RCVARLENGTHFIELDBASE, ** PPCVARLENGTHFIELDBASE;
-
 	class VarLengthField;
 	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
 	typedef const VarLengthField CVARLENGTHFIELD, * PCVARLENGTHFIELD, & RCVARLENGTHFIELD, ** PPCVARLENGTHFIELD;
@@ -107,8 +103,8 @@ namespace IttyBitty
 		WHO_KNOWS	= 0x0,
 		ONE_BYTE	= 0x10,
 		TWO_BYTES	= 0x20,
-		THREE_BYTES	= 0x40,
-		FOUR_BYTES	= 0x80,
+		//THREE_BYTES	= 0x40,
+		FOUR_BYTES	= 0x80
 	};
 
 	enum DataTypeFormat
@@ -120,20 +116,20 @@ namespace IttyBitty
 
 	enum DataType : BYTE
 	{
-		BYTES_FIELD		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
-		STRING_FIELD	= WHO_KNOWS | SIGNED_DATA_TYPE,
-		BIT_FIELD		= WHO_KNOWS | SPECIAL_DATA_TYPE,
+		BYTES_FIELD		= 0,//WHO_KNOWS | UNSIGNED_DATA_TYPE,
+		STRING_FIELD	= 1,//WHO_KNOWS | SIGNED_DATA_TYPE,
+		BIT_FIELD		= 2,//WHO_KNOWS | SPECIAL_DATA_TYPE,
 
-		BYTE_FIELD		= ONE_BYTE | UNSIGNED_DATA_TYPE,
-		CHAR_FIELD		= ONE_BYTE | SIGNED_DATA_TYPE,
-		BOOL_FIELD		= ONE_BYTE | SPECIAL_DATA_TYPE,
+		BYTE_FIELD		= 16,//ONE_BYTE | UNSIGNED_DATA_TYPE,
+		CHAR_FIELD		= 17,//ONE_BYTE | SIGNED_DATA_TYPE,
+		BOOL_FIELD		= 18,//ONE_BYTE | SPECIAL_DATA_TYPE,
 
-		WORD_FIELD		= TWO_BYTES | UNSIGNED_DATA_TYPE,
-		SHORT_FIELD		= TWO_BYTES | SIGNED_DATA_TYPE,
+		WORD_FIELD		= 64,//TWO_BYTES | UNSIGNED_DATA_TYPE,
+		SHORT_FIELD		= 65,//TWO_BYTES | SIGNED_DATA_TYPE,
 
-		DWORD_FIELD		= FOUR_BYTES | UNSIGNED_DATA_TYPE,
-		LONG_FIELD		= FOUR_BYTES | SIGNED_DATA_TYPE,
-		FLOAT_FIELD		= FOUR_BYTES | SPECIAL_DATA_TYPE
+		DWORD_FIELD		= 128,//FOUR_BYTES | UNSIGNED_DATA_TYPE,
+		LONG_FIELD		= 129,//FOUR_BYTES | SIGNED_DATA_TYPE,
+		FLOAT_FIELD		= 130//FOUR_BYTES | SPECIAL_DATA_TYPE
 	};
 
 	INLINE DataSize DataTypeToDataSize(DataType dataType)
@@ -262,7 +258,7 @@ namespace IttyBitty
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		Field(RCVALUE, CONST DataType = DataType::BYTE_FIELD);
+		EXPLICIT Field(RCVALUE, CONST DataType = DataType::BYTE_FIELD);
 
 		EXPLICIT Field(RCCHAR);
 		EXPLICIT Field(RCBYTE);
@@ -312,7 +308,7 @@ namespace IttyBitty
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		EXPLICIT VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PCBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCCHAR);
@@ -333,13 +329,12 @@ namespace IttyBitty
 
 		// Field OVERRIDES
 
-		CSIZE ByteSize() const;				
-		CSIZE StringSize() const;
-		CSIZE ByteWidth() const;
-		CSIZE StringLength() const;
+		VIRTUAL CSIZE ByteSize() const;
+		VIRTUAL CSIZE StringSize() const;
+		VIRTUAL CSIZE ByteWidth() const;
 
-		VOID FromBytes(PCBYTE);
-		VOID FromString(PCCHAR);
+		VIRTUAL VOID FromBytes(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
 		
 
 	protected:
@@ -631,10 +626,8 @@ namespace IttyBitty
 			if (!_Dispose)
 				return;
 
-			if (_Length > 0)
-				_Value.FreeData();
-			else if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
-				_Value.FreePtr();
+			//if (_Length > 0 || _DataType == DataType::STRING_FIELD)
+			//	_Value.FreeData();
 		}
 		
 		
@@ -653,33 +646,25 @@ namespace IttyBitty
 
 		//  IField OVERRIDES
 				
-		CSIZE ByteSize() const
+		VIRTUAL CSIZE ByteSize() const
 		{
-			return sizeof(_Length) + TypedField<T>::ByteSize();
+			return sizeof(_Length) + FieldBase::ByteSize();
 		}
 				
-		CSIZE StringSize() const
+		VIRTUAL CSIZE StringSize() const
 		{
-			return 2 * sizeof(_Length) + TypedField<T>::StringSize();
+			return 2 * sizeof(_Length) + FieldBase::StringSize();
 		}
 
-		CSIZE ByteWidth() const
+		VIRTUAL CSIZE ByteWidth() const
 		{
 			if (_Length > 0)
 				return _Length;
 
-			return TypedField<T>::ByteWidth();
-		}
-
-		CSIZE StringLength() const
-		{
-			if (_DataType == DataType::STRING_FIELD)
-				return _Length;
-			
-			return 2 * this->ByteWidth();
+			return FieldBase::ByteWidth();
 		}
 		
-		VOID FromBytes(PCBYTE data)
+		VIRTUAL VOID FromBytes(PCBYTE data)
 		{
 			PCBYTE bufferPtr = data;
 
@@ -691,7 +676,7 @@ namespace IttyBitty
 			_Value = bufferPtr;
 		}
 		
-		VOID FromString(PCCHAR data)
+		VIRTUAL VOID FromString(PCCHAR data)
 		{
 			PCCHAR bufferPtr = data;
 

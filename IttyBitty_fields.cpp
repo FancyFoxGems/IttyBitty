@@ -24,14 +24,17 @@ PBYTE IttyBitty::__field_buffer = NULL;
 
 // DESTRUCTOR
 
+#include "IttyBitty_print.h"
 FieldBase::~FieldBase()
 {
 	if (!_Dispose)
 		return;
-	
+
+	// TODO
+	PrintLine(F("~FieldBase"));
 	return;
 	if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
-		_Value.FreePtr();
+		_Value.FreeData();
 }
 				
 
@@ -86,7 +89,7 @@ PCCHAR FieldBase::ToString() const
 {
 	CSIZE size = this->StringSize();
 	CSIZE byteWidth = this->ByteWidth();
-
+	
 	if (__field_buffer)
 		delete[] __field_buffer;
 
@@ -188,7 +191,7 @@ VOID FieldBase::FromString(PCCHAR data)
 	CBYTE byteWidth = this->ByteWidth();
 
 	PBYTE bytes = NULL;
-
+	
 	switch (_DataType)
 	{
 	case DataType::BYTE_FIELD:
@@ -212,7 +215,7 @@ VOID FieldBase::FromString(PCCHAR data)
 		break;
 
 	default:
-
+		
 		for (BYTE i = 0; i < byteWidth; i++)
 			bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 
@@ -287,8 +290,8 @@ Field::Field(RCFIELD other)
 }
 
 Field::Field(RRFIELD other)
-{	
-	//this->~FieldBase();
+{
+	this->~FieldBase();
 	new (this) Field(other._Value, other._DataType);
 }
 
@@ -464,32 +467,57 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 }
 
 VarLengthField::VarLengthField(RCVALUE value, CONST DataType dataType, CSIZE length) 
-	: Field(value, dataType), _Length(length) { }
+	: Field(value, dataType)
+{
+	if (_DataType == DataType::STRING_FIELD)
+	{
+		if (value.String == NULL)
+			_Length = 0;
+		else
+			_Length = strlen((PCCHAR)_Value);
+	}
+	else
+	{
+		_Length = length;
+	}
+}
 
 VarLengthField::VarLengthField(PCBYTE value, CSIZE length) 
-	: Field(DataType::BYTES_FIELD), _Length(length) { }
+	: Field(DataType::BYTES_FIELD), _Length(length)
+{
+	_Dispose = FALSE;
+
+	_Value = value;
+}
 
 VarLengthField::VarLengthField(PCCHAR value) 
 	: Field(DataType::STRING_FIELD)
 {
+	_Dispose = FALSE;
+	
+	_Value = value;
+
 	if (value == NULL)
 		_Length = 0;
 	else
-		_Length = strlen(MAKE_CONST(value));
+		_Length = strlen(value);
 }
 
 VarLengthField::VarLengthField(PCBITPACK value, CSIZE length) 
-	: Field(DataType::BIT_FIELD), _Length(length) { }
+	: Field(DataType::BIT_FIELD), _Length(length)
+{
+	_Dispose = FALSE;
+
+	_Value = value;
+}
 
 VarLengthField::~VarLengthField()
 {
 	if (!_Dispose)
 		return;
-
-	if (_Length > 0)
-		_Value.FreeData();
-	else if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
-		_Value.FreePtr();
+	
+	//if (_Length > 0 || _DataType == DataType::STRING_FIELD)
+	//	_Value.FreeData();
 }
 
 
@@ -523,16 +551,17 @@ VarLengthField::operator PCBITPACK() const
 	return _Value;
 }
 
+
 // Field OVERRIDES
 
 CSIZE VarLengthField::ByteSize() const
 {
-	return sizeof(_Length) + Field::ByteSize();
+	return SIZEOF(_Length) + FieldBase::ByteSize();
 }
 
 CSIZE VarLengthField::StringSize() const
 {
-	return 2 * sizeof(_Length) + Field::StringSize();
+	return 2 * SIZEOF(_Length) + 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
 }
 
 CSIZE VarLengthField::ByteWidth() const
@@ -540,15 +569,7 @@ CSIZE VarLengthField::ByteWidth() const
 	if (_Length > 0)
 		return _Length;
 
-	return Field::ByteWidth();
-}
-
-CSIZE VarLengthField::StringLength() const
-{
-	if (_DataType == DataType::STRING_FIELD)
-		return _Length;
-			
-	return 2 * this->ByteWidth();
+	return FieldBase::ByteWidth();
 }
 
 VOID VarLengthField::FromBytes(PCBYTE data)
