@@ -566,12 +566,9 @@ VOID VarLengthField::FromBytes(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
 
-	_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(bufferPtr));
-	bufferPtr += SIZEOF(CSIZE);
-
-	_DataType = static_cast<DataType>(*bufferPtr++);
-
-	_Value = bufferPtr;
+	_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
+	
+	FieldBase::FromBytes(data);
 }
 
 VOID VarLengthField::FromString(PCCHAR data)
@@ -580,45 +577,52 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 	bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-	CBYTE byteWidth = this->ByteWidth();
+	FieldBase::FromString(data);
 
-	PBYTE bytes = NULL;
+	// TODO
+	//PCCHAR bufferPtr = data;
 
-	switch (_DataType)
-	{
-	case DataType::BYTE_FIELD:
-	case DataType::CHAR_FIELD:
-	case DataType::BOOL_FIELD:
+	//bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-		bytes = (PBYTE)&(_Value.Byte);
-		break;
-		
-	case DataType::WORD_FIELD:
-	case DataType::SHORT_FIELD:
-		
+	//CBYTE byteWidth = this->ByteWidth();
 
-		bytes = (PBYTE)&(_Value.Word);
-		break;
-		
-	case DataType::FLOAT_FIELD:
-	case DataType::LONG_FIELD:		
-	case DataType::DWORD_FIELD:
+	//PBYTE bytes = NULL;
 
-		bytes = (PBYTE)&(_Value.DWord);
-		break;
+	//switch (_DataType)
+	//{
+	//case DataType::BYTE_FIELD:
+	//case DataType::CHAR_FIELD:
+	//case DataType::BOOL_FIELD:
 
-	default:
+	//	bytes = (PBYTE)&(_Value.Byte);
+	//	break;
+	//	
+	//case DataType::WORD_FIELD:
+	//case DataType::SHORT_FIELD:
+	//	
 
-		for (BYTE i = 0; i < byteWidth; i++)
-			bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+	//	bytes = (PBYTE)&(_Value.Word);
+	//	break;
+	//	
+	//case DataType::FLOAT_FIELD:
+	//case DataType::LONG_FIELD:		
+	//case DataType::DWORD_FIELD:
 
-		_Value = bytes;
+	//	bytes = (PBYTE)&(_Value.DWord);
+	//	break;
 
-		return;
-	}
-	
-	for (SIZE i = 0 ; i < byteWidth; i++)
-		bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
+	//default:
+
+	//	for (BYTE i = 0; i < byteWidth; i++)
+	//		bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+
+	//	_Value = bytes;
+
+	//	return;
+	//}
+	//
+	//for (SIZE i = 0 ; i < byteWidth; i++)
+	//	bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
 }
 
 #pragma endregion

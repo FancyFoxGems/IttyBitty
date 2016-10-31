@@ -656,12 +656,9 @@ namespace IttyBitty
 		{
 			PCBYTE bufferPtr = data;
 
-			_Length = static_cast<DataType>(*reinterpret_cast<PCSIZE>(bufferPtr));
-			bufferPtr += SIZEOF(CSIZE);
-
-			_DataType = static_cast<DataType>(*bufferPtr++);
-
-			_Value = bufferPtr;
+			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
+	
+			FieldBase::FromBytes(data);
 		}
 		
 		VIRTUAL VOID FromString(PCCHAR data) final
@@ -669,12 +666,16 @@ namespace IttyBitty
 			PCCHAR bufferPtr = data;
 
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
-			bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
-	
-			BYTE bytes[this->ByteWidth()];
 
-			for (BYTE i = 0; i < this->ByteWidth(); i++)
-				bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+			FieldBase::FromString(data);
+			
+	// TODO
+			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
+	
+			//BYTE bytes[this->ByteWidth()];
+
+			//for (BYTE i = 0; i < this->ByteWidth(); i++)
+			//	bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 		}
 
 
