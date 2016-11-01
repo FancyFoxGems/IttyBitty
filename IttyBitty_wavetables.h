@@ -10,7 +10,7 @@
 #define _ITTYBITTY_WAVETABLES_H
 
 
-#include "IttyBitty_gpio.h"
+#include "IttyBitty_GPIO.h"
 
 
 #endif

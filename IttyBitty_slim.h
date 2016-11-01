@@ -20,7 +20,7 @@
 * [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
 *	NOTE: ^-- In Slim bundle, no structure-based abstractions
 *
-* [IttyBitty_gpio.h]: MACROS FOR PIN ACCESS & MANIPULATION
+* [IttyBitty_GPIO.h]: MACROS FOR PIN ACCESS & MANIPULATION
 *	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
 *
 * This file is part of the Itty Bitty Arduino library.

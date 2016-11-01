@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
+* [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -10,7 +10,7 @@
 #define _ITTYBITTY_GPIO_ARDUINO_H
 
 
-#include "IttyBitty_gpio.h"
+#include "IttyBitty_GPIO.h"
 
 
 #ifdef PORTA

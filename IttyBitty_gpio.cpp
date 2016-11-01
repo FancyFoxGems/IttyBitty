@@ -4,20 +4,17 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-
 /* NOTE: COMMENT THE FOLLOWING LINE OUT TO ENABLE A FULLY FEATURED / FULL BUILD OF THE LIBRARY */
 //#define ITTYBITTY_SLIM
-
 
 #if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
 	#define EXCLUDE_ITTYBITTY_BYTES
 #endif
 
-
 #ifndef EXCLUDE_ITTYBITTY_GPIO
 
 
-#include "IttyBitty_gpio.h"
+#include "IttyBitty_GPIO.h"
 
 using namespace IttyBitty;
 

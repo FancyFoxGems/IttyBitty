@@ -181,7 +181,7 @@ namespace IttyBitty
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
 		
-		#ifndef ITTYBITTY_EXCLUDE_TWI
+		#ifndef ITTYBITTY_NO_TWI
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
 		#endif
 		

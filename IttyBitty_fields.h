@@ -14,7 +14,7 @@
 	#include "Printable.h"
 	#include "HardwareSerial.h"
 
-	#ifndef ITTYBITTY_EXCLUDE_TWI
+	#ifndef ITTYBITTY_NO_TWI
 		#include "Wire.h"
 	#endif
 #endif
@@ -181,7 +181,7 @@ namespace IttyBitty
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
 		
-		#ifndef ITTYBITTY_EXCLUDE_TWI
+		#ifndef ITTYBITTY_NO_TWI
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
 		#endif
 
@@ -244,7 +244,7 @@ namespace IttyBitty
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
 		
-		#ifndef ITTYBITTY_EXCLUDE_TWI
+		#ifndef ITTYBITTY_NO_TWI
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
 		#endif
 				

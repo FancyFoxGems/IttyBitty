@@ -68,13 +68,19 @@
     <ClInclude Include="..\IttyBitty_bytes.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_gpio.h">
+    <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_gpio_arduino.h">
+    <ClInclude Include="..\IttyBitty_fields.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_gpio_portpins.h">
+    <ClInclude Include="..\IttyBitty_GPIO.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_GPIO_arduino.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_GPIO_portpins.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_info.h">
@@ -121,10 +127,13 @@
     <ClCompile Include="..\IttyBitty_bytes.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_fields.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_gpio.cpp">
+    <ClCompile Include="..\IttyBitty_GPIO.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_interrupts.cpp">

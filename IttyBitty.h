@@ -52,7 +52,7 @@
 * [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
 *	NOTE: ^-- In Slim bundle, no structure-based abstractions
 *
-* [IttyBitty_gpio.h]: MACROS FOR PIN ACCESS & MANIPULATION
+* [IttyBitty_GPIO.h]: MACROS FOR PIN ACCESS & MANIPULATION
 *	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
 *
 *
@@ -98,7 +98,7 @@
 *
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
-* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
+* [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
 *
 * [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
 *
@@ -125,8 +125,13 @@
 
 /* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
 
-#ifndef EXCLUDE_ITTYBITTY_INFO
+// TODO: Uncomment.
+#define EXCLUDE_ITTYBITTY_INFO
+
+#if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_INFO)
 	#include "IttyBitty_info.h"
+#else
+	#include "IttyBitty_bits.h"			// Included by [IttyBitty_info.h] otherwise
 #endif
 
 
@@ -148,10 +153,10 @@
 #endif
 
 
-/* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS */
+/* [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS */
 
 #ifndef EXCLUDE_ITTYBITTY_GPIO
-	#include "IttyBitty_gpio.h"
+	#include "IttyBitty_GPIO.h"
 #elif !defined(EXCLUDE_ITTYBITTY_LED)
 	#define EXCLUDE_ITTYBITTY_LED
 #endif
@@ -166,10 +171,10 @@
 #endif
 
 
-/* [IttyBitty_led.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING */
+/* [IttyBitty_LED.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING */
 
 #ifndef EXCLUDE_ITTYBITTY_LED
-	#include "IttyBitty_led.h"
+	#include "IttyBitty_LED.h"
 #endif
 
 
@@ -186,6 +191,13 @@
 	#include "IttyBitty_messages.h"
 #elif !defined(EXCLUDE_ITTYBITTY_FIELDS)
 	#define EXCLUDE_ITTYBITTY_FIELDS
+#endif
+
+
+/* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
+
+#if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
+	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
 

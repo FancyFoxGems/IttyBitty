@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_gpio.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
+* [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -65,7 +65,7 @@ namespace IttyBitty
 	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
 
 	struct _GPIO;
-	typedef _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
+	typedef _GPIO _GPIO_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
 	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 
@@ -552,10 +552,10 @@ namespace IttyBitty
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 
-#include "IttyBitty_gpio_arduino.h"
+#include "IttyBitty_GPIO_arduino.h"
 
 
-#include "IttyBitty_gpio_portpins.h"
+#include "IttyBitty_GPIO_portpins.h"
 
 
 #endif

@@ -350,7 +350,7 @@ BOOL Message::Transmit(HardwareSerial & serial)
 	return TRUE;
 }
 
-#ifndef ITTYBITTY_EXCLUDE_TWI
+#ifndef ITTYBITTY_NO_TWI
 
 BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 {
@@ -361,7 +361,8 @@ BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 
 	twi.flush();
 
-	twi.endTransmission();
+	if (twi.endTransmission())
+		return FALSE;
 
 	return TRUE;
 }

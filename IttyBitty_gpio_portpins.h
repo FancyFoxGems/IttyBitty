@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_gpio_portpins.h]
+* [IttyBitty_GPIO_portpins.h]
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -10,7 +10,7 @@
 #define _ITTYBITTY_GPIO_PORTPINS_H
 
 
-#include "IttyBitty_gpio.h"
+#include "IttyBitty_GPIO.h"
 
 
 #define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]

@@ -247,7 +247,7 @@ BOOL FieldBase::Transmit(HardwareSerial & serial)
 	return TRUE;
 }
 
-#ifndef ITTYBITTY_EXCLUDE_TWI
+#ifndef ITTYBITTY_NO_TWI
 
 BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 {
@@ -256,9 +256,10 @@ BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 	if (!this->printTo(twi))
 		return FALSE;
 
-	twi.flush();
+	twi.flush();	
 
-	twi.endTransmission();
+	if (twi.endTransmission())
+		return FALSE;
 
 	return TRUE;
 }

@@ -7,7 +7,7 @@
 #ifndef EXCLUDE_ITTYBITTY_LED
 
 
-#include "IttyBitty_led.h"
+#include "IttyBitty_LED.h"
 
 
 #endif // #ifndef EXCLUDE_ITTYBITTY_LED
