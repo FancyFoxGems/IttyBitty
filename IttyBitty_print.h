@@ -16,15 +16,15 @@
 #define _ITTYBITTY_PRINT_H
 
 
-#include <Stream.h>
+#include "HardwareSerial.h"
 
 #include "IttyBitty_util.h"
 
 
 /* SERIAL OPTIONS */
 
-#ifndef STREAM_PRINT_DELAY_MS
-	#define STREAM_PRINT_DELAY_MS		100
+#ifndef SERIAL_PRINT_DELAY_MS
+	#define SERIAL_PRINT_DELAY_MS		100
 #endif
 
 #ifndef DEFAULT_SERIAL
@@ -40,46 +40,46 @@
 
 namespace IttyBitty
 {
-	VOID FlushAndDelay(Stream & = DEFAULT_SERIAL);
+	VOID FlushAndDelay(HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintBytes(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
-	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, Stream & = DEFAULT_SERIAL);
+	VOID PrintBytes(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintBit(RCBIT, Stream & = DEFAULT_SERIAL);
-	VOID PrintBitLine(RCBIT, Stream & = DEFAULT_SERIAL);
+	VOID PrintBit(RCBIT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBitLine(RCBIT, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCBOOL, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCBOOL, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCBOOL, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCBOOL, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCCHAR, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCCHAR, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCCHAR, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCCHAR, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCBYTE, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCBYTE, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCBYTE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCBYTE, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCSHORT, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCSHORT, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCSHORT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCSHORT, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCWORD, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCWORD, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCSIZE, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCSIZE, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCSIZE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCSIZE, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCLONG, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCLONG, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCLONG, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCLONG, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCDWORD, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCDWORD, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCFLOAT, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(RCFLOAT, Stream & = DEFAULT_SERIAL);
+	VOID PrintVal(RCFLOAT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(RCFLOAT, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintString(PCCHAR, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(PCCHAR = "", Stream & = DEFAULT_SERIAL);
+	VOID PrintString(PCCHAR, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(PCCHAR = "", HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintString(CONST __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
-	VOID PrintLine(CONST __FlashStringHelper *, Stream & = DEFAULT_SERIAL);
+	VOID PrintString(CONST __FlashStringHelper *, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CONST __FlashStringHelper *, HardwareSerial & = DEFAULT_SERIAL);
 }
 
 #endif

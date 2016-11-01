@@ -32,7 +32,7 @@ FieldBase::~FieldBase()
 
 	// TODO
 	PrintLine(F("~FieldBase"));
-	return;
+
 	if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
 		_Value.FreeData();
 }

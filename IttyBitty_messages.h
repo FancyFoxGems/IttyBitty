@@ -15,7 +15,7 @@
 #ifdef DEBUG_MESSAGES
 	#include "IttyBitty_print.h"
 #elif defined(ARDUINO)
-	#include "Stream.h"
+	#include "HardwareSerial.h"
 #endif
 
 
@@ -101,6 +101,8 @@ namespace IttyBitty
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) = 0;
 
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
+
 	protected:
 
 		VIRTUAL CSIZE GetParamsByteSize() const = 0;
@@ -165,6 +167,8 @@ namespace IttyBitty
 		// USER METHODS
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
 		
 
 		// ISerializable IMPLEMENTATION
@@ -324,6 +328,9 @@ namespace IttyBitty
 		if (msgSize == 0)
 			return NULL;
 
+		if (__message_buffer)
+			delete[] __message_buffer;
+
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 
@@ -360,6 +367,9 @@ namespace IttyBitty
 		PrintVal(msgSize);
 		PrintLine("].");
 	#endif
+
+		if (__message_buffer)
+			delete[] __message_buffer;
 		
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];

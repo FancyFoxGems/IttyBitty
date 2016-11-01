@@ -16,155 +16,155 @@ using namespace IttyBitty;
 
 namespace IttyBitty
 {
-	VOID PrintBytes(PCBYTE buffer, CSIZE size, Stream & printer)
+	VOID PrintBytes(PCBYTE buffer, CSIZE size, HardwareSerial & printer)
 	{
 		for (SIZE i = 0; i < size; i++)
 			printer.write(buffer[i]);
 	}
 
-	VOID PrintBytesAndFlush(PCBYTE buffer, CSIZE size, Stream & printer)
+	VOID PrintBytesAndFlush(PCBYTE buffer, CSIZE size, HardwareSerial & printer)
 	{
 		PrintBytes(buffer, size);
 		FlushAndDelay();
 	}
 
 
-	VOID PrintBit(RCBIT data, Stream & printer)
+	VOID PrintBit(RCBIT data, HardwareSerial & printer)
 	{
 		printer.print(data ? ON_STRING : OFF_STRING);
 	}
 
-	VOID PrintBitLine(RCBIT data, Stream & printer)
+	VOID PrintBitLine(RCBIT data, HardwareSerial & printer)
 	{
 		printer.println(data ? ON_STRING : OFF_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCBOOL data, Stream & printer)
+	VOID PrintVal(RCBOOL data, HardwareSerial & printer)
 	{
 		printer.print(data ? TRUE_STRING : FALSE_STRING);
 	}
 
-	VOID PrintLine(RCBOOL data, Stream & printer)
+	VOID PrintLine(RCBOOL data, HardwareSerial & printer)
 	{
 		printer.println(data ? TRUE_STRING : FALSE_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCCHAR data, Stream & printer)
+	VOID PrintVal(RCCHAR data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCCHAR data, Stream & printer)
+	VOID PrintLine(RCCHAR data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCBYTE data, Stream & printer)
+	VOID PrintVal(RCBYTE data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCBYTE data, Stream & printer)
+	VOID PrintLine(RCBYTE data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCSHORT data, Stream & printer)
+	VOID PrintVal(RCSHORT data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCSHORT data, Stream & printer)
+	VOID PrintLine(RCSHORT data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCWORD data, Stream & printer)
+	VOID PrintVal(RCWORD data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCWORD data, Stream & printer)
+	VOID PrintLine(RCWORD data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCSIZE data, Stream & printer)
+	VOID PrintVal(RCSIZE data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCSIZE data, Stream & printer)
+	VOID PrintLine(RCSIZE data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCLONG data, Stream & printer)
+	VOID PrintVal(RCLONG data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCLONG data, Stream & printer)
+	VOID PrintLine(RCLONG data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCDWORD data, Stream & printer)
+	VOID PrintVal(RCDWORD data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCDWORD data, Stream & printer)
+	VOID PrintLine(RCDWORD data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCFLOAT data, Stream & printer)
+	VOID PrintVal(RCFLOAT data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCFLOAT data, Stream & printer)
+	VOID PrintLine(RCFLOAT data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintString(PCCHAR buffer, Stream & printer)
+	VOID PrintString(PCCHAR buffer, HardwareSerial & printer)
 	{
 		printer.print(buffer);
 	}
 
-	VOID PrintLine(PCCHAR buffer, Stream & printer)
+	VOID PrintLine(PCCHAR buffer, HardwareSerial & printer)
 	{
 		printer.println(buffer);
 		FlushAndDelay();
 	}
 
-	VOID PrintString(CONST __FlashStringHelper * flashBuffer, Stream & printer)
+	VOID PrintString(CONST __FlashStringHelper * flashBuffer, HardwareSerial & printer)
 	{
 		printer.print(flashBuffer);
 	}
 
-	VOID PrintLine(CONST __FlashStringHelper * flashBuffer, Stream & printer)
+	VOID PrintLine(CONST __FlashStringHelper * flashBuffer, HardwareSerial & printer)
 	{
 		printer.println(flashBuffer);
 		FlushAndDelay();
 	}
 
-	VOID FlushAndDelay(Stream & printer)
+	VOID FlushAndDelay(HardwareSerial & printer)
 	{
 		printer.flush();
-		delay(STREAM_PRINT_DELAY_MS);
+		delay(SERIAL_PRINT_DELAY_MS);
 	}
 }
 

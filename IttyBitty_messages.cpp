@@ -181,6 +181,18 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 	return TRUE;
 }
 
+BOOL Message::Transmit(HardwareSerial & stream)
+{
+	if (!stream.availableForWrite())
+		delay(SERIAL_DEFAULT_TIMEOUT_MS);
+	if (!stream.availableForWrite())
+		return FALSE;
+
+	this->printTo(stream);
+
+	return TRUE;
+}
+
 
 // ISerializable IMPLEMENTATION
 
@@ -257,8 +269,8 @@ PCCHAR Message::ToString() const
 	CSIZE size = this->StringSize();
 	CBYTE paramCount = this->GetParamCount();
 
-	if (__message_buffer != NULL)
-		delete __message_buffer;
+	if (__message_buffer)
+		delete[] __message_buffer;
 
 	__message_buffer = new BYTE[size];
 	__message_buffer[size - 1] = '\0';
