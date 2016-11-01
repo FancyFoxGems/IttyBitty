@@ -350,8 +350,6 @@ BOOL Message::Transmit(HardwareSerial & serial)
 	return TRUE;
 }
 
-#ifndef ITTYBITTY_NO_TWI
-
 BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 {
 	twi.beginTransmission(i2cAddr);
@@ -366,8 +364,6 @@ BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 
 	return TRUE;
 }
-
-#endif
 
 SIZE Message::printTo(Print & printer) const
 {

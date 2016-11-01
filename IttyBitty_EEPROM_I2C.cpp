@@ -4,7 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (!defined(ARDUINO) || defined(ITTYBITTY_NO_TWI)) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
+#if !defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
 	#define EXCLUDE_ITTYBITTY_EEPROM_I2C
 #endif
 
@@ -16,10 +16,11 @@
 using namespace IttyBitty;
 
 
-IttyBitty::EEPROM_I2C ExtEEPROM;
+//IttyBitty::EEPROM_I2C ExtEEPROM;
 
 
-EEPROM_I2C::EEPROM_I2C(void)
+
+EEPROM_I2C::EEPROM_I2C()
 {
    Wire.begin();
 }
@@ -45,5 +46,4 @@ uint8_t EEPROM_I2C::read(unsigned long dataAddress)
    if (Wire.available()) data = Wire.peek();
    return data;
 }
-
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C

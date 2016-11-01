@@ -180,10 +180,7 @@ namespace IttyBitty
 	#ifdef ARDUINO
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
-		
-		#ifndef ITTYBITTY_NO_TWI
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
-		#endif
 		
 		VIRTUAL SIZE printTo(Print &) const;
 

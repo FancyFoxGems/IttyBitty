@@ -247,8 +247,6 @@ BOOL FieldBase::Transmit(HardwareSerial & serial)
 	return TRUE;
 }
 
-#ifndef ITTYBITTY_NO_TWI
-
 BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 {
 	twi.beginTransmission(i2cAddr);
@@ -263,8 +261,6 @@ BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 
 	return TRUE;
 }
-
-#endif
 
 SIZE FieldBase::printTo(Print & printer) const
 {

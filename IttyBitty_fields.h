@@ -13,10 +13,7 @@
 #ifdef ARDUINO
 	#include "Printable.h"
 	#include "HardwareSerial.h"
-
-	#ifndef ITTYBITTY_NO_TWI
-		#include "Wire.h"
-	#endif
+	#include "Wire.h"
 #endif
 
 #include "IttyBitty_values.h"
@@ -179,11 +176,8 @@ namespace IttyBitty
 		
 	#ifdef ARDUINO
 
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
-		
-		#ifndef ITTYBITTY_NO_TWI
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;		
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
-		#endif
 
 	#endif
 
@@ -243,10 +237,7 @@ namespace IttyBitty
 	#ifdef ARDUINO
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
-		
-		#ifndef ITTYBITTY_NO_TWI
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
-		#endif
 				
 		VIRTUAL SIZE printTo(Print &) const;
 
