@@ -69,8 +69,7 @@ PCBYTE FieldBase::ToBytes() const
 
 	__field_buffer = new BYTE[size];
 
-	STATIC PBYTE bufferPtr = NULL;
-	bufferPtr = __field_buffer;
+	PBYTE bufferPtr = __field_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
@@ -96,8 +95,7 @@ PCCHAR FieldBase::ToString() const
 	__field_buffer = new BYTE[size];
 	__field_buffer[size - 1] = '\0';
 
-	STATIC PCHAR bufferPtr = NULL;
-	bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
@@ -234,12 +232,10 @@ SIZE FieldBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
 	SIZE size = this->StringSize();
-	STATIC PCCHAR buffer = NULL;
-	buffer = this->ToString();
+	PCCHAR buffer = this->ToString();
 #else
 	SIZE size = this->ByteSize();
-	STATIC PCBYTE buffer = NULL;
-	buffer = this->ToBytes();
+	PCBYTE buffer = this->ToBytes();
 #endif
 
 	for (SIZE i = 0; i < size; i++)

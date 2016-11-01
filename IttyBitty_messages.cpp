@@ -223,8 +223,7 @@ PCBYTE Message::ToBytes() const
 
 	__message_buffer = new BYTE[size];
 
-	STATIC PBYTE bufferPtr = NULL;
-	bufferPtr = __message_buffer;
+	PBYTE bufferPtr = __message_buffer;
 
 	memcpy(bufferPtr++, &size, SIZEOF(CSIZE));
 
@@ -235,7 +234,7 @@ PCBYTE Message::ToBytes() const
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
 	PIFIELD param = NULL;
-	STATIC PCBYTE paramBytes = NULL;
+	PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
 
 
@@ -246,9 +245,6 @@ PCBYTE Message::ToBytes() const
 		paramSize = param->ByteSize();
 
 		memcpy(bufferPtr, paramBytes, paramSize);
-
-		delete[] paramBytes;
-		paramBytes = NULL;
 
 		bufferPtr += paramSize;
 	}
@@ -261,49 +257,43 @@ PCCHAR Message::ToString() const
 	CSIZE size = this->StringSize();
 	CBYTE paramCount = this->GetParamCount();
 
-	if (__message_buffer)
-		delete[] __message_buffer;
+	if (__message_buffer != NULL)
+		delete __message_buffer;
 
 	__message_buffer = new BYTE[size];
 	__message_buffer[size - 1] = '\0';
 
-	STATIC PCHAR bufferPtr = NULL;
-	bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
 	
 	PIFIELD param = NULL;
-	STATIC PCCHAR paramStr = NULL;
+	PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
-	//DataType dataType = DataType::BYTES_FIELD;
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
 		paramStr = param->ToString();
 		paramSize = param->StringSize() - 1;
-
-		memcpy(bufferPtr, paramStr, paramSize);
 		
-		// TODO
-		//dataType = param->GetDataType();
-		//if (dataType != DataType::BYTES_FIELD && dataType != DataType::STRING_FIELD && dataType != DataType::BIT_FIELD)
-			delete[] paramStr;
-		//paramStr = NULL;
-		//param = NULL;
+		memcpy(bufferPtr, paramStr, paramSize);
+
+		if (i == 0)
+			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
 
 		bufferPtr += paramSize;
 	}
+	
 
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
 VOID Message::FromBytes(PCBYTE data)
 {
-	STATIC PCBYTE bufferPtr = NULL;
-	bufferPtr = data;
+	PCBYTE bufferPtr = data;
 
 	_MessageCode = *bufferPtr++;
 	_ParamCount = *bufferPtr++;
@@ -325,8 +315,7 @@ VOID Message::FromBytes(PCBYTE data)
 
 VOID Message::FromString(PCCHAR data)
 {
-	STATIC PCCHAR bufferPtr = NULL;
-	bufferPtr = data;
+	PCCHAR bufferPtr = data;
 
 	bufferPtr = StringReadValue<BYTE>(_MessageCode, bufferPtr);
 	bufferPtr = StringReadValue<BYTE>(_ParamCount, bufferPtr);
@@ -355,12 +344,10 @@ SIZE Message::printTo(Print & printer) const
 
 #ifdef _DEBUG
 	SIZE msgSize = this->StringSize();
-	STATIC PCCHAR buffer = NULL;
-	buffer = this->ToString();
+	PCCHAR buffer = this->ToString();
 #else
 	SIZE msgSize = this->ByteSize();
-	STATIC PCBYTE buffer = NULL;
-	buffer = this->ToBytes();
+	PCBYTE buffer = this->ToBytes();
 #endif
 	
 	for (BYTE i = 0; i < size; i++)
@@ -368,9 +355,6 @@ SIZE Message::printTo(Print & printer) const
 
 	for (SIZE i = 0; i < msgSize; i++)
 		printer.print(buffer[i]);
-
-	delete[] __message_buffer;
-	__message_buffer = NULL;
 
 	size += msgSize;
 

@@ -379,8 +379,7 @@ namespace IttyBitty
 		PrintLine(F("BUFFER FILLED.  LOADING..."));
 	#endif		
 		
-		STATIC PIMESSAGE stringMsg = NULL;
-		stringMsg = new Message();
+		PIMESSAGE stringMsg = new Message();
 		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
