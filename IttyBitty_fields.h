@@ -12,6 +12,11 @@
 		
 #ifdef ARDUINO
 	#include "Printable.h"
+	#include "HardwareSerial.h"
+
+	#ifndef ITTYBITTY_EXCLUDE_TWI
+		#include "Wire.h"
+	#endif
 #endif
 
 #include "IttyBitty_values.h"
@@ -20,6 +25,10 @@
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
+	
+#ifdef ARDUINO
+	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
+#endif
 
 	EXTERN CBYTE DATA_SIZE_MASK;
 		
@@ -167,6 +176,16 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBytes(PCBYTE) = 0;
 		VIRTUAL VOID FromString(PCCHAR) = 0;
+		
+	#ifdef ARDUINO
+
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
+		
+		#ifndef ITTYBITTY_EXCLUDE_TWI
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
+		#endif
+
+	#endif
 
 	protected:
 
@@ -220,9 +239,17 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBytes(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-				
+
 	#ifdef ARDUINO
+
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
+		
+		#ifndef ITTYBITTY_EXCLUDE_TWI
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
+		#endif
+				
 		VIRTUAL SIZE printTo(Print &) const;
+
 	#endif
 
 

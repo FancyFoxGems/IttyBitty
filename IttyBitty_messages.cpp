@@ -13,8 +13,6 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
-
 PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 
 PBYTE IttyBitty::__message_buffer = NULL;
@@ -181,18 +179,6 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 	return TRUE;
 }
 
-BOOL Message::Transmit(HardwareSerial & stream)
-{
-	if (!stream.availableForWrite())
-		delay(SERIAL_DEFAULT_TIMEOUT_MS);
-	if (!stream.availableForWrite())
-		return FALSE;
-
-	this->printTo(stream);
-
-	return TRUE;
-}
-
 
 // ISerializable IMPLEMENTATION
 
@@ -347,8 +333,40 @@ VOID Message::FromString(PCCHAR data)
 	}
 }
 
-
 #ifdef ARDUINO
+
+BOOL Message::Transmit(HardwareSerial & serial)
+{
+	if (!serial.availableForWrite())
+		delay(SERIAL_DEFAULT_TIMEOUT_MS);
+	if (!serial.availableForWrite())
+		return FALSE;
+
+	if (!this->printTo(serial))
+		return FALSE;
+
+	serial.flush();
+
+	return TRUE;
+}
+
+#ifndef ITTYBITTY_EXCLUDE_TWI
+
+BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
+{
+	twi.beginTransmission(i2cAddr);
+
+	if (!this->printTo(twi))
+		return FALSE;
+
+	twi.flush();
+
+	twi.endTransmission();
+
+	return TRUE;
+}
+
+#endif
 
 SIZE Message::printTo(Print & printer) const
 {

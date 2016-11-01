@@ -13,6 +13,10 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
+#ifdef ARDUINO
+CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
+#endif
+
 CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
 
 PBYTE IttyBitty::__field_buffer = NULL;
@@ -227,6 +231,39 @@ VOID FieldBase::FromString(PCCHAR data)
 }
 
 #ifdef ARDUINO
+
+BOOL FieldBase::Transmit(HardwareSerial & serial)
+{
+	if (!serial.availableForWrite())
+		delay(SERIAL_DEFAULT_TIMEOUT_MS);
+	if (!serial.availableForWrite())
+		return FALSE;
+
+	if (!this->printTo(serial))
+		return FALSE;
+
+	serial.flush();
+
+	return TRUE;
+}
+
+#ifndef ITTYBITTY_EXCLUDE_TWI
+
+BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
+{
+	twi.beginTransmission(i2cAddr);
+
+	if (!this->printTo(twi))
+		return FALSE;
+
+	twi.flush();
+
+	twi.endTransmission();
+
+	return TRUE;
+}
+
+#endif
 
 SIZE FieldBase::printTo(Print & printer) const
 {

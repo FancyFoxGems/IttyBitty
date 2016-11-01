@@ -14,8 +14,6 @@
 
 #ifdef DEBUG_MESSAGES
 	#include "IttyBitty_print.h"
-#elif defined(ARDUINO)
-	#include "HardwareSerial.h"
 #endif
 
 
@@ -27,8 +25,6 @@ IGNORE_WARNING(-Wreorder)
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
-
-	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
 
 	EXTERN PCCHAR MESSAGE_MARKER;
 		
@@ -101,7 +97,6 @@ namespace IttyBitty
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) = 0;
 
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
 
 	protected:
 
@@ -167,8 +162,6 @@ namespace IttyBitty
 		// USER METHODS
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
-
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
 		
 
 		// ISerializable IMPLEMENTATION
@@ -185,7 +178,15 @@ namespace IttyBitty
 		VIRTUAL VOID FromString(PCCHAR);
 		
 	#ifdef ARDUINO
+
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
+		
+		#ifndef ITTYBITTY_EXCLUDE_TWI
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
+		#endif
+		
 		VIRTUAL SIZE printTo(Print &) const;
+
 	#endif
 
 
