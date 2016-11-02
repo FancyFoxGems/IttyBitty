@@ -69,8 +69,9 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef struct EEPtr EEEPtr, _eeeptr_t, EEEPTR, * PEEEPTR, & REEEPTR, ** PPEEEPTR, && RREEEPTR;
-	typedef const struct EEPtr CEEEPTR ,* PCEEEPTR, & RCEEEPTR, ** PPCEEEPTR;
+	struct _EEEPtr;
+	typedef struct _EEEPtr EEEPtr, _eeeptr_t, EEEPTR, * PEEEPTR, & REEEPTR, ** PPEEEPTR, && RREEEPTR;
+	typedef const struct _EEEPtr CEEEPTR ,* PCEEEPTR, & RCEEEPTR, ** PPCEEEPTR;
 
 	struct _EEERef;
 	typedef struct _EEERef EEERef, _eeeref_t, EEEREF, * PEEEREF, & REEEREF, ** PPEEEREF, && RREEEREF;
@@ -110,7 +111,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [EEERef] DEFINITION
+#pragma region [_EEERef] DEFINITION
 
 struct _EEERef : public EERef
 {
@@ -140,7 +141,7 @@ public:
 	}
 
 
-//protected:
+protected:
 
 	BYTE Read(RCWORD addr) const
 	{
@@ -174,6 +175,68 @@ public:
 		Wire.endTransmission();
 		delay(50);
 	}
+};
+
+#pragma endregion
+
+
+#pragma region [_EEEPtr] DEFINITION
+
+struct _EEEPtr //: public EEPtr
+{
+	// CONSTRUCTOR
+	
+	_EEEPtr(RCWORD addr) : Address(addr) { }
+
+
+	// OPERATORS
+		
+	operator RCWORD() const
+	{
+		return this->Address;
+	}
+
+	BOOL operator !=(RCEEEPTR ptr)
+	{
+		return this->Address != ptr.Address;
+	}
+
+	EEEREF operator *()
+	{
+		return EEERef(this->Address);
+	}
+	
+	REEEPTR operator =(RCWORD addr)
+	{
+		this->Address = addr;
+		return *this;
+	}
+
+	REEEPTR operator ++()
+	{
+		++this->Address;
+		return *this;
+	}
+
+	REEEPTR operator --()
+	{
+		--this->Address;
+		return *this;
+	}
+
+	EEEPTR operator ++(INT)
+	{
+		return _EEEPtr(this->Address++);
+	}
+
+	EEEPTR operator --(INT)
+	{
+		return _EEEPtr(this->Address--);
+	}
+
+	// INSTANCE VARIABLES
+
+	WORD Address = 0;
 };
 
 #pragma endregion
