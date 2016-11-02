@@ -14,6 +14,7 @@
 #include "IttyBitty_bits.h"
 
 #include "Wire.h"
+#include "EEPROM.h"
 
 
 #pragma region DEFINES
@@ -65,9 +66,12 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	struct EEERef;
-	typedef EEERef EEERef, * PEEEREF, & REEEREF, ** PPEEEREF, && RREEEREF;
-	typedef const EEERef CEEEREF ,* PCEEEREF, & RCEEEREF, ** PPCEEEREF;
+	typedef struct EEPtr EEEPtr, _eeeptr_t, EEEPTR, * PEEEPTR, & REEEPTR, ** PPEEEPTR, && RREEEPTR;
+	typedef const struct EEPtr CEEEPTR ,* PCEEEPTR, & RCEEEPTR, ** PPCEEEPTR;
+
+	struct _EEERef;
+	typedef struct _EEERef EEERef, _eeeref_t, EEEREF, * PEEEREF, & REEEREF, ** PPEEEREF, && RREEEREF;
+	typedef const struct _EEERef CEEEREF ,* PCEEEREF, & RCEEEREF, ** PPCEEEREF;
 
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
 		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
@@ -110,6 +114,54 @@ namespace IttyBitty
 #pragma endregion
 	
 
+#pragma region [EEERef] DEFINITION
+
+struct _EEERef : public EERef
+{
+public:
+
+	// EERef METHOD HIDES
+
+	BYTE operator *() const
+	{
+		return this->Read((CWORD)this->index);
+	}
+
+	REEEREF operator =(RCBYTE value)
+	{
+		this->Write((DWORD)this->index, value);
+		return *this;
+	}
+
+
+protected:
+
+	BYTE Read(RCWORD addr) const
+	{
+		uint8_t value = 0x00;
+		Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
+		Wire.write((uint8_t)((addr) >> 8));
+		Wire.write((uint8_t)(addr & 0xFF));
+		Wire.endTransmission();
+		Wire.requestFrom((uint8_t)((0x500000 | addr) >> 16),(uint8_t)1);
+		if (Wire.available()) value = Wire.peek();
+		return value;
+	}
+
+	VOID Write(RCDWORD addr, RCBYTE value)
+	{
+		Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
+		Wire.write((uint8_t)((addr) >> 8));
+		Wire.write((uint8_t)(addr & 0xFF));
+		Wire.write(value);
+		Wire.endTransmission();
+		delay(5);
+	}
+};
+
+#pragma endregion
+
+
 #pragma region [EEPROM_I2C] DEFINITION
 
 	template<SerialEEPROMChipFamily ChipType, CBYTE I2CAddr>
@@ -124,7 +176,7 @@ namespace IttyBitty
 			return (CWORD)ChipType;
 		}
 
-		STATIC CONSTEXPR CBYTE CapacityBytes()
+		STATIC CONSTEXPR CBYTE Length()
 		{
 			return CapacityKb() * KILO * BITS_PER_BYTE * KILO;
 		}
@@ -152,62 +204,74 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		EEPROM_I2C(RCWORD = 0)
+		EEPROM_I2C() { }
+
+
+		// OPERATORS
+
+		EEEREF operator[](RCWORD addr)
 		{
+			return EEERef(addr);
+		}		
+
+
+		// ITERATOR METHODS
+
+		EEEPTR begin()
+		{
+			return EEEPtr(0);
+		} 
+
+		EEEPTR end() const
+		{
+			return EEEPtr(Length());
+		} 
+
+
+		// USER METHODS
+		
+		BYTE Read(RCWORD addr) const
+		{
+			return EEERef(addr);
+		}
+	
+		VOID Write(RCWORD addr, RCBYTE value)
+		{
+			EEERef ref(addr);
+			ref = value;
 		}
 
-
-		// EEPROMClass METHOD HIDES
-
-		VOID Write(RCDWORD addr, RCBYTE data)
+		VOID Update(RCWORD addr, RCBYTE value)
 		{
-		   Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
-		   Wire.write((uint8_t)((addr) >> 8));
-		   Wire.write((uint8_t)(addr & 0xFF));
-		   Wire.write(data);
-		   Wire.endTransmission();
-		   delay(5);
+			EEERef(addr).update(value);
 		}
-
-
-		CBYTE Read(RCDWORD addr)
-		{
-		   uint8_t data = 0x00;
-		   Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
-		   Wire.write((uint8_t)((addr) >> 8));
-		   Wire.write((uint8_t)(addr & 0xFF));
-		   Wire.endTransmission();
-		   Wire.requestFrom((uint8_t)((0x500000 | addr) >> 16),(uint8_t)1);
-		   if (Wire.available()) data = Wire.peek();
-		   return data;
-		}
-
-		//EERef operator[]( const int idx )    { return idx; }
-		//uint8_t read( int idx )              { return EERef( idx ); }
-		//void write( int idx, uint8_t val )   { (EERef( idx )) = val; }
-		//void update( int idx, uint8_t val )  { EERef( idx ).update( val ); }
-		//
-		////STL and C++11 iteration capability.
-		//EEPtr begin()                        { return 0x00; }
-		//EEPtr end()                          { return length(); } //Standards requires this to be the item after the last valid entry. The returned pointer is invalid.
-		//uint16_t length()                    { return E2END + 1; }
-
+		
 		template<typename T>
-		T &get(int idx, T &t)
+		CSIZE Read(RCWORD addr, T& datum) const
 		{
-			//EEPtr e = idx;
-			//uint8_t *ptr = (uint8_t*) &t;
-			//for( int count = sizeof(T) ; count ; --count, ++e )  *ptr++ = *e;
-			return t;
+			EEEPtr ptr(addr);
+			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
+
+			SIZE i = 0;
+			
+			while (i < SIZEOF(T))
+				*ptr++ = data[i++];
+
+			return i;
 		}
 	
 		template<typename T>
-		const T &put(int idx, const T &t)
+		CSIZE Write(RCWORD addr, CONST T & datum)
 		{
-			//EEPtr e = idx;
-			//const uint8_t *ptr = (const uint8_t*) &t;
-			//for( int count = sizeof(T) ; count ; --count, ++e )  (*e).update( *ptr++ );
-			return t;
+			EEEPTR ptr(addr);
+			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
+
+			SIZE i = 0;
+
+			while (i < SIZEOF(T))
+				(*ptr++).update(data[i++]);
+
+			return i;
 		}
 
 

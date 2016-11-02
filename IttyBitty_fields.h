@@ -442,14 +442,14 @@ namespace IttyBitty
 		}
 
 
-		VIRTUAL operator UNSIGNED_TYPE(CONST T&)() const
+		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
 		{
-			return (UNSIGNED_TYPE(CONST T&))_Value;
+			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
-		VIRTUAL operator SIGNED_TYPE(CONST T&)() const
+		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
 		{
-			return (SIGNED_TYPE(CONST T&))_Value;
+			return (SIGNED_TYPE(CONST T &))_Value;
 		}
 
 
@@ -654,7 +654,7 @@ namespace IttyBitty
 			return (CONST T)_Value;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(T&)()
+		VIRTUAL operator UNSIGNED_TYPE(T &)()
 		{
 			return (T)_Value;
 		}
