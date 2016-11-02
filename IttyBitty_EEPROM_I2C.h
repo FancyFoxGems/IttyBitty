@@ -159,15 +159,15 @@ public:
 
 	BOOL operator !=(RCEEEPTRBASE);
 
-	EEEREFBASE operator *();
+	VIRTUAL EEEREFBASE operator *();
 	
 	REEEPTRBASE operator =(RCWORD);
 
 	REEEPTRBASE operator ++();
 	REEEPTRBASE operator --();
 
-	EEEPTRBASE operator ++(INT);
-	EEEPTRBASE operator --(INT);
+	VIRTUAL EEEPTRBASE operator ++(INT);
+	VIRTUAL EEEPTRBASE operator --(INT);
 
 
 	// INSTANCE VARIABLES
@@ -216,7 +216,7 @@ public:
 	BYTE operator --(INT);
 
 	
-	// USERMETHODS
+	// USER METHODS
 	
 	REEEREFBASE Update(RCBYTE);
 	
@@ -230,8 +230,84 @@ protected:
 	
 	// HELPER METHODS
 
-	CBYTE Read(RCWORD) const;
-	VOID Write(RCDWORD, RCBYTE);
+	VIRTUAL CBYTE Read(RCWORD) const;
+	VIRTUAL VOID Write(RCDWORD, RCBYTE);
+};
+
+#pragma endregion
+
+
+#pragma region [_EEEPtr] DEFINITION
+
+struct _EEEPtr : public _EEEPtrBase
+{
+public:
+
+	// _EEEPtrBase OPERATOR OVERRIDES
+		
+	operator RCWORD() const;
+
+	BOOL operator !=(RCEEEPTRBASE);
+
+	VIRTUAL EEEREFBASE operator *()
+	{
+		return _EEERefBase(this->Address);
+	}
+
+	VIRTUAL EEEPTRBASE operator ++(INT)
+	{
+		return _EEEPtrBase(this->Address++);
+	}
+
+	VIRTUAL EEEPTRBASE operator --(INT)
+	{
+		return _EEEPtrBase(this->Address--);
+	}
+};
+
+#pragma endregion
+
+
+#pragma region [_EEERef] DEFINITION
+
+struct _EEERef : public _EEERefBase
+{
+protected:
+	
+	// HELPER METHOD OVERRIDES
+
+	VIRTUAL CBYTE Read(RCWORD addr) const
+	{
+		PrintLine("EEEREAD");
+		Wire.beginTransmission(0x50);
+
+		Wire.write((BYTE)(addr >> 8));
+		Wire.write((BYTE)addr);
+
+		Wire.endTransmission();
+		delay(5);
+		
+		BYTE value = 0;
+
+		Wire.requestFrom(0x50, 1);
+		if (!Wire.available()) delay(50);
+
+		return Wire.read(); 
+	}
+
+	VIRTUAL VOID Write(RCDWORD addr, RCBYTE value)
+	{
+		PrintLine("EEEWRITE");
+		Wire.beginTransmission(0x50);
+
+		Wire.write((BYTE)(addr >> 8));
+		Wire.write((BYTE)addr);
+
+		Wire.write(value);
+
+		Wire.endTransmission();
+		delay(50);
+	}
 };
 
 #pragma endregion
@@ -354,6 +430,12 @@ protected:
 
 	protected:
 
+		// PROTECTED STATIC CONSTEXPR METHODS		
+
+		STATIC CONSTEXPR CBIT GetPageBitFromAddress(RCDWORD address)
+		{
+			return address > (CDWORD)0xFFFF;
+		}
 	};
 
 #pragma endregion

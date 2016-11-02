@@ -44,7 +44,7 @@ BOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr)
 
 EEEREFBASE _EEEPtrBase::operator *()
 {
-	return EEERefBase(this->Address);
+	return _EEERefBase(this->Address);
 }
 	
 REEEPTRBASE _EEEPtrBase::operator =(RCWORD addr)
@@ -187,7 +187,7 @@ BYTE _EEERefBase::operator --(INT)
 }
 	
 
-// USERMETHODS
+// USER METHODS
 	
 REEEREFBASE _EEERefBase::Update(RCBYTE value)
 {
