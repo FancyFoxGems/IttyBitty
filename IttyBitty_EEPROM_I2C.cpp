@@ -23,6 +23,61 @@ EEPROMI2C<> ExtEEPROM;
 #pragma endregion
 
 
+#pragma region [_EEEPtrBase] DEFINITION
+
+// CONSTRUCTOR
+	
+_EEEPtrBase::_EEEPtrBase(RCWORD addr) : Address(addr) { }
+
+
+// OPERATORS
+		
+_EEEPtrBase::operator RCWORD() const
+{
+	return this->Address;
+}
+
+BOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr)
+{
+	return this->Address != ptr.Address;
+}
+
+EEEREFBASE _EEEPtrBase::operator *()
+{
+	return EEERefBase(this->Address);
+}
+	
+REEEPTRBASE _EEEPtrBase::operator =(RCWORD addr)
+{
+	this->Address = addr;
+	return *this;
+}
+
+REEEPTRBASE _EEEPtrBase::operator ++()
+{
+	++this->Address;
+	return *this;
+}
+
+REEEPTRBASE _EEEPtrBase::operator --()
+{
+	--this->Address;
+	return *this;
+}
+
+EEEPTRBASE _EEEPtrBase::operator ++(INT)
+{
+	return _EEEPtrBase(this->Address++);
+}
+
+EEEPTRBASE _EEEPtrBase::operator --(INT)
+{
+	return _EEEPtrBase(this->Address--);
+}
+
+#pragma endregion
+
+
 #pragma region [_EEERefBase] DEFINITION
 
 // CONSTRUCTOR
@@ -46,7 +101,7 @@ BYTE _EEERefBase::operator *() const
 	return this->Read((CWORD)this->Address);
 }
 
-REEEREF _EEERefBase::operator =(RCBYTE value)
+REEEREFBASE _EEERefBase::operator =(RCBYTE value)
 {
 	PrintLine("=");
 	this->Write((DWORD)this->Address, value);
@@ -176,61 +231,6 @@ VOID _EEERefBase::Write(RCDWORD addr, RCBYTE value)
 
 	Wire.endTransmission();
 	delay(50);
-}
-
-#pragma endregion
-
-
-#pragma region [_EEEPtr] DEFINITION
-
-// CONSTRUCTOR
-	
-_EEEPtr::_EEEPtr(RCWORD addr) : Address(addr) { }
-
-
-// OPERATORS
-		
-_EEEPtr::operator RCWORD() const
-{
-	return this->Address;
-}
-
-BOOL _EEEPtr::operator !=(RCEEEPTR ptr)
-{
-	return this->Address != ptr.Address;
-}
-
-EEEREF _EEEPtr::operator *()
-{
-	return EEERef(this->Address);
-}
-	
-REEEPTR _EEEPtr::operator =(RCWORD addr)
-{
-	this->Address = addr;
-	return *this;
-}
-
-REEEPTR _EEEPtr::operator ++()
-{
-	++this->Address;
-	return *this;
-}
-
-REEEPTR _EEEPtr::operator --()
-{
-	--this->Address;
-	return *this;
-}
-
-EEEPTR _EEEPtr::operator ++(INT)
-{
-	return _EEEPtr(this->Address++);
-}
-
-EEEPTR _EEEPtr::operator --(INT)
-{
-	return _EEEPtr(this->Address--);
 }
 
 #pragma endregion
