@@ -37,12 +37,12 @@ _EEEPtrBase::operator RCWORD() const
 	return this->Address;
 }
 
-BOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr)
+BOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr) const
 {
 	return this->Address != ptr.Address;
 }
 
-EEEREFBASE _EEEPtrBase::operator *()
+EEEREFBASE _EEEPtrBase::operator *() const
 {
 	return _EEERefBase(this->Address);
 }
