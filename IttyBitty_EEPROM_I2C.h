@@ -107,18 +107,19 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region GLOBAL CONSTANTS & VARIABLES	
-
-	EXTERN EEPROMI2C<> ExtEEPROM;
-
-#pragma endregion
-	
-
 #pragma region [EEERef] DEFINITION
 
 struct _EEERef : public EERef
 {
 public:
+
+	// CONSTRUCTOR
+
+	_EEERef(RCWORD addr) : EERef(0)
+	{
+		this->index = addr;
+	}
+
 
 	// EERef METHOD HIDES
 
@@ -281,5 +282,12 @@ protected:
 
 #pragma endregion
 }
+	
+
+#pragma region GLOBAL VARIABLES	
+
+EXTERN IttyBitty::EEPROMI2C<> ExtEEPROM;
+
+#pragma endregion
 
 #endif

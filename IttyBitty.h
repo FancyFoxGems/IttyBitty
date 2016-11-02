@@ -207,7 +207,7 @@
 
 /* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
 
-#if !defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
+#if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 

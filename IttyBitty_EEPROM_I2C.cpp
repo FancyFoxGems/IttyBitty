@@ -16,6 +16,6 @@
 using namespace IttyBitty;
 
 
-EEPROMI2C<> IttyBitty::ExtEEPROM;
+EEPROMI2C<> ExtEEPROM;
 
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
