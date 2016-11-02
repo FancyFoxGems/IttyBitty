@@ -32,17 +32,27 @@ _EEEPtrBase::_EEEPtrBase(RCWORD addr) : Address(addr) { }
 
 // OPERATORS
 		
+_EEEPtrBase::operator CBYTE()
+{
+	return **this;
+}
+		
 _EEEPtrBase::operator RCWORD() const
 {
 	return this->Address;
 }
 
-BOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr) const
+CBOOL _EEEPtrBase::operator ==(RCEEEPTRBASE ptr) const
+{
+	return this->Address == ptr.Address;
+}
+
+CBOOL _EEEPtrBase::operator !=(RCEEEPTRBASE ptr) const
 {
 	return this->Address != ptr.Address;
 }
 
-EEEREFBASE _EEEPtrBase::operator *() const
+EEEREFBASE _EEEPtrBase::operator *()
 {
 	return _EEERefBase(this->Address);
 }
@@ -94,17 +104,30 @@ _EEERefBase::operator CBYTE() const
 {
 	return **this;
 }
-
-BYTE _EEERefBase::operator *() const
+	
+_EEERefBase::operator RCWORD() const
 {
-	PrintLine("*");
-	return this->Read((CWORD)this->Address);
+	return this->Address;
+}
+
+CBYTE _EEERefBase::operator *() const
+{
+	return this->Read();
+}
+
+CBOOL _EEERefBase::operator ==(RCBYTE value) const
+{
+	return *this == value;
+}
+
+CBOOL _EEERefBase::operator !=(RCBYTE value) const
+{
+	return *this != value;
 }
 
 REEEREFBASE _EEERefBase::operator =(RCBYTE value)
 {
-	PrintLine("=");
-	this->Write((DWORD)this->Address, value);
+	this->Write(value);
 	return *this;
 }
 
@@ -172,14 +195,14 @@ REEEREFBASE _EEERefBase::operator--()
 	return *this -= 1;
 }
 	
-BYTE _EEERefBase::operator ++(INT)
+CBYTE _EEERefBase::operator ++(INT)
 { 
 	BYTE value = **this;
 	++(*this);
 	return value;
 }
 
-BYTE _EEERefBase::operator --(INT)
+CBYTE _EEERefBase::operator --(INT)
 { 
 	BYTE value = **this;
 	--(*this);
@@ -191,22 +214,21 @@ BYTE _EEERefBase::operator --(INT)
 	
 REEEREFBASE _EEERefBase::Update(RCBYTE value)
 {
-	if (*this != value)
+	if (**this != value)
 		*this = value;
 
-	return  *this;
+	return *this;
 }
 
 
 // HELPER METHODS
 
-CBYTE _EEERefBase::Read(RCWORD addr) const
+CBYTE _EEERefBase::Read() const
 {
-	PrintLine("EEEREAD");
 	Wire.beginTransmission(0x50);
 
-	Wire.write((BYTE)(addr >> 8));
-	Wire.write((BYTE)addr);
+	Wire.write((BYTE)(this->Address >> 8));
+	Wire.write((BYTE)this->Address);
 
 	Wire.endTransmission();
 	delay(5);
@@ -219,13 +241,12 @@ CBYTE _EEERefBase::Read(RCWORD addr) const
 	return Wire.read(); 
 }
 
-VOID _EEERefBase::Write(RCDWORD addr, RCBYTE value)
+VOID _EEERefBase::Write(RCBYTE value)
 {
-	PrintLine("EEEWRITE");
 	Wire.beginTransmission(0x50);
 
-	Wire.write((BYTE)(addr >> 8));
-	Wire.write((BYTE)addr);
+	Wire.write((BYTE)(this->Address >> 8));
+	Wire.write((BYTE)this->Address);
 
 	Wire.write(value);
 
