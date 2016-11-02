@@ -13,6 +13,9 @@
 
 #include "IttyBitty_bits.h"
 
+#include "IttyBitty_print.h"
+using namespace IttyBitty;
+
 #include "Wire.h"
 #include "EEPROM.h"
 
@@ -105,7 +108,7 @@ namespace IttyBitty
 	using PPCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr> **;
 
 #pragma endregion
-	
+
 
 #pragma region [EEERef] DEFINITION
 
@@ -125,38 +128,51 @@ public:
 
 	BYTE operator *() const
 	{
+		PrintLine("*");
 		return this->Read((CWORD)this->index);
 	}
 
 	REEEREF operator =(RCBYTE value)
 	{
+		PrintLine("=");
 		this->Write((DWORD)this->index, value);
 		return *this;
 	}
 
 
-protected:
+//protected:
 
 	BYTE Read(RCWORD addr) const
 	{
-		uint8_t value = 0x00;
-		Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
-		Wire.write((uint8_t)((addr) >> 8));
-		Wire.write((uint8_t)(addr & 0xFF));
+		PrintLine("EEEREAD");
+		Wire.beginTransmission(0x50);
+
+		Wire.write((BYTE)(addr >> 8));
+		Wire.write((BYTE)addr);
+
 		Wire.endTransmission();
-		Wire.requestFrom((uint8_t)((0x500000 | addr) >> 16),(uint8_t)1);
-		if (Wire.available()) value = Wire.peek();
-		return value;
+		delay(5);
+		
+		BYTE value = 0;
+
+		Wire.requestFrom(0x50, 1);
+		if (!Wire.available()) delay(50);
+
+		return Wire.read(); 
 	}
 
 	VOID Write(RCDWORD addr, RCBYTE value)
 	{
-		Wire.beginTransmission((uint8_t)((0x500000 | addr) >> 16));
-		Wire.write((uint8_t)((addr) >> 8));
-		Wire.write((uint8_t)(addr & 0xFF));
+		PrintLine("EEEWRITE");
+		Wire.beginTransmission(0x50);
+
+		Wire.write((BYTE)(addr >> 8));
+		Wire.write((BYTE)addr);
+
 		Wire.write(value);
+
 		Wire.endTransmission();
-		delay(5);
+		delay(50);
 	}
 };
 
@@ -205,7 +221,10 @@ protected:
 
 		// CONSTRUCTOR
 
-		EEPROM_I2C() { }
+		EEPROM_I2C()
+		{
+			Wire.begin();
+		}
 
 
 		// OPERATORS
@@ -233,7 +252,7 @@ protected:
 		
 		BYTE Read(RCWORD addr) const
 		{
-			return EEERef(addr);
+			return *EEERef(addr);
 		}
 	
 		VOID Write(RCWORD addr, RCBYTE value)
@@ -248,21 +267,21 @@ protected:
 		}
 		
 		template<typename T>
-		CSIZE Read(RCWORD addr, T& datum) const
+		CSIZE Load(RCWORD addr, T& datum) const
 		{
-			EEEPtr ptr(addr);
+			EEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
 
 			SIZE i = 0;
 			
 			while (i < SIZEOF(T))
-				*ptr++ = data[i++];
+				data[i++] = *ptr++;
 
 			return i;
 		}
 	
 		template<typename T>
-		CSIZE Write(RCWORD addr, CONST T & datum)
+		CSIZE Save(RCWORD addr, CONST T & datum)
 		{
 			EEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
