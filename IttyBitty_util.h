@@ -157,6 +157,7 @@ using std::extent;
 /* DATA TYPE SIZES */
 
 #define BITS_PER_BYTE 8
+#define KILO 1024
 
 #define BYTE_SIZE(T) SIZEOF(T)
 #define BYTE_SIZEOF(var) BYTE_SIZE(TYPEOF(var))

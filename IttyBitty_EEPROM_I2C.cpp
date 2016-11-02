@@ -16,34 +16,6 @@
 using namespace IttyBitty;
 
 
-//IttyBitty::EEPROM_I2C ExtEEPROM;
+EEPROMI2C<> IttyBitty::ExtEEPROM;
 
-
-
-EEPROM_I2C::EEPROM_I2C()
-{
-   Wire.begin();
-}
-
-void EEPROM_I2C::write(unsigned long dataAddress, uint8_t data)
-{
-   Wire.beginTransmission((uint8_t)((0x500000 | dataAddress) >> 16)); // B1010xxx
-   Wire.write((uint8_t)((dataAddress & WORD_MASK) >> 8)); // MSB
-   Wire.write((uint8_t)(dataAddress & 0xFF)); // LSB
-   Wire.write(data);
-   Wire.endTransmission();
-   delay(5);
-}
-
-uint8_t EEPROM_I2C::read(unsigned long dataAddress)
-{
-   uint8_t data = 0x00;
-   Wire.beginTransmission((uint8_t)((0x500000 | dataAddress) >> 16)); // B1010xxx
-   Wire.write((uint8_t)((dataAddress & WORD_MASK) >> 8)); // MSB
-   Wire.write((uint8_t)(dataAddress & 0xFF)); // LSB
-   Wire.endTransmission();
-   Wire.requestFrom((uint8_t)((0x500000 | dataAddress) >> 16),(uint8_t)1);
-   if (Wire.available()) data = Wire.peek();
-   return data;
-}
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C

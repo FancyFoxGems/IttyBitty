@@ -40,6 +40,8 @@
 #define CONSTEXPR constexpr	// NOTE: Only supported by Arduino 1.[?]+..?
 
 #define CONST const
+#define CONSTREF const &
+#define CONSTPTR const *
 #define VOLATILE volatile
 #define CONST_VOLATILE const volatile
 #define cv const volatile
