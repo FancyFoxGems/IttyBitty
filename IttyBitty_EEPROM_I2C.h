@@ -69,170 +69,135 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	struct _EEERefBase;
+	typedef struct _EEERefBase EEERef, EEEREF, * PEEEREF, & REEEREF, ** PPEEEREF, && RREEEREF; // TODO
+	typedef struct _EEERefBase EEERefBase, _eeeref_base_t, EEEREFBASE, * PEEEREFBASE, & REEEREFBASE, ** PPEEEREFBASE, && RREEEREFBASE;
+	typedef const struct _EEERefBase CEEEREFBASE ,* PCEEEREFBASE, & RCEEEREFBASE, ** PPCEEEREFBASE;
+
 	struct _EEEPtr;
 	typedef struct _EEEPtr EEEPtr, _eeeptr_t, EEEPTR, * PEEEPTR, & REEEPTR, ** PPEEEPTR, && RREEEPTR;
 	typedef const struct _EEEPtr CEEEPTR ,* PCEEEPTR, & RCEEEPTR, ** PPCEEEPTR;
 
-	struct _EEERef;
-	typedef struct _EEERef EEERef, _eeeref_t, EEEREF, * PEEEREF, & REEEREF, ** PPEEEREF, && RREEEREF;
-	typedef const struct _EEERef CEEEREF ,* PCEEEREF, & RCEEEREF, ** PPCEEEREF;
-
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
 	class EEPROM_I2C;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using EEPROMI2C = EEPROM_I2C<ChipType, I2CAddr>;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using EEPROMI2C = EEPROM_I2C<ChipType, I2CAddr, DeviceNum>;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using PEEPROMI2C = EEPROM_I2C<ChipType, I2CAddr> *;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using PEEPROMI2C = EEPROM_I2C<ChipType, I2CAddr, DeviceNum> *;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using REEPROMI2C = EEPROM_I2C<ChipType, I2CAddr> &;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using REEPROMI2C = EEPROM_I2C<ChipType, I2CAddr, DeviceNum> &;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using PPEEPROMI2C = EEPROM_I2C<ChipType, I2CAddr> **;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using PPEEPROMI2C = EEPROM_I2C<ChipType, I2CAddr, DeviceNum> **;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using RREEPROMI2C = EEPROM_I2C<ChipType, I2CAddr> &&;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using RREEPROMI2C = EEPROM_I2C<ChipType, I2CAddr, DeviceNum> &&;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using CEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr>;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using CEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr, DeviceNum>;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using PCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr> *;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using PCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr, DeviceNum> *;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using RCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr> &;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using RCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr, DeviceNum> &;
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, 
-		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS>
-	using PPCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr> **;
+		CBYTE I2CAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, CBYTE DeviceNum = 0x0>
+	using PPCEEPROMI2C = const EEPROM_I2C<ChipType, I2CAddr, DeviceNum> **;
 
 #pragma endregion
 
 
-#pragma region [_EEERef] DEFINITION
+#pragma region [_EEERefBase] DEFINITION
 
-struct _EEERef : public EERef
+struct _EEERefBase //: public EERef
 {
 public:
 
 	// CONSTRUCTOR
 
-	_EEERef(RCWORD addr) : EERef(0)
-	{
-		this->index = addr;
-	}
+	_EEERefBase(RCWORD);
 
 
-	// EERef METHOD HIDES
+	// OPERATORS
+	
+	operator CBYTE() const;
 
-	BYTE operator *() const
-	{
-		PrintLine("*");
-		return this->Read((CWORD)this->index);
-	}
+	BYTE operator *() const;
 
-	REEEREF operator =(RCBYTE value)
-	{
-		PrintLine("=");
-		this->Write((DWORD)this->index, value);
-		return *this;
-	}
+	REEEREFBASE operator =(RCBYTE);
+	REEEREFBASE operator =(RCEEEREFBASE);
+
+	REEEREFBASE operator +=(RCBYTE);
+	REEEREFBASE operator -=(RCBYTE);
+	REEEREFBASE operator *=(RCBYTE);
+	REEEREFBASE operator /=(RCBYTE);
+	REEEREFBASE operator ^=(RCBYTE);
+	REEEREFBASE operator %=(RCBYTE);
+	REEEREFBASE operator &=(RCBYTE);
+	REEEREFBASE operator |=(RCBYTE);
+	REEEREFBASE operator <<=(RCBYTE);
+	REEEREFBASE operator >>=(RCBYTE);
+	
+	REEEREFBASE operator++();
+	REEEREFBASE operator--();
+	
+	BYTE operator ++(INT);
+	BYTE operator --(INT);
+
+	
+	// USERMETHODS
+	
+	REEEREFBASE Update(RCBYTE);
+	
+	
+	// INSTANCE VARIABLES
+
+	WORD Address = 0;
 
 
 protected:
+	
+	// HELPER METHODS
 
-	BYTE Read(RCWORD addr) const
-	{
-		PrintLine("EEEREAD");
-		Wire.beginTransmission(0x50);
-
-		Wire.write((BYTE)(addr >> 8));
-		Wire.write((BYTE)addr);
-
-		Wire.endTransmission();
-		delay(5);
-		
-		BYTE value = 0;
-
-		Wire.requestFrom(0x50, 1);
-		if (!Wire.available()) delay(50);
-
-		return Wire.read(); 
-	}
-
-	VOID Write(RCDWORD addr, RCBYTE value)
-	{
-		PrintLine("EEEWRITE");
-		Wire.beginTransmission(0x50);
-
-		Wire.write((BYTE)(addr >> 8));
-		Wire.write((BYTE)addr);
-
-		Wire.write(value);
-
-		Wire.endTransmission();
-		delay(50);
-	}
+	CBYTE Read(RCWORD) const;
+	VOID Write(RCDWORD, RCBYTE);
 };
 
 #pragma endregion
 
 
-#pragma region [_EEEPtr] DEFINITION
+#pragma region [_EEEPtr] DECLARATION
 
 struct _EEEPtr //: public EEPtr
 {
+public:
+
 	// CONSTRUCTOR
 	
-	_EEEPtr(RCWORD addr) : Address(addr) { }
+	_EEEPtr(RCWORD);
 
 
 	// OPERATORS
 		
-	operator RCWORD() const
-	{
-		return this->Address;
-	}
+	operator RCWORD() const;
 
-	BOOL operator !=(RCEEEPTR ptr)
-	{
-		return this->Address != ptr.Address;
-	}
+	BOOL operator !=(RCEEEPTR);
 
-	EEEREF operator *()
-	{
-		return EEERef(this->Address);
-	}
+	EEEREF operator *();
 	
-	REEEPTR operator =(RCWORD addr)
-	{
-		this->Address = addr;
-		return *this;
-	}
+	REEEPTR operator =(RCWORD);
 
-	REEEPTR operator ++()
-	{
-		++this->Address;
-		return *this;
-	}
+	REEEPTR operator ++();
+	REEEPTR operator --();
 
-	REEEPTR operator --()
-	{
-		--this->Address;
-		return *this;
-	}
+	EEEPTR operator ++(INT);
+	EEEPTR operator --(INT);
 
-	EEEPTR operator ++(INT)
-	{
-		return _EEEPtr(this->Address++);
-	}
-
-	EEEPTR operator --(INT)
-	{
-		return _EEEPtr(this->Address--);
-	}
 
 	// INSTANCE VARIABLES
 
@@ -244,7 +209,7 @@ struct _EEEPtr //: public EEPtr
 
 #pragma region [EEPROM_I2C] DEFINITION
 
-	template<SerialEEPROMChipFamily ChipType, CBYTE I2CAddr>
+	template<SerialEEPROMChipFamily ChipType, CBYTE I2CAddr, CBYTE DeviceNum>
 	class EEPROM_I2C
 	{
 	public:
@@ -289,7 +254,6 @@ struct _EEEPtr //: public EEPtr
 			Wire.begin();
 		}
 
-
 		// OPERATORS
 
 		EEEREF operator[](RCWORD addr)
@@ -326,11 +290,11 @@ struct _EEEPtr //: public EEPtr
 
 		VOID Update(RCWORD addr, RCBYTE value)
 		{
-			EEERef(addr).update(value);
+			EEERef(addr).Update(value);
 		}
 		
 		template<typename T>
-		CSIZE Load(RCWORD addr, T& datum) const
+		CSIZE Load(RCWORD addr, T & datum) const
 		{
 			EEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
@@ -352,7 +316,7 @@ struct _EEEPtr //: public EEPtr
 			SIZE i = 0;
 
 			while (i < SIZEOF(T))
-				(*ptr++).update(data[i++]);
+				(*ptr++).Update(data[i++]);
 
 			return i;
 		}

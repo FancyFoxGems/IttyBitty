@@ -16,6 +16,223 @@
 using namespace IttyBitty;
 
 
+#pragma region GLOBAL VARIABLES	
+
 EEPROMI2C<> ExtEEPROM;
+
+#pragma endregion
+
+
+#pragma region [_EEERefBase] DEFINITION
+
+// CONSTRUCTOR
+
+_EEERefBase::_EEERefBase(RCWORD addr)
+{
+	this->Address = addr;
+}
+
+
+// OPERATORS
+	
+_EEERefBase::operator CBYTE() const
+{
+	return **this;
+}
+
+BYTE _EEERefBase::operator *() const
+{
+	PrintLine("*");
+	return this->Read((CWORD)this->Address);
+}
+
+REEEREF _EEERefBase::operator =(RCBYTE value)
+{
+	PrintLine("=");
+	this->Write((DWORD)this->Address, value);
+	return *this;
+}
+
+REEEREFBASE _EEERefBase::operator =(RCEEEREFBASE ref)
+{
+	return *this = *ref;
+}
+
+REEEREFBASE _EEERefBase::operator +=(RCBYTE value)
+{
+	return *this = **this + value;
+}
+
+REEEREFBASE _EEERefBase::operator -=(RCBYTE value)
+{
+	return *this = **this - value;
+}
+
+REEEREFBASE _EEERefBase::operator *=(RCBYTE value)
+{
+	return *this = **this * value;
+}
+
+REEEREFBASE _EEERefBase::operator /=(RCBYTE value)
+{
+	return *this = **this / value;
+}
+
+REEEREFBASE _EEERefBase::operator ^=(RCBYTE value)
+{
+	return *this = **this ^ value;
+}
+
+REEEREFBASE _EEERefBase::operator %=(RCBYTE value)
+{
+	return *this = **this % value;
+}
+
+REEEREFBASE _EEERefBase::operator &=(RCBYTE value)
+{
+	return *this = **this & value;
+}
+
+REEEREFBASE _EEERefBase::operator |=(RCBYTE value)
+{
+	return *this = **this | value;
+}
+
+REEEREFBASE _EEERefBase::operator <<=(RCBYTE value)
+{
+	return *this = **this << value;
+}
+
+REEEREFBASE _EEERefBase::operator >>=(RCBYTE value)
+{
+	return *this = **this >> value;
+}
+	
+REEEREFBASE _EEERefBase::operator++()
+{
+	return *this += 1;
+}
+REEEREFBASE _EEERefBase::operator--()
+{
+	return *this -= 1;
+}
+	
+BYTE _EEERefBase::operator ++(INT)
+{ 
+	BYTE value = **this;
+	++(*this);
+	return value;
+}
+
+BYTE _EEERefBase::operator --(INT)
+{ 
+	BYTE value = **this;
+	--(*this);
+	return value;
+}
+	
+
+// USERMETHODS
+	
+REEEREFBASE _EEERefBase::Update(RCBYTE value)
+{
+	if (*this != value)
+		*this = value;
+
+	return  *this;
+}
+
+
+// HELPER METHODS
+
+CBYTE _EEERefBase::Read(RCWORD addr) const
+{
+	PrintLine("EEEREAD");
+	Wire.beginTransmission(0x50);
+
+	Wire.write((BYTE)(addr >> 8));
+	Wire.write((BYTE)addr);
+
+	Wire.endTransmission();
+	delay(5);
+		
+	BYTE value = 0;
+
+	Wire.requestFrom(0x50, 1);
+	if (!Wire.available()) delay(50);
+
+	return Wire.read(); 
+}
+
+VOID _EEERefBase::Write(RCDWORD addr, RCBYTE value)
+{
+	PrintLine("EEEWRITE");
+	Wire.beginTransmission(0x50);
+
+	Wire.write((BYTE)(addr >> 8));
+	Wire.write((BYTE)addr);
+
+	Wire.write(value);
+
+	Wire.endTransmission();
+	delay(50);
+}
+
+#pragma endregion
+
+
+#pragma region [_EEEPtr] DEFINITION
+
+// CONSTRUCTOR
+	
+_EEEPtr::_EEEPtr(RCWORD addr) : Address(addr) { }
+
+
+// OPERATORS
+		
+_EEEPtr::operator RCWORD() const
+{
+	return this->Address;
+}
+
+BOOL _EEEPtr::operator !=(RCEEEPTR ptr)
+{
+	return this->Address != ptr.Address;
+}
+
+EEEREF _EEEPtr::operator *()
+{
+	return EEERef(this->Address);
+}
+	
+REEEPTR _EEEPtr::operator =(RCWORD addr)
+{
+	this->Address = addr;
+	return *this;
+}
+
+REEEPTR _EEEPtr::operator ++()
+{
+	++this->Address;
+	return *this;
+}
+
+REEEPTR _EEEPtr::operator --()
+{
+	--this->Address;
+	return *this;
+}
+
+EEEPTR _EEEPtr::operator ++(INT)
+{
+	return _EEEPtr(this->Address++);
+}
+
+EEEPTR _EEEPtr::operator --(INT)
+{
+	return _EEEPtr(this->Address--);
+}
+
+#pragma endregion
 
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
