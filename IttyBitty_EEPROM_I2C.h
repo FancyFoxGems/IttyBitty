@@ -13,7 +13,6 @@
 
 #include "IttyBitty_bits.h"
 
-#include "IttyBitty_print.h"
 using namespace IttyBitty;
 
 #include "Wire.h"
@@ -419,12 +418,12 @@ namespace IttyBitty
 			return NAND(MAX_T(TAddr), HIGH_BYTE(this->Address) SHL 0b1);
 		}
 
-		CBYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE)
+		BYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE)
 		{
 			return DeviceAddr OR GetPageBitsFromAddress() OR ((CBYTE)setReadFlag);
 		}
 
-		CBYTE WaitForReady() const
+		CBYTE WaitForReady()
 		{
 			BYTE errCode = 0;
 			WORD currMS = millis();
@@ -443,7 +442,7 @@ namespace IttyBitty
 			return MAX_T(BYTE);
 		}
 
-		CBYTE SendDeviceAddressWord() const
+		CBYTE SendDeviceAddressWord()
 		{
 			BYTE errCode = this->WaitForReady();
 			if (errCode)
@@ -454,7 +453,7 @@ namespace IttyBitty
 			return 0;
 		}
 
-		CBYTE SendAddressWords() const
+		CBYTE SendAddressWords()
 		{			
 			BYTE errCode = this->SendDeviceAddressWord();
 			if (errCode)
@@ -472,7 +471,7 @@ namespace IttyBitty
 			
 		// USER METHODS
 
-		CBYTE Read() const
+		CBYTE Read()
 		{			
 			BYTE errCode = this->SendAddressWords();
 			if (errCode)
@@ -483,18 +482,18 @@ namespace IttyBitty
 			if (errCode)
 				return errCode;
 			
-			Wire.requestFrom(BuildDeviceAddressWord(TRUE), 1);
+			Wire.requestFrom((BYTE)BuildDeviceAddressWord(TRUE), (BYTE)1);
 
 			return (BYTE)WIRE_READ(); 
 		}
 		
-		CSIZE Read(PBYTE data, CSIZE size) const
+		CSIZE Read(PBYTE data, CSIZE size)
 		{
 			BYTE errCode = this->SendAddressWords();
 			if (errCode)
 				return errCode;
 
-			Wire.requestFrom(BuildDeviceAddressWord(), size, FALSE);
+			Wire.requestFrom((INT)BuildDeviceAddressWord(), (INT)size, FALSE);
 
 			SIZE bytesRead = 0;
 
@@ -614,7 +613,8 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIASES
 
-		typedef TYPE_IF((CapacityKb() >= 0x0400), RCDWORD, TYPE_IF((CapacityKb() >= 0x0004), RCWORD, RCBYTE)) TAddr;
+		typedef TYPE_IF((CapacityKb() >= 0x0400), DWORD, TYPE_IF((CapacityKb() >= 0x0004), WORD, BYTE)) TAddr;
+		typedef const TAddr CTAddr;
 		
 		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEEPtr, TEEEPTR;
 		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEERef, TEEEREF;
@@ -632,11 +632,6 @@ namespace IttyBitty
 
 
 		// OPERATORS
-
-		CTEEEREF operator[](TAddr addr) const
-		{
-			return TEEERef(addr);
-		}		
 
 		TEEEREF operator[](TAddr addr)
 		{
@@ -659,33 +654,33 @@ namespace IttyBitty
 
 		// USER METHODS
 		
-		CBYTE Read(TAddr addr) const
+		CBYTE Read(CTAddr addr)
 		{
 			return TEEERef(addr).Read();
 		}
 		
-		CSIZE Read(TAddr startAddr, PBYTE buffer, CSIZE size) const
+		CSIZE Read(CTAddr startAddr, PBYTE buffer, CSIZE size)
 		{
 			return TEEERef(startAddr).Read(buffer, size);
 		}
 	
-		CBYTE Write(TAddr addr, RCBYTE value)
+		CBYTE Write(CTAddr addr, RCBYTE value)
 		{
 			return TEEERef(addr).Write(value);
 		}
 	
-		CSIZE Write(TAddr startAddr, PCBYTE data, CSIZE size)
+		CSIZE Write(CTAddr startAddr, PCBYTE data, CSIZE size)
 		{
 			return TEEERef(startAddr).Write(data, size);
 		}
 
-		CBYTE Update(TAddr addr, RCBYTE value)
+		CBYTE Update(CTAddr addr, RCBYTE value)
 		{
 			return TEEERef(addr).Update(value);
 		}
 		
 		template<typename T>
-		CSIZE Load(TAddr addr, T & datum) const
+		CSIZE Load(CTAddr addr, T & datum) const
 		{
 			TEEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
@@ -699,7 +694,7 @@ namespace IttyBitty
 		}
 	
 		template<typename T>
-		CSIZE Save(TAddr addr, CONST T & datum)
+		CSIZE Save(CTAddr addr, CONST T & datum)
 		{
 			TEEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
