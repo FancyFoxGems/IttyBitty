@@ -12,6 +12,7 @@
 
 
 #include "IttyBitty_bits.h"
+#include "IttyBitty_print.h"
 
 using namespace IttyBitty;
 
@@ -418,7 +419,7 @@ namespace IttyBitty
 			return NAND(MAX_T(TAddr), HIGH_BYTE(this->Address) SHL 0b1);
 		}
 
-		BYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE)
+		CBYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE)
 		{
 			return DeviceAddr OR GetPageBitsFromAddress() OR ((CBYTE)setReadFlag);
 		}
@@ -433,6 +434,9 @@ namespace IttyBitty
 				Wire.beginTransmission(BuildDeviceAddressWord());
 
 				errCode = Wire.endTransmission();
+				PrintLine("WaitForReady: ");
+				PrintLine(BuildDeviceAddressWord());
+				PrintLine(errCode);
 				if (!errCode)
 					return 0;
 
@@ -460,7 +464,7 @@ namespace IttyBitty
 				return errCode;
 
 			if (UseWordDataAddress())
-				WIRE_WRITE((BYTE)(this->Address SHR 8));
+				WIRE_WRITE((BYTE)(this->Address SHR BITS_PER_BYTE));
 			WIRE_WRITE((BYTE)this->Address);
 			
 			return Wire.endTransmission();
@@ -477,12 +481,12 @@ namespace IttyBitty
 			if (errCode)
 				return errCode;
 
-			Wire.beginTransmission(BuildDeviceAddressWord(TRUE));
+			Wire.beginTransmission(BuildDeviceAddressWord());
 			errCode = Wire.endTransmission();
 			if (errCode)
 				return errCode;
 			
-			Wire.requestFrom((BYTE)BuildDeviceAddressWord(TRUE), (BYTE)1);
+			Wire.requestFrom((BYTE)BuildDeviceAddressWord(), (BYTE)1);
 
 			return (BYTE)WIRE_READ(); 
 		}

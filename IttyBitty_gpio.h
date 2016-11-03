@@ -169,7 +169,7 @@ namespace IttyBitty
 
 		VIRTUAL PinMode GetPinMode(PIN_NUMBER p) const
 		{
-			return (PinMode)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 1);
+			return (PinMode)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 0b1);
 		}
 
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)

@@ -28,43 +28,43 @@
 //using namespace std;
 
 
-/* C++ KEYWORD ALIASES */
-
-#define EXTERN extern
-#define INLINE inline
-#define EXPLICIT explicit
-#define STATIC static
-#define FINAL final
-#define VIRTUAL virtual
-
-#define CONSTEXPR constexpr	// NOTE: Only supported by Arduino 1.[?]+..?
-
-#define CONST const
-#define CONSTREF const &
-#define CONSTPTR const *
-#define VOLATILE volatile
-#define CONST_VOLATILE const volatile
-#define cv const volatile
-#define CV const volatile
-
-#define ENUM enum class
-#define UNION union
-#define STRUCT struct
-#define CLASS class
-#define INTERFACE class
-
-#define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)
-#define TEMPLATE_STRUCT(T_clause) template<T_clause> STRUCT
-#define TEMPLATE_CLASS(T_clause) template<T_clause> CLASS
-#define TEMPLATE_INTERFACE(T_clause) template<T_clause> INTERFACE
+/* C++ KEYWORD/SPECIFIER/MODIFIER ALIASES */
 
 #ifndef TRUE
-	#define TRUE true
+	#define TRUE		true
 #endif
 
 #ifndef FALSE
-	#define FALSE false
+	#define FALSE		false
 #endif
+
+#define EXTERN			extern
+#define INLINE			inline
+#define EXPLICIT		explicit
+#define STATIC			static
+#define FINAL			final
+#define VIRTUAL			virtual
+
+#define CONSTEXPR		constexpr	// NOTE: Only supported by Arduino 1.[?]+..?
+
+#define CONST			const
+#define CONSTREF		const &
+#define CONSTPTR		const *
+#define VOLATILE		volatile
+#define CONST_VOLATILE	const volatile
+#define cv				const volatile
+#define CV				const volatile
+
+#define ENUM			enum class
+#define UNION			union
+#define STRUCT			struct
+#define CLASS			class
+#define INTERFACE		class
+
+#define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)
+#define TEMPLATE_STRUCT(T_clause)		template<T_clause> STRUCT
+#define TEMPLATE_CLASS(T_clause)		template<T_clause> CLASS
+#define TEMPLATE_INTERFACE(T_clause)	template<T_clause> INTERFACE
 
 
 /* (NATIVE) FUNDAMENTAL DATA TYPE ALIASES FOR WIN32 API-STYLE TYPE REFERENCES  */
@@ -142,15 +142,16 @@ typedef const nullptr_t CNULLPTR, * PCNULLPTR, & RCNULLPTR, ** PPCNULLPTR;
 /* DATA TYPE ALIAS MACROS FOR SIGNAGE */
 
 #define SIGNED(T) SIGNED_##T
-#define SIGNED_BYTE CHAR
-#define SIGNED_WORD SHORT
-#define SIGNED_QWORD LONGLONG
+#define SIGNED_BYTE			CHAR
+#define SIGNED_WORD			SHORT
+#define SIGNED_LONG			LONG
+#define SIGNED_QWORD		LONGLONG
 
 #define UNSIGNED(T) UNSIGNED_##T
-#define UNSIGNED_CHAR BYTE
-#define UNSIGNED_SHORT WORD
-#define UNSIGNED_LONG DWORD
-#define UNSIGNED_LONGLONG QWORD
+#define UNSIGNED_CHAR		BYTE
+#define UNSIGNED_SHORT		WORD
+#define UNSIGNED_LONG		DWORD
+#define UNSIGNED_LONGLONG	QWORD
 
 
 #endif

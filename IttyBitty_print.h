@@ -24,7 +24,7 @@
 /* SERIAL OPTIONS */
 
 #ifndef SERIAL_PRINT_DELAY_MS
-	#define SERIAL_PRINT_DELAY_MS		1
+	#define SERIAL_PRINT_DELAY_MS		5
 #endif
 
 #ifndef DEFAULT_SERIAL

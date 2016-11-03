@@ -266,7 +266,7 @@ namespace IttyBitty
 		#endif
 			
 			__fuse_byte_high_or_extended = boot_lock_fuse_bits_get(BOOTSIZE_FACTOR_FUSE_BYTE);
-			STATIC BYTE bootSizeFactor = CHECK_BITS(__fuse_byte_high_or_extended, BOOTSZ1 OR BOOTSZ0) SHR 1;
+			STATIC BYTE bootSizeFactor = CHECK_BITS(__fuse_byte_high_or_extended, BOOTSZ1 OR BOOTSZ0) SHR 0b1;
 
 			BOOTLOADER_SIZE = 2 ^ (BOOTSIZE_FACTOR_FACTOR - bootSizeFactor) * SPM_PAGESIZE;
 

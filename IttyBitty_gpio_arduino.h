@@ -126,7 +126,7 @@ namespace IttyBitty
 
 #define GET_ARDUINO_PIN_MODE(arduino_pin)	\
 	((PinMode)(CHECK_SET(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) OR	\
-	CHECK_SET(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) SHL 1))
+	CHECK_SET(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) SHL 0b1))
 
 #define SET_ARDUINO_PIN_MODE(arduino_pin, mode)	\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\

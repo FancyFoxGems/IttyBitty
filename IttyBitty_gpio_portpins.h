@@ -40,7 +40,7 @@
 	CLEAR_PIN(DDR##port_letter, pin_number)
 
 #define PIN_GET_MODE(port_letter, pin_number)	\
-	((PinMode)(CHECK_SET(DDR##port_letter, pin_number) OR CHECK_SET(PORT##port_letter, pin_number) SHL 1))
+	((PinMode)(CHECK_SET(DDR##port_letter, pin_number) OR CHECK_SET(PORT##port_letter, pin_number) SHL 0b1))
 
 #define PIN_SET_MODE(port_letter, pin_number, mode)	\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(DDR##port_letter, pin_number); else CLEAR_PIN(DDR##port_letter, pin_number);		\
