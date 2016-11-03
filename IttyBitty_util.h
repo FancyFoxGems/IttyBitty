@@ -124,10 +124,16 @@ using std::extent;
 
 #define BITS_PER_BYTE		8
 
-#define KILO				1024
 #define kilo				1000
-#define MEGA				KILO * KILO
+#define kilobit				kilo
+#define KILO				1024
+#define KILOBYTE			KILO
+#define KILObit				KILO
 #define mega				kilo * kilo
+#define megabit				mega
+#define MEGA				KILO * KILO
+#define MEGABYTE			
+#define MEGAbit				MEGA
 
 #define BYTE_SIZE(T)		SIZEOF(T)
 #define BYTE_SIZEOF(var)	BYTE_SIZE(TYPEOF(var))

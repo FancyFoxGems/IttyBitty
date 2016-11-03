@@ -101,10 +101,10 @@
 #define BYTE_MASK(byte_offset)		(0xFF << ((byte_offset) * BITS_PER_BYTE))
 #define NOT_BYTE(byte_offset)		NOT BYTE_MASK(byte_offset)
 
-#define WORD_MASK(word_offset)		(0xFFFF << ((word_offset) * 2 * BITS_PER_BYTE))
+#define WORD_MASK(word_offset)		(0xFFFF << ((word_offset) * BIT_SIZE(WORD)))
 #define NOT_WORD(word_offset)		NOT WORD_MASK(word_offset)
 
-#define DWORD_MASK(dword_offset)	(0xFFFF << ((dword_offset) * 4 * BITS_PER_BYTE))
+#define DWORD_MASK(dword_offset)	(0xFFFF << ((dword_offset) * BIT_SIZE(DWORD)))
 #define NOT_DWORD(dword_offset)		NOT DWORD_MASK(dword_offset)
 
 
