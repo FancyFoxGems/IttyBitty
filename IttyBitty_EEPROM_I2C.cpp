@@ -25,7 +25,9 @@ EEPROMI2C<> ExtEEPROM;
 
 #pragma region [_EEEPtrBase] DEFINITION
 
-// CONSTRUCTOR
+// CONSTRUCTORS
+	
+_EEEPtrBase::_EEEPtrBase(RCBYTE addr) : Address((CWORD)addr) { }
 	
 _EEEPtrBase::_EEEPtrBase(RCWORD addr) : Address(addr) { }
 
@@ -90,12 +92,11 @@ EEEPTRBASE _EEEPtrBase::operator --(INT)
 
 #pragma region [_EEERefBase] DEFINITION
 
-// CONSTRUCTOR
+// CONSTRUCTORS
 
-_EEERefBase::_EEERefBase(RCWORD addr)
-{
-	this->Address = addr;
-}
+_EEERefBase::_EEERefBase(RCBYTE addr) : Address((CWORD)addr) { }
+
+_EEERefBase::_EEERefBase(RCWORD addr) : Address(addr) { }
 
 
 // OPERATORS
@@ -227,7 +228,6 @@ CBYTE _EEERefBase::Read() const
 {
 	Wire.beginTransmission(0x50);
 
-	Wire.write((BYTE)(this->Address >> 8));
 	Wire.write((BYTE)this->Address);
 
 	Wire.endTransmission();
@@ -245,7 +245,6 @@ VOID _EEERefBase::Write(RCBYTE value)
 {
 	Wire.beginTransmission(0x50);
 
-	Wire.write((BYTE)(this->Address >> 8));
 	Wire.write((BYTE)this->Address);
 
 	Wire.write(value);

@@ -76,7 +76,9 @@
 
 #define NOT ~
 #define AND &
+#define NAND(val1, val2) (NOT (val1 AND val2))
 #define OR |
+#define NOR(val1, val2) (NOT (val1 OR val2))
 #define XOR ^
 #define SHR >>
 #define SHIFT_RIGHT SHR
