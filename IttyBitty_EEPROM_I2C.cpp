@@ -13,12 +13,10 @@
 
 #include "IttyBitty_EEPROM_I2C.h"
 
-using namespace IttyBitty;
-
 
 /* GLOBAL VARIABLES */
 
-EEPROMI2C<> ExtEEPROM;
+IttyBitty::EEPROMI2C<> ExtEEPROM;
 
 
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C

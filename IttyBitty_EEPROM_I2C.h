@@ -24,6 +24,22 @@ using namespace IttyBitty;
 
 #define SERIAL_EEPROM_DEFAULT_I2C_ADDRESS	0x50
 
+#define SERIAL_EEPROM_TIMEOUT_MS			500
+#define SERIAL_EEPROM_WAIT_DELAY_MS			1
+
+#pragma endregion
+
+
+#pragma region MACROS
+
+#if ARDUINO >= 100
+	#define WIRE_WRITE	Wire.write
+	#define WIRE_READ	Wire.read
+#else
+	#define WIRE_WRITE	Wire.send
+	#define WIRE_READ	Wire.receive
+#endif
+
 #pragma endregion
 
 
@@ -70,72 +86,72 @@ namespace IttyBitty
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
 	struct _EEEPtr;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using EEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using EEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using EEEPTR = _EEEPtr<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using EEEPTR = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, TAddr> *;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using REEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, TAddr> &;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using REEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PPEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, TAddr> **;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PPEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using RREEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, TAddr> &&;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using RREEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &&;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using CEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using CEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, TAddr> *;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using RCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, TAddr> &;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using RCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PPCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, TAddr> **;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PPCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
 
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
 	struct _EEERef;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using EEERef = _EEERef<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using EEERef = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using EEEREF = _EEERef<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using EEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PEEEREF = _EEERef<DeviceAddr, PageAddrBits, TAddr> *;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PEEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using REEEREF = _EEERef<DeviceAddr, PageAddrBits, TAddr> &;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using REEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PPEEEREF = _EEERef<DeviceAddr, PageAddrBits, TAddr> **;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PPEEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using RREEEREF = _EEERef<DeviceAddr, PageAddrBits, TAddr> &&;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using RREEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &&;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using CEEEREF = const _EEERef<DeviceAddr, PageAddrBits, TAddr>;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using CEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, TAddr> *;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using RCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, TAddr> &;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using RCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
-		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
-	using PPCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, TAddr> **;
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = RCBYTE>
+	using PPCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
 
 	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	class EEPROM_I2C;
@@ -163,7 +179,7 @@ namespace IttyBitty
 
 #pragma region [_EEEPtr] DEFINITION
 
-	template<CBYTE DeviceAddr, CBYTE PageAddrBits, typename TAddr>
+	template<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
 	struct _EEEPtr //: public EEPtr
 	{
 	protected:
@@ -171,10 +187,10 @@ namespace IttyBitty
 		// META-TYPEDEF ALIAS
 		// META-TYPEDEF ALIAS
 
-		typedef _EEEPtr<DeviceAddr, PageAddrBits, TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
-		typedef const _EEEPtr<DeviceAddr, PageAddrBits, TAddr> CTEEEPTR, & RCTEEEPTR;
+		typedef _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
+		typedef const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> CTEEEPTR, & RCTEEEPTR;
 
-		typedef _EEERef<DeviceAddr, PageAddrBits, TAddr> TEEERef, TEEEREF;
+		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF;
 
 
 	public:
@@ -250,23 +266,12 @@ namespace IttyBitty
 
 #pragma region [_EEERef] DEFINITION
 
-	template<CBYTE DeviceAddr, CBYTE PageAddrBits, typename TAddr>
+	template<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
 	struct _EEERef //: public EERef
 	{
 	protected:
 		
 		// PROTECTED STATIC CONSTEXPR METHODS
-
-		STATIC CONSTEXPR CBYTE GetPageBitsFromAddress(TAddr address)
-		{
-			return HIGH_BYTE(address) SHL 0b1 OR (0b1 SHL (PageAddrBits + 0b1) - 1);
-			return NAND(MAX_T(TAddr), HIGH_BYTE(address) SHL 0b1);
-		}
-
-		STATIC CONSTEXPR CBYTE BuildDeviceAddressByte(TAddr address)
-		{
-			return DeviceAddr OR GetPageBitsFromAddress();
-		}
 
 		STATIC CONSTEXPR CBOOL UseWordDataAddress()
 		{
@@ -276,8 +281,8 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIAS
 
-		typedef _EEERef<DeviceAddr, PageAddrBits, TAddr> TEEERef, TEEEREF, & RTEEEREF;
-		typedef const _EEERef<DeviceAddr, PageAddrBits, TAddr> CTEEEREF, & RCTEEEREF;
+		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF, & RTEEEREF;
+		typedef const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> CTEEEREF, & RCTEEEREF;
 
 
 	public:
@@ -398,55 +403,152 @@ namespace IttyBitty
 			return value;
 		}
 	
-
-		// USER METHODS
 	
-		RTEEEREF Update(RCBYTE value)
+		// INSTANCE VARIABLES
+
+		TAddr Address = 0;
+
+
+	protected:
+
+		// HELPER METHODS
+
+		CBYTE GetPageBitsFromAddress()
+		{
+			return HIGH_BYTE(this->Address) SHL 0b1 OR (0b1 SHL (PageAddrBits + 0b1) - 1);
+			return NAND(MAX_T(TAddr), HIGH_BYTE(this->Address) SHL 0b1);
+		}
+
+		CBYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE)
+		{
+			return DeviceAddr OR GetPageBitsFromAddress() OR ((CBYTE)setReadFlag);
+		}
+
+		CBYTE WaitForReady() const
+		{
+			BYTE errCode = 0;
+			WORD currMS = millis();
+
+			while (millis() - currMS <= SERIAL_EEPROM_TIMEOUT_MS)
+			{
+				Wire.beginTransmission(BuildDeviceAddressWord());
+
+				errCode = Wire.endTransmission();
+				if (!errCode)
+					return 0;
+
+				delay(SERIAL_EEPROM_WAIT_DELAY_MS);
+			}
+
+			return MAX_T(BYTE);
+		}
+
+		CBYTE SendDeviceAddressWord() const
+		{
+			BYTE errCode = this->WaitForReady();
+			if (errCode)
+				return errCode;
+
+			Wire.beginTransmission(BuildDeviceAddressWord());
+
+			return 0;
+		}
+
+		CBYTE SendAddressWords() const
+		{			
+			BYTE errCode = this->SendDeviceAddressWord();
+			if (errCode)
+				return errCode;
+
+			if (UseWordDataAddress())
+				WIRE_WRITE((BYTE)(this->Address SHR 8));
+			WIRE_WRITE((BYTE)this->Address);
+			
+			return Wire.endTransmission();
+		}
+
+
+	public:
+			
+		// USER METHODS
+
+		CBYTE Read() const
+		{			
+			BYTE errCode = this->SendAddressWords();
+			if (errCode)
+				return errCode;
+
+			Wire.beginTransmission(BuildDeviceAddressWord(TRUE));
+			errCode = Wire.endTransmission();
+			if (errCode)
+				return errCode;
+			
+			Wire.requestFrom(BuildDeviceAddressWord(TRUE), 1);
+
+			return (BYTE)WIRE_READ(); 
+		}
+		
+		CSIZE Read(PBYTE data, CSIZE size) const
+		{
+			BYTE errCode = this->SendAddressWords();
+			if (errCode)
+				return errCode;
+
+			Wire.requestFrom(BuildDeviceAddressWord(), size, FALSE);
+
+			SIZE bytesRead = 0;
+
+			while (bytesRead < size)
+				data[bytesRead++] = (BYTE)WIRE_READ();
+
+			return bytesRead;
+		}
+
+		CBYTE Write(RCBYTE value)
+		{
+			BYTE errCode = this->SendAddressWords();
+			if (errCode)
+				return errCode;
+		
+			WIRE_WRITE(value);
+
+			return Wire.endTransmission();
+		}
+		
+		CSIZE Write(PCBYTE data, CSIZE size)
+		{
+			BYTE errCode = this->SendAddressWords();
+			if (errCode)
+				return errCode;
+						
+			SIZE bytesWritten = 0;
+
+			while (bytesWritten < size)
+			{
+				if (bytesWritten > 0 && bytesWritten % PageWriteBytes == 0)
+				{
+					if (Wire.endTransmission())
+						return errCode;
+
+					if (this->SendAddressWords())
+						return bytesWritten;
+				}
+
+				WIRE_WRITE(data[bytesWritten++]);
+
+				++this->Address;
+			}
+
+			return 0;
+		}
+	
+		CBYTE Update(RCBYTE value)
 		{
 			if (**this != value)
 				*this = value;
 
 			return *this;
 		}
-
-		VIRTUAL VOID Write(RCBYTE value)
-		{
-			PrintLine("EEEWRITE");
-			Wire.beginTransmission(0x50);
-
-			Wire.write((BYTE)(this->Address >> 8));
-			Wire.write((BYTE)this->Address);
-			delay(5);
-		
-			Wire.write(value);
-
-			Wire.endTransmission();
-			delay(50);
-		}
-
-		VIRTUAL CBYTE Read() const
-		{
-			PrintLine("EEEREAD");
-			Wire.beginTransmission(0x50);
-
-			Wire.write((BYTE)(this->Address >> 8));
-			Wire.write((BYTE)this->Address);
-
-			Wire.endTransmission();
-			delay(5);
-		
-			BYTE value = 0;
-
-			Wire.requestFrom(0x50, 1);
-			if (!Wire.available()) delay(50);
-
-			return Wire.read(); 
-		}
-	
-	
-		// INSTANCE VARIABLES
-
-		TAddr Address = 0;
 	};
 
 #pragma endregion
@@ -457,15 +559,32 @@ namespace IttyBitty
 	template<SerialEEPROMChipFamily ChipType, CBYTE DeviceNum>
 	class EEPROM_I2C
 	{
+	public:
+		
+		// STATIC CONSTEXPR METHODS
+		
+		STATIC CONSTEXPR CWORD CapacityKb()
+		{
+			return (CWORD)ChipType;
+		}
+
+		STATIC CONSTEXPR CBYTE Size()
+		{
+			return CapacityKb() * KILO * BITS_PER_BYTE * KILO;
+		}
+		
+		STATIC CONSTEXPR CWORD (*CapacityBytes)() = &Size;
+		
+
 	protected:
 		
 		// PROTECTED STATIC CONSTEXPR METHODS
 
 		STATIC CONSTEXPR CBYTE PageAddressBits()
 		{
-			return ((CBYTE)ChipType == 0x0010) ? 3 :
-				((CBYTE)ChipType == 0x0008 || (CBYTE)ChipType == 0x0800) ? 2 :
-					((CBYTE)ChipType == 0x0004 || (CBYTE)ChipType == 0x0400) ? 1 : 0;
+			return (CapacityKb() == 0x0010) ? 3 :
+				(CapacityKb() == 0x0008 || CapacityKb() == 0x0800) ? 2 :
+					(CapacityKb() == 0x0004 || CapacityKb() == 0x0400) ? 1 : 0;
 		}
 
 		STATIC CONSTEXPR CBYTE DeviceNumberBits()
@@ -482,52 +601,27 @@ namespace IttyBitty
 		{
 			return SERIAL_EEPROM_DEFAULT_I2C_ADDRESS OR BuildDeviceNumberBits();
 		}
+		
+		STATIC CONSTEXPR CBYTE BytesPerPageWrite()
+		{
+			return (CapacityKb() >= 0x0400) ? 256 :
+				(CapacityKb() >= 0x0200) ? 128 :
+					(CapacityKb() >= 0x0040) ? 64 :
+						(CapacityKb() >= 0x0020) ? 32 :
+							(CapacityKb() >= 0x0004) ? 16 : 8;
+		}
 
 
 		// META-TYPEDEF ALIASES
 
-		typedef TYPE_IF(((CBYTE)ChipType >= 0x0400), RCDWORD, TYPE_IF(((CBYTE)ChipType >= 0x0004), RCWORD, RCBYTE)) TAddr;
+		typedef TYPE_IF((CapacityKb() >= 0x0400), RCDWORD, TYPE_IF((CapacityKb() >= 0x0004), RCWORD, RCBYTE)) TAddr;
 		
-		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), TAddr> TEEEPtr, TEEEPTR;
-		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), TAddr> TEEERef, TEEEREF;
+		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEEPtr, TEEEPTR;
+		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEERef, TEEEREF;
+		typedef const _EEERef<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> CTEEEREF;
 
 
 	public:
-
-		// STATIC CONSTEXPR METHODS
-		
-		STATIC CONSTEXPR CWORD CapacityKb()
-		{
-			return (CWORD)ChipType;
-		}
-
-		STATIC CONSTEXPR CBYTE Size()
-		{
-			return CapacityKb() * KILO * BITS_PER_BYTE * KILO;
-		}
-		
-		STATIC CONSTEXPR CWORD (*CapacityBytes)() = &Size;
-		
-		STATIC CONSTEXPR CBYTE BytesPerPageWrite()
-		{
-			if (CapacityKb() >= 1024)
-				return 256;
-
-			if (CapacityKb() >= 512)
-				return 128;
-
-			if (CapacityKb() >= 64)
-				return CapacityKb() / 2;
-
-			if (CapacityKb() >= 32)
-				return CapacityKb();
-
-			if (CapacityKb() >= 4)
-				return 16;
-
-			return 8;
-		}
-
 
 		// CONSTRUCTOR
 
@@ -536,7 +630,13 @@ namespace IttyBitty
 			Wire.begin();
 		}
 
+
 		// OPERATORS
+
+		CTEEEREF operator[](TAddr addr) const
+		{
+			return TEEERef(addr);
+		}		
 
 		TEEEREF operator[](TAddr addr)
 		{
@@ -558,20 +658,30 @@ namespace IttyBitty
 
 
 		// USER METHODS
-
-		VOID Update(TAddr addr, RCBYTE value)
+		
+		CBYTE Read(TAddr addr) const
 		{
-			TEEERef(addr).Update(value);
-		}
-	
-		VOID Write(TAddr addr, RCBYTE value)
-		{
-			TEEERef(addr).Write(value);
+			return TEEERef(addr).Read();
 		}
 		
-		BYTE Read(TAddr addr) const
+		CSIZE Read(TAddr startAddr, PBYTE buffer, CSIZE size) const
 		{
-			return *TEEERef(addr);
+			return TEEERef(startAddr).Read(buffer, size);
+		}
+	
+		CBYTE Write(TAddr addr, RCBYTE value)
+		{
+			return TEEERef(addr).Write(value);
+		}
+	
+		CSIZE Write(TAddr startAddr, PCBYTE data, CSIZE size)
+		{
+			return TEEERef(startAddr).Write(data, size);
+		}
+
+		CBYTE Update(TAddr addr, RCBYTE value)
+		{
+			return TEEERef(addr).Update(value);
 		}
 		
 		template<typename T>
