@@ -69,14 +69,6 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	struct _EEEPtrBase;
-	typedef struct _EEEPtrBase EEEPtrBase, _eeeptr_base_t, EEEPTRBASE, * PEEEPTRBASE, & REEEPTRBASE, ** PPEEEPTRBASE, && RREEEPTRBASE;
-	typedef const struct _EEEPtrBase CEEEPTRBASE ,* PCEEEPTRBASE, & RCEEEPTRBASE, ** PPCEEEPTRBASE;
-
-	struct _EEERefBase;
-	typedef struct _EEERefBase EEERefBase, _eeeref_base_t, EEEREFBASE, * PEEEREFBASE, & REEEREFBASE, ** PPEEEREFBASE, && RREEEREFBASE;
-	typedef const struct _EEERefBase CEEEREFBASE ,* PCEEEREFBASE, & RCEEEREFBASE, ** PPCEEEREFBASE;
-
 	template<CBYTE DeviceAddr = SERIAL_EEPROM_DEFAULT_I2C_ADDRESS, 
 		CBYTE PageAddrBits = 0, typename TAddr = RCBYTE>
 	struct _EEEPtr;
@@ -169,142 +161,88 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [_EEEPtrBase] DECLARATION
-
-	struct _EEEPtrBase //: public EEPtr
-	{
-	public:
-
-		// CONSTRUCTORS
-	
-		EXPLICIT _EEEPtrBase(RCBYTE);
-		EXPLICIT _EEEPtrBase(RCWORD);
-
-
-		// OPERATORS
-		
-		operator CBYTE();
-		operator RCWORD() const;
-
-		VIRTUAL EEEREFBASE operator *();
-	
-		CBOOL operator ==(RCEEEPTRBASE) const;
-		CBOOL operator !=(RCEEEPTRBASE) const;
-	
-		REEEPTRBASE operator =(RCWORD);
-
-		REEEPTRBASE operator ++();
-		REEEPTRBASE operator --();
-
-		VIRTUAL EEEPTRBASE operator ++(INT);
-		VIRTUAL EEEPTRBASE operator --(INT);
-
-
-		// INSTANCE VARIABLES
-
-		WORD Address = 0;
-	};
-
-#pragma endregion
-
-
-#pragma region [_EEERefBase] DEFINITION
-
-	struct _EEERefBase //: public EERef
-	{
-	public:
-
-		// CONSTRUCTORS
-	
-		EXPLICIT _EEERefBase(RCBYTE);
-		EXPLICIT _EEERefBase(RCWORD);
-
-
-		// OPERATORS
-	
-		operator CBYTE() const;
-		operator RCWORD() const;
-
-		CBYTE operator *() const;
-
-		CBOOL operator ==(RCBYTE) const;
-		CBOOL operator !=(RCBYTE) const;
-
-		REEEREFBASE operator =(RCBYTE);
-		REEEREFBASE operator =(RCEEEREFBASE);
-
-		REEEREFBASE operator +=(RCBYTE);
-		REEEREFBASE operator -=(RCBYTE);
-		REEEREFBASE operator *=(RCBYTE);
-		REEEREFBASE operator /=(RCBYTE);
-		REEEREFBASE operator ^=(RCBYTE);
-		REEEREFBASE operator %=(RCBYTE);
-		REEEREFBASE operator &=(RCBYTE);
-		REEEREFBASE operator |=(RCBYTE);
-		REEEREFBASE operator <<=(RCBYTE);
-		REEEREFBASE operator >>=(RCBYTE);
-	
-		REEEREFBASE operator++();
-		REEEREFBASE operator--();
-	
-		CBYTE operator ++(INT);
-		CBYTE operator --(INT);
-
-	
-		// USER METHODS
-	
-		REEEREFBASE Update(RCBYTE);
-
-	
-		// HELPER METHODS
-
-		VIRTUAL CBYTE Read() const;
-		VIRTUAL VOID Write(RCBYTE);
-	
-	
-		// INSTANCE VARIABLES
-
-		WORD Address = 0;
-	};
-
-#pragma endregion
-
-
 #pragma region [_EEEPtr] DEFINITION
 
 	template<CBYTE DeviceAddr, CBYTE PageAddrBits, typename TAddr>
-	struct _EEEPtr : public _EEEPtrBase
+	struct _EEEPtr //: public EEPtr
 	{
 	protected:
 
 		// META-TYPEDEF ALIAS
+		// META-TYPEDEF ALIAS
 
-		typedef _EEERef<DeviceAddr, PageAddrBits, TAddr> TEEERef;
+		typedef _EEEPtr<DeviceAddr, PageAddrBits, TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
+		typedef const _EEEPtr<DeviceAddr, PageAddrBits, TAddr> CTEEEPTR, & RCTEEEPTR;
+
+		typedef _EEERef<DeviceAddr, PageAddrBits, TAddr> TEEERef, TEEEREF;
 
 
 	public:
 
+		// CONSTRUCTORS
+	
+		_EEEPtr(TAddr addr) : Address(addr) { }
+
+
 		// OPERATORS
 		
-		//operator CWORD() const;
+		operator CBYTE()
+		{
+			return **this;
+		}
+		
+		operator RCWORD() const
+		{
+			return this->Address;
+		}
 
+		CBOOL operator ==(RCTEEEPTR ptr) const
+		{
+			return this->Address == ptr.Address;
+		}
 
-		// _EEEPtrBase OPERATOR OVERRIDES
+		CBOOL operator !=(RCTEEEPTR ptr) const
+		{
+			return this->Address != ptr.Address;
+		}
 
-		VIRTUAL EEEREFBASE operator *()
+		TEEEREF operator *()
 		{
 			return TEEERef(this->Address);
 		}
-
-		VIRTUAL EEEPTRBASE operator ++(INT)
+	
+		RTEEEPTR operator =(RCWORD addr)
 		{
-			return TEEERef(this->Address++);
+			this->Address = addr;
+			return *this;
 		}
 
-		VIRTUAL EEEPTRBASE operator --(INT)
+		RTEEEPTR operator ++()
 		{
-			return TEEERef(this->Address--);
+			++this->Address;
+			return *this;
 		}
+
+		RTEEEPTR operator --()
+		{
+			--this->Address;
+			return *this;
+		}
+
+		TEEEPTR operator ++(INT)
+		{
+			return TEEEPtr(this->Address++);
+		}
+
+		TEEEPTR operator --(INT)
+		{
+			return TEEEPtr(this->Address--);
+		}
+	
+	
+		// INSTANCE VARIABLES
+
+		TAddr Address = 0;
 	};
 
 #pragma endregion
@@ -313,7 +251,7 @@ namespace IttyBitty
 #pragma region [_EEERef] DEFINITION
 
 	template<CBYTE DeviceAddr, CBYTE PageAddrBits, typename TAddr>
-	struct _EEERef : public _EEERefBase
+	struct _EEERef //: public EERef
 	{
 	protected:
 		
@@ -322,7 +260,7 @@ namespace IttyBitty
 		STATIC CONSTEXPR CBYTE GetPageBitsFromAddress(TAddr address)
 		{
 			return HIGH_BYTE(address) SHL 0b1 OR (0b1 SHL (PageAddrBits + 0b1) - 1);
-			return NAND((TAddr(0) - 0b1), HIGH_BYTE(address) SHL 0b1);
+			return NAND(MAX_T(TAddr), HIGH_BYTE(address) SHL 0b1);
 		}
 
 		STATIC CONSTEXPR CBYTE BuildDeviceAddressByte(TAddr address)
@@ -330,26 +268,164 @@ namespace IttyBitty
 			return DeviceAddr OR GetPageBitsFromAddress();
 		}
 
+		STATIC CONSTEXPR CBOOL UseWordDataAddress()
+		{
+			return (SIZEOF(TAddr) - (PageAddrBits > 0 ? 1 : 0)) > 1 ? TRUE : FALSE;
+		}
+
 
 		// META-TYPEDEF ALIAS
 
-		typedef _EEEPtr<DeviceAddr, PageAddrBits, TAddr> TEEEPtr;
+		typedef _EEERef<DeviceAddr, PageAddrBits, TAddr> TEEERef, TEEEREF, & RTEEEREF;
+		typedef const _EEERef<DeviceAddr, PageAddrBits, TAddr> CTEEEREF, & RCTEEEREF;
 
 
 	public:
 
 		// CONSTRUCTORS
 	
-		_EEERef(RCBYTE addr) : _EEERefBase(addr) { }
+		_EEERef(TAddr addr) : Address(addr) { }
 
-		_EEERef(RCWORD addr) : _EEERefBase(addr) { }
 
+		// OPERATORS
 	
-		// HELPER METHOD OVERRIDES
+		operator CBYTE() const
+		{
+			return **this;
+		}
+	
+		operator RCWORD() const
+		{
+			return this->Address;
+		}
+
+		CBYTE operator *() const
+		{
+			return this->Read();
+		}
+
+		CBOOL operator ==(RCBYTE value) const
+		{
+			return *this == value;
+		}
+
+		CBOOL operator !=(RCBYTE value) const
+		{
+			return *this != value;
+		}
+
+		RTEEEREF operator =(RCBYTE value)
+		{
+			this->Write(value);
+			return *this;
+		}
+
+		RTEEEREF operator =(RCTEEEREF ref)
+		{
+			return *this = *ref;
+		}
+
+		RTEEEREF operator +=(RCBYTE value)
+		{
+			return *this = **this + value;
+		}
+
+		RTEEEREF operator -=(RCBYTE value)
+		{
+			return *this = **this - value;
+		}
+
+		RTEEEREF operator *=(RCBYTE value)
+		{
+			return *this = **this * value;
+		}
+
+		RTEEEREF operator /=(RCBYTE value)
+		{
+			return *this = **this / value;
+		}
+
+		RTEEEREF operator ^=(RCBYTE value)
+		{
+			return *this = **this ^ value;
+		}
+
+		RTEEEREF operator %=(RCBYTE value)
+		{
+			return *this = **this % value;
+		}
+
+		RTEEEREF operator &=(RCBYTE value)
+		{
+			return *this = **this & value;
+		}
+
+		RTEEEREF operator |=(RCBYTE value)
+		{
+			return *this = **this | value;
+		}
+
+		RTEEEREF operator <<=(RCBYTE value)
+		{
+			return *this = **this << value;
+		}
+
+		RTEEEREF operator >>=(RCBYTE value)
+		{
+			return *this = **this >> value;
+		}
+	
+		RTEEEREF operator++()
+		{
+			return *this += 1;
+		}
+		RTEEEREF operator--()
+		{
+			return *this -= 1;
+		}
+	
+		CBYTE operator ++(INT)
+		{ 
+			BYTE value = **this;
+			++(*this);
+			return value;
+		}
+
+		CBYTE operator --(INT)
+		{ 
+			BYTE value = **this;
+			--(*this);
+			return value;
+		}
+	
+
+		// USER METHODS
+	
+		RTEEEREF Update(RCBYTE value)
+		{
+			if (**this != value)
+				*this = value;
+
+			return *this;
+		}
+
+		VIRTUAL VOID Write(RCBYTE value)
+		{
+			PrintLine("EEEWRITE");
+			Wire.beginTransmission(0x50);
+
+			Wire.write((BYTE)(this->Address >> 8));
+			Wire.write((BYTE)this->Address);
+			delay(5);
+		
+			Wire.write(value);
+
+			Wire.endTransmission();
+			delay(50);
+		}
 
 		VIRTUAL CBYTE Read() const
 		{
-			//return _EEERefBase::Read();
 			PrintLine("EEEREAD");
 			Wire.beginTransmission(0x50);
 
@@ -366,22 +442,11 @@ namespace IttyBitty
 
 			return Wire.read(); 
 		}
+	
+	
+		// INSTANCE VARIABLES
 
-		VIRTUAL VOID Write(RCBYTE value)
-		{
-			//return _EEERefBase::Write(value);
-			PrintLine("EEEWRITE");
-			Wire.beginTransmission(0x50);
-
-			Wire.write((BYTE)(this->Address >> 8));
-			Wire.write((BYTE)this->Address);
-			delay(5);
-		
-			Wire.write(value);
-
-			Wire.endTransmission();
-			delay(50);
-		}
+		TAddr Address = 0;
 	};
 
 #pragma endregion
@@ -423,8 +488,8 @@ namespace IttyBitty
 
 		typedef TYPE_IF(((CBYTE)ChipType >= 0x0400), RCDWORD, TYPE_IF(((CBYTE)ChipType >= 0x0004), RCWORD, RCBYTE)) TAddr;
 		
-		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), TAddr> TEEEPtr;
-		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), TAddr> TEEERef;
+		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), TAddr> TEEEPtr, TEEEPTR;
+		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), TAddr> TEEERef, TEEEREF;
 
 
 	public:
@@ -436,14 +501,14 @@ namespace IttyBitty
 			return (CWORD)ChipType;
 		}
 
-		STATIC CONSTEXPR CBYTE Length()
+		STATIC CONSTEXPR CBYTE Size()
 		{
 			return CapacityKb() * KILO * BITS_PER_BYTE * KILO;
 		}
 		
-		STATIC CONSTEXPR CWORD (*CapacityBytes)() = &Length;
+		STATIC CONSTEXPR CWORD (*CapacityBytes)() = &Size;
 		
-		STATIC CONSTEXPR CBYTE BytesPerPage()
+		STATIC CONSTEXPR CBYTE BytesPerPageWrite()
 		{
 			if (CapacityKb() >= 1024)
 				return 256;
@@ -473,7 +538,7 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		TEEERef operator[](TAddr addr)
+		TEEEREF operator[](TAddr addr)
 		{
 			return TEEERef(addr);
 		}		
@@ -481,38 +546,38 @@ namespace IttyBitty
 
 		// ITERATOR METHODS
 
-		TEEEPtr begin()
+		TEEEPTR begin()
 		{
 			return TEEEPtr(0);
 		} 
 
-		TEEEPtr end() const
+		TEEEPTR end() const
 		{
-			return TEEEPtr(Length());
+			return TEEEPtr(Size());
 		} 
 
 
 		// USER METHODS
-		
-		BYTE Read(TAddr addr) const
+
+		VOID Update(TAddr addr, RCBYTE value)
 		{
-			return *TEEERef(addr);
+			TEEERef(addr).Update(value);
 		}
 	
 		VOID Write(TAddr addr, RCBYTE value)
 		{
 			TEEERef(addr).Write(value);
 		}
-
-		VOID Update(TAddr addr, RCBYTE value)
+		
+		BYTE Read(TAddr addr) const
 		{
-			TEEERef(addr).Update(value);
+			return *TEEERef(addr);
 		}
 		
 		template<typename T>
 		CSIZE Load(TAddr addr, T & datum) const
 		{
-			TEEEPtr ptr(addr);
+			TEEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
 
 			SIZE i = 0;
@@ -526,7 +591,7 @@ namespace IttyBitty
 		template<typename T>
 		CSIZE Save(TAddr addr, CONST T & datum)
 		{
-			TEEEPtr ptr(addr);
+			TEEEPTR ptr(addr);
 			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
 
 			SIZE i = 0;

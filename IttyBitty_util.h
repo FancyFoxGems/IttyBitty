@@ -189,6 +189,8 @@ using std::extent;
 
 #define T_SIZE SIZEOF(T)
 
+#define MAX_T(T) (T(0) - 0b1)
+
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr) (constructor_expr)
 #define _CONSTRUCT(constructor_expr) FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
 
