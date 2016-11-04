@@ -30,6 +30,18 @@
 
 /* C++ KEYWORD/SPECIFIER/MODIFIER ALIASES */
 
+#ifndef null
+	#define null		0
+#endif
+
+#ifndef NULL
+	#define NULL		null
+#endif
+
+#ifndef nil
+	#define nil			null
+#endif
+
 #ifndef TRUE
 	#define TRUE		true
 #endif

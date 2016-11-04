@@ -57,6 +57,9 @@ namespace IttyBitty
 	{
 		return CHECK_ARDUINO_PIN_SET(p);
 	}
+	
+	CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
+	CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
 
 	CBIT CheckPinUnset(PIN_NUMBER p)
 	{

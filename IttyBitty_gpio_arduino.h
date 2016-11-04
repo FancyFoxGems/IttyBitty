@@ -110,12 +110,12 @@ namespace IttyBitty
 	VOID SetPinMode(PIN_NUMBER, PinMode = PinMode::CurrentSink);
 	VOID SetPinMode(PIN_NUMBER, PinModeBasic = PinModeBasic::Output);
 	VOID SetPinMode(PIN_NUMBER, RCBYTE = OUTPUT);
-
+	
 	CBIT CheckPinSet(PIN_NUMBER);
 	CBIT CheckPinUnset(PIN_NUMBER);
 	
-	CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
-	CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
+	EXTERN CBIT (*ReadPin)(PIN_NUMBER);
+	EXTERN CBIT (*CheckPin)(PIN_NUMBER);
 	
 	VOID WritePin(PIN_NUMBER, RCBIT = HIGH);
 	VOID SetPin(PIN_NUMBER);

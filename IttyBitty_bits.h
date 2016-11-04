@@ -117,7 +117,7 @@
 #define CHECK_BITS(ref, mask)					MASK(ref, mask)
 #define CHECK_BITS_SET(ref, mask)				(ref, mask)
 
-#define BMASKSNT(ref, mask)						~MASK(ref, mask)
+#define BMASKSNT(ref, mask)						MASK(~ref, mask)
 #define CHECK_BITS_SNT(ref, mask)				BMASKSNT(ref, mask)
 #define CHECK_BITS_UNSET(ref, mask)				BMASKSNT(ref, mask)
 
@@ -173,11 +173,11 @@
 #define COPY_BITS_TUPLE(ref_mask_from_ref_tuple)		COPY_BITS(ref_mask_from_ref_tuple
 
 
-/* (SINGLE)		BIT-TWIDDLING MACROS */
+/* (SINGLE) BIT-TWIDDLING MACROS */
 
 #define BNOT(ref, bit_offset)						NOT_BIT(ref, bit_offset)
 
-#define BCHK(ref, bit_offset)						CHECK_BITS((ref) & BMASK(bit_offset))
+#define BCHK(ref, bit_offset)						CHECK_BITS((ref), BMASK(bit_offset))
 #define CHECK_BIT(ref, bit_offset)					BCHK(ref, bit_offset)
 #define CHECK_SET(ref, bit_offset)					BCHK(ref, bit_offset)
 	

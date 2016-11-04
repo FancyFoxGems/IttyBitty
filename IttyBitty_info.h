@@ -50,7 +50,16 @@ namespace IttyBitty
 	EXTERN PCHAR __malloc_heap_start;
 	EXTERN PCHAR __malloc_heap_end;
 	EXTERN SIZE __malloc_margin;
+	
 
+	STATIC CWORD FreeRam()
+	{
+		//EXTERN INT __bss_end;
+		//EXTERN PINT __brkval;
+
+		CWORD dummyWord = 0;
+		return (CWORD)&dummyWord - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD)__brkval);
+	}
 
 	INLINE PVUINT StackPointer()
 	{
