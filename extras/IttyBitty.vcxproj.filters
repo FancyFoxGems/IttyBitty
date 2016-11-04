@@ -5,232 +5,256 @@
       <UniqueIdentifier>{0ad123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
       <Extensions>vsarduino.h</Extensions>
     </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly">
-      <UniqueIdentifier>{92c607cd-fe76-4cde-bfd9-a695cff3e61d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\core">
-      <UniqueIdentifier>{be1d5718-d3e7-46a4-8a60-61c3e826066a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\variants">
-      <UniqueIdentifier>{ec45e1c1-2bc5-48fd-8556-80658ce03105}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\variants\eightanaloginputs">
-      <UniqueIdentifier>{427384a0-9e39-458c-a1d6-8df353ccd2ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\_micro-api-readonly\libraries">
-      <UniqueIdentifier>{90bf7457-1d1e-4f3d-9200-6a00b9f14fab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Examples">
       <UniqueIdentifier>{0be123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Metadata">
       <UniqueIdentifier>{0f068f51-3d28-425e-9cef-26f7bd5557c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Core\_micro-api-readonly">
+      <UniqueIdentifier>{92c607cd-fe76-4cde-bfd9-a695cff3e61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\_micro-api-readonly\core">
+      <UniqueIdentifier>{be1d5718-d3e7-46a4-8a60-61c3e826066a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\_micro-api-readonly\variants">
+      <UniqueIdentifier>{ec45e1c1-2bc5-48fd-8556-80658ce03105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\_micro-api-readonly\variants\eightanaloginputs">
+      <UniqueIdentifier>{427384a0-9e39-458c-a1d6-8df353ccd2ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\_micro-api-readonly\libraries">
+      <UniqueIdentifier>{90bf7457-1d1e-4f3d-9200-6a00b9f14fab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Communication">
+      <UniqueIdentifier>{de4184cf-f5e1-47bc-b32b-efac5abb35ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{8a5552d2-2110-4e01-8378-e1666b5f9890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bits &amp; Bytes">
+      <UniqueIdentifier>{04ef9d8a-1695-4d3c-aca9-0eb7f211e03f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{54dbf06e-cb14-4f36-86e0-73c9d8a1e1d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Info">
+      <UniqueIdentifier>{e616ff74-90ee-44b3-92d6-d70e7a3436d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IO">
+      <UniqueIdentifier>{10cba6eb-f737-4cce-aca7-8f64dfec2152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Storage">
+      <UniqueIdentifier>{21e31132-df64-4790-851f-ec3b7e68e770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{64ceb909-aff6-42de-a06c-a0c0a8f6fda1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="...\keywords.txt">
+    <None Include="..\keywords.txt">
       <Filter>Metadata</Filter>
     </None>
-    <None Include="...\library.properties">
+    <None Include="..\library.properties">
       <Filter>Metadata</Filter>
     </None>
-    <None Include="...\LICENSE">
+    <None Include="..\LICENSE">
       <Filter>Metadata</Filter>
     </None>
-    <None Include="...\README.md">
+    <None Include="..\README.md">
       <Filter>Metadata</Filter>
     </None>
-    <None Include="..\..\IttyBitty.ino" />
+    <None Include="IttyBitty.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.extras.vsarduino.h">
-      <Filter>__vm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\avr_cpunames.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_aliases.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_base.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_bits.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_bytes.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_DB.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_fields.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_GPIO.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_GPIO_arduino.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_GPIO_portpins.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_info.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_interrupts.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_led.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_print.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_registers.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_signals.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_slim.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_type_traits.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_util.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_values.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_wavetables.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_slim.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_fields.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_values.h">
+      <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_type_traits.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_util.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_aliases.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_bits.h">
+      <Filter>Bits &amp; Bytes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_bytes.h">
+      <Filter>Bits &amp; Bytes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_GPIO.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_GPIO_arduino.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_GPIO_portpins.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_signals.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_wavetables.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_DB.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_led.h">
+      <Filter>IO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_interrupts.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_registers.h">
+      <Filter>Bits &amp; Bytes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_print.h">
+      <Filter>Communication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_messages.h">
+      <Filter>Communication</Filter>
+    </ClInclude>
+    <ClInclude Include="..\avr_cpunames.h">
+      <Filter>Info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_info.h">
+      <Filter>Info</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\IttyBitty_bits.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\IttyBitty_base.h">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_bytes.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_DB.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
+      <Filter>Core\_micro-api-readonly\core</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_fields.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_GPIO.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_interrupts.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_led.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_messages.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_print.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_signals.cpp">
-      <Filter>src</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_values.cpp">
-      <Filter>src</Filter>
+      <Filter>Data</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_bits.cpp">
+      <Filter>Bits &amp; Bytes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_bytes.cpp">
+      <Filter>Bits &amp; Bytes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_GPIO.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_signals.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_DB.cpp">
+      <Filter>Storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">
+      <Filter>Storage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_led.cpp">
+      <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_interrupts.cpp">
+      <Filter>Control</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_print.cpp">
+      <Filter>Communication</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
-      <Filter>src\_micro-api-readonly\core</Filter>
+    <ClCompile Include="..\IttyBitty_messages.cpp">
+      <Filter>Communication</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
