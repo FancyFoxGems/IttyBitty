@@ -26,10 +26,16 @@ using namespace IttyBitty;
 #define SERIAL_EEPROM_TIMEOUT_MS			500
 #define SERIAL_EEPROM_WAIT_DELAY_MS			1
 
+#define SERIAL_EEPROM_ERASE_VALUE			0xFF
+
 #pragma endregion
 
 
-#pragma region MACROS
+#pragma region MACROS/ALIASES
+
+#ifdef ARDUINO_SAM_DUE
+	#define Wire		Wire1
+#endif
 
 #if ARDUINO >= 100
 	#define WIRE_WRITE	Wire.write
@@ -580,6 +586,18 @@ namespace IttyBitty
 
 			return bytesWritten;
 		}
+	
+		CBYTE Erase(RCBYTE size)
+		{
+			PBYTE nullBuffer = new BYTE[size];
+			memset(nullBuffer, SERIAL_EEPROM_ERASE_VALUE, size);
+
+			CBYTE bytesErased = this->Write(nullBuffer, size);
+
+			delete[] nullBuffer;
+
+			return bytesErased;
+		}
 	};
 
 #pragma endregion
@@ -662,9 +680,12 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		EEPROM_I2C()
+		EEPROM_I2C(RCBOOL use400KHz = FALSE)
 		{
 			Wire.begin();
+
+			if (use400KHz)
+				TWBR = ((F_CPU / 400 * kilo) - 16) / 2;
 		}
 
 
@@ -719,6 +740,11 @@ namespace IttyBitty
 		CSIZE Update(CTAddr startAddr, PCBYTE data, CSIZE size)
 		{
 			return TEEERef(startAddr).Update(data, size);
+		}
+
+		CBYTE Erase(CTAddr addr, RCBYTE size)
+		{
+			return TEEERef(addr).Clear(size);
 		}
 
 		template<typename T>
