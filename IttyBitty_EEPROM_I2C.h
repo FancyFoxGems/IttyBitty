@@ -587,7 +587,7 @@ namespace IttyBitty
 			return bytesWritten;
 		}
 	
-		CBYTE Erase(RCBYTE size)
+		CBYTE Erase(CSIZE size)
 		{
 			PBYTE nullBuffer = new BYTE[size];
 			memset(nullBuffer, SERIAL_EEPROM_ERASE_VALUE, size);
@@ -685,7 +685,7 @@ namespace IttyBitty
 			Wire.begin();
 
 			if (use400KHz)
-				TWBR = ((F_CPU / 400 * kilo) - 16) / 2;
+				TWBR = (CBYTE)((F_CPU / 400 * kilo) - 16) / 2;
 		}
 
 
@@ -742,7 +742,7 @@ namespace IttyBitty
 			return TEEERef(startAddr).Update(data, size);
 		}
 
-		CBYTE Erase(CTAddr addr, RCBYTE size)
+		CBYTE Erase(CTAddr addr, CSIZE size)
 		{
 			return TEEERef(addr).Clear(size);
 		}

@@ -102,15 +102,37 @@ namespace IttyBitty
 		_InitializeArduinoPortTables();
 		_InitializeArduinoPinTables();
 	}
-}
+
+
+	// ARDUINO PIN GLOBAL FUNCTIONS
+	
+	PinMode GetPinMode(PIN_NUMBER);
+	VOID SetPinMode(PIN_NUMBER, PinMode = PinMode::CurrentSink);
+	VOID SetPinMode(PIN_NUMBER, PinModeBasic = PinModeBasic::Output);
+	VOID SetPinMode(PIN_NUMBER, RCBYTE = OUTPUT);
+
+	CBIT CheckPinSet(PIN_NUMBER);
+	CBIT CheckPinUnset(PIN_NUMBER);
+	
+	CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
+	CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
+	
+	VOID WritePin(PIN_NUMBER, RCBIT = HIGH);
+	VOID SetPin(PIN_NUMBER);
+	VOID ClearPin(PIN_NUMBER);
+	VOID TogglePin(PIN_NUMBER);
+	
+	VOID ResetPin(PIN_NUMBER);
+};
 
 
 #define ARDUINO_PIN_MODE_REF(arduino_pin)		(*ARDUINO_PORT_TO_MODE[ARDUINO_PIN_TO_PORT[arduino_pin]])
 #define ARDUINO_PIN_OUT_REF(arduino_pin)		(*ARDUINO_PORT_TO_OUTPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 #define ARDUINO_PIN_IN_REF(arduino_pin)			(*ARDUINO_PORT_TO_INPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 
-#define CHECK_ARDUINO_PIN(arduino_pin)			CHECK_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 #define CHECK_ARDUINO_PIN_SET(arduino_pin)		CHECK_BITS_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define READ_ARDUINO_PIN(arduino_pin)			CHECK_ARDUINO_PIN_SET(arduino_pin)
+#define CHECK_ARDUINO_PIN(arduino_pin)			CHECK_ARDUINO_PIN_SET(arduino_pin)
 #define CHECK_ARDUINO_PIN_UNSET(arduino_pin)	CHECK_BITS_UNSET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
 #define WRITE_ARDUINO_PIN(arduino_pin, state)	(state ? SET_ARDUINO_PIN(arduino_pin) : CLEAR_ARDUINO_PIN(arduino_pin))
@@ -125,13 +147,13 @@ namespace IttyBitty
 	CLEAR_BIT(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
 #define GET_ARDUINO_PIN_MODE(arduino_pin)	\
-	((PinMode)(CHECK_SET(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) OR	\
-	CHECK_SET(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) SHL 0b1))
+	(IttyBitty::PinMode)(CHECK_SET(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) OR	\
+		CHECK_SET(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]) SHL 0b1)
 
 #define SET_ARDUINO_PIN_MODE(arduino_pin, mode)	\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\
 		else CLEAR_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);										\
-	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_ARDUINO_PIN(arduino_pin); else CLEAR_ARDUINO_PIN(arduino_pin);
+	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_ARDUINO_PIN(arduino_pin); else CLEAR_ARDUINO_PIN(arduino_pin)
 
 
 #endif

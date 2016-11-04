@@ -54,7 +54,7 @@ namespace IttyBitty
 
 namespace IttyBitty
 {
-	typedef SIZE PIN_NUMBER;
+	typedef CSIZE PIN_NUMBER;
 
 	struct _PortRegisters;
 	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
@@ -205,7 +205,7 @@ namespace IttyBitty
 
 		VIRTUAL CBIT CheckPinUnset(PIN_NUMBER p) const
 		{
-			return ~_Registers->InputReg[p];
+			return NOT _Registers->InputReg[p];
 		}
 
 		VIRTUAL BITREF PinState(PIN_NUMBER p)
@@ -213,7 +213,7 @@ namespace IttyBitty
 			return _Registers->OutputReg[p];
 		}
 
-		VIRTUAL VOID WritePin(PIN_NUMBER p, RCBIT state)
+		VIRTUAL VOID WritePin(PIN_NUMBER p, RCBIT state = HIGH)
 		{
 			_Registers->OutputReg[p] = state;
 		}
@@ -306,7 +306,7 @@ namespace IttyBitty
 			return PortPtr->CheckPinUnset(PinNum);
 		}
 
-		STATIC VOID Write(RCBIT state)
+		STATIC VOID Write(RCBIT state = HIGH)
 		{
 			return PortPtr->WritePin(PinNum, state);
 		}
