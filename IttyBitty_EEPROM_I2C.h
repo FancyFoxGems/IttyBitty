@@ -778,7 +778,7 @@ namespace IttyBitty
 
 #pragma endregion
 }
-	
+
 
 #pragma region GLOBAL VARIABLES	
 

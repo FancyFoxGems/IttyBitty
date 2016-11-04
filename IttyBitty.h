@@ -116,6 +116,8 @@
 *
 * [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC
 *
+* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT
+*
 * [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT
 *	(i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series)
 *
@@ -202,6 +204,13 @@
 	#include "IttyBitty_messages.h"
 #elif !defined(EXCLUDE_ITTYBITTY_FIELDS)
 	#define EXCLUDE_ITTYBITTY_FIELDS
+#endif
+
+
+/* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT */
+
+#ifndef EXCLUDE_ITTYBITTY_DB
+	#include "IttyBitty_DB.h"
 #endif
 
 
