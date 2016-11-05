@@ -616,13 +616,6 @@ namespace IttyBitty
 		{
 			return (CSIZE)ChipType;
 		}
-
-		STATIC CONSTEXPR CBYTE Size()
-		{
-			return CapacityKb() * KILObit / BITS_PER_BYTE;
-		}
-		
-		STATIC CONSTEXPR CSIZE (*CapacityBytes)() = &Size;
 		
 
 	protected:
@@ -673,14 +666,29 @@ namespace IttyBitty
 
 	public:		
 		
+		// STATIC CONSTEXPR METHODS
+
+		STATIC CONSTEXPR CTAddr Size()
+		{
+			return CapacityKb() * KILObit / BITS_PER_BYTE;
+		}
+		
+		STATIC CONSTEXPR CTAddr (*CapacityBytes)() = &Size;
+
+		
 		// STATIC CONSTEXPR FUNCTION ALIASES
 
 		STATIC CONSTEXPR CSIZE (*PageSize)() = &TEEERef::PageSize();
 
 
+		// INSTANCE VARIABLES
+
+		TEEEPTR _Iterator;
+
+
 		// CONSTRUCTOR
 
-		EEPROM_I2C(RCBOOL use400KHz = FALSE)
+		EEPROM_I2C(RCBOOL use400KHz = FALSE) : _Iterator(TEEEPtr(0))
 		{
 			Wire.begin();
 
@@ -701,13 +709,29 @@ namespace IttyBitty
 
 		TEEEPTR begin()
 		{
-			return TEEEPtr(0);
-		} 
+			_Iterator = TEEEPtr(0);
+			return _Iterator;
+		}
+
+		TEEEPTR curr()
+		{
+			return _Iterator;
+		}
+
+		TEEEPTR next()
+		{
+			return _Iterator++;
+		}
 
 		TEEEPTR end() const
 		{
 			return TEEEPtr(Size());
-		} 
+		}
+
+		CTAddr length() const
+		{
+			return EEPROM_I2C::Size();
+		}
 
 
 		// USER METHODS
@@ -731,6 +755,11 @@ namespace IttyBitty
 		{
 			return TEEERef(startAddr).Write(data, size);
 		}
+	
+		CSIZE Write(CTAddr startAddr, PCCHAR data)
+		{
+			return TEEERef(startAddr).Write(reinterpret_cast<PCBYTE>(data), strlen(data));
+		}
 
 		CBYTE Update(CTAddr addr, RCBYTE value)
 		{
@@ -740,6 +769,11 @@ namespace IttyBitty
 		CSIZE Update(CTAddr startAddr, PCBYTE data, CSIZE size)
 		{
 			return TEEERef(startAddr).Update(data, size);
+		}
+	
+		CSIZE Update(CTAddr startAddr, PCCHAR data)
+		{
+			return TEEERef(startAddr).Update(reinterpret_cast<PCBYTE>(data), strlen(data));
 		}
 
 		CBYTE Erase(CTAddr addr, CSIZE size)
@@ -755,7 +789,7 @@ namespace IttyBitty
 
 			SIZE i = 0;
 			
-			while (i < SIZEOF(T))
+			while (i < T_SIZE)
 				data[i++] = *ptr++;
 
 			return i;
@@ -769,7 +803,7 @@ namespace IttyBitty
 
 			SIZE i = 0;
 
-			while (i < SIZEOF(T))
+			while (i < T_SIZE)
 				(*ptr++).Update(data[i++]);
 
 			return i;
