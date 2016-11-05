@@ -18,15 +18,17 @@
 IGNORE_WARNING(-Wpointer-arith)
 
 
-/* CONDITIONALLY GENERATE ENDIANNESS MACRO */
+/* (BYTE) ENDIANNESS DEFINES & TEST MACRO */
+
+#define LITTLE_ENDIAN	0
+#define BIG_ENDIAN		1
+#define NETWORK_ORDER	BIG_ENDIAN
 
 #ifdef __AVR_ARCH__
 	#if __AVR_ARCH__ <= 60		// AVR architecture 1-6
-		#define LITTLE_ENDIAN
-		#define ENDIANNESS LSBFIRST
+		#define ENDIANNESS LITTLE_ENDIAN
 	#elif __AVR_ARCH__ >= 100	// AVR architecture 10 (Xmega)
-		#define BIG_ENDIAN
-		#define ENDIANNESS MSBFIRST
+		#define ENDIANNESS BIG_ENDIAN
 	#else
 		#define TEST_ENDIANNESS
 	#endif
@@ -38,8 +40,9 @@ IGNORE_WARNING(-Wpointer-arith)
 	#undef TEST_ENDIANNESS
 	#define ENDIANNESS (*(uint16_t *)"\0\xff" < 0x100)
 #endif
-
-#define IS_BIG_ENDIAN ENDIANNESS == MSBFIRST
+	
+#define IS_LITTLE_ENDIAN	ENDIANNESS == LITTLE_ENDIAN
+#define IS_BIG_ENDIAN		ENDIANNESS == BIG_ENDIAN
 
 
 /* ENDIANNESS SWAPPING MACROS */
