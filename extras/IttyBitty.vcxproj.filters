@@ -119,6 +119,9 @@
     <ClInclude Include="..\IttyBitty_DB.h">
       <Filter>Storage</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_DB_storage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
       <Filter>Storage</Filter>
     </ClInclude>
@@ -239,6 +242,9 @@
       <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_DB.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_DB_storage.cpp">
       <Filter>Storage</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">

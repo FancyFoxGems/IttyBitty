@@ -158,6 +158,7 @@ namespace IttyBitty
 	public:
 
 		// DESTRUCTOR
+
 		VIRTUAL ~ISerializable() { }
 
 
