@@ -10,6 +10,14 @@
 #define _ITTYBITTY_UTIL_H
 
 
+/* GCC WARNING SUPPRESSIONS */
+
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+
+
 #include "IttyBitty_type_traits.h"
 
 #include <avr/wdt.h>
