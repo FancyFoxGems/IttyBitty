@@ -10,14 +10,14 @@
 #define _ITTYBITTY_MESSAGES_H
 
 
-#include "IttyBitty_fields.h"
+#include "IttyBitty_params.h"
 
 #ifdef DEBUG_MESSAGES
 	#include "IttyBitty_print.h"
 #endif
 
 
-/* SUPRESS COMPILER WARNINGS RELATED TO FIELD REORDERING */
+/* SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING */
 
 IGNORE_WARNING(-Wreorder)
 
@@ -28,7 +28,7 @@ namespace IttyBitty
 
 	EXTERN PCCHAR MESSAGE_MARKER;
 		
-	// Message::ToBytes() / ToString() BUFFER POINTER
+	// Message::ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __message_buffer;
 
 #pragma endregion
@@ -80,8 +80,8 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL PCIFIELD operator[](CBYTE) const = 0;
-		VIRTUAL PIFIELD operator[](CBYTE) = 0;
+		VIRTUAL PCIPARAM operator[](CBYTE) const = 0;
+		VIRTUAL PIPARAM operator[](CBYTE) = 0;
 		
 
 		// ACCESSORS
@@ -89,8 +89,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetParamCount() const = 0;
 		VIRTUAL CBYTE GetMessageCode() const = 0;
 		
-		VIRTUAL RCIFIELD Param(CBYTE = 0) const = 0;
-		VIRTUAL RIFIELD Param(CBYTE = 0) = 0;
+		VIRTUAL RCIPARAM Param(CBYTE = 0) const = 0;
+		VIRTUAL RIPARAM Param(CBYTE = 0) = 0;
 
 
 		// USER METHODS
@@ -125,9 +125,9 @@ namespace IttyBitty
 		EXPLICIT Message(PCBYTE);
 		EXPLICIT Message(PCCHAR);
 
-		EXPLICIT Message(CBYTE, PIFIELD);
-		EXPLICIT Message(CBYTE, RCIFIELD);
-		Message(CBYTE, CBYTE, PPIFIELD);
+		EXPLICIT Message(CBYTE, PIPARAM);
+		EXPLICIT Message(CBYTE, RCIPARAM);
+		Message(CBYTE, CBYTE, PPIPARAM);
 
 		VIRTUAL ~Message();
 
@@ -146,8 +146,8 @@ namespace IttyBitty
 		VIRTUAL RMESSAGE operator=(RCMESSAGE);
 		VIRTUAL RMESSAGE operator=(RRMESSAGE);
 
-		VIRTUAL PCIFIELD operator[](CBYTE) const;
-		VIRTUAL PIFIELD operator[](CBYTE);
+		VIRTUAL PCIPARAM operator[](CBYTE) const;
+		VIRTUAL PIPARAM operator[](CBYTE);
 		
 
 		// ACCESSORS
@@ -155,8 +155,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetMessageCode() const;
 		VIRTUAL CBYTE GetParamCount() const;
 		
-		VIRTUAL RCIFIELD Param(CBYTE = 0) const;
-		VIRTUAL RIFIELD Param(CBYTE = 0);
+		VIRTUAL RCIPARAM Param(CBYTE = 0) const;
+		VIRTUAL RIPARAM Param(CBYTE = 0);
 
 
 		// USER METHODS
@@ -166,15 +166,15 @@ namespace IttyBitty
 
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE ByteSize() const;
+		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
 		VIRTUAL CSIZE ByteWidth() const;
 		VIRTUAL CSIZE StringLength() const;
 
-		VIRTUAL PCBYTE ToBytes() const;
+		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
 
-		VIRTUAL VOID FromBytes(PCBYTE);
+		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 		
 	#ifdef ARDUINO
@@ -196,7 +196,7 @@ namespace IttyBitty
 		BYTE _MessageCode;
 		BYTE _ParamCount;
 
-		PPIFIELD _Params;
+		PPIPARAM _Params;
 
 		
 		// HELPER METHODS
@@ -232,11 +232,11 @@ namespace IttyBitty
 
 		GenericMessage() : Message(MsgCode, ParamCnt) { }
 
-		GenericMessage(PIFIELD param) : Message(MsgCode, param) { }
+		GenericMessage(PIPARAM param) : Message(MsgCode, param) { }
 
-		GenericMessage(RCIFIELD param) : Message(MsgCode, param) { }
+		GenericMessage(RCIPARAM param) : Message(MsgCode, param) { }
 
-		GenericMessage(PPIFIELD params) : Message(MsgCode, ParamCnt, params) { }
+		GenericMessage(PPIPARAM params) : Message(MsgCode, ParamCnt, params) { }
 
 
 		// MESSAGE OVERRIDES
@@ -336,7 +336,7 @@ namespace IttyBitty
 			return NULL;
 
 		PIMESSAGE newMsg = new Message();
-		newMsg->FromBytes(__message_buffer);
+		newMsg->FromBinary(__message_buffer);
 
 		delete[] __message_buffer;
 		__message_buffer = NULL;

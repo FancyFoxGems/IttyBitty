@@ -4,19 +4,25 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
-	#define EXCLUDE_ITTYBITTY_EEPROM_I2C
+#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS)
+	#define EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
+#ifndef EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
 
 
-#include "IttyBitty_EEPROM_I2C.h"
+#include "IttyBitty_storage_adapters.h"
+
+using namespace IttyBitty;
 
 
-/* GLOBAL VARIABLES */
+#pragma region [DbStorageBase] IMPLEMENTATION
 
-IttyBitty::EEPROMI2C<> ExtEEPROM;
+// CONSTRUCTOR
 
 
-#endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
+// USER METHODS
+
+#pragma endregion
+
+#endif	// #ifndef EXCLUDE_ITTYBITTY_STORAGE

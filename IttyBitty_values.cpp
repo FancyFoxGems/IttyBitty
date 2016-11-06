@@ -4,7 +4,12 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#if defined(EXCLUDE_ITTY_BITTY_FIELDS) && !defined(EXCLUDE_ITTYBITTY_VALUES)
+	#define EXCLUDE_ITTYBITTY_VALUES
+#endif
+
 #ifndef EXCLUDE_ITTYBITTY_VALUES
+
 
 #include "IttyBitty_values.h"
 

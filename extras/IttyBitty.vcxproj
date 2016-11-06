@@ -43,11 +43,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <ForcedIncludeFiles>C:\RC\Sketchbook\IttyBitty\IttyBitty\extras\__vm\.IttyBitty.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>C:\RC\Sketchbook\..\..\extras\__vm\.IttyBitty.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;_DEBUG=1;ITTYBITTY__EXCLUDE_TWI=1;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\RC\Sketchbook\libraries\IttyBitty\utility;C:\RC\Sketchbook\libraries\Stepper\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;C:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\libraries\HalfStepper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\RC\Sketchbook\libraries\..\utility;C:\RC\Sketchbook\libraries\Stepper\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;C:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\libraries\HalfStepper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -59,13 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\avr_cpunames.h" />
+    <ClInclude Include="..\avr_cpunames.h" />
     <ClInclude Include="..\IttyBitty.h" />
     <ClInclude Include="..\IttyBitty_aliases.h" />
-    <ClInclude Include="..\IttyBitty_base.h" />
+    <ClCompile Include="..\IttyBitty_base.h" />
     <ClInclude Include="..\IttyBitty_bits.h" />
     <ClInclude Include="..\IttyBitty_bytes.h" />
     <ClInclude Include="..\IttyBitty_DB.h" />
-    <ClInclude Include="..\IttyBitty_DB_storage.h" />
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h" />
     <ClInclude Include="..\IttyBitty_fields.h" />
     <ClInclude Include="..\IttyBitty_GPIO.h" />
@@ -75,10 +75,13 @@
     <ClInclude Include="..\IttyBitty_interrupts.h" />
     <ClInclude Include="..\IttyBitty_led.h" />
     <ClInclude Include="..\IttyBitty_messages.h" />
+    <ClInclude Include="..\IttyBitty_params.h" />
     <ClInclude Include="..\IttyBitty_print.h" />
     <ClInclude Include="..\IttyBitty_registers.h" />
     <ClInclude Include="..\IttyBitty_signals.h" />
     <ClInclude Include="..\IttyBitty_slim.h" />
+    <ClInclude Include="..\IttyBitty_storage.h" />
+    <ClInclude Include="..\IttyBitty_storage_adapters.h" />
     <ClInclude Include="..\IttyBitty_type_traits.h" />
     <ClInclude Include="..\IttyBitty_util.h" />
     <ClInclude Include="..\IttyBitty_values.h" />
@@ -88,16 +91,18 @@
   <ItemGroup>
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
-    <ClCompile Include="..\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty_DB.cpp" />
-    <ClCompile Include="..\IttyBitty_DB_storage.cpp" />
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp" />
+    <ClCompile Include="..\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty_GPIO.cpp" />
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
     <ClCompile Include="..\IttyBitty_led.cpp" />
     <ClCompile Include="..\IttyBitty_messages.cpp" />
+    <ClCompile Include="..\IttyBitty_params.cpp" />
     <ClCompile Include="..\IttyBitty_print.cpp" />
     <ClCompile Include="..\IttyBitty_signals.cpp" />
+    <ClCompile Include="..\IttyBitty_storage.cpp" />
+    <ClCompile Include="..\IttyBitty_storage_adapters.cpp" />
     <ClCompile Include="..\IttyBitty_values.cpp" />
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp" />
     <ClCompile Include="..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp" />

@@ -3,11 +3,12 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_PRINT)
+#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_PRINT)
 	#define EXCLUDE_ITTYBITTY_PRINT
 #endif
 
 #ifndef EXCLUDE_ITTYBITTY_PRINT
+
 
 #include "IttyBitty_print.h"
 

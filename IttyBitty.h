@@ -15,76 +15,12 @@
 * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 *
 * See the included GNU General Public License text for more details.
-************************************************************************************************/
-
-#ifndef _ITTYBITTY_
-#define _ITTYBITTY_ "FTW"
-
-#ifdef __AVR__	// NOTE: AVR architecture compatibility only!
-
-
-/* NOTE: DEFINE [ITTYBITTY_BASE] TO INCLUDE ONLY THE BARE MINIMUM, SUCH AS BIT-TWIDDLING MACROS */
-
-/**********************************************************************************
-* [IttyBitty_slim.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
 *
+*************************************************************************************************
 *
-*	LIBRARY - SLIM BUNDLE: BASIC UTILITY HELPERS & BIT MANIPULATION MACROS ONLY
-*	NOTE: ^-- Uses hardly ANY program space or memory!
+* [IttyBitty.h]
 *
-* INCLUDES:
-*
-* [IttyBitty_aliases.h]: TYPEDEFS FOR WIN32 API-STYLE TYPE REFERENCES
-*
-* [IttyBitty_type_traits.h]: METAFUNCTIONS FOR TEMPLATED TYPING GOODNESS
-*	NOTE: ^-- As found in a subset of type support implemented in the Boost.MPL
-*		as well as various versions of C++ Standard Library [VERSION(C++) >= 11]
-*
-* [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
-*
-* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
-*
-* [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
-*	NOTE: ^-- The fastest method of register data manipulation for ATmegas
-*
-* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
-*
-* [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
-*	NOTE: ^-- In Slim bundle, no structure-based abstractions
-*
-* [IttyBitty_GPIO.h]: MACROS FOR PIN ACCESS & MANIPULATION
-*	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
-*
-*
-* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
-
-#ifdef ITTYBITTY_SLIM
-
-	#ifndef ITTYBITTY_BASE
-		#define ITTYBITTY_BASE
-	#endif
-
-	#ifndef EXCLUDE_ITTYBITTY_BYTES
-		#define EXCLUDE_ITTYBITTY_BYTES
-	#endif
-
-	#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
-		#define EXCLUDE_ITTYBITTY_EEPROM_I2C
-	#endif
-
-#endif
-
-
-/* NOTE: DEFINE [ITTYBITTY_BASE] TO EXCLUDE (MORE RESOURCE-DEMANDING) FULL-FEATURED FUNCTIONALITY */
-
-/**********************************************************************************
-* [IttyBitty_base.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
-*
-*
-*	LIBRARY - BASE BUNDLE: FULL LIBRARY FUNCTIONALITY MINUS HEAVY DATA STRUCTURES
-*	NOTE: ^-- Requires approximately 5 KB of program space and 500 B memory
+*	LIBRARY - FULL BUNDLE
 *
 * INCLUDES:
 *
@@ -116,6 +52,8 @@
 *
 * [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC
 *
+* [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA
+*
 * [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT
 *
 * [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT
@@ -124,11 +62,12 @@
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
-***********************************************************************************/
+************************************************************************************************/
 
-#ifdef ITTYBITTY_BASE
-	#undef EXCLUDE_ITTYBITTY_INTERRUPTS
-#endif
+#ifndef _ITTYBITTY_
+#define _ITTYBITTY_ "FTW"
+
+#ifdef __AVR__	// NOTE: AVR architecture compatibility only!
 
 
 //#include "IttyBitty_aliases.h"		// Included by [IttyBitty_type_traits.h]
@@ -138,13 +77,8 @@
 
 /* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
 
-// TODO: Uncomment.
-//#define EXCLUDE_ITTYBITTY_INFO
-
 #if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_INFO)
 	#include "IttyBitty_info.h"
-#else
-	#include "IttyBitty_bits.h"			// Included by [IttyBitty_info.h] otherwise
 #endif
 
 
@@ -161,8 +95,6 @@
 
 #ifndef EXCLUDE_ITTYBITTY_REGISTERS
 	#include "IttyBitty_registers.h"
-#elif !defined(EXCLUDE_ITTYBITTY_INTERRUPTS)
-	#define EXCLUDE_ITTYBITTY_INTERRUPTS
 #endif
 
 
@@ -170,8 +102,6 @@
 
 #ifndef EXCLUDE_ITTYBITTY_GPIO
 	#include "IttyBitty_GPIO.h"
-#elif !defined(EXCLUDE_ITTYBITTY_LED)
-	#define EXCLUDE_ITTYBITTY_LED
 #endif
 
 
@@ -179,8 +109,6 @@
 
 #ifndef EXCLUDE_ITTYBITTY_INTERRUPTS
 	#include "IttyBitty_interrupts.h"
-#elif !defined(EXCLUDE_ITTYBITTY_LED)
-	#define EXCLUDE_ITTYBITTY_LED
 #endif
 
 
@@ -202,8 +130,25 @@
 
 #ifndef EXCLUDE_ITTYBITTY_MESSAGES
 	#include "IttyBitty_messages.h"
-#elif !defined(EXCLUDE_ITTYBITTY_FIELDS)
-	#define EXCLUDE_ITTYBITTY_FIELDS
+#endif
+
+
+/* [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA */
+
+#if !defined(ARDUINO) || EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
+	#include "IttyBitty_storage_adapters.h"
+	#define EXCLUDE_ITTYBITTY_STORAGE
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_STORAGE
+	#include "IttyBitty_storage.h"
+#endif
+
+
+/* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
+
+#if !defined(ARDUINO) || defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
+	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
 
@@ -211,13 +156,6 @@
 
 #ifndef EXCLUDE_ITTYBITTY_DB
 	#include "IttyBitty_DB.h"
-#endif
-
-
-/* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
-
-#if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
-	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
 

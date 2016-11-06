@@ -1,13 +1,13 @@
 /***********************************************************************************************
-* [IttyBitty_fields.h]: UNIVERSAL DATA STRUCTURES FOR STORING SETTINGS & MESSAGE FIELDS
+* [IttyBitty_params.h]: UNIVERSAL DATA STRUCTURES FOR STORING SETTINGS & MESSAGE PARAMS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_FIELDS_H
-#define _ITTYBITTY_FIELDS_H
+#ifndef _ITTYBITTY_PARAMS_H
+#define _ITTYBITTY_PARAMS_H
 
 		
 #ifdef ARDUINO
@@ -29,8 +29,8 @@ namespace IttyBitty
 
 	EXTERN CBYTE DATA_SIZE_MASK;
 		
-	// Field::ToBinary() / ToString() BUFFER POINTER
-	EXTERN PBYTE __field_buffer;
+	// Param::ToBinary() / ToString() BUFFER POINTER
+	EXTERN PBYTE __param_buffer;
 
 #pragma endregion
 
@@ -41,63 +41,63 @@ namespace IttyBitty
 	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
 	typedef const ISerializable CISERIALIZABLE, *PCISERIALIZABLE, & RCISERIALIZABLE, ** PPCISERIALIZABLE;
 
-	class IField;
-	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
-	typedef const IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
+	class IParam;
+	typedef IParam IPARAM, * PIPARAM, & RIPARAM, ** PPIPARAM, && RRIPARAM;
+	typedef const IParam CIPARAM, *PCIPARAM, & RCIPARAM, ** PPCIPARAM;
 
-	class FieldBase;
-	typedef FieldBase FIELDBASE, * PFIELDBASE, & RFIELDBASE, ** PPFIELDBASE, && RRFIELDBASE;
-	typedef const FieldBase CFIELDBASE, * PCFIELDBASE, & RCFIELDBASE, ** PPCFIELDBASE;
+	class ParamBase;
+	typedef ParamBase PARAMBASE, * PPARAMBASE, & RPARAMBASE, ** PPPARAMBASE, && RRPARAMBASE;
+	typedef const ParamBase CPARAMBASE, * PCPARAMBASE, & RCPARAMBASE, ** PPCPARAMBASE;
 
-	class Field;
-	typedef Field FIELD, * PFIELD, & RFIELD, ** PPFIELD, && RRFIELD;
-	typedef const Field CFIELD, * PCFIELD, & RCFIELD, ** PPCFIELD;
+	class Param;
+	typedef Param PARAM, * PPARAM, & RPARAM, ** PPPARAM, && RRPARAM;
+	typedef const Param CPARAM, * PCPARAM, & RCPARAM, ** PPCPARAM;
 
-	class VarLengthField;
-	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
-	typedef const VarLengthField CVARLENGTHFIELD, * PCVARLENGTHFIELD, & RCVARLENGTHFIELD, ** PPCVARLENGTHFIELD;
+	class VarLengthParam;
+	typedef VarLengthParam VARLENGTHPARAM, * PVARLENGTHPARAM, & RVARLENGTHPARAM, ** PPVARLENGTHPARAM, && RRVARLENGTHPARAM;
+	typedef const VarLengthParam CVARLENGTHPARAM, * PCVARLENGTHPARAM, & RCVARLENGTHPARAM, ** PPCVARLENGTHPARAM;
 
 	template<typename T = BYTE>
-	class TypedField;
+	class TypedParam;
 	template<typename T = BYTE>
-	using TYPEDFIELD = TypedField<T>;
+	using TYPEDPARAM = TypedParam<T>;
 	template<typename T = BYTE>
-	using PTYPEDFIELD = TypedField<T> *;
+	using PTYPEDPARAM = TypedParam<T> *;
 	template<typename T = BYTE>
-	using RTYPEDFIELD = TypedField<T> &;
+	using RTYPEDPARAM = TypedParam<T> &;
 	template<typename T = BYTE>
-	using PPTYPEDFIELD = TypedField<T> **;
+	using PPTYPEDPARAM = TypedParam<T> **;
 	template<typename T = BYTE>
-	using RRTYPEDFIELD = TypedField<T> &&;
+	using RRTYPEDPARAM = TypedParam<T> &&;
 	template<typename T = BYTE>
-	using CTYPEDFIELD = const TypedField<T>;
+	using CTYPEDPARAM = const TypedParam<T>;
 	template<typename T = BYTE>
-	using PCTYPEDFIELD = const TypedField<T> *;
+	using PCTYPEDPARAM = const TypedParam<T> *;
 	template<typename T = BYTE>
-	using RCTYPEDFIELD = const TypedField<T> &;
+	using RCTYPEDPARAM = const TypedParam<T> &;
 	template<typename T = BYTE>
-	using PPCTYPEDFIELD = const TypedField<T> **;
+	using PPCTYPEDPARAM = const TypedParam<T> **;
 
 	template<typename T = PBYTE>
-	class VarLengthTypedField;
+	class VarLengthTypedParam;
 	template<typename T = PBYTE>
-	using VARLENGTHTYPEDFIELD = VarLengthTypedField<T>;
+	using VARLENGTHTYPEDPARAM = VarLengthTypedParam<T>;
 	template<typename T = PBYTE>
-	using PVARLENGTHTYPEDFIELD = VarLengthTypedField<T> *;
+	using PVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> *;
 	template<typename T = PBYTE>
-	using RVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &;
+	using RVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> &;
 	template<typename T = PBYTE>
-	using PPVARLENGTHTYPEDFIELD = VarLengthTypedField<T> **;
+	using PPVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> **;
 	template<typename T = PBYTE>
-	using RRVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &&;
+	using RRVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> &&;
 	template<typename T = PBYTE>
-	using CVARLENGTHTYPEDFIELD = const VarLengthTypedField<T>;
+	using CVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T>;
 	template<typename T = PBYTE>
-	using PCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> *;
+	using PCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> *;
 	template<typename T = PBYTE>
-	using RCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> &;
+	using RCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> &;
 	template<typename T = PBYTE>
-	using PPCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> **;
+	using PPCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> **;
 
 #pragma endregion
 
@@ -122,20 +122,20 @@ namespace IttyBitty
 
 	enum DataType : BYTE
 	{
-		BYTES_FIELD		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
-		STRING_FIELD	= WHO_KNOWS | SIGNED_DATA_TYPE,
-		BIT_FIELD		= WHO_KNOWS | SPECIAL_DATA_TYPE,
+		BYTES_PARAM		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
+		STRING_PARAM	= WHO_KNOWS | SIGNED_DATA_TYPE,
+		BIT_PARAM		= WHO_KNOWS | SPECIAL_DATA_TYPE,
 
-		BYTE_FIELD		= ONE_BYTE | UNSIGNED_DATA_TYPE,
-		CHAR_FIELD		= ONE_BYTE | SIGNED_DATA_TYPE,
-		BOOL_FIELD		= ONE_BYTE | SPECIAL_DATA_TYPE,
+		BYTE_PARAM		= ONE_BYTE | UNSIGNED_DATA_TYPE,
+		CHAR_PARAM		= ONE_BYTE | SIGNED_DATA_TYPE,
+		BOOL_PARAM		= ONE_BYTE | SPECIAL_DATA_TYPE,
 
-		WORD_FIELD		= TWO_BYTES | UNSIGNED_DATA_TYPE,
-		SHORT_FIELD		= TWO_BYTES | SIGNED_DATA_TYPE,
+		WORD_PARAM		= TWO_BYTES | UNSIGNED_DATA_TYPE,
+		SHORT_PARAM		= TWO_BYTES | SIGNED_DATA_TYPE,
 
-		DWORD_FIELD		= FOUR_BYTES | UNSIGNED_DATA_TYPE,
-		LONG_FIELD		= FOUR_BYTES | SIGNED_DATA_TYPE,
-		FLOAT_FIELD		= FOUR_BYTES | SPECIAL_DATA_TYPE
+		DWORD_PARAM		= FOUR_BYTES | UNSIGNED_DATA_TYPE,
+		LONG_PARAM		= FOUR_BYTES | SIGNED_DATA_TYPE,
+		FLOAT_PARAM		= FOUR_BYTES | SPECIAL_DATA_TYPE
 	};
 
 	INLINE DataSize DataTypeToDataSize(DataType dataType)
@@ -188,15 +188,15 @@ namespace IttyBitty
 	};
 
 
-	// [IField] DEFINITION
+	// [IParam] DEFINITION
 
-	INTERFACE IField : public ISerializable
+	INTERFACE IParam : public ISerializable
 	{
 	public:
 
 		// DESTRUCTOR
 
-		VIRTUAL ~IField() { }
+		VIRTUAL ~IParam() { }
 
 		// INTERFACE METHODS
 
@@ -205,21 +205,21 @@ namespace IttyBitty
 
 	protected:
 
-		IField() { }
+		IParam() { }
 	};
 
 #pragma endregion
 
 
-#pragma region [FieldBase] DEFINITION - TAGGED UNION BASE
+#pragma region [ParamBase] DEFINITION - TAGGED UNION BASE
 
-	CLASS FieldBase : public IField
+	CLASS ParamBase : public IParam
 	{
 	public:
 
 		// /DESTRUCTOR
 
-		VIRTUAL ~FieldBase();
+		VIRTUAL ~ParamBase();
 		
 		
 		// ISerializable IMPLEMENTATION
@@ -245,7 +245,7 @@ namespace IttyBitty
 	#endif
 
 
-		// IField IMPLEMENTATION
+		// IParam IMPLEMENTATION
 
 		VIRTUAL CONST DataSize GetDataSize() const;
 		VIRTUAL CONST DataType GetDataType() const;
@@ -264,42 +264,42 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [Field] DEFINITION - TAGGED UNION
+#pragma region [Param] DEFINITION - TAGGED UNION
 
-	CLASS Field : public FieldBase
+	CLASS Param : public ParamBase
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT Field(CONST DataType = DataType::BYTE_FIELD);
+		EXPLICIT Param(CONST DataType = DataType::BYTE_PARAM);
 
-		Field(RCFIELD);
-		Field(RRFIELD);
+		Param(RCPARAM);
+		Param(RRPARAM);
 
-		EXPLICIT Field(RCVALUE, CONST DataType = DataType::BYTE_FIELD);
+		EXPLICIT Param(RCVALUE, CONST DataType = DataType::BYTE_PARAM);
 
-		EXPLICIT Field(RCCHAR);
-		EXPLICIT Field(RCBYTE);
-		EXPLICIT Field(RCBOOL);
-		EXPLICIT Field(RCSHORT);
-		EXPLICIT Field(RCWORD);
-		EXPLICIT Field(RCLONG);
-		EXPLICIT Field(RCDWORD);
-		EXPLICIT Field(RCFLOAT);
+		EXPLICIT Param(RCCHAR);
+		EXPLICIT Param(RCBYTE);
+		EXPLICIT Param(RCBOOL);
+		EXPLICIT Param(RCSHORT);
+		EXPLICIT Param(RCWORD);
+		EXPLICIT Param(RCLONG);
+		EXPLICIT Param(RCDWORD);
+		EXPLICIT Param(RCFLOAT);
 
 
 		// STATIC FUNCTIONS
 
-		STATIC RFIELD NULL_OBJECT();
+		STATIC RPARAM NULL_OBJECT();
 		
 		
 		// OPERATORS
 
-		VIRTUAL RFIELD operator =(RCFIELD);
-		VIRTUAL RFIELD operator =(RRFIELD);
+		VIRTUAL RPARAM operator =(RCPARAM);
+		VIRTUAL RPARAM operator =(RRPARAM);
 
-		VIRTUAL RFIELD operator =(RCVALUE);
+		VIRTUAL RPARAM operator =(RCVALUE);
 
 		VIRTUAL operator RCCHAR() const;
 		VIRTUAL operator RCBYTE() const;
@@ -314,39 +314,39 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region VarLengthField DECLARATION - VARIABLE-LENGTH TAGGED UNION
+#pragma region VarLengthParam DECLARATION - VARIABLE-LENGTH TAGGED UNION
 
-	CLASS VarLengthField : public Field
+	CLASS VarLengthParam : public Param
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT VarLengthField(CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		EXPLICIT VarLengthParam(CONST DataType = DataType::BYTES_PARAM, CSIZE = 0);
 
-		VarLengthField(RCVARLENGTHFIELD);
-		VarLengthField(RRVARLENGTHFIELD);
+		VarLengthParam(RCVARLENGTHPARAM);
+		VarLengthParam(RRVARLENGTHPARAM);
 
-		EXPLICIT VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		EXPLICIT VarLengthParam(RCVALUE, CONST DataType = DataType::BYTES_PARAM, CSIZE = 0);
 
-		EXPLICIT VarLengthField(PCBYTE, CSIZE = 0);
-		EXPLICIT VarLengthField(PCCHAR);
-		EXPLICIT VarLengthField(PCBITPACK, CSIZE = 0);
+		EXPLICIT VarLengthParam(PCBYTE, CSIZE = 0);
+		EXPLICIT VarLengthParam(PCCHAR);
+		EXPLICIT VarLengthParam(PCBITPACK, CSIZE = 0);
 
-		VIRTUAL ~VarLengthField();
+		VIRTUAL ~VarLengthParam();
 		
 		
 		// OPERATORS
 
-		VIRTUAL RVARLENGTHFIELD operator =(RCVARLENGTHFIELD);
-		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
+		VIRTUAL RVARLENGTHPARAM operator =(RCVARLENGTHPARAM);
+		VIRTUAL RVARLENGTHPARAM operator =(RRVARLENGTHPARAM);
 		
 		VIRTUAL operator PCBYTE() const;
 		VIRTUAL operator PCCHAR() const;
 		VIRTUAL operator PCBITPACK() const;
 
 
-		// Field OVERRIDES
+		// Param OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final;
 
@@ -364,23 +364,23 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [TypedField] DEFINITION - TEMPLATED TAGGED UNION
+#pragma region [TypedParam] DEFINITION - TEMPLATED TAGGED UNION
 	
 	template<typename T>
-	CLASS TypedField : public FieldBase
+	CLASS TypedParam : public ParamBase
 	{
 	public:
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		TypedField()
+		TypedParam()
 		{
 			_Dispose = TRUE;
 
-			_DataType = TypedField<T>::FindDataType();
+			_DataType = TypedParam<T>::FindDataType();
 		}
 
-		TypedField(RCTYPEDFIELD<T> other)
+		TypedParam(RCTYPEDPARAM<T> other)
 		{
 			_Dispose = other._Dispose;
 
@@ -388,55 +388,55 @@ namespace IttyBitty
 			_DataType = other._DataType;
 		}
 
-		TypedField(RRTYPEDFIELD<T> other)
+		TypedParam(RRTYPEDPARAM<T> other)
 		{
-			this->~FieldBase();
-			new (this) TypedField<T>(other._Value);
+			this->~ParamBase();
+			new (this) TypedParam<T>(other._Value);
 		}
 
-		TypedField(RCVALUE value)
+		TypedParam(RCVALUE value)
 		{
 			_Value = value;
-			_DataType = TypedField<T>::FindDataType();
+			_DataType = TypedParam<T>::FindDataType();
 		}
 
-		EXPLICIT TypedField(T & value)
+		EXPLICIT TypedParam(T & value)
 		{
-			this->~FieldBase();
-			new (this) TypedField<T>(value);
+			this->~ParamBase();
+			new (this) TypedParam<T>(value);
 		}
 
-		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
+		EXPLICIT TypedParam(SIGNED_TYPE(T &) value)
 		{
-			this->~FieldBase();
-			new (this) TypedField<T>(value);
+			this->~ParamBase();
+			new (this) TypedParam<T>(value);
 		}
 
 
 		// STATIC METHODS
 
-		STATIC RTYPEDFIELD<T> NULL_OBJECT()
+		STATIC RTYPEDPARAM<T> NULL_OBJECT()
 		{
-			STATIC TypedField<T> NULL_TYPEDFIELD;
-			return NULL_TYPEDFIELD;
+			STATIC TypedParam<T> NULL_TYPEDPARAM;
+			return NULL_TYPEDPARAM;
 		}
 		
 		
 		// OPERATORS
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCTYPEDFIELD<T> rValue)
+		VIRTUAL RTYPEDPARAM<T> operator =(RCTYPEDPARAM<T> rValue)
 		{
-			*this = TypedField<T>(rValue);
+			*this = TypedParam<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RRTYPEDFIELD<T> rValue)
+		VIRTUAL RTYPEDPARAM<T> operator =(RRTYPEDPARAM<T> rValue)
 		{
-			*this = TypedField<T>(rValue);
+			*this = TypedParam<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCVALUE rValue)
+		VIRTUAL RTYPEDPARAM<T> operator =(RCVALUE rValue)
 		{
 			_Value = rValue;
 			return *this;
@@ -456,7 +456,7 @@ namespace IttyBitty
 
 		// META-MEMBERS
 
-		typedef T FieldType;
+		typedef T ParamType;
 
 
 	protected:
@@ -465,17 +465,17 @@ namespace IttyBitty
 
 		STATIC CONSTEXPR const DataType FindDataType()
 		{
-			return DataType::BYTE_FIELD;
+			return DataType::BYTE_PARAM;
 		}
 	};
 
 #pragma endregion
 
 
-#pragma region TypedField PARTIAL SPECIALIZATIONS
+#pragma region TypedParam PARTIAL SPECIALIZATIONS
 
 	template<>
-	class TypedField<CHAR>
+	class TypedParam<CHAR>
 	{
 	protected:
 		
@@ -483,12 +483,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::CHAR_FIELD;
+				return DataType::CHAR_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<BYTE>
+	class TypedParam<BYTE>
 	{
 	protected:
 		
@@ -496,12 +496,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BYTE_FIELD;
+				return DataType::BYTE_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<BOOL>
+	class TypedParam<BOOL>
 	{
 	protected:
 		
@@ -509,12 +509,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BOOL_FIELD;
+				return DataType::BOOL_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<SHORT>
+	class TypedParam<SHORT>
 	{
 	protected:
 		
@@ -522,12 +522,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::SHORT_FIELD;
+				return DataType::SHORT_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<WORD>
+	class TypedParam<WORD>
 	{
 	protected:
 		
@@ -535,12 +535,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::WORD_FIELD;
+				return DataType::WORD_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<LONG>
+	class TypedParam<LONG>
 	{
 	protected:
 		
@@ -548,12 +548,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::LONG_FIELD;
+				return DataType::LONG_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<DWORD>
+	class TypedParam<DWORD>
 	{
 	protected:
 		
@@ -561,12 +561,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::DWORD_FIELD;
+				return DataType::DWORD_PARAM;
 			}
 	};
 
 	template<>
-	class TypedField<FLOAT>
+	class TypedParam<FLOAT>
 	{
 	protected:
 		
@@ -574,33 +574,33 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::FLOAT_FIELD;
+				return DataType::FLOAT_PARAM;
 			}
 	};
 
 #pragma endregion
 
 	
-#pragma region [VarLengthTypedField] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
+#pragma region [VarLengthTypedParam] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
 	template<typename T>
 	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
 
 	template<typename T>
-	CLASS VarLengthTypedField : public TypedField<T>
+	CLASS VarLengthTypedParam : public TypedParam<T>
 	{
 	public:
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		VarLengthTypedField(CSIZE length = 0) : TypedField<T>()
+		VarLengthTypedParam(CSIZE length = 0) : TypedParam<T>()
 		{
 			_Value = new T[length];
-			_DataType = VarLengthTypedField<T>::FindDataType();
+			_DataType = VarLengthTypedParam<T>::FindDataType();
 			_Length = length;
 		}
 
-		VarLengthTypedField(RCVARLENGTHTYPEDFIELD<T> other)
+		VarLengthTypedParam(RCVARLENGTHTYPEDPARAM<T> other)
 		{
 			_Dispose = other._Dispose;
 
@@ -609,18 +609,18 @@ namespace IttyBitty
 			_Length = other._Length;
 		}
 
-		VarLengthTypedField(RRVARLENGTHTYPEDFIELD<T> other)
+		VarLengthTypedParam(RRVARLENGTHTYPEDPARAM<T> other)
 		{
-			this->~VarLengthTypedField<T>();
-			new (this) VarLengthTypedField<T>(other._Value);
+			this->~VarLengthTypedParam<T>();
+			new (this) VarLengthTypedParam<T>(other._Value);
 		}
 
-		VarLengthTypedField(RCVALUE value, CSIZE length = 0)
+		VarLengthTypedParam(RCVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
-			_DataType = VarLengthTypedField<T>::FindDataType();
+			_DataType = VarLengthTypedParam<T>::FindDataType();
 
-			if (_DataType == DataType::STRING_FIELD)
+			if (_DataType == DataType::STRING_PARAM)
 			{
 				if (value.String == NULL)
 					_Length = 0;
@@ -633,17 +633,17 @@ namespace IttyBitty
 			}
 		}
 
-		EXPLICIT VarLengthTypedField(T & value)
+		EXPLICIT VarLengthTypedParam(T & value)
 		{
-			new (this) VarLengthTypedField<T>(value);
+			new (this) VarLengthTypedParam<T>(value);
 		}
 
-		VIRTUAL ~VarLengthTypedField()
+		VIRTUAL ~VarLengthTypedParam()
 		{
 			if (!_Dispose)
 				return;
 
-			//if (_Length > 0 || _DataType == DataType::STRING_FIELD)
+			//if (_Length > 0 || _DataType == DataType::STRING_PARAM)
 			//	_Value.FreeData();
 		}
 		
@@ -661,14 +661,14 @@ namespace IttyBitty
 		}
 
 
-		//  IField OVERRIDES
+		//  IParam OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final
 		{
 			if (_Length > 0)
 				return _Length;
 
-			return FieldBase::ByteWidth();
+			return ParamBase::ByteWidth();
 		}
 		
 		VIRTUAL VOID FromBinary(PCBYTE data) final
@@ -677,7 +677,7 @@ namespace IttyBitty
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
-			FieldBase::FromBinary(data);
+			ParamBase::FromBinary(data);
 		}
 		
 		VIRTUAL VOID FromString(PCCHAR data) final
@@ -686,7 +686,7 @@ namespace IttyBitty
 
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-			FieldBase::FromString(data);
+			ParamBase::FromString(data);
 			
 			// TODO
 			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
@@ -700,17 +700,17 @@ namespace IttyBitty
 
 	protected:
 
-		using TypedField<T>::_Dispose;
-		using TypedField<T>::_Value;
-		using TypedField<T>::_DataType;
-		using TypedField<T>::IttyBitty::__field_buffer;
+		using TypedParam<T>::_Dispose;
+		using TypedParam<T>::_Value;
+		using TypedParam<T>::_DataType;
+		using TypedParam<T>::IttyBitty::__param_buffer;
 
 		
 		// PROTECTED STATIC FUNCTIONS
 
 		STATIC CONSTEXPR const DataType FindDataType()
 		{
-			return TypedField<T>::FindDataType();
+			return TypedParam<T>::FindDataType();
 		}
 
 
@@ -722,10 +722,10 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region VarLengthTypedField PARTIAL SPECIALIZATIONS
+#pragma region VarLengthTypedParam PARTIAL SPECIALIZATIONS
 
 	template<>
-	class VarLengthTypedField<PBYTE>
+	class VarLengthTypedParam<PBYTE>
 	{
 	protected:
 		
@@ -733,12 +733,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BYTES_FIELD;
+				return DataType::BYTES_PARAM;
 			}
 	};
 
 	template<>
-	class VarLengthTypedField<PCHAR>
+	class VarLengthTypedParam<PCHAR>
 	{
 	protected:
 		
@@ -746,12 +746,12 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::STRING_FIELD;
+				return DataType::STRING_PARAM;
 			}
 	};
 
 	template<>
-	class VarLengthTypedField<BOOL>
+	class VarLengthTypedParam<BOOL>
 	{
 	protected:
 		
@@ -759,7 +759,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BIT_FIELD;
+				return DataType::BIT_PARAM;
 			}
 	};
 
@@ -807,39 +807,39 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region FIELD PARSING METHODS
+#pragma region PARAM PARSING METHODS
 	
-	INLINE PIFIELD FieldFromBytes(PCBYTE data)
+	INLINE PIPARAM ParamFromBytes(PCBYTE data)
 	{
-		PIFIELD field = NULL;
+		PIPARAM param = NULL;
 
 		SIZE length = static_cast<SIZE>(*data);
 
 		if (length == 0 || length > 4)
-			field = new VarLengthField();
+			param = new VarLengthParam();
 		else
-			field = new Field();
+			param = new Param();
 
-		field->FromBinary(data);
+		param->FromBinary(data);
 
-		return field;
+		return param;
 	}
 	
-	INLINE PIFIELD FieldFromString(PCCHAR data)
+	INLINE PIPARAM ParamFromString(PCCHAR data)
 	{
-		PIFIELD field = NULL;
+		PIPARAM param = NULL;
 		SIZE length = 0;
 
 		StringReadValue<SIZE>(length, data);
 
 		if (length == 0 || length > 4)
-			field = new VarLengthField();
+			param = new VarLengthParam();
 		else
-			field = new Field();
+			param = new Param();
 
-		field->FromString(data);
+		param->FromString(data);
 
-		return field;
+		return param;
 	}
 
 #pragma endregion

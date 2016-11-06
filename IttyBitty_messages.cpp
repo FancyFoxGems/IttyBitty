@@ -4,6 +4,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#if defined(EXCLUDE_ITTY_BITTY_PARAMS) && !defined(EXCLUDE_ITTYBITTY_MESSAGES)
+	#define EXCLUDE_ITTYBITTY_MESSAGES
+#endif
+
 #ifndef EXCLUDE_ITTYBITTY_MESSAGES
 
 #include "IttyBitty_messages.h"
@@ -28,7 +32,7 @@ Message::Message(CBYTE messageCode, CBYTE paramCount)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE), _Params(NULL)
 {
 	if (_ParamCount > 0)
-		_Params = new PIFIELD[_ParamCount];
+		_Params = new PIPARAM[_ParamCount];
 }
 
 Message::Message(RCMESSAGE other)
@@ -36,9 +40,9 @@ Message::Message(RCMESSAGE other)
 	this->~Message();
 
 #ifdef _DEBUG
-	_Params[0] = FieldFromString(other.ToString());
+	_Params[0] = ParamFromString(other.ToString());
 #else
-	_Params[0] = FieldFromBytes(other.ToBytes());
+	_Params[0] = ParamFromBytes(other.ToBinary());
 #endif
 }
 
@@ -51,7 +55,7 @@ Message::Message(RRMESSAGE other)
 
 Message::Message(PCBYTE data)
 {
-	this->FromBytes(data);
+	this->FromBinary(data);
 }
 
 Message::Message(PCCHAR data)
@@ -59,26 +63,26 @@ Message::Message(PCCHAR data)
 	this->FromString(data);
 }
 
-Message::Message(CBYTE messageCode, PIFIELD param)
+Message::Message(CBYTE messageCode, PIPARAM param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {
-	_Params = new PIFIELD[_ParamCount];
+	_Params = new PIPARAM[_ParamCount];
 	_Params[0] = param;
 }
 
-Message::Message(CBYTE messageCode, RCIFIELD param)
+Message::Message(CBYTE messageCode, RCIPARAM param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {
-	_Params = new PIFIELD[_ParamCount];
+	_Params = new PIPARAM[_ParamCount];
 
 #ifdef _DEBUG
-	_Params[0] = FieldFromString(param.ToString());
+	_Params[0] = ParamFromString(param.ToString());
 #else
-	_Params[0] = FieldFromBytes(param.ToBytes());
+	_Params[0] = ParamFromBytes(param.ToBinary());
 #endif
 }
 
-Message::Message(CBYTE messageCode, CBYTE paramCount, PPIFIELD params)
+Message::Message(CBYTE messageCode, CBYTE paramCount, PPIPARAM params)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
 
 Message::~Message()
@@ -124,7 +128,7 @@ RMESSAGE Message::operator=(RCMESSAGE other)
 	return *this;
 }
 
-PCIFIELD Message::operator[](CBYTE i) const
+PCIPARAM Message::operator[](CBYTE i) const
 {
 	if (_Params == NULL)
 		return NULL;
@@ -132,7 +136,7 @@ PCIFIELD Message::operator[](CBYTE i) const
 	return _Params[i];
 }
 
-PIFIELD Message::operator[](CBYTE i)
+PIPARAM Message::operator[](CBYTE i)
 {
 	if (_Params == NULL)
 		return NULL;
@@ -153,12 +157,12 @@ CBYTE Message::GetParamCount() const
 	return _ParamCount;
 }
 
-RCIFIELD Message::Param(CBYTE i) const
+RCIPARAM Message::Param(CBYTE i) const
 {
 	return *this->operator[](i);
 }
 
-RIFIELD Message::Param(CBYTE i)
+RIPARAM Message::Param(CBYTE i)
 {
 	return *this->operator[](i);
 }
@@ -182,7 +186,7 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 
 // ISerializable IMPLEMENTATION
 
-CSIZE Message::ByteSize() const
+CSIZE Message::BinarySize() const
 {
 	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->GetParamsByteSize();
 }
@@ -212,9 +216,9 @@ CSIZE Message::StringLength() const
 	return size;
 }
 
-PCBYTE Message::ToBytes() const
+PCBYTE Message::ToBinary() const
 {
-	CSIZE size = this->ByteSize();
+	CSIZE size = this->BinarySize();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
@@ -231,7 +235,7 @@ PCBYTE Message::ToBytes() const
 	CBYTE paramCount = this->GetParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
-	PIFIELD param = NULL;
+	PIPARAM param = NULL;
 	PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
 
@@ -239,8 +243,8 @@ PCBYTE Message::ToBytes() const
 	for (SIZE i = 0; i < paramCount; i++)
 	{
 		param = _Params[i];
-		paramBytes = param->ToBytes();
-		paramSize = param->ByteSize();
+		paramBytes = param->ToBinary();
+		paramSize = param->BinarySize();
 
 		memcpy(bufferPtr, paramBytes, paramSize);
 
@@ -267,7 +271,7 @@ PCCHAR Message::ToString() const
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
 	
-	PIFIELD param = NULL;
+	PIPARAM param = NULL;
 	PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
 
@@ -289,7 +293,7 @@ PCCHAR Message::ToString() const
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
 
-VOID Message::FromBytes(PCBYTE data)
+VOID Message::FromBinary(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
 
@@ -299,13 +303,13 @@ VOID Message::FromBytes(PCBYTE data)
 	this->Dispose();
 
 	if (_ParamCount > 0)
-		_Params = new PIFIELD[_ParamCount];
+		_Params = new PIPARAM[_ParamCount];
 	
 	_Dispose = TRUE;
 
 	for (SIZE i = 0; i < _ParamCount; i++)
 	{
-		_Params[i] = FieldFromBytes(bufferPtr);
+		_Params[i] = ParamFromBytes(bufferPtr);
 
 		bufferPtr += _Params[i]->ByteWidth();
 	}
@@ -321,13 +325,13 @@ VOID Message::FromString(PCCHAR data)
 	this->Dispose();
 
 	if (_ParamCount > 0)
-		_Params = new PIFIELD[_ParamCount];
+		_Params = new PIPARAM[_ParamCount];
 
 	_Dispose = TRUE;
 
 	for (BYTE i = 0; i < _ParamCount; i++)
 	{
-		_Params[i] = FieldFromString(bufferPtr);
+		_Params[i] = ParamFromString(bufferPtr);
 
 		bufferPtr += _Params[i]->StringSize() - 1;
 	}
@@ -373,8 +377,8 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->StringSize();
 	PCCHAR buffer = this->ToString();
 #else
-	SIZE msgSize = this->ByteSize();
-	PCBYTE buffer = this->ToBytes();
+	SIZE msgSize = this->BinarySize();
+	PCBYTE buffer = this->ToBinary();
 #endif
 	
 	for (BYTE i = 0; i < size; i++)
@@ -398,7 +402,7 @@ CSIZE Message::GetParamsByteSize() const
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i]->ByteSize();
+		size += _Params[i]->BinarySize();
 
 	return size;
 }

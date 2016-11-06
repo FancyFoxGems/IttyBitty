@@ -4,14 +4,14 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_DB)
-	#define EXCLUDE_ITTYBITTY_DB
+#if defined(ITTYBITTY_BASE) && !defined(EXCLUDE_ITTYBITTY_STORAGE)
+	#define EXCLUDE_ITTYBITTY_STORAGE
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_DB
+#ifndef EXCLUDE_ITTYBITTY_STORAGE
 
 
-#include "IttyBitty_DB_adapters.h"
+#include "IttyBitty_storage.h"
 
 using namespace IttyBitty;
 
@@ -25,4 +25,4 @@ using namespace IttyBitty;
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DB
+#endif	// #ifndef EXCLUDE_ITTYBITTY_STORAGE

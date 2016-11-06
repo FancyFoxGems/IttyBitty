@@ -1,5 +1,6 @@
-/***********************************************************************************************
+/************************************************************************************************
 * [IttyBitty_slim.h]: A STRIPPED-DOWN BUNDLING OF ITTYBITTY'S FUNCTIONALITY
+*
 *
 *	LIBRARY - SLIM BUNDLE: BASIC UTILITY HELPERS & BIT MANIPULATION MACROS ONLY
 *	NOTE: ^-- Uses hardly ANY program space or memory!
@@ -20,16 +21,40 @@
 * [IttyBitty_registers.h]: REGISTER VARIABLE TYPE & SFR MACROS
 *	NOTE: ^-- In Slim bundle, no structure-based abstractions
 *
-* [IttyBitty_GPIO.h]: MACROS FOR PIN ACCESS & MANIPULATION
+* [IttyBitty_GPIO.h]: MACROS & FUNCTIONS FOR PIN ACCESS & MANIPULATION
 *	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
 *
-* This file is part of the Itty Bitty Arduino library.
+*
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
-***********************************************************************************************/
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
+************************************************************************************************/
 
 #ifndef ITTYBITTY_SLIM
 	#define ITTYBITTY_SLIM
 #endif
 
-#include "IttyBitty.h"
+#ifndef EXCLUDE_ITTYBITTY_INFO
+	#define EXCLUDE_ITTYBITTY_INFO
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES
+	#define EXCLUDE_ITTYBITTY_BYTES
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_INTERRUPTS
+	#define EXCLUDE_ITTYBITTY_INTERRUPTS
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_LED
+	#define EXCLUDE_ITTYBITTY_LED
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_PRINT
+	#define EXCLUDE_ITTYBITTY_PRINT
+#endif
+
+#ifndef EXCLUDE_ITTYBITTY_MESSAGES
+	#define EXCLUDE_ITTYBITTY_MESSAGES
+#endif
+
+#include "IttyBitty_base.h"

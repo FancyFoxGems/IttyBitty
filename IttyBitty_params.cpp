@@ -4,14 +4,14 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTYBITTY_DB) && !defined(EXCLUDE_ITTYBITTY_FIELDS)
-	#define EXCLUDE_ITTYBITTY_FIELDS
+#if defined(EXCLUDE_ITTYBITTY_MESSAGES) && defined(EXCLUDE_ITTYBITTY_STORAGE) && !defined(EXCLUDE_ITTYBITTY_PARAMS)
+	#define EXCLUDE_ITTYBITTY_PARAMS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_FIELDS
+#ifndef EXCLUDE_ITTYBITTY_PARAMS
 
 
-#include "IttyBitty_fields.h"
+#include "IttyBitty_params.h"
 
 using namespace IttyBitty;
 
@@ -24,61 +24,61 @@ CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
 
 CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
 
-PBYTE IttyBitty::__field_buffer = NULL;
+PBYTE IttyBitty::__param_buffer = NULL;
 
 #pragma endregion
 
 
-#pragma region [FieldBase] IMPLEMENTATION
+#pragma region [ParamBase] IMPLEMENTATION
 
 // DESTRUCTOR
 
 #include "IttyBitty_print.h"
-FieldBase::~FieldBase()
+ParamBase::~ParamBase()
 {
 	if (!_Dispose)
 		return;
 
 	// TODO
-	PrintLine(F("~FieldBase"));
+	PrintLine(F("~ParamBase"));
 
-	if (_DataType == DataType::BYTES_FIELD || _DataType == DataType::STRING_FIELD || _DataType == DataType::BIT_FIELD)
+	if (_DataType == DataType::BYTES_PARAM || _DataType == DataType::STRING_PARAM || _DataType == DataType::BIT_PARAM)
 		_Value.FreeData();
 }
 				
 
 // ISerializable IMPLEMENTATION
 
-CSIZE FieldBase::BinarySize() const
+CSIZE ParamBase::BinarySize() const
 {
 	return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
 }
 
-CSIZE FieldBase::StringSize() const
+CSIZE ParamBase::StringSize() const
 {
 	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
 }
 
-CSIZE FieldBase::ByteWidth() const
+CSIZE ParamBase::ByteWidth() const
 {
 	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 }
 
-CSIZE FieldBase::StringLength() const
+CSIZE ParamBase::StringLength() const
 {
 	return 2 * this->ByteWidth();
 }
 
-PCBYTE FieldBase::ToBinary() const
+PCBYTE ParamBase::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__field_buffer)
-		delete[] __field_buffer;
+	if (__param_buffer)
+		delete[] __param_buffer;
 
-	__field_buffer = new BYTE[size];
+	__param_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __field_buffer;
+	PBYTE bufferPtr = __param_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
@@ -90,21 +90,21 @@ PCBYTE FieldBase::ToBinary() const
 	if (byteWidth > 0)
 		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
 
-	return __field_buffer;
+	return __param_buffer;
 }
 
-PCCHAR FieldBase::ToString() const
+PCCHAR ParamBase::ToString() const
 {
 	CSIZE size = this->StringSize();
 	CSIZE byteWidth = this->ByteWidth();
 	
-	if (__field_buffer)
-		delete[] __field_buffer;
+	if (__param_buffer)
+		delete[] __param_buffer;
 
-	__field_buffer = new BYTE[size];
-	__field_buffer[size - 1] = '\0';
+	__param_buffer = new BYTE[size];
+	__param_buffer[size - 1] = '\0';
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__param_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
@@ -113,23 +113,23 @@ PCCHAR FieldBase::ToString() const
 
 	switch (_DataType)
 	{
-	case DataType::BYTE_FIELD:
-	case DataType::CHAR_FIELD:
-	case DataType::BOOL_FIELD:
+	case DataType::BYTE_PARAM:
+	case DataType::CHAR_PARAM:
+	case DataType::BOOL_PARAM:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::WORD_FIELD:
-	case DataType::SHORT_FIELD:
+	case DataType::WORD_PARAM:
+	case DataType::SHORT_PARAM:
 		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
 			
-	case DataType::DWORD_FIELD:
-	case DataType::LONG_FIELD:	
-	case DataType::FLOAT_FIELD:
+	case DataType::DWORD_PARAM:
+	case DataType::LONG_PARAM:	
+	case DataType::FLOAT_PARAM:
 
 		bytes = (PBYTE)&(_Value.DWord);
 		break;
@@ -141,16 +141,16 @@ PCCHAR FieldBase::ToString() const
 		for (SIZE i = 0; i < byteWidth; i++)
 			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
 
-		return reinterpret_cast<PCCHAR>(__field_buffer);
+		return reinterpret_cast<PCCHAR>(__param_buffer);
 	}
 	
 	for (SIZE i = 0; i < 4 - byteWidth; i++)
 		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
 	
-	return reinterpret_cast<PCCHAR>(__field_buffer);
+	return reinterpret_cast<PCCHAR>(__param_buffer);
 }
 
-VOID FieldBase::FromBinary(PCBYTE data)
+VOID ParamBase::FromBinary(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
 
@@ -160,23 +160,23 @@ VOID FieldBase::FromBinary(PCBYTE data)
 
 	switch (_DataType)
 	{
-	case DataType::BYTE_FIELD:
-	case DataType::CHAR_FIELD:
-	case DataType::BOOL_FIELD:
+	case DataType::BYTE_PARAM:
+	case DataType::CHAR_PARAM:
+	case DataType::BOOL_PARAM:
 
 		_Value = *((PBYTE)bufferPtr);
 		break;
 		
-	case DataType::WORD_FIELD:
-	case DataType::SHORT_FIELD:
+	case DataType::WORD_PARAM:
+	case DataType::SHORT_PARAM:
 		
 
 		_Value = *((PWORD)bufferPtr);
 		break;
 		
-	case DataType::DWORD_FIELD:
-	case DataType::LONG_FIELD:		
-	case DataType::FLOAT_FIELD:
+	case DataType::DWORD_PARAM:
+	case DataType::LONG_PARAM:		
+	case DataType::FLOAT_PARAM:
 
 		_Value = *((PDWORD)bufferPtr);
 		break;
@@ -187,7 +187,7 @@ VOID FieldBase::FromBinary(PCBYTE data)
 	}
 }
 
-VOID FieldBase::FromString(PCCHAR data)
+VOID ParamBase::FromString(PCCHAR data)
 {
 	PCCHAR bufferPtr = data;
 
@@ -201,22 +201,22 @@ VOID FieldBase::FromString(PCCHAR data)
 	
 	switch (_DataType)
 	{
-	case DataType::BYTE_FIELD:
-	case DataType::CHAR_FIELD:
-	case DataType::BOOL_FIELD:
+	case DataType::BYTE_PARAM:
+	case DataType::CHAR_PARAM:
+	case DataType::BOOL_PARAM:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::WORD_FIELD:
-	case DataType::SHORT_FIELD:		
+	case DataType::WORD_PARAM:
+	case DataType::SHORT_PARAM:		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
 		
-	case DataType::DWORD_FIELD:
-	case DataType::LONG_FIELD:		
-	case DataType::FLOAT_FIELD:
+	case DataType::DWORD_PARAM:
+	case DataType::LONG_PARAM:		
+	case DataType::FLOAT_PARAM:
 
 		bytes = (PBYTE)&(_Value.DWord);
 		break;
@@ -237,7 +237,7 @@ VOID FieldBase::FromString(PCCHAR data)
 
 #ifdef ARDUINO
 
-BOOL FieldBase::Transmit(HardwareSerial & serial)
+BOOL ParamBase::Transmit(HardwareSerial & serial)
 {
 	if (!serial.availableForWrite())
 		delay(SERIAL_DEFAULT_TIMEOUT_MS);
@@ -252,7 +252,7 @@ BOOL FieldBase::Transmit(HardwareSerial & serial)
 	return TRUE;
 }
 
-BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
+BOOL ParamBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 {
 	twi.beginTransmission(i2cAddr);
 
@@ -267,7 +267,7 @@ BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
 	return TRUE;
 }
 
-SIZE FieldBase::printTo(Print & printer) const
+SIZE ParamBase::printTo(Print & printer) const
 {
 #ifdef _DEBUG
 	SIZE size = this->StringSize();
@@ -280,8 +280,8 @@ SIZE FieldBase::printTo(Print & printer) const
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
 
-	delete[] __field_buffer;
-	__field_buffer = NULL;
+	delete[] __param_buffer;
+	__param_buffer = NULL;
 
 	return size;
 }
@@ -289,14 +289,14 @@ SIZE FieldBase::printTo(Print & printer) const
 #endif	// #ifdef ARDUINO
 
 
-// IField IMPLEMENTATION
+// IParam IMPLEMENTATION
 
-CONST DataSize FieldBase::GetDataSize() const
+CONST DataSize ParamBase::GetDataSize() const
 {
 	return DataTypeToDataSize(_DataType);
 }
 
-CONST DataType FieldBase::GetDataType() const
+CONST DataType ParamBase::GetDataType() const
 {
 	return _DataType;
 }
@@ -305,18 +305,18 @@ CONST DataType FieldBase::GetDataType() const
 
 
 
-#pragma region [Field] IMPLEMENTATION
+#pragma region [Param] IMPLEMENTATION
 
 // CONSTRUCTORS
 
-Field::Field(CONST DataType dataType)
+Param::Param(CONST DataType dataType)
 {
 	_Dispose = TRUE;
 	
 	_DataType = dataType;
 }
 
-Field::Field(RCFIELD other)
+Param::Param(RCPARAM other)
 {
 	_Dispose = other._Dispose;
 
@@ -324,132 +324,132 @@ Field::Field(RCFIELD other)
 	_DataType = other._DataType;
 }
 
-Field::Field(RRFIELD other)
+Param::Param(RRPARAM other)
 {
-	this->~FieldBase();
-	new (this) Field(other._Value, other._DataType);
+	this->~ParamBase();
+	new (this) Param(other._Value, other._DataType);
 }
 
-Field::Field(RCVALUE value, CONST DataType dataType)
+Param::Param(RCVALUE value, CONST DataType dataType)
 {
 	_Value = value;
 	_DataType = dataType;
 }
 
-Field::Field(RCCHAR value)
+Param::Param(RCCHAR value)
 {
 	_Value = value;
-	_DataType = DataType::CHAR_FIELD;
+	_DataType = DataType::CHAR_PARAM;
 }
 
-Field::Field(RCBYTE value)
+Param::Param(RCBYTE value)
 {
 	_Value = value;
-	_DataType = DataType::BYTE_FIELD;
+	_DataType = DataType::BYTE_PARAM;
 }
 
-Field::Field(RCBOOL value)
+Param::Param(RCBOOL value)
 {
 	_Value = value;
-	_DataType = DataType::BOOL_FIELD;
+	_DataType = DataType::BOOL_PARAM;
 }
 
-Field::Field(RCSHORT value)
+Param::Param(RCSHORT value)
 {
 	_Value = value;
-	_DataType = DataType::SHORT_FIELD;
+	_DataType = DataType::SHORT_PARAM;
 }
 
-Field::Field(RCWORD value)
+Param::Param(RCWORD value)
 {
 	_Value = value;
-	_DataType = DataType::WORD_FIELD;
+	_DataType = DataType::WORD_PARAM;
 }
 
-Field::Field(RCLONG value)
+Param::Param(RCLONG value)
 {
 	_Value = value;
-	_DataType = DataType::LONG_FIELD;
+	_DataType = DataType::LONG_PARAM;
 }
 
-Field::Field(RCDWORD value)
+Param::Param(RCDWORD value)
 {
 	_Value = value;
-	_DataType = DataType::DWORD_FIELD;
+	_DataType = DataType::DWORD_PARAM;
 }
 
-Field::Field(RCFLOAT value)
+Param::Param(RCFLOAT value)
 {
 	_Value = value;
-	_DataType = DataType::FLOAT_FIELD;
+	_DataType = DataType::FLOAT_PARAM;
 }
 
 
 // STATIC FUNCTIONS
 
-RFIELD Field::NULL_OBJECT()
+RPARAM Param::NULL_OBJECT()
 {
-	STATIC Field NULL_FIELD;
-	return NULL_FIELD;
+	STATIC Param NULL_PARAM;
+	return NULL_PARAM;
 }
 
 
 // OPERATORS
 
-RFIELD Field::operator =(RCFIELD rValue)
+RPARAM Param::operator =(RCPARAM rValue)
 {
-	*this = Field(rValue);
+	*this = Param(rValue);
 	return *this;
 }
 
-RFIELD Field::operator =(RRFIELD rValue)
+RPARAM Param::operator =(RRPARAM rValue)
 {
-	*this = Field(rValue);
+	*this = Param(rValue);
 	return *this;
 }
 
-RFIELD Field::operator =(RCVALUE rValue)
+RPARAM Param::operator =(RCVALUE rValue)
 {
 	_Value = rValue;
 	return *this;
 }
 
 
-Field::operator RCCHAR() const
+Param::operator RCCHAR() const
 {
 	return _Value;
 }
 
-Field::operator RCBYTE() const
+Param::operator RCBYTE() const
 {
 	return _Value;
 }
 
-Field::operator RCBOOL() const
+Param::operator RCBOOL() const
 {
 	return _Value;
 }
-Field::operator RCSHORT() const
-{
-	return _Value;
-}
-
-Field::operator RCWORD() const
+Param::operator RCSHORT() const
 {
 	return _Value;
 }
 
-Field::operator RCLONG() const
+Param::operator RCWORD() const
 {
 	return _Value;
 }
 
-Field::operator RCDWORD() const
+Param::operator RCLONG() const
 {
 	return _Value;
 }
 
-Field::operator RCFLOAT() const
+Param::operator RCDWORD() const
+{
+	return _Value;
+}
+
+Param::operator RCFLOAT() const
 {
 	return _Value;
 }
@@ -457,26 +457,26 @@ Field::operator RCFLOAT() const
 #pragma endregion
 
 
-#pragma region [VarLengthField] IMPLEMENTATION
+#pragma region [VarLengthParam] IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthField::VarLengthField(CONST DataType dataType, CSIZE length) 
-	: Field(dataType), _Length(length)
+VarLengthParam::VarLengthParam(CONST DataType dataType, CSIZE length) 
+	: Param(dataType), _Length(length)
 {
 	switch (dataType)
 	{
-	case DataType::BYTES_FIELD:
+	case DataType::BYTES_PARAM:
 
 		_Value = new BYTE[length];
 		break;
 
-	case DataType::STRING_FIELD:
+	case DataType::STRING_PARAM:
 
 		_Value = new CHAR[length];
 		break;
 
-	case DataType::BIT_FIELD:
+	case DataType::BIT_PARAM:
 
 		_Value = new BITPACK[length];
 		break;
@@ -486,7 +486,7 @@ VarLengthField::VarLengthField(CONST DataType dataType, CSIZE length)
 	}
 }
 
-VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
+VarLengthParam::VarLengthParam(RCVARLENGTHPARAM other)
 {
 	_Dispose = other._Dispose;
 
@@ -495,16 +495,16 @@ VarLengthField::VarLengthField(RCVARLENGTHFIELD other)
 	_Length = other._Length;
 }
 
-VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
+VarLengthParam::VarLengthParam(RRVARLENGTHPARAM other)
 {
-	this->~VarLengthField();
-	new (this) VarLengthField(other._Value, other._DataType, other._Length);
+	this->~VarLengthParam();
+	new (this) VarLengthParam(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RCVALUE value, CONST DataType dataType, CSIZE length) 
-	: Field(value, dataType)
+VarLengthParam::VarLengthParam(RCVALUE value, CONST DataType dataType, CSIZE length) 
+	: Param(value, dataType)
 {
-	if (_DataType == DataType::STRING_FIELD)
+	if (_DataType == DataType::STRING_PARAM)
 	{
 		if (value.String == NULL)
 			_Length = 0;
@@ -517,16 +517,16 @@ VarLengthField::VarLengthField(RCVALUE value, CONST DataType dataType, CSIZE len
 	}
 }
 
-VarLengthField::VarLengthField(PCBYTE value, CSIZE length) 
-	: Field(DataType::BYTES_FIELD), _Length(length)
+VarLengthParam::VarLengthParam(PCBYTE value, CSIZE length) 
+	: Param(DataType::BYTES_PARAM), _Length(length)
 {
 	_Dispose = FALSE;
 
 	_Value = value;
 }
 
-VarLengthField::VarLengthField(PCCHAR value) 
-	: Field(DataType::STRING_FIELD)
+VarLengthParam::VarLengthParam(PCCHAR value) 
+	: Param(DataType::STRING_PARAM)
 {
 	_Dispose = FALSE;
 	
@@ -538,81 +538,81 @@ VarLengthField::VarLengthField(PCCHAR value)
 		_Length = strlen(value);
 }
 
-VarLengthField::VarLengthField(PCBITPACK value, CSIZE length) 
-	: Field(DataType::BIT_FIELD), _Length(length)
+VarLengthParam::VarLengthParam(PCBITPACK value, CSIZE length) 
+	: Param(DataType::BIT_PARAM), _Length(length)
 {
 	_Dispose = FALSE;
 
 	_Value = value;
 }
 
-VarLengthField::~VarLengthField()
+VarLengthParam::~VarLengthParam()
 {
 	if (!_Dispose)
 		return;
 	
-	//if (_Length > 0 || _DataType == DataType::STRING_FIELD)
+	//if (_Length > 0 || _DataType == DataType::STRING_PARAM)
 	//	_Value.FreeData();
 }
 
 
 // OPERATORS
 
-RVARLENGTHFIELD VarLengthField::operator =(RCVARLENGTHFIELD rValue)
+RVARLENGTHPARAM VarLengthParam::operator =(RCVARLENGTHPARAM rValue)
 {
-	*this = VarLengthField(rValue);
+	*this = VarLengthParam(rValue);
 	return *this;
 }
 
-RVARLENGTHFIELD VarLengthField::operator =(RRVARLENGTHFIELD rValue)
+RVARLENGTHPARAM VarLengthParam::operator =(RRVARLENGTHPARAM rValue)
 {
-	*this = VarLengthField(rValue);
+	*this = VarLengthParam(rValue);
 	return *this;
 }
 
 
-VarLengthField::operator PCBYTE() const
+VarLengthParam::operator PCBYTE() const
 {
 	return _Value;
 }
 
-VarLengthField::operator PCCHAR() const
+VarLengthParam::operator PCCHAR() const
 {
 	return _Value;
 }
 
-VarLengthField::operator PCBITPACK() const
+VarLengthParam::operator PCBITPACK() const
 {
 	return _Value;
 }
 
 
-// Field OVERRIDES
+// Param OVERRIDES
 
-CSIZE VarLengthField::ByteWidth() const
+CSIZE VarLengthParam::ByteWidth() const
 {
 	if (_Length > 0)
 		return _Length;
 
-	return FieldBase::ByteWidth();
+	return ParamBase::ByteWidth();
 }
 
-VOID VarLengthField::FromBinary(PCBYTE data)
+VOID VarLengthParam::FromBinary(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
 
 	_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
-	FieldBase::FromBinary(data);
+	ParamBase::FromBinary(data);
 }
 
-VOID VarLengthField::FromString(PCCHAR data)
+VOID VarLengthParam::FromString(PCCHAR data)
 {
 	PCCHAR bufferPtr = data;
 
 	bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-	FieldBase::FromString(data);
+	ParamBase::FromString(data);
 
 	// TODO
 	//PCCHAR bufferPtr = data;
@@ -625,23 +625,23 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 	//switch (_DataType)
 	//{
-	//case DataType::BYTE_FIELD:
-	//case DataType::CHAR_FIELD:
-	//case DataType::BOOL_FIELD:
+	//case DataType::BYTE_PARAM:
+	//case DataType::CHAR_PARAM:
+	//case DataType::BOOL_PARAM:
 
 	//	bytes = (PBYTE)&(_Value.Byte);
 	//	break;
 	//	
-	//case DataType::WORD_FIELD:
-	//case DataType::SHORT_FIELD:
+	//case DataType::WORD_PARAM:
+	//case DataType::SHORT_PARAM:
 	//	
 
 	//	bytes = (PBYTE)&(_Value.Word);
 	//	break;
 	//	
-	//case DataType::FLOAT_FIELD:
-	//case DataType::LONG_FIELD:		
-	//case DataType::DWORD_FIELD:
+	//case DataType::FLOAT_PARAM:
+	//case DataType::LONG_PARAM:		
+	//case DataType::DWORD_PARAM:
 
 	//	bytes = (PBYTE)&(_Value.DWord);
 	//	break;
@@ -662,4 +662,4 @@ VOID VarLengthField::FromString(PCCHAR data)
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_FIELDS
+#endif	// #ifndef EXCLUDE_ITTYBITTY_PARAMS

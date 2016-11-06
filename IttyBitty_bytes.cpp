@@ -4,10 +4,15 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
-	#define EXCLUDE_ITTYBITTY_BYTES
-#endif
+#ifdef ITTYBITTY_SLIM
 
+	#define ITTYBITTY_BASE
+
+	#ifndef EXCLUDE_ITTYBITTY_BYTES
+		#define EXCLUDE_ITTYBITTY_BYTES
+	#endif
+
+#endif
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
