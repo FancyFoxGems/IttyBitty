@@ -107,6 +107,9 @@
     <ClInclude Include="..\IttyBitty_DB.h">
       <Filter>Data</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_datum.h">
+      <Filter>Data</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_fields.h">
       <Filter>Data</Filter>
     </ClInclude>
@@ -255,6 +258,9 @@
       <Filter>Control</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_DB.cpp">
+      <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_datum.cpp">
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_fields.cpp">

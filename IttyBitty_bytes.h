@@ -63,7 +63,7 @@ namespace IttyBitty
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 	template<typename T = BYTE>
 	class IBitField;
@@ -86,7 +86,7 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using PPCIBITFIELD = const IBitField<T> **;
 
-#endif	// #ifndef ITTYBITTY_BASE
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 
 	class IByteField;
@@ -94,7 +94,7 @@ namespace IttyBitty
 	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
 
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 	class IWordField;
 	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD, && RRIWORDFIELD;
@@ -146,7 +146,7 @@ namespace IttyBitty
 	template<typename T = BYTE>
 	using PPCBITFIELD = const BitField<T> **;
 
-#endif	// #ifndef ITTYBITTY_BASE
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 
 	class ByteField;
@@ -154,7 +154,7 @@ namespace IttyBitty
 	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
 
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 	class WordField;
 	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD, && RRWORDFIELD;
@@ -185,7 +185,7 @@ namespace IttyBitty
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
 	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
 
-#endif	// #ifndef ITTYBITTY_BASE
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 
 	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
@@ -194,7 +194,7 @@ namespace IttyBitty
 	{
 	public:
 
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		_BitProxy(PIBYTEFIELD, SIZE);
 	#else
 		_BitProxy(PBYTEFIELD, SIZE);
@@ -214,7 +214,7 @@ namespace IttyBitty
 
 	protected:
 
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		PIBYTEFIELD Parent() const;
 	#else
 		PBYTEFIELD Parent() const;
@@ -223,7 +223,7 @@ namespace IttyBitty
 
 	private:
 
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VOLATILE PIBYTEFIELD _Parent;
 	#else
 		VOLATILE PBYTEFIELD _Parent;
@@ -232,7 +232,7 @@ namespace IttyBitty
 	};
 
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
@@ -308,7 +308,7 @@ namespace IttyBitty
 	{
 	public:
 
-	#ifdef ITTYBITTY_BASE
+	#ifdef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 		VIRTUAL ~IByteField() { }
 
@@ -427,13 +427,13 @@ namespace IttyBitty
 		VIRTUAL RIWORDFIELD SetHighWord(WORD) = 0;
 	};
 
-#endif	// #ifndef ITTYBITTY_BASE
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 
 	/* [BYTEFIELD]: CLASS TO ENCAPSULATE BIT-PACKED SINGLE BYTE REFERENCES */
 
 	CLASS ByteField
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		: public virtual IByteField
 	#endif
 	{
@@ -482,7 +482,7 @@ namespace IttyBitty
 
 		VIRTUAL PPCBYTEFIELD Bytes() const;
 		VIRTUAL BYTE Byte(SIZE) const;
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL RIBYTEFIELD Byte(SIZE);
 	#else
 		VIRTUAL RBYTEFIELD Byte(SIZE);
@@ -490,7 +490,7 @@ namespace IttyBitty
 
 		VIRTUAL BYTE Value() const;
 		VIRTUAL VOID SetValue(BYTE);
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL VOID CopyFrom(RCIBITFIELD<BYTE>);
 	#else
 		VIRTUAL VOID CopyFrom(RCBYTEFIELD);
@@ -498,14 +498,14 @@ namespace IttyBitty
 
 		VIRTUAL PVBYTE Pointer() const;
 		VIRTUAL VOID PointTo(PVBYTE);
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL VOID ReferenceFrom(RCIBITFIELD<BYTE>);
 	#else
 		VIRTUAL VOID ReferenceFrom(RCBYTEFIELD);
 	#endif
 
 		VIRTUAL BYTE Mask(BYTE) const;
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL BYTE Mask(RCIBITFIELD<BYTE>) const;
 	#else
 		VIRTUAL BYTE Mask(RCBYTEFIELD) const;
@@ -522,7 +522,7 @@ namespace IttyBitty
 		VIRTUAL operator PCBITPACK() const;
 		VIRTUAL operator PBITPACK();
 
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL PIBYTEFIELD CloneByValue() const;
 		VIRTUAL PIBYTEFIELD CloneByReference() const;
 	#else
@@ -531,14 +531,14 @@ namespace IttyBitty
 	#endif
 
 		VIRTUAL BYTE LowNybble() const;
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL RIBYTEFIELD SetLowNybble(BYTE);
 	#else
 		VIRTUAL RBYTEFIELD SetLowNybble(BYTE);
 	#endif
 
 		VIRTUAL BYTE HighNybble() const;
-	#ifndef ITTYBITTY_BASE
+	#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 		VIRTUAL RIBYTEFIELD SetHighNybble(BYTE);
 	#else
 		VIRTUAL RBYTEFIELD SetHighNybble(BYTE);
@@ -559,7 +559,7 @@ namespace IttyBitty
 	};
 
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 
 	/* [BITFIELD]: [IBYTEFIELD] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
@@ -1240,7 +1240,7 @@ namespace IttyBitty
 		}
 	};
 
-#endif	// #ifndef ITTYBITTY_BASE
+#endif	// #ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 }
 
 

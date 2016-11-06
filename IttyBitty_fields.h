@@ -9,37 +9,21 @@
 #ifndef _ITTYBITTY_FIELDS_H
 #define _ITTYBITTY_FIELDS_H
 
-		
-#ifdef ARDUINO
-	#include "Printable.h"
-	#include "HardwareSerial.h"
-	#include "Wire.h"
-#endif
 
-#include "IttyBitty_values.h"
+#include "IttyBitty_datum.h"
 
 
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANTS & VARIABLES
-	
-#ifdef ARDUINO
-	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
-#endif
-
-	EXTERN CBYTE DATA_SIZE_MASK;
 		
-	// Field::ToBinary() / ToString() BUFFER POINTER
+	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __field_buffer;
 
 #pragma endregion
 
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
-
-	class ISerializable;
-	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
-	typedef const ISerializable CISERIALIZABLE, *PCISERIALIZABLE, & RCISERIALIZABLE, ** PPCISERIALIZABLE;
 
 	class IField;
 	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
@@ -102,110 +86,16 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region ENUMS
-	
-	enum DataSize : BYTE
-	{
-		WHO_KNOWS	= 0x0,
-		ONE_BYTE	= 0x10,
-		TWO_BYTES	= 0x20,
-		THREE_BYTES	= 0x40,
-		FOUR_BYTES	= 0x80
-	};
-
-	enum DataTypeFormat
-	{
-		UNSIGNED_DATA_TYPE	= 0x0,
-		SIGNED_DATA_TYPE	= 0x1,
-		SPECIAL_DATA_TYPE	= 0x2
-	};
-
-	enum DataType : BYTE
-	{
-		BYTES_FIELD		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
-		STRING_FIELD	= WHO_KNOWS | SIGNED_DATA_TYPE,
-		BIT_FIELD		= WHO_KNOWS | SPECIAL_DATA_TYPE,
-
-		BYTE_FIELD		= ONE_BYTE | UNSIGNED_DATA_TYPE,
-		CHAR_FIELD		= ONE_BYTE | SIGNED_DATA_TYPE,
-		BOOL_FIELD		= ONE_BYTE | SPECIAL_DATA_TYPE,
-
-		WORD_FIELD		= TWO_BYTES | UNSIGNED_DATA_TYPE,
-		SHORT_FIELD		= TWO_BYTES | SIGNED_DATA_TYPE,
-
-		DWORD_FIELD		= FOUR_BYTES | UNSIGNED_DATA_TYPE,
-		LONG_FIELD		= FOUR_BYTES | SIGNED_DATA_TYPE,
-		FLOAT_FIELD		= FOUR_BYTES | SPECIAL_DATA_TYPE
-	};
-
-	INLINE DataSize DataTypeToDataSize(DataType dataType)
-	{
-		return static_cast<DataSize>(MASK(dataType, DATA_SIZE_MASK));
-	}
-
-#pragma endregion
-
-
 #pragma region INTERFACE DEFINITIONS
-
-	// [ISerializable] DEFINITION
-
-	INTERFACE ISerializable 
-	#ifdef ARDUINO
-		: public Printable
-	#endif
-	{
-	public:
-
-		// DESTRUCTOR
-
-		VIRTUAL ~ISerializable() { }
-
-
-		// INTERFACE METHODS
-
-		VIRTUAL CSIZE BinarySize() const = 0;
-		VIRTUAL CSIZE StringSize() const = 0;
-		VIRTUAL CSIZE ByteWidth() const = 0;
-		VIRTUAL CSIZE StringLength() const = 0;
-
-		VIRTUAL PCBYTE ToBinary() const = 0;
-		VIRTUAL PCCHAR ToString() const = 0;
-
-		VIRTUAL VOID FromBinary(PCBYTE) = 0;
-		VIRTUAL VOID FromString(PCCHAR) = 0;
-		
-	#ifdef ARDUINO
-
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;		
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
-
-	#endif
-
-	protected:
-
-		ISerializable() { }
-	};
 
 
 	// [IField] DEFINITION
 
-	INTERFACE IField : public ISerializable
+	INTERFACE IField : public IDatum
 	{
 	public:
 
-		// DESTRUCTOR
-
-		VIRTUAL ~IField() { }
-
 		// INTERFACE METHODS
-
-		VIRTUAL CONST DataSize GetDataSize() const = 0;
-		VIRTUAL CONST DataType GetDataType() const = 0;
-
-	protected:
-
-		IField() { }
 	};
 
 #pragma endregion
@@ -257,7 +147,7 @@ namespace IttyBitty
 		
 		BOOL _Dispose = FALSE;
 
-		Value _Value;
+		ConstValue _Value;
 		DataType _DataType;
 	};
 
@@ -272,12 +162,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT Field(CONST DataType = DataType::BYTE_FIELD);
+		EXPLICIT Field(CONST DataType = DataType::BYTE_DATUM);
 
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		EXPLICIT Field(RCVALUE, CONST DataType = DataType::BYTE_FIELD);
+		EXPLICIT Field(RCCONSTVALUE, CONST DataType = DataType::BYTE_DATUM);
 
 		EXPLICIT Field(RCCHAR);
 		EXPLICIT Field(RCBYTE);
@@ -299,7 +189,7 @@ namespace IttyBitty
 		VIRTUAL RFIELD operator =(RCFIELD);
 		VIRTUAL RFIELD operator =(RRFIELD);
 
-		VIRTUAL RFIELD operator =(RCVALUE);
+		VIRTUAL RFIELD operator =(RCCONSTVALUE);
 
 		VIRTUAL operator RCCHAR() const;
 		VIRTUAL operator RCBYTE() const;
@@ -322,12 +212,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT VarLengthField(CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		EXPLICIT VarLengthField(CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
 
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		EXPLICIT VarLengthField(RCVALUE, CONST DataType = DataType::BYTES_FIELD, CSIZE = 0);
+		EXPLICIT VarLengthField(RCCONSTVALUE, CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PCBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCCHAR);
@@ -394,7 +284,7 @@ namespace IttyBitty
 			new (this) TypedField<T>(other._Value);
 		}
 
-		TypedField(RCVALUE value)
+		TypedField(RCCONSTVALUE value)
 		{
 			_Value = value;
 			_DataType = TypedField<T>::FindDataType();
@@ -436,7 +326,7 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCVALUE rValue)
+		VIRTUAL RTYPEDFIELD<T> operator =(RCCONSTVALUE rValue)
 		{
 			_Value = rValue;
 			return *this;
@@ -465,7 +355,7 @@ namespace IttyBitty
 
 		STATIC CONSTEXPR const DataType FindDataType()
 		{
-			return DataType::BYTE_FIELD;
+			return DataType::BYTE_DATUM;
 		}
 	};
 
@@ -483,7 +373,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::CHAR_FIELD;
+				return DataType::CHAR_DATUM;
 			}
 	};
 
@@ -496,7 +386,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BYTE_FIELD;
+				return DataType::BYTE_DATUM;
 			}
 	};
 
@@ -509,7 +399,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BOOL_FIELD;
+				return DataType::BOOL_DATUM;
 			}
 	};
 
@@ -522,7 +412,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::SHORT_FIELD;
+				return DataType::SHORT_DATUM;
 			}
 	};
 
@@ -535,7 +425,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::WORD_FIELD;
+				return DataType::WORD_DATUM;
 			}
 	};
 
@@ -548,7 +438,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::LONG_FIELD;
+				return DataType::LONG_DATUM;
 			}
 	};
 
@@ -561,7 +451,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::DWORD_FIELD;
+				return DataType::DWORD_DATUM;
 			}
 	};
 
@@ -574,7 +464,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::FLOAT_FIELD;
+				return DataType::FLOAT_DATUM;
 			}
 	};
 
@@ -615,12 +505,12 @@ namespace IttyBitty
 			new (this) VarLengthTypedField<T>(other._Value);
 		}
 
-		VarLengthTypedField(RCVALUE value, CSIZE length = 0)
+		VarLengthTypedField(RCCONSTVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
 			_DataType = VarLengthTypedField<T>::FindDataType();
 
-			if (_DataType == DataType::STRING_FIELD)
+			if (_DataType == DataType::STRING_DATUM)
 			{
 				if (value.String == NULL)
 					_Length = 0;
@@ -643,7 +533,7 @@ namespace IttyBitty
 			if (!_Dispose)
 				return;
 
-			//if (_Length > 0 || _DataType == DataType::STRING_FIELD)
+			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
 			//	_Value.FreeData();
 		}
 		
@@ -733,7 +623,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BYTES_FIELD;
+				return DataType::BYTES_DATUM;
 			}
 	};
 
@@ -746,7 +636,7 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::STRING_FIELD;
+				return DataType::STRING_DATUM;
 			}
 	};
 
@@ -759,50 +649,9 @@ namespace IttyBitty
 
 			STATIC CONSTEXPR const DataType FindDataType()
 			{
-				return DataType::BIT_FIELD;
+				return DataType::BIT_DATUM;
 			}
 	};
-
-#pragma endregion
-	
-
-#pragma region HELPER METHODS
-
-	template<typename T>
-	INLINE PCHAR StringInsertValue(CONST T value, PCHAR buffer, CBYTE radix = 0x10)
-	{
-		CHAR valStr[2 * T_SIZE + 1];
-		
-		valStr[2 * T_SIZE] = '\0';
-		
-		itoa(value, valStr, radix);
-
-		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
-		for (SIZE i = 0; i < lenDiff; i++)
-		{
-			valStr[i + lenDiff] = valStr[i];
-			valStr[i] = '0';
-		}
-
-		memcpy(buffer, valStr, 2 * T_SIZE);
-
-		return (PCHAR)(buffer + 2 * T_SIZE);
-	}
-
-	template<typename T>
-	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
-	{
-		CHAR valStr[2 * T_SIZE + 1];
-
-		valStr[2 * T_SIZE] = '\0';
-
-		memcpy(valStr, data, 2 * T_SIZE);
-		valStr[2 * T_SIZE] = '\0';
-
-		value = static_cast<T>(strtol(valStr, NULL, 0x10));
-		
-		return (PCCHAR)(data + 2 * T_SIZE);
-	}
 
 #pragma endregion
 	

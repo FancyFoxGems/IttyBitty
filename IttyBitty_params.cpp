@@ -18,12 +18,6 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL CONSTANTS & VARIABLES
 
-#ifdef ARDUINO
-CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
-#endif
-
-CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
-
 PBYTE IttyBitty::__param_buffer = NULL;
 
 #pragma endregion
@@ -33,16 +27,12 @@ PBYTE IttyBitty::__param_buffer = NULL;
 
 // DESTRUCTOR
 
-#include "IttyBitty_print.h"
 ParamBase::~ParamBase()
 {
 	if (!_Dispose)
 		return;
 
-	// TODO
-	PrintLine(F("~ParamBase"));
-
-	if (_DataType == DataType::BYTES_PARAM || _DataType == DataType::STRING_PARAM || _DataType == DataType::BIT_PARAM)
+	if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
 		_Value.FreeData();
 }
 				
@@ -113,23 +103,23 @@ PCCHAR ParamBase::ToString() const
 
 	switch (_DataType)
 	{
-	case DataType::BYTE_PARAM:
-	case DataType::CHAR_PARAM:
-	case DataType::BOOL_PARAM:
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::WORD_PARAM:
-	case DataType::SHORT_PARAM:
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:
 		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
 			
-	case DataType::DWORD_PARAM:
-	case DataType::LONG_PARAM:	
-	case DataType::FLOAT_PARAM:
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:	
+	case DataType::FLOAT_DATUM:
 
 		bytes = (PBYTE)&(_Value.DWord);
 		break;
@@ -160,23 +150,23 @@ VOID ParamBase::FromBinary(PCBYTE data)
 
 	switch (_DataType)
 	{
-	case DataType::BYTE_PARAM:
-	case DataType::CHAR_PARAM:
-	case DataType::BOOL_PARAM:
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
 
 		_Value = *((PBYTE)bufferPtr);
 		break;
 		
-	case DataType::WORD_PARAM:
-	case DataType::SHORT_PARAM:
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:
 		
 
 		_Value = *((PWORD)bufferPtr);
 		break;
 		
-	case DataType::DWORD_PARAM:
-	case DataType::LONG_PARAM:		
-	case DataType::FLOAT_PARAM:
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:		
+	case DataType::FLOAT_DATUM:
 
 		_Value = *((PDWORD)bufferPtr);
 		break;
@@ -201,22 +191,22 @@ VOID ParamBase::FromString(PCCHAR data)
 	
 	switch (_DataType)
 	{
-	case DataType::BYTE_PARAM:
-	case DataType::CHAR_PARAM:
-	case DataType::BOOL_PARAM:
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
 
 		bytes = (PBYTE)&(_Value.Byte);
 		break;
 		
-	case DataType::WORD_PARAM:
-	case DataType::SHORT_PARAM:		
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:		
 
 		bytes = (PBYTE)&(_Value.Word);
 		break;
 		
-	case DataType::DWORD_PARAM:
-	case DataType::LONG_PARAM:		
-	case DataType::FLOAT_PARAM:
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:		
+	case DataType::FLOAT_DATUM:
 
 		bytes = (PBYTE)&(_Value.DWord);
 		break;
@@ -330,7 +320,7 @@ Param::Param(RRPARAM other)
 	new (this) Param(other._Value, other._DataType);
 }
 
-Param::Param(RCVALUE value, CONST DataType dataType)
+Param::Param(RCCONSTVALUE value, CONST DataType dataType)
 {
 	_Value = value;
 	_DataType = dataType;
@@ -339,49 +329,49 @@ Param::Param(RCVALUE value, CONST DataType dataType)
 Param::Param(RCCHAR value)
 {
 	_Value = value;
-	_DataType = DataType::CHAR_PARAM;
+	_DataType = DataType::CHAR_DATUM;
 }
 
 Param::Param(RCBYTE value)
 {
 	_Value = value;
-	_DataType = DataType::BYTE_PARAM;
+	_DataType = DataType::BYTE_DATUM;
 }
 
 Param::Param(RCBOOL value)
 {
 	_Value = value;
-	_DataType = DataType::BOOL_PARAM;
+	_DataType = DataType::BOOL_DATUM;
 }
 
 Param::Param(RCSHORT value)
 {
 	_Value = value;
-	_DataType = DataType::SHORT_PARAM;
+	_DataType = DataType::SHORT_DATUM;
 }
 
 Param::Param(RCWORD value)
 {
 	_Value = value;
-	_DataType = DataType::WORD_PARAM;
+	_DataType = DataType::WORD_DATUM;
 }
 
 Param::Param(RCLONG value)
 {
 	_Value = value;
-	_DataType = DataType::LONG_PARAM;
+	_DataType = DataType::LONG_DATUM;
 }
 
 Param::Param(RCDWORD value)
 {
 	_Value = value;
-	_DataType = DataType::DWORD_PARAM;
+	_DataType = DataType::DWORD_DATUM;
 }
 
 Param::Param(RCFLOAT value)
 {
 	_Value = value;
-	_DataType = DataType::FLOAT_PARAM;
+	_DataType = DataType::FLOAT_DATUM;
 }
 
 
@@ -389,8 +379,8 @@ Param::Param(RCFLOAT value)
 
 RPARAM Param::NULL_OBJECT()
 {
-	STATIC Param NULL_PARAM;
-	return NULL_PARAM;
+	STATIC Param NULL_DATUM;
+	return NULL_DATUM;
 }
 
 
@@ -408,7 +398,7 @@ RPARAM Param::operator =(RRPARAM rValue)
 	return *this;
 }
 
-RPARAM Param::operator =(RCVALUE rValue)
+RPARAM Param::operator =(RCCONSTVALUE rValue)
 {
 	_Value = rValue;
 	return *this;
@@ -466,17 +456,17 @@ VarLengthParam::VarLengthParam(CONST DataType dataType, CSIZE length)
 {
 	switch (dataType)
 	{
-	case DataType::BYTES_PARAM:
+	case DataType::BYTES_DATUM:
 
 		_Value = new BYTE[length];
 		break;
 
-	case DataType::STRING_PARAM:
+	case DataType::STRING_DATUM:
 
 		_Value = new CHAR[length];
 		break;
 
-	case DataType::BIT_PARAM:
+	case DataType::BIT_DATUM:
 
 		_Value = new BITPACK[length];
 		break;
@@ -501,10 +491,10 @@ VarLengthParam::VarLengthParam(RRVARLENGTHPARAM other)
 	new (this) VarLengthParam(other._Value, other._DataType, other._Length);
 }
 
-VarLengthParam::VarLengthParam(RCVALUE value, CONST DataType dataType, CSIZE length) 
+VarLengthParam::VarLengthParam(RCCONSTVALUE value, CONST DataType dataType, CSIZE length) 
 	: Param(value, dataType)
 {
-	if (_DataType == DataType::STRING_PARAM)
+	if (_DataType == DataType::STRING_DATUM)
 	{
 		if (value.String == NULL)
 			_Length = 0;
@@ -518,7 +508,7 @@ VarLengthParam::VarLengthParam(RCVALUE value, CONST DataType dataType, CSIZE len
 }
 
 VarLengthParam::VarLengthParam(PCBYTE value, CSIZE length) 
-	: Param(DataType::BYTES_PARAM), _Length(length)
+	: Param(DataType::BYTES_DATUM), _Length(length)
 {
 	_Dispose = FALSE;
 
@@ -526,7 +516,7 @@ VarLengthParam::VarLengthParam(PCBYTE value, CSIZE length)
 }
 
 VarLengthParam::VarLengthParam(PCCHAR value) 
-	: Param(DataType::STRING_PARAM)
+	: Param(DataType::STRING_DATUM)
 {
 	_Dispose = FALSE;
 	
@@ -539,7 +529,7 @@ VarLengthParam::VarLengthParam(PCCHAR value)
 }
 
 VarLengthParam::VarLengthParam(PCBITPACK value, CSIZE length) 
-	: Param(DataType::BIT_PARAM), _Length(length)
+	: Param(DataType::BIT_DATUM), _Length(length)
 {
 	_Dispose = FALSE;
 
@@ -551,7 +541,7 @@ VarLengthParam::~VarLengthParam()
 	if (!_Dispose)
 		return;
 	
-	//if (_Length > 0 || _DataType == DataType::STRING_PARAM)
+	//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
 	//	_Value.FreeData();
 }
 
@@ -625,23 +615,23 @@ VOID VarLengthParam::FromString(PCCHAR data)
 
 	//switch (_DataType)
 	//{
-	//case DataType::BYTE_PARAM:
-	//case DataType::CHAR_PARAM:
-	//case DataType::BOOL_PARAM:
+	//case DataType::BYTE_DATUM:
+	//case DataType::CHAR_DATUM:
+	//case DataType::BOOL_DATUM:
 
 	//	bytes = (PBYTE)&(_Value.Byte);
 	//	break;
 	//	
-	//case DataType::WORD_PARAM:
-	//case DataType::SHORT_PARAM:
+	//case DataType::WORD_DATUM:
+	//case DataType::SHORT_DATUM:
 	//	
 
 	//	bytes = (PBYTE)&(_Value.Word);
 	//	break;
 	//	
-	//case DataType::FLOAT_PARAM:
-	//case DataType::LONG_PARAM:		
-	//case DataType::DWORD_PARAM:
+	//case DataType::FLOAT_DATUM:
+	//case DataType::LONG_DATUM:		
+	//case DataType::DWORD_DATUM:
 
 	//	bytes = (PBYTE)&(_Value.DWord);
 	//	break;

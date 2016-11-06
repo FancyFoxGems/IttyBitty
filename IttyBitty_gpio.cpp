@@ -29,68 +29,65 @@ BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 
-namespace IttyBitty
+// ARDUINO PIN GLOBAL FUNCTIONS
+
+PinMode GetPinMode(PIN_NUMBER p)
 {
-	// ARDUINO PIN GLOBAL FUNCTIONS
+	return GET_ARDUINO_PIN_MODE(p);
+}
 
-	PinMode GetPinMode(PIN_NUMBER p)
-	{
-		return GET_ARDUINO_PIN_MODE(p);
-	}
+VOID SetPinMode(PIN_NUMBER p, PinMode mode)
+{
+	SET_ARDUINO_PIN_MODE(p, mode);
+}
 
-	VOID SetPinMode(PIN_NUMBER p, PinMode mode)
-	{
-		SET_ARDUINO_PIN_MODE(p, mode);
-	}
+VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode)
+{
+	SET_ARDUINO_PIN_MODE(p, basicMode);
+}
 
-	VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode)
-	{
-		SET_ARDUINO_PIN_MODE(p, basicMode);
-	}
+VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode)
+{
+	SET_ARDUINO_PIN_MODE(p, arduinoMode);
+}
 
-	VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode)
-	{
-		SET_ARDUINO_PIN_MODE(p, arduinoMode);
-	}
-
-	CBIT CheckPinSet(PIN_NUMBER p)
-	{
-		return CHECK_ARDUINO_PIN_SET(p);
-	}
+CBIT CheckPinSet(PIN_NUMBER p)
+{
+	return CHECK_ARDUINO_PIN_SET(p);
+}
 	
-	CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
-	CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
+CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
+CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
 
-	CBIT CheckPinUnset(PIN_NUMBER p)
-	{
-		return CHECK_ARDUINO_PIN_UNSET(p);
-	}
+CBIT CheckPinUnset(PIN_NUMBER p)
+{
+	return CHECK_ARDUINO_PIN_UNSET(p);
+}
 	
-	VOID WritePin(PIN_NUMBER p, RCBIT state)
-	{
-		WRITE_ARDUINO_PIN(p, state);
-	}
+VOID WritePin(PIN_NUMBER p, RCBIT state)
+{
+	WRITE_ARDUINO_PIN(p, state);
+}
 
-	VOID SetPin(PIN_NUMBER p)
-	{
-		SET_ARDUINO_PIN(p);
-	}
+VOID SetPin(PIN_NUMBER p)
+{
+	SET_ARDUINO_PIN(p);
+}
 
-	VOID ClearPin(PIN_NUMBER p)
-	{
-		CLEAR_ARDUINO_PIN(p);
-	}
+VOID ClearPin(PIN_NUMBER p)
+{
+	CLEAR_ARDUINO_PIN(p);
+}
 
-	VOID TogglePin(PIN_NUMBER p)
-	{
-		TOGGLE_ARDUINO_PIN(p);
-	}
+VOID TogglePin(PIN_NUMBER p)
+{
+	TOGGLE_ARDUINO_PIN(p);
+}
 		
-	VOID ResetPin(PIN_NUMBER p)
-	{
-		RESET_ARDUINO_PIN(p);
-	}
-};
+VOID ResetPin(PIN_NUMBER p)
+{
+	RESET_ARDUINO_PIN(p);
+}
 
 #endif	// #ifdef ARDUINO
 

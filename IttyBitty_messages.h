@@ -28,7 +28,7 @@ namespace IttyBitty
 
 	EXTERN PCCHAR MESSAGE_MARKER;
 		
-	// Message::ToBinary() / ToString() BUFFER POINTER
+	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __message_buffer;
 
 #pragma endregion

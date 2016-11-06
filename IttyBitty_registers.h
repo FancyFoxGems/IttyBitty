@@ -52,7 +52,7 @@ namespace IttyBitty
 
 	typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
 
-#ifndef ITTYBITTY_BASE
+#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
 	typedef WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16, && RRREG16;
 	typedef DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 #endif

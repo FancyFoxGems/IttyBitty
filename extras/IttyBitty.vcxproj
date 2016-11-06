@@ -65,6 +65,7 @@
     <ClCompile Include="..\IttyBitty_base.h" />
     <ClInclude Include="..\IttyBitty_bits.h" />
     <ClInclude Include="..\IttyBitty_bytes.h" />
+    <ClInclude Include="..\IttyBitty_datum.h" />
     <ClInclude Include="..\IttyBitty_DB.h" />
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h" />
     <ClInclude Include="..\IttyBitty_fields.h" />
@@ -92,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
+    <ClCompile Include="..\IttyBitty_datum.cpp" />
     <ClCompile Include="..\IttyBitty_DB.cpp" />
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp" />
     <ClCompile Include="..\IttyBitty_fields.cpp" />

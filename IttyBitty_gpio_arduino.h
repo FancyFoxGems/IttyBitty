@@ -102,28 +102,28 @@ namespace IttyBitty
 		_InitializeArduinoPortTables();
 		_InitializeArduinoPinTables();
 	}
-
-
-	// ARDUINO PIN GLOBAL FUNCTIONS
-	
-	PinMode GetPinMode(PIN_NUMBER);
-	VOID SetPinMode(PIN_NUMBER, PinMode = PinMode::CurrentSink);
-	VOID SetPinMode(PIN_NUMBER, PinModeBasic = PinModeBasic::Output);
-	VOID SetPinMode(PIN_NUMBER, RCBYTE = OUTPUT);
-	
-	CBIT CheckPinSet(PIN_NUMBER);
-	CBIT CheckPinUnset(PIN_NUMBER);
-	
-	EXTERN CBIT (*ReadPin)(PIN_NUMBER);
-	EXTERN CBIT (*CheckPin)(PIN_NUMBER);
-	
-	VOID WritePin(PIN_NUMBER, RCBIT = HIGH);
-	VOID SetPin(PIN_NUMBER);
-	VOID ClearPin(PIN_NUMBER);
-	VOID TogglePin(PIN_NUMBER);
-	
-	VOID ResetPin(PIN_NUMBER);
 };
+
+
+// ARDUINO PIN GLOBAL FUNCTIONS
+	
+IttyBitty::PinMode GetPinMode(PIN_NUMBER);
+VOID SetPinMode(PIN_NUMBER, IttyBitty::PinMode = IttyBitty::PinMode::CurrentSink);
+VOID SetPinMode(PIN_NUMBER, IttyBitty::PinModeBasic = IttyBitty::PinModeBasic::Output);
+VOID SetPinMode(PIN_NUMBER, RCBYTE = OUTPUT);
+	
+CBIT CheckPinSet(PIN_NUMBER);
+CBIT CheckPinUnset(PIN_NUMBER);
+	
+EXTERN CBIT (*ReadPin)(PIN_NUMBER);
+EXTERN CBIT (*CheckPin)(PIN_NUMBER);
+	
+VOID WritePin(PIN_NUMBER, RCBIT = HIGH);
+VOID SetPin(PIN_NUMBER);
+VOID ClearPin(PIN_NUMBER);
+VOID TogglePin(PIN_NUMBER);
+	
+VOID ResetPin(PIN_NUMBER);
 
 
 #define ARDUINO_PIN_MODE_REF(arduino_pin)		(*ARDUINO_PORT_TO_MODE[ARDUINO_PIN_TO_PORT[arduino_pin]])

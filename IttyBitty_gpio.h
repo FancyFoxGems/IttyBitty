@@ -27,6 +27,9 @@
 #endif
 
 
+typedef CSIZE PIN_NUMBER;
+
+
 namespace IttyBitty
 {
 	ENUM PinModeBasic : BYTE
@@ -54,8 +57,6 @@ namespace IttyBitty
 
 namespace IttyBitty
 {
-	typedef CSIZE PIN_NUMBER;
-
 	struct _PortRegisters;
 	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
 	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
