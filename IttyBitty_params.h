@@ -100,7 +100,7 @@ namespace IttyBitty
 
 #pragma region [ParamBase] DEFINITION - TAGGED UNION BASE
 
-	CLASS ParamBase : public IParam
+	CLASS ParamBase : public DatumBase<ConstValue>, public IParam
 	{
 	public:
 
@@ -254,7 +254,7 @@ namespace IttyBitty
 #pragma region [TypedParam] DEFINITION - TEMPLATED TAGGED UNION
 	
 	template<typename T>
-	CLASS TypedParam : public ParamBase
+	CLASS TypedParam : public DatumBase<ConstValue>, public IParam
 	{
 	public:
 
