@@ -17,6 +17,9 @@
 #endif
 
 #include "IttyBitty_values.h"
+	
+// TODO
+#include "IttyBitty_print.h"
 
 
 namespace IttyBitty
@@ -45,59 +48,110 @@ namespace IttyBitty
 	typedef IDatum IDATUM, * PIDATUM, & RIDATUM, ** PPIDATUM, && RRIDATUM;
 	typedef const IDatum CIDATUM, *PCIDATUM, & RCIDATUM, ** PPCIDATUM;
 
+	template<typename TVal = CONSTVALUE>
 	class DatumBase;
-	typedef DatumBase DATUMBASE, * PDATUMBASE, & RDATUMBASE, ** PPDATUMBASE, && RRDATUMBASE;
-	typedef const DatumBase CDATUMBASE, * PCDATUMBASE, & RCDATUMBASE, ** PPCDATUMBASE;
+	template<typename TVal = CONSTVALUE>
+	using DATUMBASE = DatumBase<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PDATUMBASE = DatumBase<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RDATUMBASE = DatumBase<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPDATUMBASE = DatumBase<TVal> **;
+	template<typename TVal = CONSTVALUE>
+	using RRDATUMBASE = DatumBase<TVal> &&;
+	template<typename TVal = CONSTVALUE>
+	using CDATUMBASE = const DatumBase<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PCDATUMBASE = const DatumBase<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RCDATUMBASE = const DatumBase<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPCDATUMBASE = const DatumBase<TVal> **;
 
+	template<typename TVal = CONSTVALUE>
 	class Datum;
-	typedef Datum DATUM, * PDATUM, & RDATUM, ** PPDATUM, && RRDATUM;
-	typedef const Datum CDATUM, * PCDATUM, & RCDATUM, ** PPCDATUM;
+	template<typename TVal = CONSTVALUE>
+	using DATUM = Datum<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PDATUM = Datum<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RDATUM = Datum<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPDATUM = Datum<TVal> **;
+	template<typename TVal = CONSTVALUE>
+	using RRDATUM = Datum<TVal> &&;
+	template<typename TVal = CONSTVALUE>
+	using CDATUM = const Datum<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PCDATUM = const Datum<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RCDATUM = const Datum<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPCDATUM = const Datum<TVal> **;
 
+	template<typename TVal = CONSTVALUE>
 	class VarLengthDatum;
-	typedef VarLengthDatum VARLENGTHDATUM, * PVARLENGTHDATUM, & RVARLENGTHDATUM, ** PPVARLENGTHDATUM, && RRVARLENGTHDATUM;
-	typedef const VarLengthDatum CVARLENGTHDATUM, * PCVARLENGTHDATUM, & RCVARLENGTHDATUM, ** PPCVARLENGTHDATUM;
+	template<typename TVal = CONSTVALUE>
+	using VARLENGTHDATUM = VarLengthDatum<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PVARLENGTHDATUM = VarLengthDatum<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RVARLENGTHDATUM = VarLengthDatum<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPVARLENGTHDATUM = VarLengthDatum<TVal> **;
+	template<typename TVal = CONSTVALUE>
+	using RRVARLENGTHDATUM = VarLengthDatum<TVal> &&;
+	template<typename TVal = CONSTVALUE>
+	using CVARLENGTHDATUM = const VarLengthDatum<TVal>;
+	template<typename TVal = CONSTVALUE>
+	using PCVARLENGTHDATUM = const VarLengthDatum<TVal> *;
+	template<typename TVal = CONSTVALUE>
+	using RCVARLENGTHDATUM = const VarLengthDatum<TVal> &;
+	template<typename TVal = CONSTVALUE>
+	using PPCVARLENGTHDATUM = const VarLengthDatum<TVal> **;
 
-	template<typename T = BYTE>
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
 	class TypedDatum;
-	template<typename T = BYTE>
-	using TYPEDDATUM = TypedDatum<T>;
-	template<typename T = BYTE>
-	using PTYPEDDATUM = TypedDatum<T> *;
-	template<typename T = BYTE>
-	using RTYPEDDATUM = TypedDatum<T> &;
-	template<typename T = BYTE>
-	using PPTYPEDDATUM = TypedDatum<T> **;
-	template<typename T = BYTE>
-	using RRTYPEDDATUM = TypedDatum<T> &&;
-	template<typename T = BYTE>
-	using CTYPEDDATUM = const TypedDatum<T>;
-	template<typename T = BYTE>
-	using PCTYPEDDATUM = const TypedDatum<T> *;
-	template<typename T = BYTE>
-	using RCTYPEDDATUM = const TypedDatum<T> &;
-	template<typename T = BYTE>
-	using PPCTYPEDDATUM = const TypedDatum<T> **;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using TYPEDDATUM = TypedDatum<T, TVal>;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using PTYPEDDATUM = TypedDatum<T, TVal> *;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using RTYPEDDATUM = TypedDatum<T, TVal> &;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using PPTYPEDDATUM = TypedDatum<T, TVal> **;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using RRTYPEDDATUM = TypedDatum<T, TVal> &&;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using CTYPEDDATUM = const TypedDatum<T, TVal>;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using PCTYPEDDATUM = const TypedDatum<T, TVal> *;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using RCTYPEDDATUM = const TypedDatum<T, TVal> &;
+	template<typename T = BYTE, typename TVal = CONSTVALUE>
+	using PPCTYPEDDATUM = const TypedDatum<T, TVal> **;
 
-	template<typename T = PBYTE>
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
 	class VarLengthTypedDatum;
-	template<typename T = PBYTE>
-	using VARLENGTHTYPEDDATUM = VarLengthTypedDatum<T>;
-	template<typename T = PBYTE>
-	using PVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T> *;
-	template<typename T = PBYTE>
-	using RVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T> &;
-	template<typename T = PBYTE>
-	using PPVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T> **;
-	template<typename T = PBYTE>
-	using RRVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T> &&;
-	template<typename T = PBYTE>
-	using CVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T>;
-	template<typename T = PBYTE>
-	using PCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T> *;
-	template<typename T = PBYTE>
-	using RCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T> &;
-	template<typename T = PBYTE>
-	using PPCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T> **;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using VARLENGTHTYPEDDATUM = VarLengthTypedDatum<T, TVal>;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using PVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T, TVal> *;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using RVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T, TVal> &;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using PPVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T, TVal> **;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using RRVARLENGTHTYPEDDATUM = VarLengthTypedDatum<T, TVal> &&;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using CVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T, TVal>;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using PCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T, TVal> *;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using RCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T, TVal> &;
+	template<typename T = PBYTE, typename TVal = CONSTVALUE>
+	using PPCVARLENGTHTYPEDDATUM = const VarLengthTypedDatum<T, TVal> **;
 
 #pragma endregion
 
@@ -213,42 +267,284 @@ namespace IttyBitty
 
 #pragma region [DatumBase] DEFINITION - TAGGED UNION BASE
 
+	template<typename T>
+	INLINE PCHAR StringInsertValue(CONST T, PCHAR, CBYTE = 0x10);
+
+	template<typename T>
+	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
+	
+	template<typename TVal>
 	CLASS DatumBase : public IDatum
 	{
 	public:
 
 		// /DESTRUCTOR
+		
+		VIRTUAL ~DatumBase()
+		{
+			if (!_Dispose)
+				return;
 
-		VIRTUAL ~DatumBase();
+			// TODO
+			PrintLine(F("~DatumBase"));
+
+			if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
+				_Value.FreeData();
+		}
 		
 		
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE BinarySize() const;
-		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
+		VIRTUAL CSIZE BinarySize() const
+		{
+			return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
+		}
 
-		VIRTUAL PCBYTE ToBinary() const;
-		VIRTUAL PCCHAR ToString() const;
+		VIRTUAL CSIZE StringSize() const
+		{
+			return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
+		}
 
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
+		VIRTUAL CSIZE ByteWidth() const
+		{
+			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
+		}
+		VIRTUAL CSIZE StringLength() const
+		{
+			return 2 * this->ByteWidth();
+		}
+
+		VIRTUAL PCBYTE ToBinary() const
+		{
+			CSIZE size = this->BinarySize();
+
+			if (__datum_buffer)
+				delete[] __datum_buffer;
+
+			__datum_buffer = new BYTE[size];
+
+			PBYTE bufferPtr = __datum_buffer;
+	
+			CSIZE byteWidth = this->ByteWidth();
+			memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
+			bufferPtr += SIZEOF(byteWidth);
+
+			memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
+			bufferPtr += SIZEOF(DataType);
+
+			if (byteWidth > 0)
+				memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
+
+			return __datum_buffer;
+		}
+
+		VIRTUAL PCCHAR ToString() const
+		{
+			CSIZE size = this->StringSize();
+			CSIZE byteWidth = this->ByteWidth();
+	
+			if (__datum_buffer)
+				delete[] __datum_buffer;
+
+			__datum_buffer = new BYTE[size];
+			__datum_buffer[size - 1] = '\0';
+
+			PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
+
+			bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
+			bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
+
+			PCBYTE bytes = NULL;
+
+			switch (_DataType)
+			{
+			case DataType::BYTE_DATUM:
+			case DataType::CHAR_DATUM:
+			case DataType::BOOL_DATUM:
+
+				bytes = (PBYTE)&(_Value.Byte);
+				break;
+		
+			case DataType::WORD_DATUM:
+			case DataType::SHORT_DATUM:
+		
+
+				bytes = (PBYTE)&(_Value.Word);
+				break;
+			
+			case DataType::DWORD_DATUM:
+			case DataType::LONG_DATUM:	
+			case DataType::FLOAT_DATUM:
+
+				bytes = (PBYTE)&(_Value.DWord);
+				break;
+
+			default:
+
+				bytes = _Value.Bytes;
+
+				for (SIZE i = 0; i < byteWidth; i++)
+					bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
+
+				return reinterpret_cast<PCCHAR>(__datum_buffer);
+			}
+	
+			for (SIZE i = 0; i < 4 - byteWidth; i++)
+				bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
+	
+			return reinterpret_cast<PCCHAR>(__datum_buffer);
+		}
+
+		VIRTUAL VOID FromBinary(PCBYTE data)
+		{
+			PCBYTE bufferPtr = data;
+
+			bufferPtr += SIZEOF(CSIZE);
+
+			_DataType = static_cast<DataType>(*bufferPtr++);
+
+			switch (_DataType)
+			{
+			case DataType::BYTE_DATUM:
+			case DataType::CHAR_DATUM:
+			case DataType::BOOL_DATUM:
+
+				_Value = *((PBYTE)bufferPtr);
+				break;
+		
+			case DataType::WORD_DATUM:
+			case DataType::SHORT_DATUM:
+		
+
+				_Value = *((PWORD)bufferPtr);
+				break;
+		
+			case DataType::DWORD_DATUM:
+			case DataType::LONG_DATUM:		
+			case DataType::FLOAT_DATUM:
+
+				_Value = *((PDWORD)bufferPtr);
+				break;
+
+			default:
+
+				_Value = data;
+			}
+		}
+
+		VIRTUAL VOID FromString(PCCHAR data)
+		{
+			PCCHAR bufferPtr = data;
+
+			bufferPtr += 2 * SIZEOF(CSIZE);
+
+			bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
+
+			CBYTE byteWidth = this->ByteWidth();
+
+			PBYTE bytes = NULL;
+	
+			switch (_DataType)
+			{
+			case DataType::BYTE_DATUM:
+			case DataType::CHAR_DATUM:
+			case DataType::BOOL_DATUM:
+
+				bytes = (PBYTE)&(_Value.Byte);
+				break;
+		
+			case DataType::WORD_DATUM:
+			case DataType::SHORT_DATUM:		
+
+				bytes = (PBYTE)&(_Value.Word);
+				break;
+		
+			case DataType::DWORD_DATUM:
+			case DataType::LONG_DATUM:		
+			case DataType::FLOAT_DATUM:
+
+				bytes = (PBYTE)&(_Value.DWord);
+				break;
+
+			default:
+		
+				for (BYTE i = 0; i < byteWidth; i++)
+					bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+
+				_Value = bytes;
+
+				return;
+			}
+	
+			for (SIZE i = 0 ; i < byteWidth; i++)
+				bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
+		}
 
 	#ifdef ARDUINO
 
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
+		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
+		{
+			if (!serial.availableForWrite())
+				delay(SERIAL_DEFAULT_TIMEOUT_MS);
+			if (!serial.availableForWrite())
+				return FALSE;
+
+			if (!this->printTo(serial))
+				return FALSE;
+
+			serial.flush();
+
+			return TRUE;
+		}
+
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & twi = Wire)
+		{
+			twi.beginTransmission(i2cAddr);
+
+			if (!this->printTo(twi))
+				return FALSE;
+
+			twi.flush();	
+
+			if (twi.endTransmission())
+				return FALSE;
+
+			return TRUE;
+		}
 				
-		VIRTUAL SIZE printTo(Print &) const;
+		VIRTUAL SIZE printTo(Print & printer) const
+		{
+		#ifdef _DEBUG
+			SIZE size = this->StringSize();
+			PCCHAR buffer = this->ToString();
+		#else
+			SIZE size = this->BinarySize();
+			PCBYTE buffer = this->ToBinary();
+		#endif
+
+			for (SIZE i = 0; i < size; i++)
+				printer.print(buffer[i]);
+
+			delete[] __datum_buffer;
+			__datum_buffer = NULL;
+
+			return size;
+		}
 
 	#endif
 
 
 		// IDatum IMPLEMENTATION
 
-		VIRTUAL CONST DataSize GetDataSize() const;
-		VIRTUAL CONST DataType GetDataType() const;
+		VIRTUAL CONST DataSize GetDataSize() const
+		{
+			return DataTypeToDataSize(_DataType);
+		}
+
+		VIRTUAL CONST DataType GetDataType() const
+		{
+			return _DataType;
+		}
 		
 
 	protected:
@@ -257,7 +553,7 @@ namespace IttyBitty
 		
 		BOOL _Dispose = FALSE;
 
-		ConstValue _Value;
+		TVal _Value;
 		DataType _DataType;
 	};
 
@@ -265,100 +561,391 @@ namespace IttyBitty
 
 
 #pragma region [Datum] DEFINITION - TAGGED UNION
-
-	CLASS Datum : public DatumBase
+	
+	template<typename TVal>
+	CLASS Datum : public DatumBase<TVal>
 	{
+	protected:
+
+		// TYPEDEF ALIASES
+		typedef TVal TVAL, * PTVAL, & RTVAL;
+		typedef const TVal CTVAL, * PCTVAL, & RCTVAL;
+
+		using DatumBase<TVal>::_Dispose;
+		using DatumBase<TVal>::_Value;
+		using DatumBase<TVal>::_DataType;
+		using DatumBase<TVal>::IttyBitty::__datum_buffer;
+
+
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT Datum(CONST DataType = DataType::BYTE_DATUM);
+		EXPLICIT Datum(CONST DataType dataType = DataType::BYTE_DATUM)
+		{
+			_Dispose = TRUE;
+	
+			_DataType = dataType;
+		}
 
-		Datum(RCDATUM);
-		Datum(RRDATUM);
+		Datum(RCDATUM<TVal> other)
+		{
+			_Dispose = other._Dispose;
 
-		EXPLICIT Datum(RCCONSTVALUE, CONST DataType = DataType::BYTE_DATUM);
+			_Value = other._Value;
+			_DataType = other._DataType;
+		}
 
-		EXPLICIT Datum(RCCHAR);
-		EXPLICIT Datum(RCBYTE);
-		EXPLICIT Datum(RCBOOL);
-		EXPLICIT Datum(RCSHORT);
-		EXPLICIT Datum(RCWORD);
-		EXPLICIT Datum(RCLONG);
-		EXPLICIT Datum(RCDWORD);
-		EXPLICIT Datum(RCFLOAT);
+		Datum(RRDATUM<TVal> other)
+		{
+			this->~DatumBase();
+			new (this) Datum(other._Value, other._DataType);
+		}
 
+		EXPLICIT Datum(TVAL value, CONST DataType dataType = DataType::BYTE_DATUM)
+		{
+			_Value = value;
+			_DataType = dataType;
+		}
 
+		EXPLICIT Datum(RCCHAR value)
+		{
+			_Value = value;
+			_DataType = DataType::CHAR_DATUM;
+		}
+
+		EXPLICIT Datum(RCBYTE value)
+		{
+			_Value = value;
+			_DataType = DataType::BYTE_DATUM;
+		}
+
+		EXPLICIT Datum(RCBOOL value)
+		{
+			_Value = value;
+			_DataType = DataType::BOOL_DATUM;
+		}
+
+		EXPLICIT Datum(RCSHORT value)
+		{
+			_Value = value;
+			_DataType = DataType::SHORT_DATUM;
+		}
+
+		EXPLICIT Datum(RCWORD value)
+		{
+			_Value = value;
+			_DataType = DataType::WORD_DATUM;
+		}
+
+		EXPLICIT Datum(RCLONG value)
+		{
+			_Value = value;
+			_DataType = DataType::LONG_DATUM;
+		}
+
+		EXPLICIT Datum(RCDWORD value)
+		{
+			_Value = value;
+			_DataType = DataType::DWORD_DATUM;
+		}
+
+		EXPLICIT Datum(RCFLOAT value)
+		{
+			_Value = value;
+			_DataType = DataType::FLOAT_DATUM;
+		}
+
+		
 		// STATIC FUNCTIONS
 
-		STATIC RDATUM NULL_OBJECT();
+		STATIC RDATUM<TVal> NULL_OBJECT()
+		{
+			STATIC Datum NULL_DATUM;
+			return NULL_DATUM;
+		}
 		
 		
 		// OPERATORS
 
-		VIRTUAL RDATUM operator =(RCDATUM);
-		VIRTUAL RDATUM operator =(RRDATUM);
+		VIRTUAL RDATUM<TVal> operator =(RCDATUM<TVal> rValue)
+		{
+			*this = Datum(rValue);
+			return *this;
+		}
 
-		VIRTUAL RDATUM operator =(RCCONSTVALUE);
+		VIRTUAL RDATUM<TVal> operator =(RRDATUM<TVal> rValue)
+		{
+			*this = Datum(rValue);
+			return *this;
+		}
 
-		VIRTUAL operator RCCHAR() const;
-		VIRTUAL operator RCBYTE() const;
-		VIRTUAL operator RCBOOL() const;
-		VIRTUAL operator RCSHORT() const;
-		VIRTUAL operator RCWORD() const;
-		VIRTUAL operator RCLONG() const;
-		VIRTUAL operator RCDWORD() const;
-		VIRTUAL operator RCFLOAT() const;
+		VIRTUAL RDATUM<TVal> operator =(RCCONSTVALUE rValue)
+		{
+			_Value = rValue;
+			return *this;
+		}
+
+		VIRTUAL operator RCCHAR() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCBYTE() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCBOOL() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCSHORT() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCWORD() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCLONG() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCDWORD() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator RCFLOAT() const
+		{
+			return _Value;
+		}
 	};
 
 #pragma endregion
 
 
 #pragma region VarLengthDatum DECLARATION - VARIABLE-LENGTH TAGGED UNION
-
-	CLASS VarLengthDatum : public Datum
+	
+	template<typename TVal>
+	CLASS VarLengthDatum : public Datum<TVal>
 	{
-	public:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		EXPLICIT VarLengthDatum(CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
-
-		VarLengthDatum(RCVARLENGTHDATUM);
-		VarLengthDatum(RRVARLENGTHDATUM);
-
-		EXPLICIT VarLengthDatum(RCCONSTVALUE, CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
-
-		EXPLICIT VarLengthDatum(PCBYTE, CSIZE = 0);
-		EXPLICIT VarLengthDatum(PCCHAR);
-		EXPLICIT VarLengthDatum(PCBITPACK, CSIZE = 0);
-
-		VIRTUAL ~VarLengthDatum();
-		
-		
-		// OPERATORS
-
-		VIRTUAL RVARLENGTHDATUM operator =(RCVARLENGTHDATUM);
-		VIRTUAL RVARLENGTHDATUM operator =(RRVARLENGTHDATUM);
-		
-		VIRTUAL operator PCBYTE() const;
-		VIRTUAL operator PCCHAR() const;
-		VIRTUAL operator PCBITPACK() const;
-
-
-		// Datum OVERRIDES
-
-		VIRTUAL CSIZE ByteWidth() const final;
-
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
-		
-
 	protected:
+		
+		using Datum<TVal>::_Dispose;
+		using Datum<TVal>::_Value;
+		using Datum<TVal>::_DataType;
+		using Datum<TVal>::IttyBitty::__datum_buffer;
 
 		// INSTANCE VARIABLES
 
 		SIZE _Length = 0;
+
+
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		EXPLICIT VarLengthDatum(CONST DataType dataType = DataType::BYTES_DATUM, CSIZE length = 0)
+			: Datum<TVal>(dataType), _Length(length)
+		{
+			switch (dataType)
+			{
+			case DataType::BYTES_DATUM:
+
+				_Value = new BYTE[length];
+				break;
+
+			case DataType::STRING_DATUM:
+
+				_Value = new CHAR[length];
+				break;
+
+			case DataType::BIT_DATUM:
+
+				_Value = new BITPACK[length];
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		VarLengthDatum(RCVARLENGTHDATUM<TVal> other)
+		{
+			_Dispose = other._Dispose;
+
+			_Value = other._Value;
+			_DataType = other._DataType;
+			_Length = other._Length;
+		}
+
+		VarLengthDatum(RRVARLENGTHDATUM<TVal> other)
+		{
+			this->~VarLengthDatum<TVal>();
+			new (this) VarLengthDatum<TVal>(other._Value, other._DataType, other._Length);
+		}
+
+		EXPLICIT VarLengthDatum(CONST TVal & value, CONST DataType dataType = DataType::BYTES_DATUM, CSIZE length = 0) 
+			: Datum<TVal>(value, dataType)
+		{
+			if (_DataType == DataType::STRING_DATUM)
+			{
+				if (value.String == NULL)
+					_Length = 0;
+				else
+					_Length = strlen((PCCHAR)_Value);
+			}
+			else
+			{
+				_Length = length;
+			}
+		}
+
+		EXPLICIT VarLengthDatum(PCBYTE value, CSIZE length) 
+			: Datum<TVal>(DataType::BYTES_DATUM), _Length(length)
+		{
+			_Dispose = FALSE;
+
+			_Value = value;
+		}
+
+		EXPLICIT VarLengthDatum(PCCHAR value) 
+			: Datum<TVal>(DataType::STRING_DATUM)
+		{
+			_Dispose = FALSE;
+	
+			_Value = value;
+
+			if (value == NULL)
+				_Length = 0;
+			else
+				_Length = strlen(value);
+		}
+
+		EXPLICIT VarLengthDatum(PCBITPACK value, CSIZE length) 
+			: Datum<TVal>(DataType::BIT_DATUM), _Length(length)
+		{
+			_Dispose = FALSE;
+
+			_Value = value;
+		}
+
+		VIRTUAL ~VarLengthDatum()
+		{
+			if (!_Dispose)
+				return;
+	
+			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
+			//	_Value.FreeData();
+		}		
+		
+		// OPERATORS
+
+		VIRTUAL RVARLENGTHDATUM<TVal> operator =(RCVARLENGTHDATUM<TVal> rValue)
+		{
+			*this = VarLengthDatum<TVal>(rValue);
+			return *this;
+		}
+
+		VIRTUAL RVARLENGTHDATUM<TVal> operator =(RRVARLENGTHDATUM<TVal> rValue)
+		{
+			*this = VarLengthDatum<TVal>(rValue);
+			return *this;
+		}
+		
+		VIRTUAL operator PCBYTE() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator PCCHAR() const
+		{
+			return _Value;
+		}
+
+		VIRTUAL operator PCBITPACK() const
+		{
+			return _Value;
+		}
+
+		// Datum OVERRIDES
+
+		VIRTUAL CSIZE ByteWidth() const final
+		{
+			if (_Length > 0)
+				return _Length;
+
+			return DatumBase<TVal>::ByteWidth();
+		}
+
+		VIRTUAL VOID FromBinary(PCBYTE data)
+		{
+			PCBYTE bufferPtr = data;
+
+			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
+	
+			DatumBase<TVal>::FromBinary(data);
+		}
+		
+		VIRTUAL VOID FromString(PCCHAR data)
+		{
+			PCCHAR bufferPtr = data;
+
+			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
+
+			DatumBase<TVal>::FromString(data);
+
+			// TODO
+			//PCCHAR bufferPtr = data;
+
+			//bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
+
+			//CBYTE byteWidth = this->ByteWidth();
+
+			//PBYTE bytes = NULL;
+
+			//switch (_DataType)
+			//{
+			//case DataType::BYTE_DATUM:
+			//case DataType::CHAR_DATUM:
+			//case DataType::BOOL_DATUM:
+
+			//	bytes = (PBYTE)&(_Value.Byte);
+			//	break;
+			//	
+			//case DataType::WORD_DATUM:
+			//case DataType::SHORT_DATUM:
+			//	
+
+			//	bytes = (PBYTE)&(_Value.Word);
+			//	break;
+			//	
+			//case DataType::FLOAT_DATUM:
+			//case DataType::LONG_DATUM:		
+			//case DataType::DWORD_DATUM:
+
+			//	bytes = (PBYTE)&(_Value.DWord);
+			//	break;
+
+			//default:
+
+			//	for (BYTE i = 0; i < byteWidth; i++)
+			//		bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+
+			//	_Value = bytes;
+
+			//	return;
+			//}
+			//
+			//for (SIZE i = 0 ; i < byteWidth; i++)
+			//	bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
+		}
 	};
 
 #pragma endregion
@@ -366,9 +953,17 @@ namespace IttyBitty
 
 #pragma region [TypedDatum] DEFINITION - TEMPLATED TAGGED UNION
 	
-	template<typename T>
-	CLASS TypedDatum : public DatumBase
+	template<typename T, typename TVal>
+	CLASS TypedDatum : public DatumBase<TVal>
 	{
+	protected:
+
+		using DatumBase<TVal>::_Dispose;
+		using DatumBase<TVal>::_Value;
+		using DatumBase<TVal>::_DataType;
+		using DatumBase<TVal>::IttyBitty::__datum_buffer;
+
+
 	public:
 
 		// CONSTRUYCTORS/DESTRUCTOR
@@ -380,7 +975,7 @@ namespace IttyBitty
 			_DataType = TypedDatum<T>::FindDataType();
 		}
 
-		TypedDatum(RCTYPEDDATUM<T> other)
+		TypedDatum(RCTYPEDDATUM<T, TVal> other)
 		{
 			_Dispose = other._Dispose;
 
@@ -388,16 +983,16 @@ namespace IttyBitty
 			_DataType = other._DataType;
 		}
 
-		TypedDatum(RRTYPEDDATUM<T> other)
+		TypedDatum(RRTYPEDDATUM<T, TVal> other)
 		{
 			this->~DatumBase();
-			new (this) TypedDatum<T>(other._Value);
+			new (this) TypedDatum<T, TVal>(other._Value);
 		}
 
-		TypedDatum(RCCONSTVALUE value)
+		TypedDatum(CONST TVal & value)
 		{
 			_Value = value;
-			_DataType = TypedDatum<T>::FindDataType();
+			_DataType = TypedDatum<T, TVal>::FindDataType();
 		}
 
 		EXPLICIT TypedDatum(T & value)
@@ -415,28 +1010,28 @@ namespace IttyBitty
 
 		// STATIC METHODS
 
-		STATIC RTYPEDDATUM<T> NULL_OBJECT()
+		STATIC RTYPEDDATUM<T, TVal> NULL_OBJECT()
 		{
-			STATIC TypedDatum<T> NULL_TYPEDDATUM;
+			STATIC TypedDatum<T, TVal> NULL_TYPEDDATUM;
 			return NULL_TYPEDDATUM;
 		}
 		
 		
 		// OPERATORS
 
-		VIRTUAL RTYPEDDATUM<T> operator =(RCTYPEDDATUM<T> rValue)
+		VIRTUAL RTYPEDDATUM<T, TVal> operator =(RCTYPEDDATUM<T, TVal> rValue)
 		{
-			*this = TypedDatum<T>(rValue);
+			*this = TypedDatum<T, TVal>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDDATUM<T> operator =(RRTYPEDDATUM<T> rValue)
+		VIRTUAL RTYPEDDATUM<T, TVal> operator =(RRTYPEDDATUM<T, TVal> rValue)
 		{
-			*this = TypedDatum<T>(rValue);
+			*this = TypedDatum<T, TVal>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDDATUM<T> operator =(RCCONSTVALUE rValue)
+		VIRTUAL RTYPEDDATUM<T, TVal> operator =(CONST TVal & rValue)
 		{
 			_Value = rValue;
 			return *this;
@@ -474,8 +1069,8 @@ namespace IttyBitty
 
 #pragma region TypedDatum PARTIAL SPECIALIZATIONS
 
-	template<>
-	class TypedDatum<CHAR>
+	template<typename TVal>
+	class TypedDatum<CHAR, TVal>
 	{
 	protected:
 		
@@ -486,9 +1081,9 @@ namespace IttyBitty
 				return DataType::CHAR_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<BYTE>
+	
+	template<typename TVal>
+	class TypedDatum<BYTE, TVal>
 	{
 	protected:
 		
@@ -499,9 +1094,9 @@ namespace IttyBitty
 				return DataType::BYTE_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<BOOL>
+	
+	template<typename TVal>
+	class TypedDatum<BOOL, TVal>
 	{
 	protected:
 		
@@ -512,9 +1107,9 @@ namespace IttyBitty
 				return DataType::BOOL_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<SHORT>
+	
+	template<typename TVal>
+	class TypedDatum<SHORT, TVal>
 	{
 	protected:
 		
@@ -525,9 +1120,9 @@ namespace IttyBitty
 				return DataType::SHORT_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<WORD>
+	
+	template<typename TVal>
+	class TypedDatum<WORD, TVal>
 	{
 	protected:
 		
@@ -538,9 +1133,9 @@ namespace IttyBitty
 				return DataType::WORD_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<LONG>
+	
+	template<typename TVal>
+	class TypedDatum<LONG, TVal>
 	{
 	protected:
 		
@@ -552,8 +1147,8 @@ namespace IttyBitty
 			}
 	};
 
-	template<>
-	class TypedDatum<DWORD>
+	template<typename TVal>
+	class TypedDatum<DWORD, TVal>
 	{
 	protected:
 		
@@ -564,9 +1159,9 @@ namespace IttyBitty
 				return DataType::DWORD_DATUM;
 			}
 	};
-
-	template<>
-	class TypedDatum<FLOAT>
+	
+	template<typename TVal>
+	class TypedDatum<FLOAT, TVal>
 	{
 	protected:
 		
@@ -583,24 +1178,42 @@ namespace IttyBitty
 	
 #pragma region [VarLengthTypedDatum] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
-	template<typename T>
-	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
-
-	template<typename T>
-	CLASS VarLengthTypedDatum : public TypedDatum<T>
+	template<typename T,  typename TVal>
+	CLASS VarLengthTypedDatum : public TypedDatum<T, TVal>
 	{
+	protected:
+
+		using TypedDatum<T, TVal>::_Dispose;
+		using TypedDatum<T, TVal>::_Value;
+		using TypedDatum<T, TVal>::_DataType;
+		using TypedDatum<T, TVal>::IttyBitty::__datum_buffer;
+
+		
+		// PROTECTED STATIC FUNCTIONS
+
+		STATIC CONSTEXPR const DataType FindDataType()
+		{
+			return TypedDatum<T, TVal>::FindDataType();
+		}
+
+
+		// INSTANCE VARIABLES
+
+		SIZE _Length = 0;
+
+
 	public:
 
 		// CONSTRUYCTORS/DESTRUCTOR
 
-		VarLengthTypedDatum(CSIZE length = 0) : TypedDatum<T>()
+		VarLengthTypedDatum(CSIZE length = 0) : TypedDatum<T, TVal>()
 		{
 			_Value = new T[length];
-			_DataType = VarLengthTypedDatum<T>::FindDataType();
+			_DataType = VarLengthTypedDatum<T, TVal>::FindDataType();
 			_Length = length;
 		}
 
-		VarLengthTypedDatum(RCVARLENGTHTYPEDDATUM<T> other)
+		VarLengthTypedDatum(RCVARLENGTHTYPEDDATUM<T, TVal> other)
 		{
 			_Dispose = other._Dispose;
 
@@ -609,16 +1222,16 @@ namespace IttyBitty
 			_Length = other._Length;
 		}
 
-		VarLengthTypedDatum(RRVARLENGTHTYPEDDATUM<T> other)
+		VarLengthTypedDatum(RRVARLENGTHTYPEDDATUM<T, TVal> other)
 		{
-			this->~VarLengthTypedDatum<T>();
-			new (this) VarLengthTypedDatum<T>(other._Value);
+			this->~VarLengthTypedDatum<T, TVal>();
+			new (this) VarLengthTypedDatum<T, TVal>(other._Value);
 		}
 
-		VarLengthTypedDatum(RCCONSTVALUE value, CSIZE length = 0)
+		VarLengthTypedDatum(CONST TVal & value, CSIZE length = 0)
 		{
 			_Value = value;
-			_DataType = VarLengthTypedDatum<T>::FindDataType();
+			_DataType = VarLengthTypedDatum<T, TVal>::FindDataType();
 
 			if (_DataType == DataType::STRING_DATUM)
 			{
@@ -635,7 +1248,7 @@ namespace IttyBitty
 
 		EXPLICIT VarLengthTypedDatum(T & value)
 		{
-			new (this) VarLengthTypedDatum<T>(value);
+			new (this) VarLengthTypedDatum<T, TVal>(value);
 		}
 
 		VIRTUAL ~VarLengthTypedDatum()
@@ -668,7 +1281,7 @@ namespace IttyBitty
 			if (_Length > 0)
 				return _Length;
 
-			return DatumBase::ByteWidth();
+			return DatumBase<TVal>::ByteWidth();
 		}
 		
 		VIRTUAL VOID FromBinary(PCBYTE data) final
@@ -677,7 +1290,7 @@ namespace IttyBitty
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
-			DatumBase::FromBinary(data);
+			DatumBase<TVal>::FromBinary(data);
 		}
 		
 		VIRTUAL VOID FromString(PCCHAR data) final
@@ -686,7 +1299,7 @@ namespace IttyBitty
 
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-			DatumBase::FromString(data);
+			DatumBase<TVal>::FromString(data);
 			
 			// TODO
 			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
@@ -696,27 +1309,6 @@ namespace IttyBitty
 			//for (BYTE i = 0; i < this->ByteWidth(); i++)
 			//	bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 		}
-
-
-	protected:
-
-		using TypedDatum<T>::_Dispose;
-		using TypedDatum<T>::_Value;
-		using TypedDatum<T>::_DataType;
-		using TypedDatum<T>::IttyBitty::__datum_buffer;
-
-		
-		// PROTECTED STATIC FUNCTIONS
-
-		STATIC CONSTEXPR const DataType FindDataType()
-		{
-			return TypedDatum<T>::FindDataType();
-		}
-
-
-		// INSTANCE VARIABLES
-
-		SIZE _Length = 0;
 	};
 
 #pragma endregion
@@ -724,8 +1316,8 @@ namespace IttyBitty
 
 #pragma region VarLengthTypedDatum PARTIAL SPECIALIZATIONS
 
-	template<>
-	class VarLengthTypedDatum<PBYTE>
+	template<typename TVal>
+	class VarLengthTypedDatum<PBYTE, TVal>
 	{
 	protected:
 		
@@ -736,9 +1328,9 @@ namespace IttyBitty
 				return DataType::BYTES_DATUM;
 			}
 	};
-
-	template<>
-	class VarLengthTypedDatum<PCHAR>
+	
+	template<typename TVal>
+	class VarLengthTypedDatum<PCHAR, TVal>
 	{
 	protected:
 		
@@ -749,9 +1341,9 @@ namespace IttyBitty
 				return DataType::STRING_DATUM;
 			}
 	};
-
-	template<>
-	class VarLengthTypedDatum<BOOL>
+	
+	template<typename TVal>
+	class VarLengthTypedDatum<BOOL, TVal>
 	{
 	protected:
 		
@@ -809,6 +1401,7 @@ namespace IttyBitty
 
 #pragma region DATUM PARSING METHODS
 	
+	template<typename TVal = CONSTVALUE>
 	INLINE PIDATUM DatumFromBytes(PCBYTE data)
 	{
 		PIDATUM datum = NULL;
@@ -816,15 +1409,16 @@ namespace IttyBitty
 		SIZE length = static_cast<SIZE>(*data);
 
 		if (length == 0 || length > 4)
-			datum = new VarLengthDatum();
+			datum = new VarLengthDatum<TVal>();
 		else
-			datum = new Datum();
+			datum = new Datum<TVal>();
 
 		datum->FromBinary(data);
 
 		return datum;
 	}
 	
+	template<typename TVal = CONSTVALUE>
 	INLINE PIDATUM DatumFromString(PCCHAR data)
 	{
 		PIDATUM datum = NULL;
@@ -833,9 +1427,9 @@ namespace IttyBitty
 		StringReadValue<SIZE>(length, data);
 
 		if (length == 0 || length > 4)
-			datum = new VarLengthDatum();
+			datum = new VarLengthDatum<TVal>();
 		else
-			datum = new Datum();
+			datum = new Datum<TVal>();
 
 		datum->FromString(data);
 
@@ -843,7 +1437,7 @@ namespace IttyBitty
 	}
 
 #pragma endregion
-}
+};
 
 
 #endif

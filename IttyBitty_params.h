@@ -86,10 +86,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region INTERFACE DEFINITIONS
-
-
-	// [IParam] DEFINITION
+#pragma region [IParam] DEFINITION
 
 	INTERFACE IParam : public IDatum
 	{
@@ -472,9 +469,6 @@ namespace IttyBitty
 
 	
 #pragma region [VarLengthTypedParam] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
-
-	template<typename T>
-	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
 
 	template<typename T>
 	CLASS VarLengthTypedParam : public TypedParam<T>

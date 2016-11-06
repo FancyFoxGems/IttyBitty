@@ -86,10 +86,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region INTERFACE DEFINITIONS
-
-
-	// [IField] DEFINITION
+#pragma region [IField] DEFINITION
 
 	INTERFACE IField : public IDatum
 	{
@@ -472,9 +469,6 @@ namespace IttyBitty
 
 	
 #pragma region [VarLengthTypedField] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
-
-	template<typename T>
-	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
 
 	template<typename T>
 	CLASS VarLengthTypedField : public TypedField<T>
