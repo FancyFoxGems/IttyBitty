@@ -101,6 +101,9 @@
     <ClInclude Include="..\IttyBitty_interrupts.h">
       <Filter>Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_timers.h">
+      <Filter>Control</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_DB.h">
       <Filter>Data</Filter>
     </ClInclude>
@@ -246,6 +249,9 @@
       <Filter>Communication</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_interrupts.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_timers.cpp">
       <Filter>Control</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_DB.cpp">
