@@ -21,6 +21,8 @@ using namespace IttyBitty;
 
 #ifdef ARDUINO
 
+#pragma region ARDUINO PORT/PIN MAPPING GLOBAL VARIABLE DEFINITIONS
+
 PVBYTE ARDUINO_PORT_TO_MODE[NUM_PORTS];
 PVBYTE ARDUINO_PORT_TO_OUTPUT[NUM_PORTS];
 PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
@@ -28,8 +30,44 @@ PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
 BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
+#pragma endregion
+	
 
-// ARDUINO PIN GLOBAL FUNCTIONS
+#pragma region ARDUINO INITIALIZATION GLOBAL FUNCTION DEFINITIONS
+
+namespace IttyBitty
+{
+	VOID InitGPIO()
+	{
+		_InitializeArduinoPortTables();
+		_InitializeArduinoPinTables();
+	}
+	
+	VOID _InitializeArduinoPortTables()
+	{
+		for (SIZE i = 0; i < NUM_PORTS; i++)
+		{
+			if (i == 9) ++i;
+			ARDUINO_PORT_TO_MODE[i]		= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+			ARDUINO_PORT_TO_OUTPUT[i]	= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+			ARDUINO_PORT_TO_INPUT[i]	= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
+		}
+	}
+
+	VOID _InitializeArduinoPinTables()
+	{
+		for (SIZE i = 0; i < NUM_DIGITAL_PINS; i++)
+		{
+			ARDUINO_PIN_TO_PORT[i] = pgm_read_byte(&digital_pin_to_port_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
+			ARDUINO_PIN_TO_MASK[i] = pgm_read_byte(&digital_pin_to_bit_mask_PGM[i]);
+		}
+	}
+};
+
+#pragma endregion
+	
+
+#pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
 
 PinMode GetPinMode(PIN_NUMBER p)
 {
@@ -89,8 +127,12 @@ VOID ResetPin(PIN_NUMBER p)
 	RESET_ARDUINO_PIN(p);
 }
 
-#endif	// #ifdef ARDUINO
+#pragma endregion
 
+#endif	// #ifdef ARDUINO
+	
+
+#pragma region BIT-PACKED PORT VARIABLE DEFINITION MACROS
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
@@ -112,6 +154,10 @@ VOID ResetPin(PIN_NUMBER p)
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
+#pragma endregion
+	
+
+#pragma region BIT-PACKED PORT-SPECIFIC VARIABLE DEFINITION CALLS
 
 #ifdef PORTA
 	_INITIALIZE_PORT_STRUCTS(A)
@@ -157,8 +203,12 @@ VOID ResetPin(PIN_NUMBER p)
 	_INITIALIZE_PORT_STRUCTS(L)
 #endif
 
+#pragma endregion
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+
+#ifndef EXCLUDE_ITTYBITTY_BYTES	
+
+#pragma region PORT-SPECIFIC STRUCTURE DEFINITION CALLS
 
 	#define _GPIO_INITIALIZE_PORT(port_letter) RPORT GPIO::P##port_letter = Port##port_letter;
 
@@ -205,6 +255,8 @@ VOID ResetPin(PIN_NUMBER p)
 	#ifdef PORTL
 		_GPIO_INITIALIZE_PORT(L)
 	#endif
+
+#pragma endregion
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 

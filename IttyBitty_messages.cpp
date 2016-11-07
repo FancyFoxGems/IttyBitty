@@ -15,7 +15,7 @@
 using namespace IttyBitty;
 
 
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
 
 PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 

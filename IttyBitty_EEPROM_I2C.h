@@ -916,7 +916,7 @@ namespace IttyBitty
 }
 
 
-#pragma region GLOBAL VARIABLES	
+#pragma region ExtEEPROM GLOBAL VARIABLE DECLARATION
 
 EXTERN IttyBitty::EEPROMI2C<> ExtEEPROM;
 

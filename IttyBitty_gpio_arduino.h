@@ -11,7 +11,9 @@
 
 
 #include "IttyBitty_GPIO.h"
+	
 
+#pragma region PORT-CHECKING COMPILE-TIME LOGIC
 
 #ifdef PORTA
 	CSIZE __DUMMY_PORTA = __COUNTER__;
@@ -60,6 +62,11 @@
 
 CSIZE NUM_PORTS = __COUNTER__;
 
+#pragma endregion
+	
+
+#pragma region ARDUINO PIN/PORT MAPPING GLOBAL VARIABLE DECLARATIONS
+
 EXTERN PVBYTE ARDUINO_PORT_TO_MODE[NUM_PORTS];
 EXTERN PVBYTE ARDUINO_PORT_TO_OUTPUT[NUM_PORTS];
 EXTERN PVBYTE ARDUINO_PORT_TO_INPUT[NUM_PORTS];
@@ -73,39 +80,23 @@ EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 	CONSTEXPR CSIZE ARDUINO_PORT_INDEX_CORRECTION = 1;
 #endif
 
+#pragma endregion
+	
 
-INLINE VOID _InitializeArduinoPortTables()
-{
-	for (SIZE i = 0; i < NUM_PORTS; i++)
-	{
-		if (i == 9) ++i;
-		ARDUINO_PORT_TO_MODE[i]		= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_mode_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		ARDUINO_PORT_TO_OUTPUT[i]	= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_output_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-		ARDUINO_PORT_TO_INPUT[i]	= reinterpret_cast<PVBYTE>(pgm_read_byte(&port_to_input_PGM[i + ARDUINO_PORT_INDEX_CORRECTION]));
-	}
-}
-
-INLINE VOID _InitializeArduinoPinTables()
-{
-	for (SIZE i = 0; i < NUM_DIGITAL_PINS; i++)
-	{
-		ARDUINO_PIN_TO_PORT[i] = pgm_read_byte(&digital_pin_to_port_PGM[i]) - ARDUINO_PORT_INDEX_CORRECTION;
-		ARDUINO_PIN_TO_MASK[i] = pgm_read_byte(&digital_pin_to_bit_mask_PGM[i]);
-	}
-}
-
+#pragma region ARDUINO INITIALIZATION GLOBAL FUNCTION DECLARATIONS
 
 namespace IttyBitty
 {
-	INLINE VOID InitGPIO()
-	{
-		_InitializeArduinoPortTables();
-		_InitializeArduinoPinTables();
-	}
+	VOID InitGPIO();
+	
+	VOID _InitializeArduinoPortTables();
+	VOID _InitializeArduinoPinTables();
 };
 
+#pragma endregion
+	
 
-// ARDUINO PIN GLOBAL FUNCTIONS
+#pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
 	
 IttyBitty::PinMode GetPinMode(PIN_NUMBER);
 VOID SetPinMode(PIN_NUMBER, IttyBitty::PinMode = IttyBitty::PinMode::CurrentSink);
@@ -125,6 +116,10 @@ VOID TogglePin(PIN_NUMBER);
 	
 VOID ResetPin(PIN_NUMBER);
 
+#pragma endregion
+
+
+#pragma region ARDUINO PIN MANIPULATION MACROS
 
 #define ARDUINO_PIN_MODE_REF(arduino_pin)		(*ARDUINO_PORT_TO_MODE[ARDUINO_PIN_TO_PORT[arduino_pin]])
 #define ARDUINO_PIN_OUT_REF(arduino_pin)		(*ARDUINO_PORT_TO_OUTPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
@@ -155,5 +150,6 @@ VOID ResetPin(PIN_NUMBER);
 		else CLEAR_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);										\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_ARDUINO_PIN(arduino_pin); else CLEAR_ARDUINO_PIN(arduino_pin)
 
+#pragma endregion
 
 #endif

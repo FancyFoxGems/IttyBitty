@@ -16,7 +16,7 @@
 using namespace IttyBitty;
 
 
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
 
 PBYTE IttyBitty::__field_buffer = NULL;
 
@@ -299,150 +299,150 @@ CONST DataType FieldBase::GetDataType() const
 
 // CONSTRUCTORS
 
-Field::Field(CONST DataType dataType)
-{
-	_Dispose = TRUE;
-	
-	_DataType = dataType;
-}
-
-Field::Field(RCFIELD other)
-{
-	_Dispose = other._Dispose;
-
-	_Value = other._Value;
-	_DataType = other._DataType;
-}
-
-Field::Field(RRFIELD other)
-{
-	this->~FieldBase();
-	new (this) Field(other._Value, other._DataType);
-}
-
-Field::Field(RCCONSTVALUE value, CONST DataType dataType)
-{
-	_Value = value;
-	_DataType = dataType;
-}
-
-Field::Field(RCCHAR value)
-{
-	_Value = value;
-	_DataType = DataType::CHAR_DATUM;
-}
-
-Field::Field(RCBYTE value)
-{
-	_Value = value;
-	_DataType = DataType::BYTE_DATUM;
-}
-
-Field::Field(RCBOOL value)
-{
-	_Value = value;
-	_DataType = DataType::BOOL_DATUM;
-}
-
-Field::Field(RCSHORT value)
-{
-	_Value = value;
-	_DataType = DataType::SHORT_DATUM;
-}
-
-Field::Field(RCWORD value)
-{
-	_Value = value;
-	_DataType = DataType::WORD_DATUM;
-}
-
-Field::Field(RCLONG value)
-{
-	_Value = value;
-	_DataType = DataType::LONG_DATUM;
-}
-
-Field::Field(RCDWORD value)
-{
-	_Value = value;
-	_DataType = DataType::DWORD_DATUM;
-}
-
-Field::Field(RCFLOAT value)
-{
-	_Value = value;
-	_DataType = DataType::FLOAT_DATUM;
-}
-
-
-// STATIC FUNCTIONS
-
-RFIELD Field::NULL_OBJECT()
-{
-	STATIC Field NULL_DATUM;
-	return NULL_DATUM;
-}
-
-
-// OPERATORS
-
-RFIELD Field::operator =(RCFIELD rValue)
-{
-	*this = Field(rValue);
-	return *this;
-}
-
-RFIELD Field::operator =(RRFIELD rValue)
-{
-	*this = Field(rValue);
-	return *this;
-}
-
-RFIELD Field::operator =(RCCONSTVALUE rValue)
-{
-	_Value = rValue;
-	return *this;
-}
-
-
-Field::operator RCCHAR() const
-{
-	return _Value;
-}
-
-Field::operator RCBYTE() const
-{
-	return _Value;
-}
-
-Field::operator RCBOOL() const
-{
-	return _Value;
-}
-Field::operator RCSHORT() const
-{
-	return _Value;
-}
-
-Field::operator RCWORD() const
-{
-	return _Value;
-}
-
-Field::operator RCLONG() const
-{
-	return _Value;
-}
-
-Field::operator RCDWORD() const
-{
-	return _Value;
-}
-
-Field::operator RCFLOAT() const
-{
-	return _Value;
-}
+//Field::Field(CONST DataType dataType)
+//{
+//	_Dispose = TRUE;
+//	
+//	_DataType = dataType;
+//}
+//
+//Field::Field(RCFIELD other)
+//{
+//	_Dispose = other._Dispose;
+//
+//	_Value = other._Value;
+//	_DataType = other._DataType;
+//}
+//
+//Field::Field(RRFIELD other)
+//{
+//	this->~FieldBase();
+//	new (this) Field(other._Value, other._DataType);
+//}
+//
+//Field::Field(RCCONSTVALUE value, CONST DataType dataType)
+//{
+//	_Value = value;
+//	_DataType = dataType;
+//}
+//
+//Field::Field(RCCHAR value)
+//{
+//	_Value = value;
+//	_DataType = DataType::CHAR_DATUM;
+//}
+//
+//Field::Field(RCBYTE value)
+//{
+//	_Value = value;
+//	_DataType = DataType::BYTE_DATUM;
+//}
+//
+//Field::Field(RCBOOL value)
+//{
+//	_Value = value;
+//	_DataType = DataType::BOOL_DATUM;
+//}
+//
+//Field::Field(RCSHORT value)
+//{
+//	_Value = value;
+//	_DataType = DataType::SHORT_DATUM;
+//}
+//
+//Field::Field(RCWORD value)
+//{
+//	_Value = value;
+//	_DataType = DataType::WORD_DATUM;
+//}
+//
+//Field::Field(RCLONG value)
+//{
+//	_Value = value;
+//	_DataType = DataType::LONG_DATUM;
+//}
+//
+//Field::Field(RCDWORD value)
+//{
+//	_Value = value;
+//	_DataType = DataType::DWORD_DATUM;
+//}
+//
+//Field::Field(RCFLOAT value)
+//{
+//	_Value = value;
+//	_DataType = DataType::FLOAT_DATUM;
+//}
+//
+//
+//// STATIC FUNCTIONS
+//
+//RFIELD Field::NULL_OBJECT()
+//{
+//	STATIC Field NULL_DATUM;
+//	return NULL_DATUM;
+//}
+//
+//
+//// OPERATORS
+//
+//RFIELD Field::operator =(RCFIELD rValue)
+//{
+//	*this = Field(rValue);
+//	return *this;
+//}
+//
+//RFIELD Field::operator =(RRFIELD rValue)
+//{
+//	*this = Field(rValue);
+//	return *this;
+//}
+//
+//RFIELD Field::operator =(RCCONSTVALUE rValue)
+//{
+//	_Value = rValue;
+//	return *this;
+//}
+//
+//
+//Field::operator RCCHAR() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCBYTE() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCBOOL() const
+//{
+//	return _Value;
+//}
+//Field::operator RCSHORT() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCWORD() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCLONG() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCDWORD() const
+//{
+//	return _Value;
+//}
+//
+//Field::operator RCFLOAT() const
+//{
+//	return _Value;
+//}
 
 #pragma endregion
 

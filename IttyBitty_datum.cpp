@@ -12,7 +12,7 @@
 using namespace IttyBitty;
 
 
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
 
 #ifdef ARDUINO
 CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
@@ -23,5 +23,89 @@ CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
 PBYTE IttyBitty::__datum_buffer = NULL;
 
 #pragma endregion
+
+
+namespace IttyBitty
+{
+#pragma region HELPER GLOBAL FUNCTION DEFINITIONS
+
+	template<typename T>
+	PCHAR StringInsertValue(CONST T value, PCHAR buffer, CBYTE radix = 0x10)
+	{
+		CHAR valStr[2 * T_SIZE + 1];
+		
+		valStr[2 * T_SIZE] = '\0';
+		
+		itoa(value, valStr, radix);
+
+		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
+		for (SIZE i = 0; i < lenDiff; i++)
+		{
+			valStr[i + lenDiff] = valStr[i];
+			valStr[i] = '0';
+		}
+
+		memcpy(buffer, valStr, 2 * T_SIZE);
+
+		return (PCHAR)(buffer + 2 * T_SIZE);
+	}
+
+	template<typename T>
+	PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
+	{
+		CHAR valStr[2 * T_SIZE + 1];
+
+		valStr[2 * T_SIZE] = '\0';
+
+		memcpy(valStr, data, 2 * T_SIZE);
+		valStr[2 * T_SIZE] = '\0';
+
+		value = static_cast<T>(strtol(valStr, NULL, 0x10));
+		
+		return (PCCHAR)(data + 2 * T_SIZE);
+	}
+
+#pragma endregion
+	
+
+#pragma region DATUM PARSING GLOBAL FUNCTION DEFINITIONS
+	
+	template<typename TVal = CONSTVALUE>
+	PIDATUM DatumFromBytes(PCBYTE data)
+	{
+		PIDATUM datum = NULL;
+
+		SIZE length = static_cast<SIZE>(*data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthDatum<TVal>();
+		else
+			datum = new Datum<TVal>();
+
+		datum->FromBinary(data);
+
+		return datum;
+	}
+	
+	template<typename TVal = CONSTVALUE>
+	PIDATUM DatumFromString(PCCHAR data)
+	{
+		PIDATUM datum = NULL;
+		SIZE length = 0;
+
+		StringReadValue<SIZE>(length, data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthDatum<TVal>();
+		else
+			datum = new Datum<TVal>();
+
+		datum->FromString(data);
+
+		return datum;
+	}
+
+#pragma endregion
+};
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_DATUM

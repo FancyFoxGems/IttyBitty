@@ -11,7 +11,9 @@
 
 
 #include "IttyBitty_GPIO.h"
+	
 
+#pragma region GENERAL PIN MANIPULATION MACROs
 
 #define PIN_REF(port_ref, pin_number) reinterpret_cast<PVBYTE>(port_ref)[pin_number]
 
@@ -46,10 +48,12 @@
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(DDR##port_letter, pin_number); else CLEAR_PIN(DDR##port_letter, pin_number);		\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_PIN(PORT##port_letter, pin_number); else CLEAR_PIN(PORT##port_letter, pin_number)
 
+#pragma endregion
+	
 
+#pragma region PIN-SPECIFIC MACROs
 
 #ifdef PORTA
-
 
 	#define DDRA_0 PIN_REF(DDRA, 0)
 	#define DDRA_1 PIN_REF(DDRA, 1)
@@ -357,12 +361,10 @@
 	#define PA6_SET_MODE(mode) PIN_SET_MODE(A, 6, mode)
 	#define PA7_SET_MODE(mode) PIN_SET_MODE(A, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTB
-
 
 	#define DDRB_0 PIN_REF(DDRB, 0)
 	#define DDRB_1 PIN_REF(DDRB, 1)
@@ -670,12 +672,10 @@
 	#define PB6_SET_MODE(mode) PIN_SET_MODE(B, 6, mode)
 	#define PB7_SET_MODE(mode) PIN_SET_MODE(B, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTC
-
 
 	#define DDRC_0 PIN_REF(DDRC, 0)
 	#define DDRC_1 PIN_REF(DDRC, 1)
@@ -983,12 +983,10 @@
 	#define PC6_SET_MODE(mode) PIN_SET_MODE(C, 6, mode)
 	#define PC7_SET_MODE(mode) PIN_SET_MODE(C, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTD
-
 
 	#define DDRD_0 PIN_REF(DDRD, 0)
 	#define DDRD_1 PIN_REF(DDRD, 1)
@@ -1296,12 +1294,10 @@
 	#define PD6_SET_MODE(mode) PIN_SET_MODE(D, 6, mode)
 	#define PD7_SET_MODE(mode) PIN_SET_MODE(D, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTE
-
 
 	#define DDRE_0 PIN_REF(DDRE, 0)
 	#define DDRE_1 PIN_REF(DDRE, 1)
@@ -1609,12 +1605,10 @@
 	#define PE6_SET_MODE(mode) PIN_SET_MODE(E, 6, mode)
 	#define PE7_SET_MODE(mode) PIN_SET_MODE(E, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTF
-
 
 	#define DDRF_0 PIN_REF(DDRF, 0)
 	#define DDRF_1 PIN_REF(DDRF, 1)
@@ -1922,12 +1916,10 @@
 	#define PF6_SET_MODE(mode) PIN_SET_MODE(F, 6, mode)
 	#define PF7_SET_MODE(mode) PIN_SET_MODE(F, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTG
-
 
 	#define DDRG_0 PIN_REF(DDRG, 0)
 	#define DDRG_1 PIN_REF(DDRG, 1)
@@ -2235,12 +2227,10 @@
 	#define PG6_SET_MODE(mode) PIN_SET_MODE(G, 6, mode)
 	#define PG7_SET_MODE(mode) PIN_SET_MODE(G, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTH
-
 
 	#define DDRH_0 PIN_REF(DDRH, 0)
 	#define DDRH_1 PIN_REF(DDRH, 1)
@@ -2548,12 +2538,10 @@
 	#define PH6_SET_MODE(mode) PIN_SET_MODE(H, 6, mode)
 	#define PH7_SET_MODE(mode) PIN_SET_MODE(H, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTJ
-
 
 	#define DDRJ_0 PIN_REF(DDRJ, 0)
 	#define DDRJ_1 PIN_REF(DDRJ, 1)
@@ -2861,12 +2849,10 @@
 	#define PJ6_SET_MODE(mode) PIN_SET_MODE(J, 6, mode)
 	#define PJ7_SET_MODE(mode) PIN_SET_MODE(J, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTK
-
 
 	#define DDRK_0 PIN_REF(DDRK, 0)
 	#define DDRK_1 PIN_REF(DDRK, 1)
@@ -3174,12 +3160,10 @@
 	#define PK6_SET_MODE(mode) PIN_SET_MODE(K, 6, mode)
 	#define PK7_SET_MODE(mode) PIN_SET_MODE(K, 7, mode)
 
-
 #endif
 
 
 #ifdef PORTL
-
 
 	#define DDRL_0 PIN_REF(DDRL, 0)
 	#define DDRL_1 PIN_REF(DDRL, 1)
@@ -3487,8 +3471,8 @@
 	#define PL6_SET_MODE(mode) PIN_SET_MODE(L, 6, mode)
 	#define PL7_SET_MODE(mode) PIN_SET_MODE(L, 7, mode)
 
-
 #endif
 
+#pragma endregion
 
 #endif

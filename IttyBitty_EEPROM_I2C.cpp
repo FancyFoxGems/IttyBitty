@@ -14,7 +14,7 @@
 #include "IttyBitty_EEPROM_I2C.h"
 
 
-/* GLOBAL VARIABLES */
+/* ExtEEPROM GLOBAL VARIABLE DEFINITION */
 
 IttyBitty::EEPROMI2C<> ExtEEPROM;
 

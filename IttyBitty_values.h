@@ -26,7 +26,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [ConstValue] DEFINITION: IMMUTABLE, CONSTVALUE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
+#pragma region [ConstValue] DEFINITION: IMMUTABLE, VALUE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
 	
 	UNION PACKED ConstValue
 	{
@@ -116,20 +116,20 @@ namespace IttyBitty
 	{
 		// UNION MEMBERS
 
-		PBYTE Bytes;
-		PCHAR String;	
-		PBITPACK BitFields;
+		PPBYTE BytesRef;
+		PPCHAR StringRef;	
+		PPBITPACK BitFieldsRef;
 		
-		PCHAR CharPtr;
-		PBYTE BytePtr;
-		PBOOL BoolPtr;
+		PCHAR CharRef;
+		PBYTE ByteRef;
+		PBOOL BoolRef;
 		
-		PSHORT ShortPtr;
-		PWORD WordPtr;
+		PSHORT ShortRef;
+		PWORD WordRef;
 		
-		PLONG LongPtr;
-		PDWORD DWordPtr;
-		PFLOAT FloatPtr;
+		PLONG LongRef;
+		PDWORD DWordRef;
+		PFLOAT FloatRef;
 
 
 		// CONSTRUCTORS

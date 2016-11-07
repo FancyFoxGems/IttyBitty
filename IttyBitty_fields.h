@@ -15,7 +15,7 @@
 
 namespace IttyBitty
 {
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 		
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __field_buffer;
@@ -153,49 +153,49 @@ namespace IttyBitty
 
 #pragma region [Field] DEFINITION - TAGGED UNION
 
-	CLASS Field : public FieldBase
+	CLASS Field : public DatumBase<Value>, public IField
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT Field(CONST DataType = DataType::BYTE_DATUM);
+		//EXPLICIT Field(CONST DataType = DataType::BYTE_DATUM);
 
-		Field(RCFIELD);
-		Field(RRFIELD);
+		//Field(RCFIELD);
+		//Field(RRFIELD);
 
-		EXPLICIT Field(RCCONSTVALUE, CONST DataType = DataType::BYTE_DATUM);
+		//EXPLICIT Field(RCVALUE, CONST DataType = DataType::BYTE_DATUM);
 
-		EXPLICIT Field(RCCHAR);
-		EXPLICIT Field(RCBYTE);
-		EXPLICIT Field(RCBOOL);
-		EXPLICIT Field(RCSHORT);
-		EXPLICIT Field(RCWORD);
-		EXPLICIT Field(RCLONG);
-		EXPLICIT Field(RCDWORD);
-		EXPLICIT Field(RCFLOAT);
+		//EXPLICIT Field(RCCHAR);
+		//EXPLICIT Field(RCBYTE);
+		//EXPLICIT Field(RCBOOL);
+		//EXPLICIT Field(RCSHORT);
+		//EXPLICIT Field(RCWORD);
+		//EXPLICIT Field(RCLONG);
+		//EXPLICIT Field(RCDWORD);
+		//EXPLICIT Field(RCFLOAT);
 
 
-		// STATIC FUNCTIONS
+		//// STATIC FUNCTIONS
 
-		STATIC RFIELD NULL_OBJECT();
-		
-		
-		// OPERATORS
+		//STATIC RFIELD NULL_OBJECT();
+		//
+		//
+		//// OPERATORS
 
-		VIRTUAL RFIELD operator =(RCFIELD);
-		VIRTUAL RFIELD operator =(RRFIELD);
+		//VIRTUAL RFIELD operator =(RCFIELD);
+		//VIRTUAL RFIELD operator =(RRFIELD);
 
-		VIRTUAL RFIELD operator =(RCCONSTVALUE);
+		//VIRTUAL RFIELD operator =(RCVALUE);
 
-		VIRTUAL operator RCCHAR() const;
-		VIRTUAL operator RCBYTE() const;
-		VIRTUAL operator RCBOOL() const;
-		VIRTUAL operator RCSHORT() const;
-		VIRTUAL operator RCWORD() const;
-		VIRTUAL operator RCLONG() const;
-		VIRTUAL operator RCDWORD() const;
-		VIRTUAL operator RCFLOAT() const;
+		//VIRTUAL operator RCCHAR() const;
+		//VIRTUAL operator RCBYTE() const;
+		//VIRTUAL operator RCBOOL() const;
+		//VIRTUAL operator RCSHORT() const;
+		//VIRTUAL operator RCWORD() const;
+		//VIRTUAL operator RCLONG() const;
+		//VIRTUAL operator RCDWORD() const;
+		//VIRTUAL operator RCFLOAT() const;
 	};
 
 #pragma endregion

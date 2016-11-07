@@ -24,7 +24,7 @@
 
 namespace IttyBitty
 {
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 	
 #ifdef ARDUINO
 	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
@@ -198,6 +198,28 @@ namespace IttyBitty
 	}
 
 #pragma endregion
+	
+
+#pragma region HELPER GLOBAL FUNCTION DECLARATIONS
+
+	template<typename T>
+	PCHAR StringInsertValue(CONST T, PCHAR, CBYTE = 0x10);
+	
+	template<typename T>
+	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
+
+#pragma endregion
+	
+
+#pragma region DATUM PARSING GLOBAL FUNCTION DECLARATIONS
+	
+	template<typename TVal = CONSTVALUE>
+	PIDATUM DatumFromBytes(PCBYTE);
+	
+	template<typename TVal = CONSTVALUE>
+	PIDATUM DatumFromString(PCCHAR);
+
+#pragma endregion
 
 
 #pragma region INTERFACE DEFINITIONS
@@ -266,12 +288,6 @@ namespace IttyBitty
 
 
 #pragma region [DatumBase] DEFINITION - TAGGED UNION BASE
-
-	template<typename T>
-	INLINE PCHAR StringInsertValue(CONST T, PCHAR, CBYTE = 0x10);
-
-	template<typename T>
-	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
 	
 	template<typename TVal>
 	CLASS DatumBase : public IDatum
@@ -1354,87 +1370,6 @@ namespace IttyBitty
 				return DataType::BIT_DATUM;
 			}
 	};
-
-#pragma endregion
-	
-
-#pragma region HELPER METHODS
-
-	template<typename T>
-	INLINE PCHAR StringInsertValue(CONST T value, PCHAR buffer, CBYTE radix = 0x10)
-	{
-		CHAR valStr[2 * T_SIZE + 1];
-		
-		valStr[2 * T_SIZE] = '\0';
-		
-		itoa(value, valStr, radix);
-
-		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
-		for (SIZE i = 0; i < lenDiff; i++)
-		{
-			valStr[i + lenDiff] = valStr[i];
-			valStr[i] = '0';
-		}
-
-		memcpy(buffer, valStr, 2 * T_SIZE);
-
-		return (PCHAR)(buffer + 2 * T_SIZE);
-	}
-
-	template<typename T>
-	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
-	{
-		CHAR valStr[2 * T_SIZE + 1];
-
-		valStr[2 * T_SIZE] = '\0';
-
-		memcpy(valStr, data, 2 * T_SIZE);
-		valStr[2 * T_SIZE] = '\0';
-
-		value = static_cast<T>(strtol(valStr, NULL, 0x10));
-		
-		return (PCCHAR)(data + 2 * T_SIZE);
-	}
-
-#pragma endregion
-	
-
-#pragma region DATUM PARSING METHODS
-	
-	template<typename TVal = CONSTVALUE>
-	INLINE PIDATUM DatumFromBytes(PCBYTE data)
-	{
-		PIDATUM datum = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthDatum<TVal>();
-		else
-			datum = new Datum<TVal>();
-
-		datum->FromBinary(data);
-
-		return datum;
-	}
-	
-	template<typename TVal = CONSTVALUE>
-	INLINE PIDATUM DatumFromString(PCCHAR data)
-	{
-		PIDATUM datum = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthDatum<TVal>();
-		else
-			datum = new Datum<TVal>();
-
-		datum->FromString(data);
-
-		return datum;
-	}
 
 #pragma endregion
 };

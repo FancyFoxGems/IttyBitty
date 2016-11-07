@@ -16,7 +16,7 @@
 using namespace IttyBitty;
 
 
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
 
 PBYTE IttyBitty::__param_buffer = NULL;
 

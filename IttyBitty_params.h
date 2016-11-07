@@ -15,7 +15,7 @@
 
 namespace IttyBitty
 {
-#pragma region GLOBAL CONSTANTS & VARIABLES
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 		
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __param_buffer;

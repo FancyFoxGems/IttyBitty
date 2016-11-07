@@ -13,6 +13,8 @@
 #include "IttyBitty_registers.h"
 
 
+#pragma region DEFINES
+
 #define TRISTATE_INPUT INPUT
 
 #define	L	LOW		// I/O low state; 0x0
@@ -21,17 +23,25 @@
 #define HIGH_Z			0x0		// (Tri-state) input high impedance / disconnected state
 #define DISCONNECTED	HIGH_Z
 
+#pragma endregion
+
 
 #ifdef EXCLUDE_ITTYBITTY_BYTES
 	#include "IttyBitty_bits.h"
 #endif
 
 
+#pragma region GLOBAL TYPEDEFS
+
 typedef CSIZE PIN_NUMBER;
+
+#pragma endregion
 
 
 namespace IttyBitty
 {
+#pragma region ENUMS
+
 	ENUM PinModeBasic : BYTE
 	{
 		Input	= INPUT,
@@ -49,14 +59,17 @@ namespace IttyBitty
 		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
+
+#pragma endregion
 }
 
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
-
 namespace IttyBitty
 {
+#pragma region FORWARD DECLARATIONS & TYPE ALIASES
+
 	struct _PortRegisters;
 	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
 	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
@@ -69,6 +82,19 @@ namespace IttyBitty
 	typedef _GPIO _GPIO_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
 	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	struct _Pin;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using _pin_t = struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using Pin = struct _Pin<PinNum, PortPtr>;
+	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	using PIN = struct _Pin<PinNum, PortPtr>;
+
+#pragma endregion
+
+
+#pragma region [_PortRegisters] DEFINITION
 
 	STRUCT _PortRegisters
 	{
@@ -118,6 +144,10 @@ namespace IttyBitty
 		RREG8 InputReg		= REG8::NULL_OBJECT();
 	};
 
+#pragma endregion
+
+
+#pragma region [_Port] DEFINITION
 
 	STRUCT _Port
 	{
@@ -248,16 +278,11 @@ namespace IttyBitty
 		PPORTREG _Registers = NULL;
 	};
 
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	struct _Pin;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using _pin_t = struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using Pin = struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PIN = struct _Pin<PinNum, PortPtr>;
+#pragma endregion
 
 
+#pragma region [_Pin] DEFINITION
+	
 	template<PIN_NUMBER PinNum, PPORT PortPtr>
 	STRUCT _Pin
 	{
@@ -332,8 +357,12 @@ namespace IttyBitty
 			return PortPtr->ResetPin(PinNum);
 		}
 	};
+
+#pragma endregion
 }
 
+
+#pragma region PORT-SPECIFIC STRUCTURE DECLARATION MACROS
 
 	#define _DECLARE_PORT_STRUCTS(port_letter)	\
 		EXTERN IttyBitty::RBITPACK P##port_letter##_DDR;	\
@@ -356,6 +385,10 @@ namespace IttyBitty
 
 #endif
 
+#pragma endregion
+
+
+#pragma region PORT-SPECIFIC STRUCTURE GLOBAL VARIABLE DECLARATION CALLS
 
 #ifdef PORTA
 	_DECLARE_PORT_STRUCTS(A)
@@ -401,11 +434,15 @@ namespace IttyBitty
 	_DECLARE_PORT_STRUCTS(L)
 #endif
 
+#pragma endregion
+
 
 #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 namespace IttyBitty
 {
+#pragma region PIN STRUCTURE GLOBAL VARIABLE TYPEDEF MACRO & PORT-SPECIFIC CALLS
+
 	#define _TYPEDEF_PINS(port_letter)				\
 		typedef PIN<0, &Port##port_letter> Pin##port_letter##0;	\
 		typedef PIN<1, &Port##port_letter> Pin##port_letter##1;	\
@@ -461,6 +498,10 @@ namespace IttyBitty
 		_TYPEDEF_PINS(L)
 	#endif
 
+#pragma endregion
+
+
+#pragma region [_GPIO] STATIC DEFINITION (w/ PORT-SPECIFIC STRUCTURE / PIN TYPEDEF MACROS & PORT-SPECIFIC CALLS)
 
 	#define _GPIO_DECLARE_PORT_STRUCTS(port_letter) STATIC RPORT P##port_letter;
 
