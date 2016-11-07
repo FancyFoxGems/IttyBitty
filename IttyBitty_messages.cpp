@@ -13,6 +13,160 @@
 #include "IttyBitty_messages.h"
 
 using namespace IttyBitty;
+	
+
+namespace IttyBitty
+{
+#ifdef ARDUINO
+
+#pragma region SERIAL/STREAM READING GLOBAL FUNCTION DEFINITIONS
+
+	CBOOL operator >(Stream & stream, PBYTE b)
+	{
+		return stream.readBytes(b, 1);
+	}
+
+	CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length)
+	{
+		SIZE i = length;
+
+		while (i > 0)
+		{
+			if (!stream.available())
+			{
+				delay(SERIAL_DEFAULT_TIMEOUT_MS);
+				
+				if (!stream.available())
+					return FALSE;
+			}
+				
+			INT result = stream.read();
+			if (result < 0)
+				return FALSE;
+
+			buffer[length - i--] = (CBYTE)result;
+		}
+
+		return TRUE;
+	}
+
+#pragma endregion
+	
+
+#pragma region MESSAGE PARSING/HANDLING GLOBAL FUNCTION DEFINITIONS
+
+
+	PIMESSAGE MessageFromBytes(Stream & stream)
+	{
+		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
+			return NULL;
+
+		SIZE msgSize = 0;
+		msgSize = Read<CSIZE>(stream, (PBYTE)&msgSize);
+		if (msgSize == 0)
+			return NULL;
+
+		if (__message_buffer)
+			delete[] __message_buffer;
+
+		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
+		__message_buffer = new byte[bufferSize];
+
+		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
+			return NULL;
+
+		PIMESSAGE newMsg = new Message();
+		newMsg->FromBinary(__message_buffer);
+
+		delete[] __message_buffer;
+		__message_buffer = NULL;
+
+		return newMsg;
+	}	
+
+	PIMESSAGE MessageFromString(Stream & stream)
+	{
+		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
+			return NULL;
+
+	#ifdef DEBUG_MESSAGES
+		PrintString(F("MESSAGE INCOMING [SIZE="));
+	#endif
+
+		CHAR valStr[4];
+		ReadBuffer(stream, reinterpret_cast<PBYTE>(valStr), 2 * SIZEOF(CSIZE));
+		
+		SIZE msgSize = 0;
+		StringReadValue<SIZE>(msgSize, valStr);
+		if (msgSize == 0)
+			return NULL;
+
+	#ifdef DEBUG_MESSAGES
+		PrintVal(msgSize);
+		PrintLine("].");
+	#endif
+
+		if (__message_buffer)
+			delete[] __message_buffer;
+		
+		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
+		__message_buffer = new byte[bufferSize];
+		__message_buffer[bufferSize - 1] = '\0';
+
+	#ifdef DEBUG_MESSAGES
+		PrintVal(bufferSize);
+		PrintLine(F(" BYTES ALLOCATED.  READING DATA..."));
+	#endif
+
+		if (!ReadBuffer(stream, __message_buffer, bufferSize - 1))
+			return NULL;
+
+	#ifdef DEBUG_MESSAGES
+		PrintString(F("RAW DATA: "));
+		PrintLine((PCCHAR)__message_buffer);
+		PrintLine(F("BUFFER FILLED.  LOADING..."));
+	#endif		
+		
+		PIMESSAGE stringMsg = new Message();
+		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+
+	#ifdef DEBUG_MESSAGES
+		PrintLine(F("MESSAGE LOADED.\n"));
+	#endif
+
+		delete[] __message_buffer;
+		__message_buffer = NULL;
+
+		return stringMsg;
+	}
+	
+	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler)
+	{
+		PIMESSAGE message = NULL;
+
+	#ifdef _DEBUG
+		message = MessageFromString(stream);
+	#else
+		message = MessageFromBytes(stream);
+	#endif
+
+		if (message == NULL)
+			return;
+
+		if (__message_buffer != NULL)
+			delete[] __message_buffer;
+		__message_buffer = NULL;
+
+		msgHandler(message);
+
+		if (message)
+			delete message;
+	}
+
+#pragma endregion
+
+#endif	// #ifdef ARDUINO
+};
 
 
 #pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS

@@ -116,13 +116,44 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region HELPER GLOBAL FUNCTION DECLARATIONS
+#pragma region HELPER GLOBAL FUNCTION DEFINITIONS
 
+	// TODO: BY REF?
 	template<typename T>
-	PCHAR StringInsertValue(CONST T, PCHAR, CBYTE = 0x10);
+	INLINE PCHAR StringInsertValue(CONST T & value, PCHAR buffer, CBYTE radix = 0x10)
+	{
+		CHAR valStr[2 * T_SIZE + 1];
+		
+		valStr[2 * T_SIZE] = '\0';
+		
+		itoa(value, valStr, radix);
+
+		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
+		for (SIZE i = 0; i < lenDiff; i++)
+		{
+			valStr[i + lenDiff] = valStr[i];
+			valStr[i] = '0';
+		}
+
+		memcpy(buffer, valStr, 2 * T_SIZE);
+
+		return (PCHAR)(buffer + 2 * T_SIZE);
+	}
 	
 	template<typename T>
-	PCCHAR StringReadValue(T &, PCCHAR, CBYTE = 0x10);
+	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
+	{
+		CHAR valStr[2 * T_SIZE + 1];
+
+		valStr[2 * T_SIZE] = '\0';
+
+		memcpy(valStr, data, 2 * T_SIZE);
+		valStr[2 * T_SIZE] = '\0';
+
+		value = static_cast<T>(strtol(valStr, NULL, 0x10));
+		
+		return (PCCHAR)(data + 2 * T_SIZE);
+	}
 
 #pragma endregion
 
