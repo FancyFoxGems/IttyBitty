@@ -15,14 +15,6 @@
 
 namespace IttyBitty
 {
-#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-		
-	// ToBinary() / ToString() BUFFER POINTER
-	EXTERN PBYTE __field_buffer;
-
-#pragma endregion
-
-
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class IField;
@@ -108,7 +100,7 @@ namespace IttyBitty
 
 #pragma region [FieldBase] DEFINITION - TAGGED UNION BASE
 
-	CLASS FieldBase : public DatumBase<ConstValue>, public IField
+	CLASS FieldBase : public DatumBase<Value>, public IField
 	{
 	public:
 
@@ -127,38 +119,38 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const
 		{
-			return DatumBase<ConstValue>::BinarySize();
+			return DatumBase<Value>::BinarySize();
 		}
 
 		VIRTUAL CSIZE StringSize() const
 		{
-			return DatumBase<ConstValue>::StringSize();
+			return DatumBase<Value>::StringSize();
 		}
 
 		VIRTUAL CSIZE ByteWidth() const
 		{
-			return DatumBase<ConstValue>::ByteWidth();
+			return DatumBase<Value>::ByteWidth();
 		}
 		VIRTUAL CSIZE StringLength() const
 		{
-			return DatumBase<ConstValue>::StringLength();
+			return DatumBase<Value>::StringLength();
 		}
 
 	#ifdef ARDUINO
 
 		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
 		{
-			return DatumBase<ConstValue>::Transmit(serial);
+			return DatumBase<Value>::Transmit(serial);
 		}
 
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & twi = Wire)
 		{
-			return DatumBase<ConstValue>::Transmit(i2cAddr, twi);
+			return DatumBase<Value>::Transmit(i2cAddr, twi);
 		}
 				
 		VIRTUAL SIZE printTo(Print & printer) const
 		{
-			return DatumBase<ConstValue>::printTo(printer);
+			return DatumBase<Value>::printTo(printer);
 		}
 
 	#endif
@@ -168,12 +160,12 @@ namespace IttyBitty
 
 		VIRTUAL CONST DataSize GetDataSize() const
 		{
-			return DatumBase<ConstValue>::GetDataSize();
+			return DatumBase<Value>::GetDataSize();
 		}
 
 		VIRTUAL CONST DataType GetDataType() const
 		{
-			return DatumBase<ConstValue>::GetDataType();
+			return DatumBase<Value>::GetDataType();
 		}
 	};
 
@@ -193,16 +185,16 @@ namespace IttyBitty
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		EXPLICIT Field(RCCONSTVALUE, CONST DataType = DataType::BYTE_DATUM);
+		EXPLICIT Field(RVALUE, CONST DataType = DataType::BYTE_DATUM);
 
-		EXPLICIT Field(RCCHAR);
-		EXPLICIT Field(RCBYTE);
-		EXPLICIT Field(RCBOOL);
-		EXPLICIT Field(RCSHORT);
-		EXPLICIT Field(RCWORD);
-		EXPLICIT Field(RCLONG);
-		EXPLICIT Field(RCDWORD);
-		EXPLICIT Field(RCFLOAT);
+		EXPLICIT Field(RCHAR);
+		EXPLICIT Field(RBYTE);
+		EXPLICIT Field(RBOOL);
+		EXPLICIT Field(RSHORT);
+		EXPLICIT Field(RWORD);
+		EXPLICIT Field(RLONG);
+		EXPLICIT Field(RDWORD);
+		EXPLICIT Field(RFLOAT);
 
 
 		// STATIC FUNCTIONS
@@ -215,16 +207,24 @@ namespace IttyBitty
 		VIRTUAL RFIELD operator =(RCFIELD);
 		VIRTUAL RFIELD operator =(RRFIELD);
 
-		VIRTUAL RFIELD operator =(RCCONSTVALUE);
+		VIRTUAL RFIELD operator =(RVALUE);
 
 		VIRTUAL operator RCCHAR() const;
+		VIRTUAL operator RCHAR();
 		VIRTUAL operator RCBYTE() const;
+		VIRTUAL operator RBYTE();
 		VIRTUAL operator RCBOOL() const;
+		VIRTUAL operator RBOOL();
 		VIRTUAL operator RCSHORT() const;
+		VIRTUAL operator RSHORT();
 		VIRTUAL operator RCWORD() const;
+		VIRTUAL operator RWORD();
 		VIRTUAL operator RCLONG() const;
+		VIRTUAL operator RLONG();
 		VIRTUAL operator RCDWORD() const;
+		VIRTUAL operator RDWORD();
 		VIRTUAL operator RCFLOAT() const;
+		VIRTUAL operator RFLOAT();
 	};
 
 #pragma endregion
@@ -243,11 +243,11 @@ namespace IttyBitty
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		EXPLICIT VarLengthField(RCCONSTVALUE, CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
+		EXPLICIT VarLengthField(RVALUE, CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
 
-		EXPLICIT VarLengthField(PCBYTE, CSIZE = 0);
-		EXPLICIT VarLengthField(PCCHAR);
-		EXPLICIT VarLengthField(PCBITPACK, CSIZE = 0);
+		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
+		EXPLICIT VarLengthField(PCHAR);
+		EXPLICIT VarLengthField(PBITPACK, CSIZE = 0);
 
 		VIRTUAL ~VarLengthField();
 		
@@ -258,8 +258,11 @@ namespace IttyBitty
 		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
 		
 		VIRTUAL operator PCBYTE() const;
+		VIRTUAL operator PBYTE();
 		VIRTUAL operator PCCHAR() const;
+		VIRTUAL operator PCHAR();
 		VIRTUAL operator PCBITPACK() const;
+		VIRTUAL operator PBITPACK();
 
 
 		// Field OVERRIDES
@@ -310,19 +313,13 @@ namespace IttyBitty
 			new (this) TypedField<T>(other._Value);
 		}
 
-		TypedField(RCCONSTVALUE value)
+		TypedField(RVALUE value)
 		{
 			_Value = value;
 			_DataType = TypedField<T>::FindDataType();
 		}
 
 		EXPLICIT TypedField(T & value)
-		{
-			this->~FieldBase();
-			new (this) TypedField<T>(value);
-		}
-
-		EXPLICIT TypedField(SIGNED_TYPE(T &) value)
 		{
 			this->~FieldBase();
 			new (this) TypedField<T>(value);
@@ -352,21 +349,30 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCCONSTVALUE rValue)
+		VIRTUAL RTYPEDFIELD<T> operator =(RVALUE rValue)
 		{
 			_Value = rValue;
 			return *this;
 		}
-
 
 		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
 		{
 			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
+		VIRTUAL operator UNSIGNED_TYPE(T &)()
+		{
+			return (UNSIGNED_TYPE(T &))_Value;
+		}
+
 		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
 		{
 			return (SIGNED_TYPE(CONST T &))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(T &)()
+		{
+			return (SIGNED_TYPE(T &))_Value;
 		}
 
 
@@ -528,14 +534,14 @@ namespace IttyBitty
 			new (this) VarLengthTypedField<T>(other._Value);
 		}
 
-		VarLengthTypedField(RCCONSTVALUE value, CSIZE length = 0)
+		VarLengthTypedField(RCVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
 			_DataType = VarLengthTypedField<T>::FindDataType();
 
 			if (_DataType == DataType::STRING_DATUM)
 			{
-				if (value.String == NULL)
+				if (value.StringRef == NULL)
 					_Length = 0;
 				else
 					_Length = strlen((PCCHAR)_Value);
@@ -563,14 +569,24 @@ namespace IttyBitty
 		
 		// OPERATORS
 
-		VIRTUAL operator CONST T() const
+		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
 		{
-			return (CONST T)_Value;
+			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
 		VIRTUAL operator UNSIGNED_TYPE(T &)()
 		{
-			return (T)_Value;
+			return (UNSIGNED_TYPE(T &))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
+		{
+			return (SIGNED_TYPE(CONST T &))_Value;
+		}
+
+		VIRTUAL operator SIGNED_TYPE(T &)()
+		{
+			return (SIGNED_TYPE(T &))_Value;
 		}
 
 
@@ -581,12 +597,12 @@ namespace IttyBitty
 			if (_Length > 0)
 				return _Length;
 
-			return DatumBase<ConstValue>::ByteWidth();
+			return DatumBase<Value>::ByteWidth();
 		}
 		
 		VIRTUAL VOID FromBinary(PCBYTE data) final
 		{
-			PCBYTE bufferPtr = data;
+			PBYTE bufferPtr = data;
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
@@ -595,7 +611,7 @@ namespace IttyBitty
 		
 		VIRTUAL VOID FromString(PCCHAR data) final
 		{
-			PCCHAR bufferPtr = data;
+			PCHAR bufferPtr = data;
 
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
@@ -616,7 +632,7 @@ namespace IttyBitty
 		using TypedField<T>::_Dispose;
 		using TypedField<T>::_Value;
 		using TypedField<T>::_DataType;
-		using TypedField<T>::IttyBitty::__field_buffer;
+		using TypedField<T>::IttyBitty::__datum_buffer;
 
 		
 		// PROTECTED STATIC FUNCTIONS

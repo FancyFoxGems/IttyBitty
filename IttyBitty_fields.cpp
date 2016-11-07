@@ -14,13 +14,6 @@
 #include "IttyBitty_fields.h"
 
 using namespace IttyBitty;
-
-
-#pragma region GLOBAL CONSTANTS & VARIABLE DEFINITIONS
-
-PBYTE IttyBitty::__field_buffer = NULL;
-
-#pragma endregion
 	
 
 #pragma region FIELD PARSING GLOBAL FUNCTION DEFINITIONS
@@ -81,12 +74,12 @@ PCBYTE FieldBase::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__field_buffer)
-		delete[] __field_buffer;
+	if (__datum_buffer)
+		delete[] __datum_buffer;
 
-	__field_buffer = new BYTE[size];
+	__datum_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __field_buffer;
+	PBYTE bufferPtr = __datum_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
@@ -96,9 +89,9 @@ PCBYTE FieldBase::ToBinary() const
 	bufferPtr += SIZEOF(DataType);
 
 	if (byteWidth > 0)
-		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
+		memcpy(bufferPtr, *_Value.BytesRef, this->ByteWidth());
 
-	return __field_buffer;
+	return __datum_buffer;
 }
 
 PCCHAR FieldBase::ToString() const
@@ -106,13 +99,13 @@ PCCHAR FieldBase::ToString() const
 	CSIZE size = this->StringSize();
 	CSIZE byteWidth = this->ByteWidth();
 	
-	if (__field_buffer)
-		delete[] __field_buffer;
+	if (__datum_buffer)
+		delete[] __datum_buffer;
 
-	__field_buffer = new BYTE[size];
-	__field_buffer[size - 1] = '\0';
+	__datum_buffer = new BYTE[size];
+	__datum_buffer[size - 1] = '\0';
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__field_buffer);
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
@@ -125,37 +118,37 @@ PCCHAR FieldBase::ToString() const
 	case DataType::CHAR_DATUM:
 	case DataType::BOOL_DATUM:
 
-		bytes = (PBYTE)&(_Value.Byte);
+		bytes = (PBYTE)_Value.ByteRef;
 		break;
 		
 	case DataType::WORD_DATUM:
 	case DataType::SHORT_DATUM:
 		
 
-		bytes = (PBYTE)&(_Value.Word);
+		bytes = (PBYTE)_Value.WordRef;
 		break;
 			
 	case DataType::DWORD_DATUM:
 	case DataType::LONG_DATUM:	
 	case DataType::FLOAT_DATUM:
 
-		bytes = (PBYTE)&(_Value.DWord);
+		bytes = (PBYTE)_Value.DWordRef;
 		break;
 
 	default:
 
-		bytes = _Value.Bytes;
+		bytes = *_Value.BytesRef;
 
 		for (SIZE i = 0; i < byteWidth; i++)
 			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
 
-		return reinterpret_cast<PCCHAR>(__field_buffer);
+		return reinterpret_cast<PCCHAR>(__datum_buffer);
 	}
 	
 	for (SIZE i = 0; i < 4 - byteWidth; i++)
 		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
 	
-	return reinterpret_cast<PCCHAR>(__field_buffer);
+	return reinterpret_cast<PCCHAR>(__datum_buffer);
 }
 
 VOID FieldBase::FromBinary(PCBYTE data)
@@ -191,7 +184,7 @@ VOID FieldBase::FromBinary(PCBYTE data)
 
 	default:
 
-		_Value = data;
+		_Value = (PBYTE)data;
 	}
 }
 
@@ -213,20 +206,20 @@ VOID FieldBase::FromString(PCCHAR data)
 	case DataType::CHAR_DATUM:
 	case DataType::BOOL_DATUM:
 
-		bytes = (PBYTE)&(_Value.Byte);
+		bytes = (PBYTE)_Value.ByteRef;
 		break;
 		
 	case DataType::WORD_DATUM:
 	case DataType::SHORT_DATUM:		
 
-		bytes = (PBYTE)&(_Value.Word);
+		bytes = (PBYTE)_Value.WordRef;
 		break;
 		
 	case DataType::DWORD_DATUM:
 	case DataType::LONG_DATUM:		
 	case DataType::FLOAT_DATUM:
 
-		bytes = (PBYTE)&(_Value.DWord);
+		bytes = (PBYTE)_Value.DWordRef;
 		break;
 
 	default:
@@ -272,55 +265,55 @@ Field::Field(RRFIELD other)
 	new (this) Field(other._Value, other._DataType);
 }
 
-Field::Field(RCCONSTVALUE value, CONST DataType dataType)
+Field::Field(RVALUE value, CONST DataType dataType)
 {
 	_Value = value;
 	_DataType = dataType;
 }
 
-Field::Field(RCCHAR value)
+Field::Field(RCHAR value)
 {
 	_Value = value;
 	_DataType = DataType::CHAR_DATUM;
 }
 
-Field::Field(RCBYTE value)
+Field::Field(RBYTE value)
 {
 	_Value = value;
 	_DataType = DataType::BYTE_DATUM;
 }
 
-Field::Field(RCBOOL value)
+Field::Field(RBOOL value)
 {
 	_Value = value;
 	_DataType = DataType::BOOL_DATUM;
 }
 
-Field::Field(RCSHORT value)
+Field::Field(RSHORT value)
 {
 	_Value = value;
 	_DataType = DataType::SHORT_DATUM;
 }
 
-Field::Field(RCWORD value)
+Field::Field(RWORD value)
 {
 	_Value = value;
 	_DataType = DataType::WORD_DATUM;
 }
 
-Field::Field(RCLONG value)
+Field::Field(RLONG value)
 {
 	_Value = value;
 	_DataType = DataType::LONG_DATUM;
 }
 
-Field::Field(RCDWORD value)
+Field::Field(RDWORD value)
 {
 	_Value = value;
 	_DataType = DataType::DWORD_DATUM;
 }
 
-Field::Field(RCFLOAT value)
+Field::Field(RFLOAT value)
 {
 	_Value = value;
 	_DataType = DataType::FLOAT_DATUM;
@@ -350,7 +343,7 @@ RFIELD Field::operator =(RRFIELD rValue)
 	return *this;
 }
 
-RFIELD Field::operator =(RCCONSTVALUE rValue)
+RFIELD Field::operator =(RVALUE rValue)
 {
 	_Value = rValue;
 	return *this;
@@ -362,7 +355,17 @@ Field::operator RCCHAR() const
 	return _Value;
 }
 
+Field::operator RCHAR()
+{
+	return _Value;
+}
+
 Field::operator RCBYTE() const
+{
+	return _Value;
+}
+
+Field::operator RBYTE()
 {
 	return _Value;
 }
@@ -371,7 +374,18 @@ Field::operator RCBOOL() const
 {
 	return _Value;
 }
+
+Field::operator RBOOL()
+{
+	return _Value;
+}
+
 Field::operator RCSHORT() const
+{
+	return _Value;
+}
+
+Field::operator RSHORT()
 {
 	return _Value;
 }
@@ -381,7 +395,17 @@ Field::operator RCWORD() const
 	return _Value;
 }
 
+Field::operator RWORD()
+{
+	return _Value;
+}
+
 Field::operator RCLONG() const
+{
+	return _Value;
+}
+
+Field::operator RLONG()
 {
 	return _Value;
 }
@@ -391,7 +415,17 @@ Field::operator RCDWORD() const
 	return _Value;
 }
 
+Field::operator RDWORD()
+{
+	return _Value;
+}
+
 Field::operator RCFLOAT() const
+{
+	return _Value;
+}
+
+Field::operator RFLOAT()
 {
 	return _Value;
 }
@@ -443,12 +477,12 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RCCONSTVALUE value, CONST DataType dataType, CSIZE length) 
+VarLengthField::VarLengthField(RVALUE value, CONST DataType dataType, CSIZE length) 
 	: Field(value, dataType)
 {
 	if (_DataType == DataType::STRING_DATUM)
 	{
-		if (value.String == NULL)
+		if (value.StringRef == NULL)
 			_Length = 0;
 		else
 			_Length = strlen((PCCHAR)_Value);
@@ -459,7 +493,7 @@ VarLengthField::VarLengthField(RCCONSTVALUE value, CONST DataType dataType, CSIZ
 	}
 }
 
-VarLengthField::VarLengthField(PCBYTE value, CSIZE length) 
+VarLengthField::VarLengthField(PBYTE value, CSIZE length) 
 	: Field(DataType::BYTES_DATUM), _Length(length)
 {
 	_Dispose = FALSE;
@@ -467,7 +501,7 @@ VarLengthField::VarLengthField(PCBYTE value, CSIZE length)
 	_Value = value;
 }
 
-VarLengthField::VarLengthField(PCCHAR value) 
+VarLengthField::VarLengthField(PCHAR value) 
 	: Field(DataType::STRING_DATUM)
 {
 	_Dispose = FALSE;
@@ -480,7 +514,7 @@ VarLengthField::VarLengthField(PCCHAR value)
 		_Length = strlen(value);
 }
 
-VarLengthField::VarLengthField(PCBITPACK value, CSIZE length) 
+VarLengthField::VarLengthField(PBITPACK value, CSIZE length) 
 	: Field(DataType::BIT_DATUM), _Length(length)
 {
 	_Dispose = FALSE;
@@ -518,7 +552,17 @@ VarLengthField::operator PCBYTE() const
 	return _Value;
 }
 
+VarLengthField::operator PBYTE()
+{
+	return _Value;
+}
+
 VarLengthField::operator PCCHAR() const
+{
+	return _Value;
+}
+
+VarLengthField::operator PCHAR()
 {
 	return _Value;
 }
@@ -528,6 +572,12 @@ VarLengthField::operator PCBITPACK() const
 	return _Value;
 }
 
+VarLengthField::operator PBITPACK()
+{
+	return _Value;
+}
+
+
 
 // Field OVERRIDES
 
@@ -536,7 +586,7 @@ CSIZE VarLengthField::ByteWidth() const
 	if (_Length > 0)
 		return _Length;
 
-	return DatumBase<ConstValue>::ByteWidth();
+	return DatumBase<Value>::ByteWidth();
 }
 
 VOID VarLengthField::FromBinary(PCBYTE data)

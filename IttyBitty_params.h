@@ -308,13 +308,7 @@ namespace IttyBitty
 			_DataType = TypedParam<T>::FindDataType();
 		}
 
-		EXPLICIT TypedParam(T & value)
-		{
-			this->~ParamBase();
-			new (this) TypedParam<T>(value);
-		}
-
-		EXPLICIT TypedParam(SIGNED_TYPE(T &) value)
+		EXPLICIT TypedParam(CONST T & value)
 		{
 			this->~ParamBase();
 			new (this) TypedParam<T>(value);
@@ -349,7 +343,6 @@ namespace IttyBitty
 			_Value = rValue;
 			return *this;
 		}
-
 
 		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
 		{
@@ -538,7 +531,7 @@ namespace IttyBitty
 			}
 		}
 
-		EXPLICIT VarLengthTypedParam(T & value)
+		EXPLICIT VarLengthTypedParam(CONST T & value)
 		{
 			new (this) VarLengthTypedParam<T>(value);
 		}
@@ -555,14 +548,14 @@ namespace IttyBitty
 		
 		// OPERATORS
 
-		VIRTUAL operator CONST T() const
+		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
 		{
-			return (CONST T)_Value;
+			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(T &)()
+		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
 		{
-			return (T)_Value;
+			return (SIGNED_TYPE(CONST T &))_Value;
 		}
 
 
