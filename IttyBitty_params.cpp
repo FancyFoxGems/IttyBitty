@@ -14,13 +14,6 @@
 #include "IttyBitty_params.h"
 
 using namespace IttyBitty;
-
-
-#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
-
-PBYTE IttyBitty::__param_buffer = NULL;
-
-#pragma endregion
 	
 
 #pragma region PARAM PARSING GLOBAL FUNCTION DEFINITIONS
@@ -81,12 +74,12 @@ PCBYTE ParamBase::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__param_buffer)
-		delete[] __param_buffer;
+	if (__datum_buffer)
+		delete[] __datum_buffer;
 
-	__param_buffer = new BYTE[size];
+	__datum_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __param_buffer;
+	PBYTE bufferPtr = __datum_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
 	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
@@ -98,7 +91,7 @@ PCBYTE ParamBase::ToBinary() const
 	if (byteWidth > 0)
 		memcpy(bufferPtr, _Value.Bytes, this->ByteWidth());
 
-	return __param_buffer;
+	return __datum_buffer;
 }
 
 PCCHAR ParamBase::ToString() const
@@ -106,13 +99,13 @@ PCCHAR ParamBase::ToString() const
 	CSIZE size = this->StringSize();
 	CSIZE byteWidth = this->ByteWidth();
 	
-	if (__param_buffer)
-		delete[] __param_buffer;
+	if (__datum_buffer)
+		delete[] __datum_buffer;
 
-	__param_buffer = new BYTE[size];
-	__param_buffer[size - 1] = '\0';
+	__datum_buffer = new BYTE[size];
+	__datum_buffer[size - 1] = '\0';
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__param_buffer);
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
@@ -149,13 +142,13 @@ PCCHAR ParamBase::ToString() const
 		for (SIZE i = 0; i < byteWidth; i++)
 			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
 
-		return reinterpret_cast<PCCHAR>(__param_buffer);
+		return reinterpret_cast<PCCHAR>(__datum_buffer);
 	}
 	
 	for (SIZE i = 0; i < 4 - byteWidth; i++)
 		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
 	
-	return reinterpret_cast<PCCHAR>(__param_buffer);
+	return reinterpret_cast<PCCHAR>(__datum_buffer);
 }
 
 VOID ParamBase::FromBinary(PCBYTE data)

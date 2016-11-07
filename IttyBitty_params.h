@@ -15,14 +15,6 @@
 
 namespace IttyBitty
 {
-#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-		
-	// ToBinary() / ToString() BUFFER POINTER
-	EXTERN PBYTE __param_buffer;
-
-#pragma endregion
-
-
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class IParam;
@@ -616,7 +608,7 @@ namespace IttyBitty
 		using TypedParam<T>::_Dispose;
 		using TypedParam<T>::_Value;
 		using TypedParam<T>::_DataType;
-		using TypedParam<T>::IttyBitty::__param_buffer;
+		using TypedParam<T>::IttyBitty::__datum_buffer;
 
 		
 		// PROTECTED STATIC FUNCTIONS
