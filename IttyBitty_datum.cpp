@@ -66,46 +66,6 @@ namespace IttyBitty
 	}
 
 #pragma endregion
-	
-
-#pragma region DATUM PARSING GLOBAL FUNCTION DEFINITIONS
-	
-	template<typename TVal = CONSTVALUE>
-	PIDATUM DatumFromBytes(PCBYTE data)
-	{
-		PIDATUM datum = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthDatum<TVal>();
-		else
-			datum = new Datum<TVal>();
-
-		datum->FromBinary(data);
-
-		return datum;
-	}
-	
-	template<typename TVal = CONSTVALUE>
-	PIDATUM DatumFromString(PCCHAR data)
-	{
-		PIDATUM datum = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthDatum<TVal>();
-		else
-			datum = new Datum<TVal>();
-
-		datum->FromString(data);
-
-		return datum;
-	}
-
-#pragma endregion
 };
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_DATUM

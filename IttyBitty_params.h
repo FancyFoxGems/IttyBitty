@@ -84,6 +84,14 @@ namespace IttyBitty
 	using PPCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> **;
 
 #pragma endregion
+	
+
+#pragma region PARAM PARSING GLOBAL FUNCTION DECLARATIONS
+	
+	PIPARAM ParamFromBytes(PCBYTE);
+	PIPARAM ParamFromString(PCCHAR);
+
+#pragma endregion
 
 
 #pragma region [IParam] DEFINITION
@@ -111,41 +119,62 @@ namespace IttyBitty
 		
 		// ISerializable IMPLEMENTATION
 
-		VIRTUAL CSIZE BinarySize() const;
-		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
-
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
+		VIRTUAL CSIZE BinarySize() const
+		{
+			return DatumBase<ConstValue>::BinarySize();
+		}
+
+		VIRTUAL CSIZE StringSize() const
+		{
+			return DatumBase<ConstValue>::StringSize();
+		}
+
+		VIRTUAL CSIZE ByteWidth() const
+		{
+			return DatumBase<ConstValue>::ByteWidth();
+		}
+		VIRTUAL CSIZE StringLength() const
+		{
+			return DatumBase<ConstValue>::StringLength();
+		}
+
 	#ifdef ARDUINO
 
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
+		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
+		{
+			return DatumBase<ConstValue>::Transmit(serial);
+		}
+
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & twi = Wire)
+		{
+			return DatumBase<ConstValue>::Transmit(i2cAddr, twi);
+		}
 				
-		VIRTUAL SIZE printTo(Print &) const;
+		VIRTUAL SIZE printTo(Print & printer) const
+		{
+			return DatumBase<ConstValue>::printTo(printer);
+		}
 
 	#endif
 
 
-		// IParam IMPLEMENTATION
+		// IDatum IMPLEMENTATION
 
-		VIRTUAL CONST DataSize GetDataSize() const;
-		VIRTUAL CONST DataType GetDataType() const;
-		
+		VIRTUAL CONST DataSize GetDataSize() const
+		{
+			return DatumBase<ConstValue>::GetDataSize();
+		}
 
-	protected:
-
-		// INSTANCE VARIABLES
-		
-		BOOL _Dispose = FALSE;
-
-		ConstValue _Value;
-		DataType _DataType;
+		VIRTUAL CONST DataType GetDataType() const
+		{
+			return DatumBase<ConstValue>::GetDataType();
+		}
 	};
 
 #pragma endregion
@@ -552,7 +581,7 @@ namespace IttyBitty
 			if (_Length > 0)
 				return _Length;
 
-			return ParamBase::ByteWidth();
+			return DatumBase<ConstValue>::ByteWidth();
 		}
 		
 		VIRTUAL VOID FromBinary(PCBYTE data) final

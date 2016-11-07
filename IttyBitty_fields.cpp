@@ -16,9 +16,47 @@
 using namespace IttyBitty;
 
 
-#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
+#pragma region GLOBAL CONSTANTS & VARIABLE DEFINITIONS
 
 PBYTE IttyBitty::__field_buffer = NULL;
+
+#pragma endregion
+	
+
+#pragma region FIELD PARSING GLOBAL FUNCTION DEFINITIONS
+	
+	PIFIELD FieldFromBytes(PCBYTE data)
+	{
+		PIFIELD datum = NULL;
+
+		SIZE length = static_cast<SIZE>(*data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthField();
+		else
+			datum = new Field();
+
+		datum->FromBinary(data);
+
+		return datum;
+	}
+	
+	PIFIELD FieldFromString(PCCHAR data)
+	{
+		PIFIELD datum = NULL;
+		SIZE length = 0;
+
+		StringReadValue<SIZE>(length, data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthField();
+		else
+			datum = new Field();
+
+		datum->FromString(data);
+
+		return datum;
+	}
 
 #pragma endregion
 
@@ -38,26 +76,6 @@ FieldBase::~FieldBase()
 				
 
 // ISerializable IMPLEMENTATION
-
-CSIZE FieldBase::BinarySize() const
-{
-	return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
-}
-
-CSIZE FieldBase::StringSize() const
-{
-	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
-}
-
-CSIZE FieldBase::ByteWidth() const
-{
-	return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
-}
-
-CSIZE FieldBase::StringLength() const
-{
-	return 2 * this->ByteWidth();
-}
 
 PCBYTE FieldBase::ToBinary() const
 {
@@ -223,72 +241,6 @@ VOID FieldBase::FromString(PCCHAR data)
 	
 	for (SIZE i = 0 ; i < byteWidth; i++)
 		bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
-}
-
-#ifdef ARDUINO
-
-BOOL FieldBase::Transmit(HardwareSerial & serial)
-{
-	if (!serial.availableForWrite())
-		delay(SERIAL_DEFAULT_TIMEOUT_MS);
-	if (!serial.availableForWrite())
-		return FALSE;
-
-	if (!this->printTo(serial))
-		return FALSE;
-
-	serial.flush();
-
-	return TRUE;
-}
-
-BOOL FieldBase::Transmit(BYTE i2cAddr, TwoWire & twi)
-{
-	twi.beginTransmission(i2cAddr);
-
-	if (!this->printTo(twi))
-		return FALSE;
-
-	twi.flush();	
-
-	if (twi.endTransmission())
-		return FALSE;
-
-	return TRUE;
-}
-
-SIZE FieldBase::printTo(Print & printer) const
-{
-#ifdef _DEBUG
-	SIZE size = this->StringSize();
-	PCCHAR buffer = this->ToString();
-#else
-	SIZE size = this->BinarySize();
-	PCBYTE buffer = this->ToBinary();
-#endif
-
-	for (SIZE i = 0; i < size; i++)
-		printer.print(buffer[i]);
-
-	delete[] __field_buffer;
-	__field_buffer = NULL;
-
-	return size;
-}
-
-#endif	// #ifdef ARDUINO
-
-
-// IField IMPLEMENTATION
-
-CONST DataSize FieldBase::GetDataSize() const
-{
-	return DataTypeToDataSize(_DataType);
-}
-
-CONST DataType FieldBase::GetDataType() const
-{
-	return _DataType;
 }
 
 #pragma endregion
@@ -584,7 +536,7 @@ CSIZE VarLengthField::ByteWidth() const
 	if (_Length > 0)
 		return _Length;
 
-	return FieldBase::ByteWidth();
+	return DatumBase<ConstValue>::ByteWidth();
 }
 
 VOID VarLengthField::FromBinary(PCBYTE data)
@@ -603,51 +555,6 @@ VOID VarLengthField::FromString(PCCHAR data)
 	bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
 	FieldBase::FromString(data);
-
-	// TODO
-	//PCCHAR bufferPtr = data;
-
-	//bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
-
-	//CBYTE byteWidth = this->ByteWidth();
-
-	//PBYTE bytes = NULL;
-
-	//switch (_DataType)
-	//{
-	//case DataType::BYTE_DATUM:
-	//case DataType::CHAR_DATUM:
-	//case DataType::BOOL_DATUM:
-
-	//	bytes = (PBYTE)&(_Value.Byte);
-	//	break;
-	//	
-	//case DataType::WORD_DATUM:
-	//case DataType::SHORT_DATUM:
-	//	
-
-	//	bytes = (PBYTE)&(_Value.Word);
-	//	break;
-	//	
-	//case DataType::FLOAT_DATUM:
-	//case DataType::LONG_DATUM:		
-	//case DataType::DWORD_DATUM:
-
-	//	bytes = (PBYTE)&(_Value.DWord);
-	//	break;
-
-	//default:
-
-	//	for (BYTE i = 0; i < byteWidth; i++)
-	//		bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
-
-	//	_Value = bytes;
-
-	//	return;
-	//}
-	//
-	//for (SIZE i = 0 ; i < byteWidth; i++)
-	//	bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
 }
 
 #pragma endregion
