@@ -4,22 +4,22 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_DB)
-	#define EXCLUDE_ITTYBITTY_DB
+#if (defined(ITTYBITTY_SLIM) || defined(EXCLUDE_ITTYBITTY_DB)) && !defined(EXCLUDE_ITTYBITTY_DB_DEFS)
+	#define EXCLUDE_ITTYBITTY_DB_DEFS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_DB
+#ifndef EXCLUDE_ITTYBITTY_DB_DEFS
 
 
-#include "IttyBitty_DB.h"
+#include "IttyBitty_DB_defs.h"
 
 using namespace IttyBitty;
 
 
-#pragma region [DataBase] IMPLEMENTATION
+#pragma region [DbHeader] IMPLEMENTATION
 
 
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DB
+#endif	// #ifndef EXCLUDE_ITTYBITTY_DB_DEFS

@@ -42,6 +42,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{54dbf06e-cb14-4f36-86e0-73c9d8a1e1d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{0d299d15-6c23-4f0a-b817-6fa42bc4004c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Info">
       <UniqueIdentifier>{e616ff74-90ee-44b3-92d6-d70e7a3436d2}</UniqueIdentifier>
     </Filter>
@@ -104,9 +107,6 @@
     <ClInclude Include="..\IttyBitty_timers.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_DB.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="..\IttyBitty_datum.h">
       <Filter>Data</Filter>
     </ClInclude>
@@ -118,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="..\IttyBitty_values.h">
       <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_DB.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_DB_defs.h">
+      <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="..\avr_cpunames.h">
       <Filter>Info</Filter>
@@ -257,9 +263,6 @@
     <ClCompile Include="..\IttyBitty_timers.cpp">
       <Filter>Control</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_DB.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
     <ClCompile Include="..\IttyBitty_datum.cpp">
       <Filter>Data</Filter>
     </ClCompile>
@@ -271,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="..\IttyBitty_values.cpp">
       <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_DB.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_DB_defs.cpp">
+      <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_GPIO.cpp">
       <Filter>IO</Filter>

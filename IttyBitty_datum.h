@@ -44,6 +44,14 @@ namespace IttyBitty
 	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
 	typedef const ISerializable CISERIALIZABLE, *PCISERIALIZABLE, & RCISERIALIZABLE, ** PPCISERIALIZABLE;
 
+#ifdef ARDUINO
+
+	class ITransmittable;
+	typedef ITransmittable ITRANSMITTABLE, * PITRANSMITTABLE, & RITRANSMITTABLE, ** PPITRANSMITTABLE, && RRITRANSMITTABLE;
+	typedef const ITransmittable CITRANSMITTABLE, *PCITRANSMITTABLE, & RCITRANSMITTABLE, ** PPCITRANSMITTABLE;
+
+#endif
+
 	class IDatum;
 	typedef IDatum IDATUM, * PIDATUM, & RIDATUM, ** PPIDATUM, && RRIDATUM;
 	typedef const IDatum CIDATUM, *PCIDATUM, & RCIDATUM, ** PPCIDATUM;
@@ -186,13 +194,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE) = 0;
 		VIRTUAL VOID FromString(PCCHAR) = 0;
-		
-	#ifdef ARDUINO
-
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
-
-	#endif
 
 	protected:
 
@@ -200,9 +201,27 @@ namespace IttyBitty
 	};
 
 
+		
+#ifdef ARDUINO
+
+	// [ITransmittable] DEFINITION
+
+	INTERFACE ITransmittable : public ISerializable
+	{
+	public:
+
+		// INTERFACE METHODS
+
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE) = 0;
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire) = 0;
+	};
+
+#endif
+
+
 	// [IDatum] DEFINITION
 
-	INTERFACE IDatum : public ISerializable
+	INTERFACE IDatum : public ITransmittable
 	{
 	public:
 

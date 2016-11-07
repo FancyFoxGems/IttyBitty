@@ -125,8 +125,7 @@ namespace IttyBitty
 		EXPLICIT Message(PCBYTE);
 		EXPLICIT Message(PCCHAR);
 
-		EXPLICIT Message(CBYTE, PIPARAM);
-		EXPLICIT Message(CBYTE, RCIPARAM);
+		Message(CBYTE, RCIPARAM);
 		Message(CBYTE, CBYTE, PPIPARAM);
 
 		VIRTUAL ~Message();

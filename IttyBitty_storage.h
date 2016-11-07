@@ -31,10 +31,9 @@ namespace IttyBitty
 	typedef StorageLocation STORAGELOCATION, * PSTORAGELOCATION, & RSTORAGELOCATION, ** PPSTORAGELOCATION, && RRSTORAGELOCATION;
 	typedef const StorageLocation CSTORAGELOCATION, * PCSTORAGELOCATION, & RCSTORAGELOCATION, ** PPCSTORAGELOCATION;
 	
-	template<typename TAddr = WORD>
 	class IStorage;
-	//typedef IStorage ISTORAGE, * PISTORAGE, & RISTORAGE, ** PPISTORAGE, && RRISTORAGE;
-	//typedef const IStorage CISTORAGE, * PCISTORAGE, & RCISTORAGE, ** PPCISTORAGE;
+	typedef IStorage ISTORAGE, * PISTORAGE, & RISTORAGE, ** PPISTORAGE, && RRISTORAGE;
+	typedef const IStorage CISTORAGE, * PCISTORAGE, & RCISTORAGE, ** PPCISTORAGE;
 
 	class StorageBase;
 	typedef StorageBase STORAGEBASE, * PSTORAGEBASE, & RSTORAGEBASE, ** PPSTORAGEBASE, && RRSTORAGEBASE;
@@ -118,16 +117,8 @@ namespace IttyBitty
 	
 #pragma region [IStorage] DEFINITION
 
-	template<typename TAddr>
 	class IStorage
 	{
-	protected:
-		
-		// META-TYPEDEF ALIAS
-
-		typedef const TAddr & RCTADDR;
-
-
 	public:
 
 		// DESTRUCTOR
@@ -141,7 +132,7 @@ namespace IttyBitty
 
 		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION) = 0;
 
-		VIRTUAL MEDIARESULT Seek(RCTADDR) = 0;
+		VIRTUAL MEDIARESULT Seek(RCDWORD) = 0;
 
 		VIRTUAL MEDIARESULT Write(PCBYTE, RCSIZE) = 0;
 		

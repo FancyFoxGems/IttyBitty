@@ -217,13 +217,6 @@ Message::Message(PCCHAR data)
 	this->FromString(data);
 }
 
-Message::Message(CBYTE messageCode, PIPARAM param)
-	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
-{
-	_Params = new PIPARAM[_ParamCount];
-	_Params[0] = param;
-}
-
 Message::Message(CBYTE messageCode, RCIPARAM param)
 	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
 {

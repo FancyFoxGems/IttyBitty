@@ -1,16 +1,17 @@
 /***********************************************************************************************
-* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT
+* [IttyBitty_DB_defs.h]: HEADERS/TABLE DEFINITIONS FOR STRUCTURED DATA STORAGE SUPPORT
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef ITTYBITTY_DB_H
-#define ITTYBITTY_DB_H
+#ifndef ITTYBITTY_DB_DEFS_H
+#define ITTYBITTY_DB_DEFS_H
 
 
-#include "IttyBitty_DB_defs.h"
+#include "IttyBitty_fields.h"
+#include "IttyBitty_storage.h"
 
 
 #pragma region DEFINES
@@ -24,15 +25,40 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class DbTable;
-	typedef DbTable DBTABLE, * PDBTABLE, & RDBTABLE, ** PPDBTABLE, && RRDBTABLE;
-	typedef const DbTable CDBTABLE, * PCDBTABLE, & RCDBTABLE, ** PPCDBTABLE;
+	class DbHeader;
+	typedef DbHeader DBHEADER, * PDBHEADER, & RDBHEADER, ** PPDBHEADER, && RRDBHEADER;
+	typedef const DbHeader CDBHEADER, * PCDBHEADER, & RCDBHEADER, ** PPCDBHEADER;
 
-	class Database;
-	typedef Database DATABASE, * PDATABASE, & RDATABASE, ** PPDATABASE, && RRDATABASE;
-	typedef const Database CDATABASE, * PCDATABASE, & RCDATABASE, ** PPCDATABASE;
+	class IDbTableDef;
+	typedef IDbTableDef IDBTABLEDEF, * PIDBTABLEDEF, & RIDBTABLEDEF, ** PPIDBTABLEDEF, && RRIDBTABLEDEF;
+	typedef const IDbTableDef CIDBTABLEDEF, * PCIDBTABLEDEF, & RCIDBTABLEDEF, ** PPCIDBTABLEDEF;
 
-#pragma endregion/*
+	class DbTableDef;
+	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
+	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
+
+	template<typename T = BYTE>
+	class TypedDbTableDef;
+	template<typename T = BYTE>
+	using TYPEDDBTABLEDEF = TypedDbTableDef<T>;
+	template<typename T = BYTE>
+	using PTYPEDDBTABLEDEF = TypedDbTableDef<T> *;
+	template<typename T = BYTE>
+	using RTYPEDDBTABLEDEF = TypedDbTableDef<T> &;
+	template<typename T = BYTE>
+	using PPTYPEDDBTABLEDEF = TypedDbTableDef<T> **;
+	template<typename T = BYTE>
+	using RRTYPEDDBTABLEDEF = TypedDbTableDef<T> &&;
+	template<typename T = BYTE>
+	using CTYPEDDBTABLEDEF = const TypedDbTableDef<T>;
+	template<typename T = BYTE>
+	using PCTYPEDDBTABLEDEF = const TypedDbTableDef<T> *;
+	template<typename T = BYTE>
+	using RCTYPEDDBTABLEDEF = const TypedDbTableDef<T> &;
+	template<typename T = BYTE>
+	using PPCTYPEDDBTABLEDEF = const TypedDbTableDef<T> **;
+
+#pragma endregion
 
 	
 #pragma region ENUMS
@@ -91,23 +117,101 @@ namespace IttyBitty
 	typedef enum DbResult DBRESULT, * PDBRESULT, & RDBRESULT, ** PPDBRESULT;
 	typedef const enum DbResult CDBRESULT, * PCDBRESULT, & RCDBRESULT, ** PPCDBRESULT;
 
-#pragma endregion*/
+#pragma endregion
 
 	
-#pragma region [DbTable] DEFINITION
+#pragma region [DbHeader] DEFINITION
 
-	class DbTable : public ISerializable
+	class DbHeader : public ISerializable
 	{
 	public:
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTable();
+		DbHeader(CBYTE = 0);
 
-		EXPLICIT DbTable(PCBYTE);
-		EXPLICIT DbTable(PCCHAR);
+		//DbHeader(RCDBHEADER);
+		//DbHeader(RRDBHEADER);
 
-		VIRTUAL ~DbTable();
+		EXPLICIT DbHeader(PCBYTE);
+		EXPLICIT DbHeader(PCCHAR);
+
+		DbHeader(RCDBTABLEDEF);
+		DbHeader(CBYTE, PPIDBTABLEDEF);
+
+		VIRTUAL ~DbHeader();
+
+
+	protected:
+		
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+		
+		// OPERATORS
+
+		//VIRTUAL RDBHEADER operator=(RCDBHEADER);
+		//VIRTUAL RDBHEADER operator=(RRDBHEADER);
+
+		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const;
+		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
+		
+
+		// ACCESSORS
+		
+		VIRTUAL CBYTE GetTableDefCount() const;
+		
+		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
+		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
+		
+
+		// ISerializable IMPLEMENTATION
+
+		VIRTUAL CSIZE BinarySize() const;
+		VIRTUAL CSIZE StringSize() const;
+		VIRTUAL CSIZE ByteWidth() const;
+		VIRTUAL CSIZE StringLength() const;
+
+		VIRTUAL PCBYTE ToBinary() const;
+		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID FromBinary(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
+		
+	#ifdef ARDUINO
+		
+		VIRTUAL SIZE printTo(Print &) const;
+
+	#endif
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		PPIDBTABLEDEF _TableDefs = NULL;
+	};
+
+#pragma endregion
+
+	
+#pragma region [DbTableDef] DEFINITION
+
+	class DbTableDef : public ISerializable
+	{
+	public:
+		
+		// CONSTRUCTORS/DESTRUCTOR
+
+		DbTableDef();
+
+		EXPLICIT DbTableDef(PCBYTE);
+		EXPLICIT DbTableDef(PCCHAR);
+
+		VIRTUAL ~DbTableDef();
 
 
 	protected:
@@ -143,58 +247,8 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		DBTABLEDEF _Header;
-		DWORD _RowCount = 0;
-	};
-
-#pragma endregion
-
-
-#pragma region [Database] DEFINITION
-
-	class Database
-	{
-	public:		
-		
-		// CONSTRUCTOR
-
-		Database(RCISTORAGE);
-
-
-		// USER METHODS
-		
-		CDWORD Size() const;
-		CBYTE Length() const;
-		CBYTE Capacity() const;
-
-		CDBRESULT Create();
-		CDBRESULT Open(RCSTORAGELOCATION);
-		CDBRESULT WipeAllData();
-
-		CDBRESULT readRec(unsigned long, PBYTE);
-		CDBRESULT deleteRec(unsigned long);
-		CDBRESULT insertRec(unsigned long, const PBYTE);
-		CDBRESULT updateRec(unsigned long, const PBYTE);
-		CDBRESULT appendRec(PBYTE rec);
-
-
-	protected:
-		
-		// INSTANCE VARIABLES
-
-		DBHEADER _Header;
-		PDBTABLE _Tables = NULL;
-
-
-		// HELPER METHODS
-
-		void Write(unsigned long ee, const byte* p, unsigned int);
-		void Read(unsigned long ee, byte* p, unsigned int);
-
-		void writeHead();
-		void readHead();
-
-		CDBRESULT writeRec(unsigned long, const PBYTE);
+		DWORD _AddrOffset = 0;
+		DWORD _RowSize = 0;
 	};
 
 #pragma endregion
