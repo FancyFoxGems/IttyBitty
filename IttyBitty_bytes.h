@@ -59,7 +59,7 @@ namespace IttyBitty
 	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
 
 	struct _BitProxy;
-	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF, &&RRBITREF;
+	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF, && RRBITREF;
 	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
 
 

@@ -448,7 +448,7 @@ namespace std
 	using make_signed_t = typename make_signed<T>::type;
 
 
-	/* [make_signed]: METAFUNCTION W/ SPECIALIZATION ON FUNDAMENTAL SIGNED TYPES TO REFERENCE UNSIGNED CONJUGATE OF A GIVEN TYPE */
+	/* [make_unsigned]: METAFUNCTION W/ SPECIALIZATION ON FUNDAMENTAL SIGNED TYPES TO REFERENCE UNSIGNED CONJUGATE OF A GIVEN TYPE */
 
 	template<typename T = VOID>
 	STRUCT make_unsigned : identity<T> { };

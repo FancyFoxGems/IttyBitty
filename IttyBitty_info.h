@@ -27,14 +27,6 @@
 
 namespace IttyBitty
 {
-	/* GENERAL CPU & ARDUINO INFO FUNCTIONS */
-
-	CONSTEXPR PCCHAR CPUType()
-	{
-		return _AVR_CPU_NAME_;
-	}
-
-
 	/* MEMORY AREA/ALLOCATION VARIABLES & FUNCTIONS */
 
 	EXTERN PCHAR __data_start;
@@ -52,7 +44,14 @@ namespace IttyBitty
 	EXTERN PCHAR __malloc_heap_start;
 	EXTERN PCHAR __malloc_heap_end;
 	EXTERN SIZE __malloc_margin;
-	
+
+
+	/* GENERAL CPU & ARDUINO INFO FUNCTIONS */
+
+	CONSTEXPR PCCHAR CPUType()
+	{
+		return _AVR_CPU_NAME_;
+	}	
 
 	STATIC CWORD FreeRam()
 	{

@@ -5,11 +5,11 @@
       <UniqueIdentifier>{0ad123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
       <Extensions>vsarduino.h</Extensions>
     </Filter>
-    <Filter Include="Examples">
-      <UniqueIdentifier>{0be123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Metadata">
       <UniqueIdentifier>{0f068f51-3d28-425e-9cef-26f7bd5557c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Examples">
+      <UniqueIdentifier>{0be123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
