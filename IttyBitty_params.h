@@ -19,7 +19,7 @@ namespace IttyBitty
 
 	class IParam;
 	typedef IParam IPARAM, * PIPARAM, & RIPARAM, ** PPIPARAM, && RRIPARAM;
-	typedef const IParam CIPARAM, *PCIPARAM, & RCIPARAM, ** PPCIPARAM;
+	typedef const IParam CIPARAM, * PCIPARAM, & RCIPARAM, ** PPCIPARAM;
 
 	class ParamBase;
 	typedef ParamBase PARAMBASE, * PPARAMBASE, & RPARAMBASE, ** PPPARAMBASE, && RRPARAMBASE;

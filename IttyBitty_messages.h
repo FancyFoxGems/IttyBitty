@@ -38,11 +38,11 @@ namespace IttyBitty
 
 	class IMessage;
 	typedef IMessage IMESSAGE, * PIMESSAGE, & RIMESSAGE, ** PPIMESSAGE, && RRIMESSAGE;
-	typedef const IMessage CIMESSAGE, *PCIMESSAGE, & RCIMESSAGE, ** PPCIMESSAGE;
+	typedef const IMessage CIMESSAGE, * PCIMESSAGE, & RCIMESSAGE, ** PPCIMESSAGE;
 
 	class Message;
 	typedef Message MESSAGE, * PMESSAGE, & RMESSAGE, ** PPMESSAGE, && RRMESSAGE;
-	typedef const Message CMESSAGE, *PCMESSAGE, & RCMESSAGE, ** PPCMESSAGE;
+	typedef const Message CMESSAGE, * PCMESSAGE, & RCMESSAGE, ** PPCMESSAGE;
 
 	template<CBYTE MsgCode, CBYTE ParamCnt>
 	class GenericMessage;

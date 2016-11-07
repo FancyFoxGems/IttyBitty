@@ -19,7 +19,7 @@ namespace IttyBitty
 
 	class IField;
 	typedef IField IFIELD, * PIFIELD, & RIFIELD, ** PPIFIELD, && RRIFIELD;
-	typedef const IField CIFIELD, *PCIFIELD, & RCIFIELD, ** PPCIFIELD;
+	typedef const IField CIFIELD, * PCIFIELD, & RCIFIELD, ** PPCIFIELD;
 
 	class FieldBase;
 	typedef FieldBase FIELDBASE, * PFIELDBASE, & RFIELDBASE, ** PPFIELDBASE, && RRFIELDBASE;

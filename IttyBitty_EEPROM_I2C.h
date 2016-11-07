@@ -769,6 +769,11 @@ namespace IttyBitty
 			return _Iterator;
 		}
 
+		TEEEPTR Seek(RCTADDR addr)
+		{
+			return this->seek(addr);
+		}
+
 
 		// USER METHODS
 		
