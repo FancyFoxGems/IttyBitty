@@ -60,32 +60,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\keywords.txt">
-      <Filter>Metadata</Filter>
+      <Filter>_Metadata</Filter>
     </None>
     <None Include="..\library.properties">
-      <Filter>Metadata</Filter>
+      <Filter>_Metadata</Filter>
     </None>
     <None Include="..\LICENSE">
-      <Filter>Metadata</Filter>
+      <Filter>_Metadata</Filter>
     </None>
     <None Include="..\README.md">
-      <Filter>Metadata</Filter>
+      <Filter>_Metadata</Filter>
     </None>
     <None Include="IttyBitty.ino" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Wire\Wire.h">
+      <Filter>_Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Wire\utility\twi.h">
+      <Filter>_Libs</Filter>
+    </ClInclude>
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty.h">
+    <ClCompile Include="..\IttyBitty.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_base.h">
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_base.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_slim.h">
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_slim.h">
       <Filter>Core</Filter>
-    </ClInclude>
+    </ClCompile>
     <ClInclude Include="..\IttyBitty_bits.h">
       <Filter>Bits &amp; Bytes</Filter>
     </ClInclude>
@@ -169,9 +175,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\IttyBitty_base.h">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
       <Filter>Core\_micro-api-readonly\core</Filter>
     </ClCompile>
@@ -244,6 +247,11 @@
     <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
       <Filter>Core\_micro-api-readonly\core</Filter>
     </ClCompile>
+    <ClCompile Include="..\Wire\Wire.cpp">
+      <Filter>_Libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Wire\utility\twi.c">
+      <Filter>_Libs</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_bits.cpp">
       <Filter>Bits &amp; Bytes</Filter>

@@ -21,6 +21,10 @@
 * [IttyBitty.h]
 *
 *	LIBRARY - FULL BUNDLE
+*	Memory Usage:	< 7.2 KB Program Memory (Flash ROM) / < 815 B SRAM
+*		w/o full IttyBitty_bytes module:	< 6.85 KB Program Memory (Flash ROM) / < 660 B SRAM
+*		NOTE: #define EXCLUDE_ITTYBITTY_FULL_BYTES --^
+*						
 *
 * INCLUDES:
 *

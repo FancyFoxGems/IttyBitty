@@ -58,11 +58,13 @@
     <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Wire\Wire.h" />
+    <ClInclude Include="..\Wire\utility\twi.h" />
     <ClInclude Include="..\avr_cpunames.h" />
-    <ClInclude Include="..\avr_cpunames.h" />
-    <ClInclude Include="..\IttyBitty.h" />
-    <ClInclude Include="..\IttyBitty_aliases.h" />
+    <ClCompile Include="..\IttyBitty.h" />
     <ClCompile Include="..\IttyBitty_base.h" />
+    <ClCompile Include="..\IttyBitty_slim.h" />
+    <ClInclude Include="..\IttyBitty_aliases.h" />
     <ClInclude Include="..\IttyBitty_bits.h" />
     <ClInclude Include="..\IttyBitty_bytes.h" />
     <ClInclude Include="..\IttyBitty_datum.h" />
@@ -81,7 +83,6 @@
     <ClInclude Include="..\IttyBitty_print.h" />
     <ClInclude Include="..\IttyBitty_registers.h" />
     <ClInclude Include="..\IttyBitty_signals.h" />
-    <ClInclude Include="..\IttyBitty_slim.h" />
     <ClInclude Include="..\IttyBitty_storage.h" />
     <ClInclude Include="..\IttyBitty_storage_adapters.h" />
     <ClInclude Include="..\IttyBitty_timers.h" />
@@ -92,6 +93,8 @@
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Wire\Wire.cpp" />
+    <ClCompile Include="..\Wire\utility\twi.c" />
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
     <ClCompile Include="..\IttyBitty_datum.cpp" />

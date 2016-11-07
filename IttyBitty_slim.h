@@ -3,7 +3,8 @@
 *
 *
 *	LIBRARY - SLIM BUNDLE: BASIC UTILITY HELPERS & BIT MANIPULATION MACROS ONLY
-*	NOTE: ^-- Uses hardly ANY program space or memory!
+*		Memory Usage:	< 2.75 KB Program Memory (Flash ROM) / < 400 B SRAM
+*	NOTE: Uses very little program space or volatile memory! --^
 *
 * INCLUDES:
 *
