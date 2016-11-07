@@ -212,39 +212,39 @@ VOID ConstValue::FreeData()
 
 // CONSTRUCTORS
 
-Value::Value() : Bytes(0) { }
+Value::Value() : BytesRef(0) { }
 
 Value::Value(RCVALUE other)
 {
-	this->Bytes = other.Bytes;
+	this->BytesRef = other.BytesRef;
 }
 
 Value::Value(RRVALUE other)
 {	
-	new (this) Value(other.Bytes);
+	new (this) Value(*other.BytesRef);
 }
 
-Value::Value(PBYTE value) : Bytes(value) { }
+Value::Value(PBYTE value) : BytesRef(&value) { }
 
-Value::Value(PCHAR value) : String(value) { }
+Value::Value(PCHAR value) : StringRef(&value) { }
 
-Value::Value(PBITPACK value) : BitFields(value) { }
+Value::Value(PBITPACK value) : BitFieldsRef(&value) { }
 
-Value::Value(RCHAR value) : CharPtr(&value) { }
+Value::Value(RCHAR value) : CharRef(&value) { }
 
-Value::Value(RBYTE value) : BytePtr(&value) { }
+Value::Value(RBYTE value) : ByteRef(&value) { }
 
-Value::Value(RBOOL value) : BoolPtr(&value) { }
+Value::Value(RBOOL value) : BoolRef(&value) { }
 
-Value::Value(RSHORT value) : ShortPtr(&value) { }
+Value::Value(RSHORT value) : ShortRef(&value) { }
 
-Value::Value(RWORD value) : WordPtr(&value) { }
+Value::Value(RWORD value) : WordRef(&value) { }
 
-Value::Value(RLONG value) : LongPtr(&value) { }
+Value::Value(RLONG value) : LongRef(&value) { }
 		
-Value::Value(RDWORD value) : DWordPtr(&value) { }
+Value::Value(RDWORD value) : DWordRef(&value) { }
 
-Value::Value(RFLOAT value) : FloatPtr(&value) { }
+Value::Value(RFLOAT value) : FloatRef(&value) { }
 
 
 // OPERATORS
@@ -263,179 +263,179 @@ RVALUE Value::operator =(RRVALUE rValue)
 
 RVALUE Value::operator =(PBYTE rValue)
 {
-	this->Bytes = rValue;
+	*this->BytesRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(PCHAR rValue)
 {
-	this->String = rValue;
+	*this->StringRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(PBITPACK rValue)
 {
-	this->BitFields = rValue;
+	*this->BitFieldsRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RCHAR rValue)
 {
-	*this->CharPtr = rValue;
+	*this->CharRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RBYTE rValue)
 {
-	*this->BytePtr = rValue;
+	*this->ByteRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RBOOL rValue)
 {
-	*this->BoolPtr = rValue;
+	*this->BoolRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RSHORT rValue)
 {
-	*this->ShortPtr = rValue;
+	*this->ShortRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RWORD rValue)
 {
-	*this->WordPtr = rValue;
+	*this->WordRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RLONG rValue)
 {
-	*this->LongPtr = rValue;
+	*this->LongRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RDWORD rValue)
 {
-	*this->DWordPtr = rValue;
+	*this->DWordRef = rValue;
 	return *this;
 }
 
 RVALUE Value::operator =(RFLOAT rValue)
 {
-	*this->FloatPtr = rValue;
+	*this->FloatRef = rValue;
 	return *this;
 }
 
 
 Value::operator PCBYTE() const
 {
-	return MAKE_CONST(this->Bytes);
+	return MAKE_CONST(*this->BytesRef);
 }
 
 Value::operator PBYTE()
 {
-	return this->Bytes;
+	return *this->BytesRef;
 }
 
 Value::operator PCCHAR() const
 {
-	return MAKE_CONST(this->String);
+	return MAKE_CONST(*this->StringRef);
 }
 
 Value::operator PCHAR()
 {
-	return this->String;
+	return *this->StringRef;
 }
 
 Value::operator PCBITPACK() const
 {
-	return MAKE_CONST(this->BitFields);
+	return MAKE_CONST(*this->BitFieldsRef);
 }
 
 Value::operator PBITPACK()
 {
-	return this->BitFields;
+	return *this->BitFieldsRef;
 }
 
 Value::operator RCCHAR() const
 {
-	return MAKE_CONST(*this->CharPtr);
+	return MAKE_CONST(*this->CharRef);
 }
 
 Value::operator RCHAR()
 {
-	return *this->CharPtr;
+	return *this->CharRef;
 }
 
 Value::operator RCBYTE() const
 {
-	return MAKE_CONST(*this->BytePtr);
+	return MAKE_CONST(*this->ByteRef);
 }
 
 Value::operator RBYTE()
 {
-	return *this->BytePtr;	
+	return *this->ByteRef;	
 }
 
 Value::operator RCBOOL() const
 {
-	return MAKE_CONST(*this->BoolPtr);
+	return MAKE_CONST(*this->BoolRef);
 }
 
 Value::operator RBOOL()
 {
-	return *this->BoolPtr;
+	return *this->BoolRef;
 }
 
 Value::operator RCSHORT() const
 {
-	return MAKE_CONST(*this->ShortPtr);
+	return MAKE_CONST(*this->ShortRef);
 }
 
 Value::operator RSHORT()
 {
-	return *this->ShortPtr;
+	return *this->ShortRef;
 }
 
 Value::operator RCWORD() const
 {
-	return MAKE_CONST(*this->WordPtr);
+	return MAKE_CONST(*this->WordRef);
 }
 
 Value::operator RWORD()
 {
-	return *this->WordPtr;
+	return *this->WordRef;
 }
 
 Value::operator RCLONG() const
 {
-	return MAKE_CONST(*this->LongPtr);
+	return MAKE_CONST(*this->LongRef);
 }
 
 Value::operator RLONG()
 {
-	return *this->LongPtr;
+	return *this->LongRef;
 }
 
 Value::operator RCDWORD() const
 {
-	return MAKE_CONST(*this->DWordPtr);
+	return MAKE_CONST(*this->DWordRef);
 }
 
 Value::operator RDWORD()
 {
-	return *this->DWordPtr;
+	return *this->DWordRef;
 }
 
 Value::operator RCFLOAT() const
 {
-	return MAKE_CONST(*this->FloatPtr);
+	return MAKE_CONST(*this->FloatRef);
 }
 
 Value::operator RFLOAT()
 {
-	return *this->FloatPtr;
+	return *this->FloatRef;
 }
 
 
@@ -443,14 +443,14 @@ Value::operator RFLOAT()
 
 VOID Value::FreePtr()
 {
-	if (this->Bytes)
-		delete this->Bytes;
+	if (this->BytesRef)
+		delete this->BytesRef;
 }
 
 VOID Value::FreeData()
 {
-	if (this->Bytes)
-		delete[] this->Bytes;
+	if (this->BytesRef)
+		delete[] this->BytesRef;
 }
 
 #pragma endregion
