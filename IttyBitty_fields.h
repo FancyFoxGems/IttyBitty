@@ -93,6 +93,18 @@ namespace IttyBitty
 	public:
 
 		// INTERFACE METHODS
+
+		VIRTUAL PCBYTE MetadataToBinary() const = 0;
+		VIRTUAL PCBYTE ValueToBinary() const = 0;
+
+		VIRTUAL PCCHAR MetadataToString() const = 0;
+		VIRTUAL PCCHAR ValueToString() const = 0;
+
+		VIRTUAL VOID MetadataFromBinary(PCBYTE) = 0;
+		VIRTUAL VOID ValueFromBinary(PCBYTE) = 0;
+
+		VIRTUAL VOID MetadataFromString(PCCHAR) = 0;
+		VIRTUAL VOID ValueFromString(PCCHAR) = 0;
 	};
 
 #pragma endregion
@@ -167,6 +179,18 @@ namespace IttyBitty
 		{
 			return DatumBase<Value>::GetDataType();
 		}
+
+		VIRTUAL PCBYTE MetadataToBinary() const;
+		VIRTUAL PCBYTE ValueToBinary() const;
+
+		VIRTUAL PCCHAR MetadataToString() const;
+		VIRTUAL PCCHAR ValueToString() const;
+
+		VIRTUAL VOID MetadataFromBinary(PCBYTE);
+		VIRTUAL VOID ValueFromBinary(PCBYTE);
+
+		VIRTUAL VOID MetadataFromString(PCCHAR);
+		VIRTUAL VOID ValueFromString(PCCHAR);
 	};
 
 #pragma endregion
@@ -269,8 +293,9 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE ByteWidth() const final;
 
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
+		VIRTUAL VOID MetadataFromBinary(PCBYTE);
+
+		VIRTUAL VOID MetadataFromString(PCCHAR);
 		
 
 	protected:
@@ -599,31 +624,23 @@ namespace IttyBitty
 
 			return DatumBase<Value>::ByteWidth();
 		}
-		
-		VIRTUAL VOID FromBinary(PCBYTE data) final
+
+		VIRTUAL VOID MetadataFromBinary(PCBYTE data) final
 		{
-			PBYTE bufferPtr = data;
+			PCBYTE bufferPtr = data;
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
-			FieldBase::FromBinary(data);
+			FieldBase::MetadataFromBinary(data);
 		}
-		
-		VIRTUAL VOID FromString(PCCHAR data) final
+
+		VIRTUAL VOID MetadataFromString(PCCHAR data) final
 		{
-			PCHAR bufferPtr = data;
+			PCCHAR bufferPtr = data;
 
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-			FieldBase::FromString(data);
-			
-			// TODO
-			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
-	
-			//BYTE bytes[this->ByteWidth()];
-
-			//for (BYTE i = 0; i < this->ByteWidth(); i++)
-			//	bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+			FieldBase::MetadataFromString(data);
 		}
 
 

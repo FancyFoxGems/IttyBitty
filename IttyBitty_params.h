@@ -585,14 +585,6 @@ namespace IttyBitty
 			bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
 			ParamBase::FromString(data);
-			
-			// TODO
-			//bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
-	
-			//BYTE bytes[this->ByteWidth()];
-
-			//for (BYTE i = 0; i < this->ByteWidth(); i++)
-			//	bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
 		}
 
 

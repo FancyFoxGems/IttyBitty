@@ -195,6 +195,7 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE) = 0;
 		VIRTUAL VOID FromString(PCCHAR) = 0;
 
+
 	protected:
 
 		ISerializable() { }
@@ -233,6 +234,7 @@ namespace IttyBitty
 
 		VIRTUAL CONST DataSize GetDataSize() const = 0;
 		VIRTUAL CONST DataType GetDataType() const = 0;
+
 
 	protected:
 

@@ -79,19 +79,9 @@ PCBYTE FieldBase::ToBinary() const
 
 	__datum_buffer = new BYTE[size];
 
-	PBYTE bufferPtr = __datum_buffer;
-	
-	CSIZE byteWidth = this->ByteWidth();
-	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
-	bufferPtr += SIZEOF(byteWidth);
+	this->MetadataToBinary();
 
-	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
-	bufferPtr += SIZEOF(DataType);
-
-	if (byteWidth > 0)
-		memcpy(bufferPtr, *_Value.BytesRef, this->ByteWidth());
-
-	return __datum_buffer;
+	return this->ValueToBinary();
 }
 
 PCCHAR FieldBase::ToString() const
@@ -105,50 +95,9 @@ PCCHAR FieldBase::ToString() const
 	__datum_buffer = new BYTE[size];
 	__datum_buffer[size - 1] = '\0';
 
-	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
-
-	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
-	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
-
-	PCBYTE bytes = NULL;
-
-	switch (_DataType)
-	{
-	case DataType::BYTE_DATUM:
-	case DataType::CHAR_DATUM:
-	case DataType::BOOL_DATUM:
-
-		bytes = (PBYTE)_Value.ByteRef;
-		break;
-		
-	case DataType::WORD_DATUM:
-	case DataType::SHORT_DATUM:
-		
-
-		bytes = (PBYTE)_Value.WordRef;
-		break;
-			
-	case DataType::DWORD_DATUM:
-	case DataType::LONG_DATUM:	
-	case DataType::FLOAT_DATUM:
-
-		bytes = (PBYTE)_Value.DWordRef;
-		break;
-
-	default:
-
-		bytes = *_Value.BytesRef;
-
-		for (SIZE i = 0; i < byteWidth; i++)
-			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
-
-		return reinterpret_cast<PCCHAR>(__datum_buffer);
-	}
+	this->MetadataToString();
 	
-	for (SIZE i = 0; i < 4 - byteWidth; i++)
-		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
-	
-	return reinterpret_cast<PCCHAR>(__datum_buffer);
+	return this->ValueToString();
 }
 
 VOID FieldBase::FromBinary(PCBYTE data)
@@ -195,6 +144,198 @@ VOID FieldBase::FromString(PCCHAR data)
 	bufferPtr += 2 * SIZEOF(CSIZE);
 
 	bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
+
+	CBYTE byteWidth = this->ByteWidth();
+
+	PBYTE bytes = NULL;
+	
+	switch (_DataType)
+	{
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
+
+		bytes = (PBYTE)_Value.ByteRef;
+		break;
+		
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:		
+
+		bytes = (PBYTE)_Value.WordRef;
+		break;
+		
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:		
+	case DataType::FLOAT_DATUM:
+
+		bytes = (PBYTE)_Value.DWordRef;
+		break;
+
+	default:
+		
+		for (BYTE i = 0; i < byteWidth; i++)
+			bufferPtr = StringReadValue<BYTE>(bytes[i], bufferPtr);
+
+		_Value = bytes;
+
+		return;
+	}
+	
+	for (SIZE i = 0 ; i < byteWidth; i++)
+		bufferPtr = StringReadValue<BYTE>(bytes[byteWidth - i - 1], bufferPtr);
+}
+
+PCBYTE FieldBase::MetadataToBinary() const
+{
+	PBYTE bufferPtr = __datum_buffer;
+	
+	CSIZE byteWidth = this->ByteWidth();
+	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
+	bufferPtr += SIZEOF(byteWidth);
+
+	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
+	bufferPtr += SIZEOF(DataType);
+
+	return __datum_buffer;
+}
+
+PCBYTE FieldBase::ValueToBinary() const
+{
+	PBYTE bufferPtr = __datum_buffer;
+	
+	bufferPtr += SIZEOF(CSIZE);
+	bufferPtr += SIZEOF(DataType);
+	
+	CSIZE byteWidth = this->ByteWidth();
+
+	if (byteWidth > 0)
+		memcpy(bufferPtr, *_Value.BytesRef, byteWidth);
+
+	return __datum_buffer;
+}
+
+PCCHAR FieldBase::MetadataToString() const
+{
+	CSIZE byteWidth = this->ByteWidth();
+	
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
+
+	bufferPtr = StringInsertValue<CSIZE>(byteWidth, bufferPtr);
+	bufferPtr = StringInsertValue<CBYTE>(static_cast<CBYTE>(this->GetDataType()), bufferPtr);
+	
+	return reinterpret_cast<PCCHAR>(__datum_buffer);
+}
+
+PCCHAR FieldBase::ValueToString() const
+{
+	CSIZE byteWidth = this->ByteWidth();
+
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
+
+	bufferPtr += 2 * SIZEOF(CSIZE);
+	bufferPtr += 2 * SIZEOF(DataType);
+
+	PCBYTE bytes = NULL;
+
+	switch (_DataType)
+	{
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
+
+		bytes = (PBYTE)_Value.ByteRef;
+		break;
+		
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:
+		
+
+		bytes = (PBYTE)_Value.WordRef;
+		break;
+			
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:	
+	case DataType::FLOAT_DATUM:
+
+		bytes = (PBYTE)_Value.DWordRef;
+		break;
+
+	default:
+
+		bytes = *_Value.BytesRef;
+
+		for (SIZE i = 0; i < byteWidth; i++)
+			bufferPtr = StringInsertValue<CBYTE>(bytes[i], bufferPtr);
+
+		return reinterpret_cast<PCCHAR>(__datum_buffer);
+	}
+	
+	for (SIZE i = 0; i < 4 - byteWidth; i++)
+		bufferPtr = StringInsertValue<CBYTE>(bytes[byteWidth - i - 1], bufferPtr);
+	
+	return reinterpret_cast<PCCHAR>(__datum_buffer);
+}
+
+VOID FieldBase::MetadataFromBinary(PCBYTE data)
+{
+	PCBYTE bufferPtr = data;
+
+	bufferPtr += SIZEOF(CSIZE);
+
+	_DataType = static_cast<DataType>(*bufferPtr++);
+}
+
+VOID FieldBase::ValueFromBinary(PCBYTE data)
+{
+	PCBYTE bufferPtr = data;
+
+	bufferPtr += SIZEOF(CSIZE);
+	bufferPtr += SIZEOF(DataType);
+
+	switch (_DataType)
+	{
+	case DataType::BYTE_DATUM:
+	case DataType::CHAR_DATUM:
+	case DataType::BOOL_DATUM:
+
+		_Value = *((PBYTE)bufferPtr);
+		break;
+		
+	case DataType::WORD_DATUM:
+	case DataType::SHORT_DATUM:
+		
+
+		_Value = *((PWORD)bufferPtr);
+		break;
+		
+	case DataType::DWORD_DATUM:
+	case DataType::LONG_DATUM:		
+	case DataType::FLOAT_DATUM:
+
+		_Value = *((PDWORD)bufferPtr);
+		break;
+
+	default:
+
+		_Value = (PBYTE)data;
+	}
+}
+
+VOID FieldBase::MetadataFromString(PCCHAR data)
+{
+	PCCHAR bufferPtr = data;
+
+	bufferPtr += 2 * SIZEOF(CSIZE);
+
+	bufferPtr = StringReadValue<DataType>(_DataType, bufferPtr);
+}
+
+VOID FieldBase::ValueFromString(PCCHAR data)
+{
+	PCCHAR bufferPtr = data;
+
+	bufferPtr += 2 * SIZEOF(CSIZE);
+	bufferPtr += 2 * SIZEOF(DataType);
 
 	CBYTE byteWidth = this->ByteWidth();
 
@@ -589,22 +730,22 @@ CSIZE VarLengthField::ByteWidth() const
 	return DatumBase<Value>::ByteWidth();
 }
 
-VOID VarLengthField::FromBinary(PCBYTE data)
+VOID VarLengthField::MetadataFromBinary(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
 
 	_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
 	
-	FieldBase::FromBinary(data);
+	FieldBase::MetadataFromBinary(data);
 }
 
-VOID VarLengthField::FromString(PCCHAR data)
+VOID VarLengthField::MetadataFromString(PCCHAR data)
 {
 	PCCHAR bufferPtr = data;
 
 	bufferPtr = StringReadValue<SIZE>(_Length, bufferPtr);
 
-	FieldBase::FromString(data);
+	FieldBase::MetadataFromString(data);
 }
 
 #pragma endregion
