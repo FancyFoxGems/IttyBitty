@@ -273,7 +273,7 @@ namespace IttyBitty
 		}
 		
 		
-		// ISerializable IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL CSIZE BinarySize() const
 		{
@@ -348,7 +348,7 @@ namespace IttyBitty
 	#endif
 
 
-		// IDatum IMPLEMENTATION
+		// [IDatum] IMPLEMENTATION
 
 		VIRTUAL CDATASIZE GetDataSize() const
 		{

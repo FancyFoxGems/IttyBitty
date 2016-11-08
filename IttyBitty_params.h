@@ -109,7 +109,7 @@ namespace IttyBitty
 		VIRTUAL ~ParamBase();
 		
 		
-		// ISerializable IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -156,7 +156,7 @@ namespace IttyBitty
 	#endif
 
 
-		// IDatum IMPLEMENTATION
+		// [IDatum] IMPLEMENTATION
 
 		VIRTUAL CDATASIZE GetDataSize() const
 		{
@@ -254,7 +254,7 @@ namespace IttyBitty
 		VIRTUAL operator PCBITPACK() const;
 
 
-		// Param OVERRIDES
+		// [Param] OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final;
 
@@ -559,7 +559,7 @@ namespace IttyBitty
 		}
 
 
-		//  IParam OVERRIDES
+		//  [Param] OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final
 		{

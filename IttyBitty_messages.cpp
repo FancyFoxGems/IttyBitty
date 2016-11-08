@@ -331,7 +331,7 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 }
 
 
-// ISerializable IMPLEMENTATION
+// [ISerializable] IMPLEMENTATION
 
 CSIZE Message::BinarySize() const
 {

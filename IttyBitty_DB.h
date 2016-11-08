@@ -119,7 +119,7 @@ namespace IttyBitty
 
 	public:		
 
-		// ISerializable IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;

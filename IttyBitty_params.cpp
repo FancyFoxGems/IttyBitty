@@ -68,7 +68,7 @@ ParamBase::~ParamBase()
 }
 				
 
-// ISerializable IMPLEMENTATION
+// [ISerializable] IMPLEMENTATION
 
 PCBYTE ParamBase::ToBinary() const
 {
@@ -522,7 +522,7 @@ VarLengthParam::operator PCBITPACK() const
 }
 
 
-// Param OVERRIDES
+// [Param] OVERRIDES
 
 CSIZE VarLengthParam::ByteWidth() const
 {

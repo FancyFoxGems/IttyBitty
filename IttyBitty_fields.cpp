@@ -68,7 +68,7 @@ FieldBase::~FieldBase()
 }
 				
 
-// ISerializable IMPLEMENTATION
+// [ISerializable] IMPLEMENTATION
 
 PCBYTE FieldBase::ToBinary() const
 {
@@ -720,7 +720,7 @@ VarLengthField::operator PBITPACK()
 
 
 
-// Field OVERRIDES
+// [Field] OVERRIDES
 
 CSIZE VarLengthField::ByteWidth() const
 {

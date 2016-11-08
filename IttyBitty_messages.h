@@ -136,9 +136,12 @@ namespace IttyBitty
 
 
 	protected:
+		
+		// HELPER METHODS
 
 		VIRTUAL CSIZE GetParamsByteSize() const = 0;
 		VIRTUAL CSIZE GetParamsStringSize() const = 0;
+
 
 		IMessage() { }
 	};
@@ -200,7 +203,7 @@ namespace IttyBitty
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 		
 
-		// ISerializable IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
@@ -275,7 +278,7 @@ namespace IttyBitty
 		GenericMessage(PPIPARAM params) : Message(MsgCode, ParamCnt, params) { }
 
 
-		// MESSAGE OVERRIDES
+		// [Message] OVERRIDES
 
 		VOID Handle(...) { }
 

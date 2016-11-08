@@ -121,7 +121,7 @@ namespace IttyBitty
 		VIRTUAL ~FieldBase();
 		
 		
-		// ISerializable IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -168,7 +168,7 @@ namespace IttyBitty
 	#endif
 
 
-		// IDatum IMPLEMENTATION
+		// [IDatum] IMPLEMENTATION
 
 		VIRTUAL CDATASIZE GetDataSize() const
 		{
@@ -289,7 +289,7 @@ namespace IttyBitty
 		VIRTUAL operator PBITPACK();
 
 
-		// Field OVERRIDES
+		// [Field] OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final;
 
@@ -615,7 +615,7 @@ namespace IttyBitty
 		}
 
 
-		//  IField OVERRIDES
+		//  [Field] OVERRIDES
 
 		VIRTUAL CSIZE ByteWidth() const final
 		{
