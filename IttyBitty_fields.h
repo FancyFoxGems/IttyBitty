@@ -78,7 +78,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region FIELD PARSING GLOBAL FUNCTION DECLARATIONS
+#pragma region [Field] PARSING GLOBAL FUNCTION DECLARATIONS
 	
 	PIFIELD FieldFromBytes(PCBYTE);
 	PIFIELD FieldFromString(PCCHAR);

@@ -33,9 +33,9 @@ namespace IttyBitty
 	typedef IDbTableDef IDBTABLEDEF, * PIDBTABLEDEF, & RIDBTABLEDEF, ** PPIDBTABLEDEF, && RRIDBTABLEDEF;
 	typedef const IDbTableDef CIDBTABLEDEF, * PCIDBTABLEDEF, & RCIDBTABLEDEF, ** PPCIDBTABLEDEF;
 
-	class DbTableDef;
-	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
-	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
+	class SimpleDbTableDef;
+	typedef SimpleDbTableDef SIMPLEDBTABLEDEF, * PSIMPLEDBTABLEDEF, & RSIMPLEDBTABLEDEF, ** PPSIMPLEDBTABLEDEF, && RRSIMPLEDBTABLEDEF;
+	typedef const SimpleDbTableDef CSIMPLEDBTABLEDEF, * PCSIMPLEDBTABLEDEF, & RCSIMPLEDBTABLEDEF, ** PPCSIMPLEDBTABLEDEF;
 
 	template<typename T = BYTE>
 	class TypedDbTableDef;
@@ -57,6 +57,10 @@ namespace IttyBitty
 	using RCTYPEDDBTABLEDEF = const TypedDbTableDef<T> &;
 	template<typename T = BYTE>
 	using PPCTYPEDDBTABLEDEF = const TypedDbTableDef<T> **;
+
+	class DbTableDef;
+	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
+	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
 
 #pragma endregion
 
@@ -116,6 +120,17 @@ namespace IttyBitty
 
 	typedef enum DbResult DBRESULT, * PDBRESULT, & RDBRESULT, ** PPDBRESULT;
 	typedef const enum DbResult CDBRESULT, * PCDBRESULT, & RCDBRESULT, ** PPCDBRESULT;
+
+#pragma endregion
+	
+
+#pragma region DbHeader/DbTableDef PARSING GLOBAL FUNCTION DECLARATIONS
+
+	PDBHEADER DbHeaderFromBytes(Stream & stream);
+	PDBHEADER DbHeaderFromString(Stream & stream);
+
+	PDBHEADER DbHeaderFromBytes(Stream & stream);
+	PDBHEADER DbHeaderFromString(Stream & stream);
 
 #pragma endregion
 
@@ -194,6 +209,12 @@ namespace IttyBitty
 
 		BYTE _TableCount = 0;
 		PPIDBTABLEDEF _TableDefs = NULL;
+
+		
+		// HELPER METHODS
+
+		VIRTUAL CSIZE GetTableDefsByteSize() const;
+		VIRTUAL CSIZE GetTableDefsStringSize() const;
 	};
 
 #pragma endregion

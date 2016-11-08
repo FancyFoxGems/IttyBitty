@@ -53,7 +53,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region MESSAGE PARSING/HANDLING GLOBAL FUNCTION DEFINITIONS
+#pragma region [Message] PARSING/HANDLING GLOBAL FUNCTION DEFINITIONS
 
 
 	PIMESSAGE MessageFromBytes(Stream & stream)

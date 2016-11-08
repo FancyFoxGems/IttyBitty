@@ -78,7 +78,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region PARAM PARSING GLOBAL FUNCTION DECLARATIONS
+#pragma region [Param] PARSING GLOBAL FUNCTION DECLARATIONS
 	
 	PIPARAM ParamFromBytes(PCBYTE);
 	PIPARAM ParamFromString(PCCHAR);

@@ -54,7 +54,7 @@ namespace IttyBitty
 		WORD stackEnd = reinterpret_cast<WORD>(__heap_end);
 
 		if (stackEnd > RAMEND)
-			stackEnd = reinterpret_cast<WORD>(__bss_end);
+			stackEnd = static_cast<WORD>(__bss_end);
 
 		return static_cast<CWORD>(RAMEND + 1 - stackEnd - __malloc_margin);
 	}
@@ -131,7 +131,7 @@ namespace IttyBitty
 		//return StackSpaceFree() + HeapSpaceFree();
 
 		CWORD dummyWord = 0;
-		return (CWORD)&dummyWord - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD)__brkval);
+		return reinterpret_cast<CWORD>(&dummyWord) - (__brkval == 0 ? reinterpret_cast<CWORD>(&__heap_start) : reinterpret_cast<CWORD>(__brkval));
 	}
 	
 
@@ -149,7 +149,7 @@ namespace IttyBitty
 		WORD stackEnd = reinterpret_cast<WORD>(__heap_end);
 
 		if (stackEnd > RAMEND)
-			stackEnd = reinterpret_cast<WORD>(__bss_end);
+			stackEnd = static_cast<WORD>(__bss_end);
 
 		return static_cast<CWORD>(static_cast<WORD>(RAMEND) + 1 - stackEnd - __malloc_margin);
 	}

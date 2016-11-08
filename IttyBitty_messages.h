@@ -90,7 +90,7 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region MESSAGE PARSING GLOBAL FUNCTION DECLARATIONS
+#pragma region [Message] PARSING GLOBAL FUNCTION DECLARATIONS
 	
 	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
 

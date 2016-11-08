@@ -39,31 +39,31 @@
 #pragma endregion
 
 
-namespace IttyBitty
-{
 #pragma region MEMORY AREA/ALLOCATION VARIABLES (FROM AVR LibC & COMPILER, e.g. AVR-GCC)
 
-	EXTERN PCHAR __data_start;
-	EXTERN PCHAR __data_end;
-	EXTERN PCHAR __bss_start;
-	EXTERN PCHAR __bss_end;
-	EXTERN PCHAR __heap_start;
-	EXTERN PCHAR __heap_end;
+EXTERN PCHAR __data_start;
+EXTERN PCHAR __data_end;
+EXTERN PCHAR __bss_start;
+EXTERN INT __bss_end;		// NOTE: "INT" because SD Library says so..!
+EXTERN PCHAR __heap_start;
+EXTERN PCHAR __heap_end;
 
-	EXTERN PINT __brkval;
+EXTERN PINT __brkval;
 
-	EXTERN PCHAR _etext;
-	EXTERN PCHAR _edata;
+EXTERN PCHAR _etext;
+EXTERN PCHAR _edata;
 	
-	EXTERN SIZE __malloc_margin;
-	EXTERN PCHAR __malloc_heap_start;
-	EXTERN PCHAR __malloc_heap_end;
+EXTERN SIZE __malloc_margin;
+EXTERN PCHAR __malloc_heap_start;
+EXTERN PCHAR __malloc_heap_end;
 	
-	EXTERN BYTE __fuse_byte_high_or_extended;
+EXTERN BYTE __fuse_byte_high_or_extended;
 
 #pragma endregion
 
 
+namespace IttyBitty
+{
 #pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DECLARATIONS
 
 	CONSTEXPR PCCHAR CPUType();
