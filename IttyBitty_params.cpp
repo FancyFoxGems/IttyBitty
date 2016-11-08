@@ -244,7 +244,7 @@ VOID ParamBase::FromString(PCCHAR data)
 
 // CONSTRUCTORS
 
-Param::Param(CONST DataType dataType)
+Param::Param(CDATATYPE dataType)
 {
 	_Dispose = TRUE;
 	
@@ -265,7 +265,7 @@ Param::Param(RRPARAM other)
 	new (this) Param(other._Value, other._DataType);
 }
 
-Param::Param(RCCONSTVALUE value, CONST DataType dataType)
+Param::Param(RCCONSTVALUE value, CDATATYPE dataType)
 {
 	_Value = value;
 	_DataType = dataType;
@@ -396,7 +396,7 @@ Param::operator RCFLOAT() const
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthParam::VarLengthParam(CONST DataType dataType, CSIZE length) 
+VarLengthParam::VarLengthParam(CDATATYPE dataType, CSIZE length) 
 	: Param(dataType), _Length(length)
 {
 	switch (dataType)
@@ -436,7 +436,7 @@ VarLengthParam::VarLengthParam(RRVARLENGTHPARAM other)
 	new (this) VarLengthParam(other._Value, other._DataType, other._Length);
 }
 
-VarLengthParam::VarLengthParam(RCCONSTVALUE value, CONST DataType dataType, CSIZE length) 
+VarLengthParam::VarLengthParam(RCCONSTVALUE value, CDATATYPE dataType, CSIZE length) 
 	: Param(value, dataType)
 {
 	if (_DataType == DataType::STRING_DATUM)

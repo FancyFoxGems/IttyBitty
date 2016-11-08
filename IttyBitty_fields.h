@@ -170,12 +170,12 @@ namespace IttyBitty
 
 		// IDatum IMPLEMENTATION
 
-		VIRTUAL CONST DataSize GetDataSize() const
+		VIRTUAL CDATASIZE GetDataSize() const
 		{
 			return DatumBase<Value>::GetDataSize();
 		}
 
-		VIRTUAL CONST DataType GetDataType() const
+		VIRTUAL CDATATYPE GetDataType() const
 		{
 			return DatumBase<Value>::GetDataType();
 		}
@@ -204,12 +204,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT Field(CONST DataType = DataType::BYTE_DATUM);
+		EXPLICIT Field(CDATATYPE = DataType::BYTE_DATUM);
 
 		Field(RCFIELD);
 		Field(RRFIELD);
 
-		EXPLICIT Field(RVALUE, CONST DataType = DataType::BYTE_DATUM);
+		EXPLICIT Field(RVALUE, CDATATYPE = DataType::BYTE_DATUM);
 
 		EXPLICIT Field(RCHAR);
 		EXPLICIT Field(RBYTE);
@@ -262,12 +262,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT VarLengthField(CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
+		EXPLICIT VarLengthField(CDATATYPE = DataType::BYTES_DATUM, CSIZE = 0);
 
 		VarLengthField(RCVARLENGTHFIELD);
 		VarLengthField(RRVARLENGTHFIELD);
 
-		EXPLICIT VarLengthField(RVALUE, CONST DataType = DataType::BYTES_DATUM, CSIZE = 0);
+		EXPLICIT VarLengthField(RVALUE, CDATATYPE = DataType::BYTES_DATUM, CSIZE = 0);
 
 		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
@@ -410,7 +410,7 @@ namespace IttyBitty
 		
 		// PROTECTED STATIC FUNCTIONS
 
-		STATIC CONSTEXPR const DataType FindDataType()
+		STATIC CONSTEXPR CDATATYPE FindDataType()
 		{
 			return DataType::BYTE_DATUM;
 		}
@@ -428,7 +428,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::CHAR_DATUM;
 			}
@@ -441,7 +441,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::BYTE_DATUM;
 			}
@@ -454,7 +454,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::BOOL_DATUM;
 			}
@@ -467,7 +467,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::SHORT_DATUM;
 			}
@@ -480,7 +480,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::WORD_DATUM;
 			}
@@ -493,7 +493,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::LONG_DATUM;
 			}
@@ -506,7 +506,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::DWORD_DATUM;
 			}
@@ -519,7 +519,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::FLOAT_DATUM;
 			}
@@ -654,7 +654,7 @@ namespace IttyBitty
 		
 		// PROTECTED STATIC FUNCTIONS
 
-		STATIC CONSTEXPR const DataType FindDataType()
+		STATIC CONSTEXPR CDATATYPE FindDataType()
 		{
 			return TypedField<T>::FindDataType();
 		}
@@ -677,7 +677,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::BYTES_DATUM;
 			}
@@ -690,7 +690,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::STRING_DATUM;
 			}
@@ -703,7 +703,7 @@ namespace IttyBitty
 		
 			// PROTECTED STATIC FUNCTIONS
 
-			STATIC CONSTEXPR const DataType FindDataType()
+			STATIC CONSTEXPR CDATATYPE FindDataType()
 			{
 				return DataType::BIT_DATUM;
 			}

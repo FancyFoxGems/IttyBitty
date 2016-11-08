@@ -45,29 +45,29 @@ namespace IttyBitty
 	VOID PrintBytes(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
 	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintBit(RCBIT, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintBitLine(RCBIT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBit(CBIT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBitLine(CBIT, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCBOOL, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCBOOL, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CBOOL, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CBOOL, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCCHAR, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCCHAR, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CCHAR, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CCHAR, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCBYTE, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCBYTE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CBYTE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CBYTE, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCSHORT, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCSHORT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CSHORT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CSHORT, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCWORD, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CWORD, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCSIZE, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCSIZE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CSIZE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CSIZE, HardwareSerial & = DEFAULT_SERIAL);
 
-	VOID PrintVal(RCLONG, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCLONG, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CLONG, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintLine(CLONG, HardwareSerial & = DEFAULT_SERIAL);
 
 	VOID PrintVal(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);
 	VOID PrintLine(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);

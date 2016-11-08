@@ -98,10 +98,10 @@ namespace IttyBitty
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
 	
-IttyBitty::PinMode GetPinMode(PIN_NUMBER);
-VOID SetPinMode(PIN_NUMBER, IttyBitty::PinMode = IttyBitty::PinMode::CurrentSink);
-VOID SetPinMode(PIN_NUMBER, IttyBitty::PinModeBasic = IttyBitty::PinModeBasic::Output);
-VOID SetPinMode(PIN_NUMBER, RCBYTE = OUTPUT);
+IttyBitty::CPINMODE GetPinMode(PIN_NUMBER);
+VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODE = IttyBitty::PinMode::CurrentSink);
+VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODEBASIC = IttyBitty::PinModeBasic::Output);
+VOID SetPinMode(PIN_NUMBER, CBYTE = OUTPUT);
 	
 CBIT CheckPinSet(PIN_NUMBER);
 CBIT CheckPinUnset(PIN_NUMBER);
@@ -109,7 +109,7 @@ CBIT CheckPinUnset(PIN_NUMBER);
 EXTERN CBIT (*ReadPin)(PIN_NUMBER);
 EXTERN CBIT (*CheckPin)(PIN_NUMBER);
 	
-VOID WritePin(PIN_NUMBER, RCBIT = HIGH);
+VOID WritePin(PIN_NUMBER, CBIT = HIGH);
 VOID SetPin(PIN_NUMBER);
 VOID ClearPin(PIN_NUMBER);
 VOID TogglePin(PIN_NUMBER);

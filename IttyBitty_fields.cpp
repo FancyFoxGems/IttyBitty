@@ -385,7 +385,7 @@ VOID FieldBase::ValueFromString(PCCHAR data)
 
 // CONSTRUCTORS
 
-Field::Field(CONST DataType dataType)
+Field::Field(CDATATYPE dataType)
 {
 	_Dispose = TRUE;
 	
@@ -406,7 +406,7 @@ Field::Field(RRFIELD other)
 	new (this) Field(other._Value, other._DataType);
 }
 
-Field::Field(RVALUE value, CONST DataType dataType)
+Field::Field(RVALUE value, CDATATYPE dataType)
 {
 	_Value = value;
 	_DataType = dataType;
@@ -578,7 +578,7 @@ Field::operator RFLOAT()
 
 // CONSTRUCTORS/DESTRUCTOR
 
-VarLengthField::VarLengthField(CONST DataType dataType, CSIZE length) 
+VarLengthField::VarLengthField(CDATATYPE dataType, CSIZE length) 
 	: Field(dataType), _Length(length)
 {
 	switch (dataType)
@@ -618,7 +618,7 @@ VarLengthField::VarLengthField(RRVARLENGTHFIELD other)
 	new (this) VarLengthField(other._Value, other._DataType, other._Length);
 }
 
-VarLengthField::VarLengthField(RVALUE value, CONST DataType dataType, CSIZE length) 
+VarLengthField::VarLengthField(RVALUE value, CDATATYPE dataType, CSIZE length) 
 	: Field(value, dataType)
 {
 	if (_DataType == DataType::STRING_DATUM)

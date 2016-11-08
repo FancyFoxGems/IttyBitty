@@ -30,89 +30,89 @@ namespace IttyBitty
 	}
 
 
-	VOID PrintBit(RCBIT data, HardwareSerial & printer)
+	VOID PrintBit(CBIT data, HardwareSerial & printer)
 	{
 		printer.print(data ? ON_STRING : OFF_STRING);
 	}
 
-	VOID PrintBitLine(RCBIT data, HardwareSerial & printer)
+	VOID PrintBitLine(CBIT data, HardwareSerial & printer)
 	{
 		printer.println(data ? ON_STRING : OFF_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCBOOL data, HardwareSerial & printer)
+	VOID PrintVal(CBOOL data, HardwareSerial & printer)
 	{
 		printer.print(data ? TRUE_STRING : FALSE_STRING);
 	}
 
-	VOID PrintLine(RCBOOL data, HardwareSerial & printer)
+	VOID PrintLine(CBOOL data, HardwareSerial & printer)
 	{
 		printer.println(data ? TRUE_STRING : FALSE_STRING);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCCHAR data, HardwareSerial & printer)
+	VOID PrintVal(CCHAR data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCCHAR data, HardwareSerial & printer)
+	VOID PrintLine(CCHAR data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCBYTE data, HardwareSerial & printer)
+	VOID PrintVal(CBYTE data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCBYTE data, HardwareSerial & printer)
+	VOID PrintLine(CBYTE data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCSHORT data, HardwareSerial & printer)
+	VOID PrintVal(CSHORT data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCSHORT data, HardwareSerial & printer)
+	VOID PrintLine(CSHORT data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCWORD data, HardwareSerial & printer)
+	VOID PrintVal(CWORD data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCWORD data, HardwareSerial & printer)
+	VOID PrintLine(CWORD data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCSIZE data, HardwareSerial & printer)
+	VOID PrintVal(CSIZE data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCSIZE data, HardwareSerial & printer)
+	VOID PrintLine(CSIZE data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintVal(RCLONG data, HardwareSerial & printer)
+	VOID PrintVal(CLONG data, HardwareSerial & printer)
 	{
 		printer.print(data);
 	}
 
-	VOID PrintLine(RCLONG data, HardwareSerial & printer)
+	VOID PrintLine(CLONG data, HardwareSerial & printer)
 	{
 		printer.println(data);
 		FlushAndDelay();

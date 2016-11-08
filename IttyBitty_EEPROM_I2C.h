@@ -56,7 +56,7 @@ namespace IttyBitty
 {
 #pragma region ENUMS
 	
-	ENUM SerialEEPROMChipFamily : CWORD
+	ENUM SerialEepromChipFamily : WORD
 	{
 		UNKNOWN_EEPROM_CHIP	= 0x0100,
 
@@ -88,6 +88,9 @@ namespace IttyBitty
 		mc24XX512	= 0x0200,
 		mc24XX102x	= 0x0400
 	};
+
+	typedef enum SerialEepromChipFamily SERIALEEPROMCHIPFAMILY;
+	typedef const enum SerialEepromChipFamily CSERIALEEPROMCHIPFAMILY;
 
 #pragma endregion
 
@@ -162,25 +165,25 @@ namespace IttyBitty
 		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
 	using PPCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
 
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	class EEPROM_I2C;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using EEPROMI2C = EEPROM_I2C<ChipType, DeviceNum>;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using PEEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> *;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using REEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> &;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using PPEEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> **;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using RREEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> &&;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using CEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum>;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using PCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> *;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using RCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> &;
-	template<SerialEEPROMChipFamily ChipType = SerialEEPROMChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
 	using PPCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> **;
 
 #pragma endregion
@@ -322,17 +325,17 @@ namespace IttyBitty
 			return this->Read();
 		}
 
-		CBOOL operator ==(RCBYTE value) const
+		CBOOL operator ==(CBYTE value) const
 		{
 			return *this == value;
 		}
 
-		CBOOL operator !=(RCBYTE value) const
+		CBOOL operator !=(CBYTE value) const
 		{
 			return *this != value;
 		}
 
-		RTEEEREF operator =(RCBYTE value)
+		RTEEEREF operator =(CBYTE value)
 		{
 			this->Write(value);
 			return *this;
@@ -343,52 +346,52 @@ namespace IttyBitty
 			return *this = *ref;
 		}
 
-		RTEEEREF operator +=(RCBYTE value)
+		RTEEEREF operator +=(CBYTE value)
 		{
 			return *this = **this + value;
 		}
 
-		RTEEEREF operator -=(RCBYTE value)
+		RTEEEREF operator -=(CBYTE value)
 		{
 			return *this = **this - value;
 		}
 
-		RTEEEREF operator *=(RCBYTE value)
+		RTEEEREF operator *=(CBYTE value)
 		{
 			return *this = **this * value;
 		}
 
-		RTEEEREF operator /=(RCBYTE value)
+		RTEEEREF operator /=(CBYTE value)
 		{
 			return *this = **this / value;
 		}
 
-		RTEEEREF operator ^=(RCBYTE value)
+		RTEEEREF operator ^=(CBYTE value)
 		{
 			return *this = **this ^ value;
 		}
 
-		RTEEEREF operator %=(RCBYTE value)
+		RTEEEREF operator %=(CBYTE value)
 		{
 			return *this = **this % value;
 		}
 
-		RTEEEREF operator &=(RCBYTE value)
+		RTEEEREF operator &=(CBYTE value)
 		{
 			return *this = **this & value;
 		}
 
-		RTEEEREF operator |=(RCBYTE value)
+		RTEEEREF operator |=(CBYTE value)
 		{
 			return *this = **this | value;
 		}
 
-		RTEEEREF operator <<=(RCBYTE value)
+		RTEEEREF operator <<=(CBYTE value)
 		{
 			return *this = **this << value;
 		}
 
-		RTEEEREF operator >>=(RCBYTE value)
+		RTEEEREF operator >>=(CBYTE value)
 		{
 			return *this = **this >> value;
 		}
@@ -537,7 +540,7 @@ namespace IttyBitty
 			return bytesRead;
 		}
 
-		CBYTE Write(RCBYTE value)
+		CBYTE Write(CBYTE value)
 		{
 			BYTE errCode = this->SendAddressWords();
 			if (errCode)
@@ -573,7 +576,7 @@ namespace IttyBitty
 			return bytesWritten;
 		}
 	
-		CBYTE Update(RCBYTE value)
+		CBYTE Update(CBYTE value)
 		{
 			if (**this != value)
 				*this = value;
@@ -613,7 +616,7 @@ namespace IttyBitty
 
 #pragma region [EEPROM_I2C] DEFINITION
 
-	template<SerialEEPROMChipFamily ChipType, CBYTE DeviceNum>
+	template<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum>
 	class EEPROM_I2C
 	{
 	public:
@@ -799,12 +802,12 @@ namespace IttyBitty
 			return this->Read(buffer, size);
 		}
 	
-		CBYTE Write(RCBYTE value)
+		CBYTE Write(CBYTE value)
 		{
 			return (*_Iterator).Write(value);
 		}
 	
-		CBYTE Write(RCBYTE value, RCTADDR addr)
+		CBYTE Write(CBYTE value, RCTADDR addr)
 		{
 			this->seek(addr);
 			return this->Write(value);
@@ -832,12 +835,12 @@ namespace IttyBitty
 			return this->Write(data, data);
 		}
 
-		CBYTE Update(RCBYTE value)
+		CBYTE Update(CBYTE value)
 		{
 			return (*_Iterator).Update(value);
 		}
 
-		CBYTE Update(RCBYTE value, RCTADDR addr)
+		CBYTE Update(CBYTE value, RCTADDR addr)
 		{
 			this->seek(addr);
 			return this->Update(value);

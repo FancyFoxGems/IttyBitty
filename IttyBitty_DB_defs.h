@@ -192,6 +192,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
+		BYTE _TableCount = 0;
 		PPIDBTABLEDEF _TableDefs = NULL;
 	};
 

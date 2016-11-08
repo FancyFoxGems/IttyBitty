@@ -69,22 +69,22 @@ namespace IttyBitty
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
 
-PinMode GetPinMode(PIN_NUMBER p)
+CPINMODE GetPinMode(PIN_NUMBER p)
 {
 	return GET_ARDUINO_PIN_MODE(p);
 }
 
-VOID SetPinMode(PIN_NUMBER p, PinMode mode)
+VOID SetPinMode(PIN_NUMBER p, CPINMODE mode)
 {
 	SET_ARDUINO_PIN_MODE(p, mode);
 }
 
-VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode)
+VOID SetPinMode(PIN_NUMBER p, CPINMODEBASIC basicMode)
 {
 	SET_ARDUINO_PIN_MODE(p, basicMode);
 }
 
-VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode)
+VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode)
 {
 	SET_ARDUINO_PIN_MODE(p, arduinoMode);
 }
@@ -102,7 +102,7 @@ CBIT CheckPinUnset(PIN_NUMBER p)
 	return CHECK_ARDUINO_PIN_UNSET(p);
 }
 	
-VOID WritePin(PIN_NUMBER p, RCBIT state)
+VOID WritePin(PIN_NUMBER p, CBIT state)
 {
 	WRITE_ARDUINO_PIN(p, state);
 }

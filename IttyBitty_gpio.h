@@ -42,13 +42,6 @@ namespace IttyBitty
 {
 #pragma region ENUMS
 
-	ENUM PinModeBasic : BYTE
-	{
-		Input	= INPUT,
-		Output	= OUTPUT,
-		PullUp	= INPUT_PULLUP
-	};
-
 	ENUM PinMode : BYTE
 	{
 		// Input mode states
@@ -59,6 +52,19 @@ namespace IttyBitty
 		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
+
+	ENUM PinModeBasic : BYTE
+	{
+		Input	= INPUT,
+		Output	= OUTPUT,
+		PullUp	= INPUT_PULLUP
+	};
+
+	typedef enum PinMode PINMODE;
+	typedef const enum PinMode CPINMODE;
+
+	typedef enum PinModeBasic PINMODEBASIC;
+	typedef const enum PinModeBasic CPINMODEBASIC;
 
 #pragma endregion
 }
@@ -198,23 +204,23 @@ namespace IttyBitty
 			return this->PinState(p);
 		}
 
-		VIRTUAL PinMode GetPinMode(PIN_NUMBER p) const
+		VIRTUAL CPINMODE GetPinMode(PIN_NUMBER p) const
 		{
-			return (PinMode)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 0b1);
+			return (CPINMODE)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 0b1);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinMode mode = PinMode::CurrentSink)
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODE mode = PinMode::CurrentSink)
 		{
 			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
 			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, PinModeBasic basicMode = PinModeBasic::Output)
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODEBASIC basicMode = PinModeBasic::Output)
 		{
 			this->SetPinMode(p, (PinMode)basicMode);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, RCBYTE arduinoMode = OUTPUT)
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode = OUTPUT)
 		{
 			this->SetPinMode(p, (PinModeBasic)arduinoMode);
 		}
@@ -244,7 +250,7 @@ namespace IttyBitty
 			return _Registers->OutputReg[p];
 		}
 
-		VIRTUAL VOID WritePin(PIN_NUMBER p, RCBIT state = HIGH)
+		VIRTUAL VOID WritePin(PIN_NUMBER p, CBIT state = HIGH)
 		{
 			_Registers->OutputReg[p] = state;
 		}
@@ -292,24 +298,24 @@ namespace IttyBitty
 
 		VIRTUAL ~_Pin() { }
 
-		STATIC PinMode Mode()
+		STATIC CPINMODE Mode()
 		{
 			return PortPtr->GetPinMode(PinNum);
 		}
 
-		STATIC VOID SetMode(PinMode mode)
+		STATIC VOID SetMode(CPINMODE mode)
 		{
 			PortPtr->SetPinMode(PinNum, mode);
 		}
 
-		STATIC VOID SetMode(PinModeBasic basicMode)
+		STATIC VOID SetMode(CPINMODEBASIC basicMode)
 		{
 			PortPtr->SetPinMode(PinNum, basicMode);
 		}
 
-		STATIC VOID SetMode(RCBYTE arduinoMode)
+		STATIC VOID SetMode(CBYTE arduinoMode)
 		{
-			PortPtr->SetPinMode(PinNum, (PinModeBasic)arduinoMode);
+			PortPtr->SetPinMode(PinNum, (CPINMODEBASIC)arduinoMode);
 		}
 
 		STATIC CBIT Read()
@@ -332,7 +338,7 @@ namespace IttyBitty
 			return PortPtr->CheckPinUnset(PinNum);
 		}
 
-		STATIC VOID Write(RCBIT state = HIGH)
+		STATIC VOID Write(CBIT state = HIGH)
 		{
 			return PortPtr->WritePin(PinNum, state);
 		}

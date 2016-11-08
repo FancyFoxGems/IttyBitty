@@ -116,9 +116,16 @@ namespace IttyBitty
 		FLOAT_DATUM		= FOUR_BYTES | SPECIAL_DATA_TYPE
 	};
 
-	INLINE DataSize DataTypeToDataSize(DataType dataType)
+	typedef enum DataSize DATASIZE;
+	typedef const enum DataSize CDATASIZE;
+
+	typedef enum DataType DATATYPE;
+	typedef const enum DataType CDATATYPE;
+
+
+	INLINE CDATASIZE DataTypeToDataSize(CDATATYPE dataType)
 	{
-		return static_cast<DataSize>(MASK((BYTE)dataType, DATA_SIZE_MASK));
+		return static_cast<CDATASIZE>(MASK((CBYTE)dataType, DATA_SIZE_MASK));
 	}
 
 #pragma endregion
@@ -232,8 +239,8 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CONST DataSize GetDataSize() const = 0;
-		VIRTUAL CONST DataType GetDataType() const = 0;
+		VIRTUAL CDATASIZE GetDataSize() const = 0;
+		VIRTUAL CDATATYPE GetDataType() const = 0;
 
 
 	protected:
@@ -343,12 +350,12 @@ namespace IttyBitty
 
 		// IDatum IMPLEMENTATION
 
-		VIRTUAL CONST DataSize GetDataSize() const
+		VIRTUAL CDATASIZE GetDataSize() const
 		{
 			return DataTypeToDataSize(_DataType);
 		}
 
-		VIRTUAL CONST DataType GetDataType() const
+		VIRTUAL CDATATYPE GetDataType() const
 		{
 			return _DataType;
 		}
@@ -361,7 +368,7 @@ namespace IttyBitty
 		BOOL _Dispose = FALSE;
 
 		TVal _Value;
-		DataType _DataType;
+		DATATYPE _DataType;
 	};
 
 #pragma endregion
