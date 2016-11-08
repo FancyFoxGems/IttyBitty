@@ -130,7 +130,7 @@ namespace IttyBitty
 		VIRTUAL RIPARAM Param(CBYTE = 0) = 0;
 
 
-		// USER METHODS
+		// INTERFACE METHODS
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) = 0;
 
@@ -198,7 +198,7 @@ namespace IttyBitty
 		VIRTUAL RIPARAM Param(CBYTE = 0);
 
 
-		// USER METHODS
+		// [IMessage] IMPLEMENTATION
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 		
@@ -238,7 +238,7 @@ namespace IttyBitty
 		PPIPARAM _Params;
 
 		
-		// HELPER METHODS
+		// [IMessage] HELPER METHODS
 
 		VIRTUAL CSIZE GetParamsByteSize() const;
 		VIRTUAL CSIZE GetParamsStringSize() const;
@@ -291,12 +291,6 @@ namespace IttyBitty
 		{
 			return PARAM_COUNT();
 		}
-
-
-	protected:
-
-		using Message::_Dispose;
-		using Message::_Params;
 	};
 	
 #pragma endregion

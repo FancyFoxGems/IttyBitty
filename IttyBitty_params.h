@@ -256,10 +256,10 @@ namespace IttyBitty
 
 		// [Param] OVERRIDES
 
-		VIRTUAL CSIZE ByteWidth() const final;
+		CSIZE ByteWidth() const override;
 
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
+		VOID FromBinary(PCBYTE) override;
+		VOID FromString(PCCHAR) override;
 		
 
 	protected:
@@ -561,7 +561,7 @@ namespace IttyBitty
 
 		//  [Param] OVERRIDES
 
-		VIRTUAL CSIZE ByteWidth() const final
+		CSIZE ByteWidth() const override
 		{
 			if (_Length > 0)
 				return _Length;
@@ -569,7 +569,7 @@ namespace IttyBitty
 			return DatumBase<ConstValue>::ByteWidth();
 		}
 		
-		VIRTUAL VOID FromBinary(PCBYTE data) final
+		VOID FromBinary(PCBYTE data) override
 		{
 			PCBYTE bufferPtr = data;
 
@@ -578,7 +578,7 @@ namespace IttyBitty
 			ParamBase::FromBinary(data);
 		}
 		
-		VIRTUAL VOID FromString(PCCHAR data) final
+		VOID FromString(PCCHAR data) override
 		{
 			PCCHAR bufferPtr = data;
 

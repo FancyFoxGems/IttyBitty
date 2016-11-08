@@ -291,11 +291,11 @@ namespace IttyBitty
 
 		// [Field] OVERRIDES
 
-		VIRTUAL CSIZE ByteWidth() const final;
+		CSIZE ByteWidth() const override;
 
-		VIRTUAL VOID MetadataFromBinary(PCBYTE);
+		VOID MetadataFromBinary(PCBYTE) override;
 
-		VIRTUAL VOID MetadataFromString(PCCHAR);
+		VOID MetadataFromString(PCCHAR) override;
 		
 
 	protected:
@@ -617,7 +617,7 @@ namespace IttyBitty
 
 		//  [Field] OVERRIDES
 
-		VIRTUAL CSIZE ByteWidth() const final
+		CSIZE ByteWidth() const override
 		{
 			if (_Length > 0)
 				return _Length;
@@ -625,7 +625,7 @@ namespace IttyBitty
 			return DatumBase<Value>::ByteWidth();
 		}
 
-		VIRTUAL VOID MetadataFromBinary(PCBYTE data) final
+		VOID MetadataFromBinary(PCBYTE data) override
 		{
 			PCBYTE bufferPtr = data;
 
@@ -634,7 +634,7 @@ namespace IttyBitty
 			FieldBase::MetadataFromBinary(data);
 		}
 
-		VIRTUAL VOID MetadataFromString(PCCHAR data) final
+		VOID MetadataFromString(PCCHAR data) override
 		{
 			PCCHAR bufferPtr = data;
 

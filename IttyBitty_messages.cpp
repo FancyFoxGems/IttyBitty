@@ -230,7 +230,11 @@ Message::Message(CBYTE messageCode, RCIPARAM param)
 }
 
 Message::Message(CBYTE messageCode, CBYTE paramCount, PPIPARAM params)
-	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params) { }
+	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params)
+{
+	if (_Params == NULL)
+		_Params = new PIPARAM[_ParamCount];
+}
 
 Message::~Message()
 {
@@ -315,7 +319,7 @@ RIPARAM Message::Param(CBYTE i)
 }
 
 
-// USER METHODS
+// [IMessage] IMPLEMENTATION
 
 //VOID Message::Handle(...)
 BOOL Message::Handle(PVOID results, PCVOID state)
@@ -542,7 +546,7 @@ SIZE Message::printTo(Print & printer) const
 #endif	// #ifdef ARDUINO
 
 
-// HELPER METHODS
+// [IMessage] HELPER METHODS
 
 CSIZE Message::GetParamsByteSize() const
 {
