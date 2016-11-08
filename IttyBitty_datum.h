@@ -91,14 +91,14 @@ namespace IttyBitty
 		FOUR_BYTES	= 0x80
 	};
 
-	enum DataTypeFormat
+	enum DataTypeFormat : BYTE
 	{
 		UNSIGNED_DATA_TYPE	= 0x0,
 		SIGNED_DATA_TYPE	= 0x1,
 		SPECIAL_DATA_TYPE	= 0x2
 	};
 
-	enum DataType : BYTE
+	ENUM DataType : BYTE
 	{
 		BYTES_DATUM		= WHO_KNOWS | UNSIGNED_DATA_TYPE,
 		STRING_DATUM	= WHO_KNOWS | SIGNED_DATA_TYPE,
@@ -118,7 +118,7 @@ namespace IttyBitty
 
 	INLINE DataSize DataTypeToDataSize(DataType dataType)
 	{
-		return static_cast<DataSize>(MASK(dataType, DATA_SIZE_MASK));
+		return static_cast<DataSize>(MASK((BYTE)dataType, DATA_SIZE_MASK));
 	}
 
 #pragma endregion

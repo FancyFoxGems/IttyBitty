@@ -56,7 +56,7 @@ namespace IttyBitty
 {
 #pragma region ENUMS
 	
-	enum SerialEEPROMChipFamily : CWORD
+	ENUM SerialEEPROMChipFamily : CWORD
 	{
 		UNKNOWN_EEPROM_CHIP	= 0x0100,
 
