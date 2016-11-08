@@ -32,10 +32,10 @@ namespace IttyBitty
 	typedef Database DATABASE, * PDATABASE, & RDATABASE, ** PPDATABASE, && RRDATABASE;
 	typedef const Database CDATABASE, * PCDATABASE, & RCDATABASE, ** PPCDATABASE;
 
-#pragma endregion/*
+#pragma endregion
 
 	
-#pragma region ENUMS
+/*#pragma region ENUMS
 
 	ENUM DbResult : BYTE
 	{

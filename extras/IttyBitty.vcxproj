@@ -103,6 +103,7 @@
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp" />
     <ClCompile Include="..\IttyBitty_fields.cpp" />
     <ClCompile Include="..\IttyBitty_GPIO.cpp" />
+    <ClCompile Include="..\IttyBitty_info.cpp" />
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
     <ClCompile Include="..\IttyBitty_led.cpp" />
     <ClCompile Include="..\IttyBitty_messages.cpp" />

@@ -298,6 +298,9 @@
     <ClCompile Include="..\IttyBitty_signals.cpp">
       <Filter>IO</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_info.cpp">
+      <Filter>Info</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">
       <Filter>Storage</Filter>
     </ClCompile>

@@ -67,6 +67,43 @@ namespace IttyBitty
 
 #pragma endregion
 	
+	
+#ifdef ARDUINO
+
+#pragma region SERIAL/STREAM READING GLOBAL FUNCTION DECLARATIONS/DEFINITIONS
+
+	CBOOL operator >(Stream & stream, PBYTE b);
+	CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length = 1);
+
+	template<typename T>
+	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
+	{
+		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
+		
+		STATIC T NULL_T = (T)0;
+		if (!result)
+			return NULL_T;
+
+		return *((T *)buffer);
+	}
+
+#pragma endregion
+	
+
+#pragma region MESSAGE PARSING GLOBAL FUNCTION DECLARATIONS
+	
+	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
+
+
+	PIMESSAGE MessageFromBytes(Stream & stream);
+	PIMESSAGE MessageFromString(Stream & stream);
+	
+	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler);
+
+#pragma endregion
+
+#endif	// #ifdef ARDUINO
+	
 
 #pragma region [IMessage] DEFINITION
 
@@ -260,43 +297,6 @@ namespace IttyBitty
 	};
 	
 #pragma endregion
-	
-	
-#ifdef ARDUINO
-
-#pragma region SERIAL/STREAM READING GLOBAL FUNCTION DECLARATIONS/DEFINITIONS
-
-	CBOOL operator >(Stream & stream, PBYTE b);
-	CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length = 1);
-
-	template<typename T>
-	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
-	{
-		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
-		
-		STATIC T NULL_T = (T)0;
-		if (!result)
-			return NULL_T;
-
-		return *((T *)buffer);
-	}
-
-#pragma endregion
-	
-
-#pragma region MESSAGE PARSING GLOBAL FUNCTION DECLARATIONS
-	
-	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
-
-
-	PIMESSAGE MessageFromBytes(Stream & stream);
-	PIMESSAGE MessageFromString(Stream & stream);
-	
-	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler);
-
-#pragma endregion
-
-#endif	// #ifdef ARDUINO
 }
 
 
