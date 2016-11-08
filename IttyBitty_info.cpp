@@ -128,13 +128,10 @@ namespace IttyBitty
 
 	#endif
 
-		//EXTERN INT __bss_end;
-		//EXTERN PINT __brkval;
+		//return StackSpaceFree() + HeapSpaceFree();
 
 		CWORD dummyWord = 0;
 		return (CWORD)&dummyWord - (__brkval == 0 ? (CWORD) &__heap_start : (CWORD)__brkval);
-
-		//return StackSpaceFree() + HeapSpaceFree();
 	}
 	
 
