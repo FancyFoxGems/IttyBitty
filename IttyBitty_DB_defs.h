@@ -14,13 +14,6 @@
 #include "IttyBitty_storage.h"
 
 
-#pragma region DEFINES
-
-#define ITTYBITTY_DB_DEFAULT_GROWTH_FACTOR		2U
-
-#pragma endregion
-
-
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
@@ -162,7 +155,7 @@ namespace IttyBitty
 	
 #pragma region [IDbHeader] DEFINITION
 
-	class IDbHeader : public ISerializable
+	class IDbHeader : public ISerializable, public IStorable
 	{
 	public:
 
@@ -173,8 +166,8 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		//VIRTUAL RDBHEADER operator=(RCDBHEADER) = 0;
-		//VIRTUAL RDBHEADER operator=(RRDBHEADER) = 0;
+		VIRTUAL RDBHEADER operator=(RCDBHEADER) = 0;
+		VIRTUAL RDBHEADER operator=(RRDBHEADER) = 0;
 
 		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const = 0;
 		VIRTUAL PIDBTABLEDEF operator[](CBYTE) = 0;
@@ -212,8 +205,8 @@ namespace IttyBitty
 
 		DbHeader(CBYTE = 0);
 
-		//DbHeader(RCDBHEADER);
-		//DbHeader(RRDBHEADER);
+		DbHeader(RCDBHEADER);
+		DbHeader(RRDBHEADER);
 
 		EXPLICIT DbHeader(PCBYTE);
 		EXPLICIT DbHeader(PCCHAR);
@@ -235,8 +228,8 @@ namespace IttyBitty
 		
 		// OPERATORS
 
-		//VIRTUAL RDBHEADER operator=(RCDBHEADER);
-		//VIRTUAL RDBHEADER operator=(RRDBHEADER);
+		VIRTUAL RDBHEADER operator=(RCDBHEADER);
+		VIRTUAL RDBHEADER operator=(RRDBHEADER);
 
 		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const;
 		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
@@ -248,6 +241,15 @@ namespace IttyBitty
 		
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
+				
+
+		// [IStorable] IMPLEMENTATION
+
+		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+
+		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
 		
 
 		// [ISerializable] IMPLEMENTATION
@@ -330,7 +332,7 @@ namespace IttyBitty
 	
 #pragma region [IDbTableDef] DEFINITION
 
-	class IDbTableDef : public ISerializable
+	class IDbTableDef : public ISerializable, public IStorable
 	{
 	public:
 
@@ -390,6 +392,15 @@ namespace IttyBitty
 		VIRTUAL CSIZE GetRowSize() const;
 
 		VIRTUAL DWORD GetAddrOffset() const;
+				
+
+		// [IStorable] IMPLEMENTATION
+
+		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+
+		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
 
 
 		// [ISerializable] IMPLEMENTATION

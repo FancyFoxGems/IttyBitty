@@ -24,9 +24,38 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	class IDbTable;
+	typedef IDbTable IDBTABLE, * PIDBTABLE, & RIDBTABLE, ** PPIDBTABLE, && RRIDBTABLE;
+	typedef const IDbTable CIDBTABLE, * PCIDBTABLE, & RCIDBTABLE, ** PPCIDBTABLE;
+
 	class DbTable;
 	typedef DbTable DBTABLE, * PDBTABLE, & RDBTABLE, ** PPDBTABLE, && RRDBTABLE;
 	typedef const DbTable CDBTABLE, * PCDBTABLE, & RCDBTABLE, ** PPCDBTABLE;
+
+	template<typename T>
+	class TypedDbTable;
+	template<typename T>
+	using TYPEDDBTABLE = TypedDbTable<T>;
+	template<typename T>
+	using PTYPEDDBTABLE = TypedDbTable<T> *;
+	template<typename T>
+	using RTYPEDDBTABLE = TypedDbTable<T> &;
+	template<typename T>
+	using PPTYPEDDBTABLE = TypedDbTable<T> **;
+	template<typename T>
+	using RRTYPEDDBTABLE = TypedDbTable<T> &&;
+	template<typename T>
+	using CTYPEDDBTABLE = const TypedDbTable<T>;
+	template<typename T>
+	using PCTYPEDDBTABLE = const TypedDbTable<T> *;
+	template<typename T>
+	using RCTYPEDDBTABLE = const TypedDbTable<T> &;
+	template<typename T>
+	using PPCTYPEDDBTABLE = const TypedDbTable<T> **;
+
+	class FieldedDbTable;
+	typedef FieldedDbTable FIELDEDDBTABLE, * PFIELDEDDBTABLE, & RFIELDEDDBTABLE, ** PPFIELDEDDBTABLE, && RRFIELDEDDBTABLE;
+	typedef const FieldedDbTable CFIELDEDDBTABLE, * PCFIELDEDDBTABLE, & RCFIELDEDDBTABLE, ** PPCFIELDEDDBTABLE;
 
 	class Database;
 	typedef Database DATABASE, * PDATABASE, & RDATABASE, ** PPDATABASE, && RRDATABASE;
@@ -94,9 +123,38 @@ namespace IttyBitty
 #pragma endregion*/
 
 	
+#pragma region [IDbTable] DEFINITION
+
+	class IDbTable : public ISerializable, public IStorable
+	{
+	public:
+		
+		// DESTRUCTOR
+
+		VIRTUAL ~IDbTable() { }
+
+		
+		// INTERFACE METHODS
+		
+		VIRTUAL CDWORD Size() const = 0;
+		VIRTUAL CDWORD Capacity() const = 0;
+		VIRTUAL CSIZE RowCount() const = 0;
+		VIRTUAL CSIZE RowsAvailable() const = 0;
+
+		VIRTUAL CDBRESULT Grow(CDWORD) = 0;
+		
+
+	protected:
+
+		IDbTable() { }
+	};
+
+#pragma endregion
+
+	
 #pragma region [DbTable] DEFINITION
 
-	class DbTable : public ISerializable
+	class DbTable : public IDbTable
 	{
 	public:
 		
@@ -117,7 +175,26 @@ namespace IttyBitty
 		VIRTUAL VOID Dispose();
 
 
-	public:		
+	public:
+
+		// [IDbTable] IMPLEMENTATION
+		
+		VIRTUAL CDWORD Size() const;
+		VIRTUAL CDWORD Capacity() const;
+		VIRTUAL CSIZE RowCount() const;
+		VIRTUAL CSIZE RowsAvailable() const;
+
+		VIRTUAL CDBRESULT Grow(CDWORD);
+				
+
+		// [IStorable] IMPLEMENTATION
+
+		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+
+		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
+
 
 		// [ISerializable] IMPLEMENTATION
 
@@ -143,16 +220,52 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		DBTABLEDEF _Header;
+		PIDBTABLEDEF _TableDef;
 		DWORD _RowCount = 0;
 	};
 
+#pragma endregion
+	
+
+#pragma region [TypedDbTable] DEFINITION
+	
+	template<typename T>
+	CLASS TypedDbTable : public DbTable
+	{
+	public:
+
+		// TYPEDEF ALIASES
+
+		typedef T ROW_TYPE;
+
+
+		// STATIC CONSTEXPR METHODS
+
+		STATIC CONSTEXPR CSIZE ROW_SIZE()
+		{
+			return T_SIZE;
+		}
+
+
+		// CONSTRUCTORS
+
+		TypedDbTable() : DbTable(ROW_SIZE()) { }
+
+
+		// [DbTable] OVERRIDES
+
+		CSIZE GetRowSize() const
+		{
+			return ROW_SIZE();
+		}
+	};
+	
 #pragma endregion
 
 
 #pragma region [Database] DEFINITION
 
-	class Database
+	class Database final : public ISerializable, public IStorable
 	{
 	public:		
 		
@@ -164,10 +277,11 @@ namespace IttyBitty
 		// USER METHODS
 		
 		CDWORD Size() const;
-		CBYTE Length() const;
 		CBYTE Capacity() const;
 
 		CDBRESULT Create();
+		CDBRESULT Grow(CDWORD);
+
 		CDBRESULT Open(RCSTORAGELOCATION);
 		CDBRESULT WipeAllData();
 
@@ -176,14 +290,43 @@ namespace IttyBitty
 		CDBRESULT insertRec(unsigned long, const PBYTE);
 		CDBRESULT updateRec(unsigned long, const PBYTE);
 		CDBRESULT appendRec(PBYTE rec);
+				
+
+		// [IStorable] IMPLEMENTATION
+
+		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+
+		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
+
+
+		// [ISerializable] IMPLEMENTATION
+
+		VIRTUAL CSIZE BinarySize() const;
+		VIRTUAL CSIZE StringSize() const;
+		VIRTUAL CSIZE ByteWidth() const;
+		VIRTUAL CSIZE StringLength() const;
+
+		VIRTUAL PCBYTE ToBinary() const;
+		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID FromBinary(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
+		
+	#ifdef ARDUINO
+		
+		VIRTUAL SIZE printTo(Print &) const;
+
+	#endif
 
 
 	protected:
 		
 		// INSTANCE VARIABLES
 
-		DBHEADER _Header;
-		PDBTABLE _Tables = NULL;
+		PIDBHEADER _Header;
+		PPIDBTABLE _Tables = NULL;
 
 
 		// HELPER METHODS

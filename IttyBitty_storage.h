@@ -31,6 +31,10 @@ namespace IttyBitty
 	typedef StorageLocation STORAGELOCATION, * PSTORAGELOCATION, & RSTORAGELOCATION, ** PPSTORAGELOCATION, && RRSTORAGELOCATION;
 	typedef const StorageLocation CSTORAGELOCATION, * PCSTORAGELOCATION, & RCSTORAGELOCATION, ** PPCSTORAGELOCATION;
 	
+	class IStorable;
+	typedef IStorable ISTORABLE, * PISTORABLE, & RISTORABLE, ** PPISTORABLE, && RRISTORABLE;
+	typedef const IStorable CISTORABLE, * PCISTORABLE, & RCISTORABLE, ** PPCISTORABLE;
+	
 	class IStorage;
 	typedef IStorage ISTORAGE, * PISTORAGE, & RISTORAGE, ** PPISTORAGE, && RRISTORAGE;
 	typedef const IStorage CISTORAGE, * PCISTORAGE, & RCISTORAGE, ** PPCISTORAGE;
@@ -115,6 +119,34 @@ namespace IttyBitty
 #pragma endregion
 
 	
+#pragma region [IStorable] DEFINITION
+
+	class IStorable
+	{
+	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IStorable() { }
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const = 0;
+		VIRTUAL MEDIARESULT SaveAsString(RCISTORAGE) const = 0;
+
+		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE) = 0;
+		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE) = 0;
+
+
+	protected:
+		
+		IStorable() { }
+	};
+
+#pragma endregion
+
+	
 #pragma region [IStorage] DEFINITION
 
 	class IStorage
@@ -126,7 +158,7 @@ namespace IttyBitty
 		VIRTUAL ~IStorage() { }
 
 
-		// USER METHODS
+		// INTERFACE METHODS
 
 		VIRTUAL CBOOL Available() = 0;
 
@@ -151,6 +183,29 @@ namespace IttyBitty
 
 #pragma region [StorageBase] DEFINITION
 
+	class StorageBase
+	{
+	public:
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION);
+
+		VIRTUAL MEDIARESULT Seek(RCDWORD);
+
+		VIRTUAL MEDIARESULT Write(PCBYTE, CSIZE);
+		
+		VIRTUAL MEDIARESULT Flush();
+
+		VIRTUAL MEDIARESULT Close();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+	};
 
 #pragma endregion
 }
