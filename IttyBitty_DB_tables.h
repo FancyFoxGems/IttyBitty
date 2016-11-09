@@ -67,6 +67,14 @@ namespace IttyBitty
 	typedef const FieldedDbTable CFIELDEDDBTABLE, * PCFIELDEDDBTABLE, & RCFIELDEDDBTABLE, ** PPCFIELDEDDBTABLE;
 
 #pragma endregion
+	
+
+#pragma region [DbTable] PARSING GLOBAL FUNCTION DECLARATIONS
+
+	PIDBTABLE DbTableFromBytes(Stream & stream);
+	PIDBTABLE DbTableFromString(Stream & stream);
+
+#pragma endregion
 
 	
 #pragma region [IDbTable] DEFINITION
@@ -116,7 +124,7 @@ namespace IttyBitty
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTable(CSIZE, PCCHAR = NULL, CDWORD = 0);
+		DbTable(CSIZE = 0, PCCHAR = NULL, CDWORD = 0);
 
 		EXPLICIT DbTable(PCBYTE);
 		EXPLICIT DbTable(PCCHAR);
@@ -182,11 +190,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsString(RCISTORAGE) const;
 
-		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromString(RCISTORAGE);
 
 
 		// [ISerializable] IMPLEMENTATION

@@ -23,6 +23,29 @@ using namespace IttyBitty;
 PBYTE IttyBitty::__db_table_buffer = NULL;
 
 #pragma endregion
+	
+
+#pragma region [DbTable] PARSING GLOBAL FUNCTION DEFINITIONS
+	
+	//PIDBTABLE DbTableFromBytes(PCBYTE data)
+	//{
+	//	PIDBTABLE dbTable = new DbTable();
+
+	//	dbTable->FromBinary(data);
+
+	//	return dbTable;
+	//}
+	//
+	//PIDBTABLE DbTableFromString(PCCHAR data)
+	//{
+	//	PIDBTABLE dbTable = new DbTable();
+
+	//	dbTable->FromString(data);
+
+	//	return dbTable;
+	//}
+
+#pragma endregion
 
 
 #pragma region [DbTable] IMPLEMENTATION
@@ -129,20 +152,24 @@ VOID DbTable::SetTableName(PCCHAR)
 
 // [IStorable] IMPLEMENTATION
 
-MEDIARESULT DbTable::SaveAsBinary(RCISTORAGE) const
+STORAGERESULT DbTable::SaveAsBinary(RCISTORAGE storage) const
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT DbTable::SaveAstring(RCISTORAGE) const
+STORAGERESULT DbTable::SaveAsString(RCISTORAGE storage) const
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT DbTable::LoadFromBinary(RCISTORAGE)
+STORAGERESULT DbTable::LoadFromBinary(RCISTORAGE storage)
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT DbTable::LoadFromString(RCISTORAGE)
+STORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
 {
+	return StorageResult::SUCCESS;
 }
 
 
@@ -164,17 +191,17 @@ PCCHAR DbTable::ToString() const
 {
 }
 
-VOID DbTable::FromBinary(PCBYTE)
+VOID DbTable::FromBinary(PCBYTE data)
 {
 }
 
-VOID DbTable::FromString(PCCHAR)
+VOID DbTable::FromString(PCCHAR data)
 {
 }
 		
 #ifdef ARDUIN
 
-SIZE DbTable::printTo(Print &) const
+SIZE DbTable::printTo(Print & printer) const
 {
 }
 

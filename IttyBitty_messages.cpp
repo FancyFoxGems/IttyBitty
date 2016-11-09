@@ -354,7 +354,7 @@ PCBYTE Message::ToBinary() const
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[size];
+	__message_buffer = new byte[size];
 
 	PBYTE bufferPtr = __message_buffer;
 
@@ -393,7 +393,7 @@ PCCHAR Message::ToString() const
 	if (__message_buffer)
 		delete[] __message_buffer;
 
-	__message_buffer = new BYTE[size];
+	__message_buffer = new byte[size];
 	__message_buffer[size - 1] = '\0';
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);

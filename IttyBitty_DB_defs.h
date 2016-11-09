@@ -152,10 +152,10 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region DbTableSet/DbTableDef PARSING GLOBAL FUNCTION DECLARATIONS
+#pragma region [DbTableSet]/[DbTableDef] PARSING GLOBAL FUNCTION DECLARATIONS
 
-	PDBTABLESET DbTableSetFromBytes(Stream & stream);
-	PDBTABLESET DbTableSetFromString(Stream & stream);
+	PIDBTABLESET DbTableSetFromBytes(Stream & stream);
+	PIDBTABLESET DbTableSetFromString(Stream & stream);
 
 	PIDBTABLEDEF DbTableDefFromBytes(Stream & stream);
 	PIDBTABLEDEF DbTableDefFromString(Stream & stream);
@@ -201,7 +201,7 @@ namespace IttyBitty
 	
 #pragma region [DbTableSet] DEFINITION
 
-	CLASS DbTableSet : public DatumBase<ConstValue>, public IDbTableSet
+	CLASS DbTableSet : public IDbTableSet
 	{
 	protected:
 		
@@ -249,11 +249,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsString(RCISTORAGE) const;
 
-		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromString(RCISTORAGE);
 		
 
 		// [ISerializable] IMPLEMENTATION
@@ -360,6 +360,12 @@ namespace IttyBitty
 
 	protected:
 
+
+		// [IDbTableDef] IHELPER METHODS
+
+		VIRTUAL CBYTE TableNameLength() const = 0;
+
+
 		IDbTableDef() { }
 	};
 
@@ -374,7 +380,7 @@ namespace IttyBitty
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTableDef(CSIZE, PCCHAR = NULL, CDWORD = 0);
+		DbTableDef(CSIZE = 0, PCCHAR = NULL, CDWORD = 0);
 
 		EXPLICIT DbTableDef(PCBYTE);
 		EXPLICIT DbTableDef(PCCHAR);
@@ -408,11 +414,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL MEDIARESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL MEDIARESULT SaveAstring(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL STORAGERESULT SaveAsString(RCISTORAGE) const;
 
-		VIRTUAL MEDIARESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL MEDIARESULT LoadFromString(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL STORAGERESULT LoadFromString(RCISTORAGE);
 
 
 		// [ISerializable] IMPLEMENTATION
@@ -438,6 +444,11 @@ namespace IttyBitty
 		SIZE _RowSize = 0;
 		PCCHAR _TableName = NULL;
 		DWORD _AddrOffset = 0;
+
+
+		// [IDbTableDef] IHELPER METHODS
+
+		VIRTUAL CBYTE TableNameLength() const;
 	};
 
 #pragma endregion

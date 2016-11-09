@@ -77,13 +77,13 @@ PCBYTE ParamBase::ToBinary() const
 	if (__datum_buffer)
 		delete[] __datum_buffer;
 
-	__datum_buffer = new BYTE[size];
+	__datum_buffer = new byte[size];
 
 	PBYTE bufferPtr = __datum_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
-	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
-	bufferPtr += SIZEOF(byteWidth);
+	memcpy(bufferPtr, &byteWidth, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
 
 	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
 	bufferPtr += SIZEOF(DataType);
@@ -102,7 +102,7 @@ PCCHAR ParamBase::ToString() const
 	if (__datum_buffer)
 		delete[] __datum_buffer;
 
-	__datum_buffer = new BYTE[size];
+	__datum_buffer = new byte[size];
 	__datum_buffer[size - 1] = '\0';
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__datum_buffer);
@@ -403,12 +403,12 @@ VarLengthParam::VarLengthParam(CDATATYPE dataType, CSIZE length)
 	{
 	case DataType::BYTES_DATUM:
 
-		_Value = new BYTE[length];
+		_Value = new byte[length];
 		break;
 
 	case DataType::STRING_DATUM:
 
-		_Value = new CHAR[length];
+		_Value = new char[length];
 		break;
 
 	case DataType::BIT_DATUM:

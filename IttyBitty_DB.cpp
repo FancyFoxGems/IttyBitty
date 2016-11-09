@@ -31,14 +31,21 @@ PBYTE IttyBitty::__database_buffer = NULL;
 		
 STATIC PDATABASE Database::Open(RCISTORAGE, RCSTORAGELOCATION)
 {
+	PDATABASE database = NULL;
+
+	return database;
 }
 
 STATIC PDATABASE Database::Create(RCISTORAGE, RCSTORAGELOCATION)
 {
+	PDATABASE database = NULL;
+
+	return database;
 }
 
 STATIC CDBRESULT Database::Delete(RCISTORAGE, RCSTORAGELOCATION)
 {
+	return DbResult::SUCCESS;
 }
 
 		
@@ -241,20 +248,24 @@ CDBRESULT Database::TruncateFrom(PCCHAR)
 
 // [IStorable] IMPLEMENTATION
 
-MEDIARESULT Database::SaveAsBinary(RCISTORAGE) const
+STORAGERESULT Database::SaveAsBinary(RCISTORAGE storage) const
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT Database::SaveAstring(RCISTORAGE) const
+STORAGERESULT Database::SaveAsString(RCISTORAGE storage) const
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT Database::LoadFromBinary(RCISTORAGE)
+STORAGERESULT Database::LoadFromBinary(RCISTORAGE storage)
 {
+	return StorageResult::SUCCESS;
 }
 
-MEDIARESULT Database::LoadFromString(RCISTORAGE)
+STORAGERESULT Database::LoadFromString(RCISTORAGE storage)
 {
+	return StorageResult::SUCCESS;
 }
 
 
@@ -276,17 +287,17 @@ PCCHAR Database::ToString() const
 {
 }
 
-VOID Database::FromBinary(PCBYTE)
+VOID Database::FromBinary(PCBYTE data)
 {
 }
 
-VOID Database::FromString(PCCHAR)
+VOID Database::FromString(PCCHAR data)
 {
 }
 		
 #ifdef ARDUINO
 
-SIZE Database::printTo(Print &) const
+SIZE Database::printTo(Print & printer) const
 {
 }
 

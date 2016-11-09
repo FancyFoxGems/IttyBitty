@@ -605,7 +605,7 @@ namespace IttyBitty
 	
 		CBYTE Erase(CSIZE size)
 		{
-			PBYTE nullBuffer = new BYTE[size];
+			PBYTE nullBuffer = new byte[size];
 			memset(nullBuffer, SERIAL_EEPROM_ERASE_VALUE, size);
 
 			CBYTE bytesErased = this->Write(nullBuffer, size);

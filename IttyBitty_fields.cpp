@@ -77,7 +77,7 @@ PCBYTE FieldBase::ToBinary() const
 	if (__datum_buffer)
 		delete[] __datum_buffer;
 
-	__datum_buffer = new BYTE[size];
+	__datum_buffer = new byte[size];
 
 	this->MetadataToBinary();
 
@@ -92,7 +92,7 @@ PCCHAR FieldBase::ToString() const
 	if (__datum_buffer)
 		delete[] __datum_buffer;
 
-	__datum_buffer = new BYTE[size];
+	__datum_buffer = new byte[size];
 	__datum_buffer[size - 1] = '\0';
 
 	this->MetadataToString();
@@ -190,8 +190,8 @@ PCBYTE FieldBase::MetadataToBinary() const
 	PBYTE bufferPtr = __datum_buffer;
 	
 	CSIZE byteWidth = this->ByteWidth();
-	memcpy(bufferPtr, &byteWidth, SIZEOF(byteWidth));
-	bufferPtr += SIZEOF(byteWidth);
+	memcpy(bufferPtr, &byteWidth, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
 
 	memcpy(bufferPtr, &_DataType, SIZEOF(DataType));
 	bufferPtr += SIZEOF(DataType);
@@ -585,12 +585,12 @@ VarLengthField::VarLengthField(CDATATYPE dataType, CSIZE length)
 	{
 	case DataType::BYTES_DATUM:
 
-		_Value = new BYTE[length];
+		_Value = new byte[length];
 		break;
 
 	case DataType::STRING_DATUM:
 
-		_Value = new CHAR[length];
+		_Value = new char[length];
 		break;
 
 	case DataType::BIT_DATUM:
