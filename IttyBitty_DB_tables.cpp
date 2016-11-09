@@ -26,23 +26,26 @@ PBYTE IttyBitty::__db_table_buffer = NULL;
 
 
 #pragma region [DbTable] IMPLEMENTATION
-/*
+
 // CONSTRUCTORS/DESTRUCTOR
 
 DbTable::DbTable(CSIZE rowSize, PCCHAR tableName, CDWORD addrOffset)
 {
 }
 
-DbTable::DbTable(PCBYTE)
+DbTable::DbTable(PCBYTE data)
 {
+	this->FromBinary(data);
 }
 
-DbTable::DbTable(PCCHAR)
+DbTable::DbTable(PCCHAR data)
 {
+	this->FromString(data);
 }
 
 DbTable::~DbTable()
 {
+	this->Dispose();
 }
 
 
@@ -59,6 +62,23 @@ RDBTABLE DbTable::NULL_OBJECT()
 
 VOID DbTable::Dispose()
 {
+	//if (_TableDefs == NULL)
+	//	return;
+
+	//if (_Dispose)
+	//{
+	//	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	//	{
+	//		if (_TableDefs[i] != NULL)
+	//		{
+	//			delete _TableDefs[i];
+	//			_TableDefs[i] = NULL;
+	//		}
+	//	}
+	//}
+
+	//delete[] _TableDefs;
+	//_TableDefs = NULL;
 }
 
 
@@ -80,36 +100,44 @@ CSIZE DbTable::RowsAvailable() const
 {
 }
 
-CDBRESULT DbTable::Grow(CDWORD, CBOOL)
+CDBRESULT DbTable::Grow(RCFLOAT growthFactor, CBOOL)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Shrink(CDWORD, CBOOL)
+CDBRESULT DbTable::Shrink(RCFLOAT shrinkFactor, CBOOL)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::SelectAll(PBYTE &, RSIZE)
+CDBRESULT DbTable::SelectAll(PBYTE & resultRows, RSIZE resultCount)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Find(CSIZE, PBYTE, PSIZE)
+CDBRESULT DbTable::Find(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Insert(PCBYTE, CSIZE)
+CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIndex)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Update(PCBYTE, CSIZE, PSIZE)
+CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIndex, PSIZE rowsAffected)
 {
+	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Delete(CSIZE)
+CDBRESULT DbTable::Delete(CSIZE rowIndex)
 {
+	return DbResult::SUCCESS;
 }
 
 CDBRESULT DbTable::Truncate()
 {
+	return DbResult::SUCCESS;
 }
 		
 
@@ -138,22 +166,22 @@ VOID DbTable::SetTableName(PCCHAR)
 
 // [IStorable] IMPLEMENTATION
 
-STORAGERESULT DbTable::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT DbTable::SaveAsBinary(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTable::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT DbTable::SaveAsString(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTable::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT DbTable::LoadFromBinary(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
@@ -185,14 +213,91 @@ VOID DbTable::FromString(PCCHAR data)
 {
 }
 		
-#ifdef ARDUIN
+#ifdef ARDUINO
 
 SIZE DbTable::printTo(Print & printer) const
 {
 }
 
 #endif
-*/
+		
+
+// [IDbTable] HELPER METHODS
+
+CDBRESULT DbTable::SelectAllRows(PBYTE & resultRows, RSIZE resultCount)
+{
+	return DbResult::SUCCESS;
+}
+
+CDBRESULT DbTable::FindRow(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
+{
+	return DbResult::SUCCESS;
+}
+
+CDWORD DbTable::RowsBinarySize() const
+{
+	return _TableDef->RowSize();
+}
+
+CDWORD DbTable::RowsStringSize() const
+{
+	return 2 * _TableDef->RowSize() + 1;
+}
+
+CSTORAGERESULT DbTable::SaveRowAsBinary(RCISTORAGE storage, CSIZE rowIndex) const
+{
+	return StorageResult::SUCCESS;
+}
+
+CSTORAGERESULT DbTable::SaveRowAsString(RCISTORAGE storage, CSIZE rowIndex) const
+{
+	return StorageResult::SUCCESS;
+}
+
+CSTORAGERESULT DbTable::LoadRowFromBinary(RCISTORAGE storage, CSIZE rowIndex)
+{
+	return StorageResult::SUCCESS;
+}
+
+CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage, CSIZE rowIndex)
+{
+	return StorageResult::SUCCESS;
+}
+
+CSIZE DbTable::RowBinarySize() const
+{
+	return _TableDef->RowSize();
+}
+
+CSIZE DbTable::RowStringSize() const
+{
+	return 2 * _TableDef->RowSize() + 1;
+}
+
+PCBYTE DbTable::RowToBinary(CSIZE rowIndex) const
+{
+}
+
+PCCHAR DbTable::RowToString(CSIZE rowIndex) const
+{
+}
+
+VOID DbTable::RowFromBinary(PCBYTE data, CSIZE rowIndex)
+{
+}
+
+VOID DbTable::RowFromString(PCCHAR data, CSIZE rowIndex)
+{
+}
+
+
+// [IDbTableDef] IHELPER METHODS
+
+CBYTE DbTable::TableNameLength() const
+{
+	return _TableDef->TableNameLength();
+}
+
 #pragma endregion
 
 #endif	// #ifndef EXCLUDE_ITTYBITTY_DB_TABLES

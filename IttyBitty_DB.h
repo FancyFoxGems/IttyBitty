@@ -6,8 +6,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef ITTYBITTY_DB_H
-#define ITTYBITTY_DB_H
+#ifndef _ITTYBITTY_DB_H
+#define _ITTYBITTY_DB_H
 
 
 #include "IttyBitty_DB_tables.h"
@@ -95,8 +95,8 @@ namespace IttyBitty
 		CDBRESULT LoadDatabase(RCISTORAGE);
 		CDBRESULT SaveDatabase(RCISTORAGE);
 
-		CDBRESULT GrowDatabase(CDWORD, CBOOL = FALSE);
-		CDBRESULT ShrinkDatabase(CDWORD, CBOOL = FALSE);
+		CDBRESULT GrowDatabase(RCFLOAT, CBOOL = FALSE);
+		CDBRESULT ShrinkDatabase(RCFLOAT, CBOOL = FALSE);
 		CDBRESULT TruncateDatabase();
 		CDBRESULT WipeDatabase();
 
@@ -108,11 +108,11 @@ namespace IttyBitty
 			return DbResult::SUCCESS;
 		}
 
-		CDBRESULT GrowTable(CBYTE, CDWORD, CBOOL = FALSE);
-		CDBRESULT GrowTable(PCCHAR, CDWORD, CBOOL = FALSE);
+		CDBRESULT GrowTable(CBYTE, RCFLOAT, CBOOL = FALSE);
+		CDBRESULT GrowTable(PCCHAR, RCFLOAT, CBOOL = FALSE);
 
-		CDBRESULT ShrinkTable(CBYTE, CDWORD, CBOOL = FALSE);
-		CDBRESULT ShrinkTable(PCCHAR, CDWORD, CBOOL = FALSE);
+		CDBRESULT ShrinkTable(CBYTE, RCFLOAT, CBOOL = FALSE);
+		CDBRESULT ShrinkTable(PCCHAR, RCFLOAT, CBOOL = FALSE);
 
 		CDBRESULT DropTable(CBYTE);
 		CDBRESULT DropTable(PCCHAR);
@@ -121,30 +121,38 @@ namespace IttyBitty
 		CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
 
 		template<typename T>
-		CDBRESULT SelectAllFrom(CBYTE tableIndex, T *& resultSet, RSIZE rowCount)
+		CDBRESULT SelectAllFrom(CBYTE tableIndex, T *& resultSet, RSIZE resultCount)
 		{
-			return DbResult::SUCCESS;
+			PIDBTABLE table = this->Table(tableIndex);
+
+			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
 		}
 		
 		template<typename T>
-		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& resultSet, RSIZE rowCount)
+		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& resultSet, RSIZE resultCount)
 		{
-			return DbResult::SUCCESS;
+			PIDBTABLE table = this->Table(tableName);
+
+			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
 		}
 
 		CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
 		CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
 
 		template<typename T>
-		CDBRESULT FindFrom(CBYTE tableIndex, CSIZE rowIndex, T & result)
+		CDBRESULT FindFrom(CBYTE tableIndex, CSIZE rowIndex, T * result)
 		{
-			return DbResult::SUCCESS;
+			PIDBTABLE table = this->Table(tableIndex);
+
+			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
 		}
 		
 		template<typename T>
-		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIndex, T & result)
+		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIndex, T * result)
 		{
-			return DbResult::SUCCESS;
+			PIDBTABLE table = this->Table(tableName);
+
+			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
 		}
 
 		CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
@@ -162,11 +170,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL STORAGERESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL STORAGERESULT SaveAsString(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsString(RCISTORAGE) const;
 
-		VIRTUAL STORAGERESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL STORAGERESULT LoadFromString(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE);
 
 
 		// [ISerializable] IMPLEMENTATION

@@ -6,8 +6,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef ITTYBITTY_STORAGE_ADAPTERS_H
-#define ITTYBITTY_STORAGE_ADAPTERS_H
+#ifndef _ITTYBITTY_STORAGE_ADAPTERS_H
+#define _ITTYBITTY_STORAGE_ADAPTERS_H
 
 
 #include "IttyBitty_storage.h"

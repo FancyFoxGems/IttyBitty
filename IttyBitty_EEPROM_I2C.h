@@ -8,11 +8,11 @@
 ***********************************************************************************************/
 
 #if !defined(ARDUINO) && !defined(ITTYBITTY_EEPROM_I2C_H)
-	#define ITTYBITTY_EEPROM_I2C_H
+	#define _ITTYBITTY_EEPROM_I2C_H
 #endif
 
-#ifndef ITTYBITTY_EEPROM_I2C_H
-#define ITTYBITTY_EEPROM_I2C_H
+#ifndef _ITTYBITTY_EEPROM_I2C_H
+#define _ITTYBITTY_EEPROM_I2C_H
 
 
 #include "IttyBitty_bits.h"

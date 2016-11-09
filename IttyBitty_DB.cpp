@@ -152,11 +152,11 @@ CDBRESULT Database::SaveDatabase(RCISTORAGE)
 {
 }
 
-CDBRESULT Database::GrowDatabase(CDWORD, CBOOL)
+CDBRESULT Database::GrowDatabase(RCFLOAT, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkDatabase(CDWORD, CBOOL)
+CDBRESULT Database::ShrinkDatabase(RCFLOAT, CBOOL)
 {
 }
 
@@ -172,19 +172,19 @@ CDBRESULT Database::CreateTable(CSIZE, PCCHAR)
 {
 }
 
-CDBRESULT Database::GrowTable(CBYTE, CDWORD, CBOOL)
+CDBRESULT Database::GrowTable(CBYTE, RCFLOAT, CBOOL)
 {
 }
 
-CDBRESULT Database::GrowTable(PCCHAR, CDWORD, CBOOL)
+CDBRESULT Database::GrowTable(PCCHAR, RCFLOAT, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkTable(CBYTE, CDWORD, CBOOL)
+CDBRESULT Database::ShrinkTable(CBYTE, RCFLOAT, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkTable(PCCHAR, CDWORD, CBOOL)
+CDBRESULT Database::ShrinkTable(PCCHAR, RCFLOAT, CBOOL)
 {
 }
 
@@ -248,22 +248,22 @@ CDBRESULT Database::TruncateFrom(PCCHAR)
 
 // [IStorable] IMPLEMENTATION
 
-STORAGERESULT Database::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT Database::SaveAsBinary(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT Database::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT Database::SaveAsString(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT Database::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT Database::LoadFromBinary(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT Database::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT Database::LoadFromString(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
@@ -326,7 +326,7 @@ RIDBTABLEDEF Database::TableDef(PCCHAR)
 {
 }
 
-		
+
 // [IDbTableDefSet] HELPER METHODS
 
 CSIZE Database::TableDefsByteSize() const

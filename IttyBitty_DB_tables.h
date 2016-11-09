@@ -6,8 +6,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef ITTYBITTY_DB_TABLES_H
-#define ITTYBITTY_DB_TABLES_H
+#ifndef _ITTYBITTY_DB_TABLES_H
+#define _ITTYBITTY_DB_TABLES_H
 
 
 #include "IttyBitty_DB_defs.h"
@@ -15,7 +15,8 @@
 
 #pragma region DEFINES
 
-#define ITTYBITTY_DB_DEFAULT_GROWTH_FACTOR		2U
+#define DB_DEFAULT_GROWTH_FACTOR		2.0F
+#define DB_ERASE_GROWTH_ALLOCATION		TRUE
 
 #pragma endregion
 
@@ -38,8 +39,6 @@ namespace IttyBitty
 
 	typedef DbTable DBTABLE, * PDBTABLE, & RDBTABLE, ** PPDBTABLE, && RRDBTABLE;
 	typedef const DbTable CDBTABLE, * PCDBTABLE, & RCDBTABLE, ** PPCDBTABLE;
-	
-	class Database;
 
 	template<typename T>
 	using TYPEDDBTABLE = TypedDbTable<T>;
@@ -87,8 +86,8 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowCount() const = 0;
 		VIRTUAL CSIZE RowsAvailable() const = 0;
 
-		VIRTUAL CDBRESULT Grow(CDWORD, CBOOL = FALSE) = 0;
-		VIRTUAL CDBRESULT Shrink(CDWORD, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Grow(RCFLOAT, CBOOL = FALSE) = 0;
+		VIRTUAL CDBRESULT Shrink(RCFLOAT, CBOOL = FALSE);
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
 		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE = NULL) = 0;
@@ -100,6 +99,34 @@ namespace IttyBitty
 		
 
 	protected:
+
+		friend class Database;
+
+
+		// HELPER METHODS
+
+		VIRTUAL CDBRESULT SelectAllRows(PBYTE &, RSIZE) = 0;
+
+		VIRTUAL CDBRESULT FindRow(CSIZE, PBYTE, PSIZE = NULL) = 0;
+
+		VIRTUAL CDWORD RowsBinarySize() const = 0;
+		VIRTUAL CDWORD RowsStringSize() const = 0;
+
+		VIRTUAL CSTORAGERESULT SaveRowAsBinary(RCISTORAGE, CSIZE) const = 0;
+		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const = 0;
+
+		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE) = 0;
+		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE, CSIZE) = 0;
+
+		VIRTUAL CSIZE RowBinarySize() const = 0;
+		VIRTUAL CSIZE RowStringSize() const = 0;
+
+		VIRTUAL PCBYTE RowToBinary(CSIZE) const = 0;
+		VIRTUAL PCCHAR RowToString(CSIZE) const = 0;
+
+		VIRTUAL VOID RowFromBinary(PCBYTE, CSIZE) = 0;
+		VIRTUAL VOID RowFromString(PCCHAR, CSIZE) = 0;
+
 
 		IDbTable() { }
 	};
@@ -150,23 +177,23 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowCount() const;
 		VIRTUAL CSIZE RowsAvailable() const;
 
-		VIRTUAL CDBRESULT Grow(CDWORD, CBOOL = FALSE);
-		VIRTUAL CDBRESULT Shrink(CDWORD, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Grow(RCFLOAT, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Shrink(RCFLOAT, CBOOL = FALSE);
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
 
 		template<typename T>
-		CDBRESULT SelectAll(T *& resultSet, RSIZE rowCount)
+		CDBRESULT SelectAll(T *& resultSet, RSIZE resultCount)
 		{
-			return DbResult::SUCCESS;
+			return this->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
 		}
 
 		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE = NULL);
 
 		template<typename T>
-		CDBRESULT Find(CSIZE rowIndex, T & result)
+		CDBRESULT Find(CSIZE rowIndex, T * result)
 		{
-			return DbResult::SUCCESS;
+			return this->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
 		}
 
 		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_T(SIZE));
@@ -188,11 +215,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL STORAGERESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL STORAGERESULT SaveAsString(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsBinary(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsString(RCISTORAGE) const;
 
-		VIRTUAL STORAGERESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL STORAGERESULT LoadFromString(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE);
 
 
 		// [ISerializable] IMPLEMENTATION
@@ -220,6 +247,36 @@ namespace IttyBitty
 
 		PIDBTABLEDEF _TableDef;
 		DWORD _RowCount = 0;
+		
+
+		// [IDbTable] HELPER METHODS
+
+		VIRTUAL CDBRESULT SelectAllRows(PBYTE &, RSIZE);
+
+		VIRTUAL CDBRESULT FindRow(CSIZE, PBYTE, PSIZE = NULL);
+
+		VIRTUAL CDWORD RowsBinarySize() const;
+		VIRTUAL CDWORD RowsStringSize() const;
+
+		VIRTUAL CSTORAGERESULT SaveRowAsBinary(RCISTORAGE, CSIZE) const;
+		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const;
+
+		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE);
+		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE, CSIZE);
+
+		VIRTUAL CSIZE RowBinarySize() const;
+		VIRTUAL CSIZE RowStringSize() const;
+
+		VIRTUAL PCBYTE RowToBinary(CSIZE) const;
+		VIRTUAL PCCHAR RowToString(CSIZE) const;
+
+		VIRTUAL VOID RowFromBinary(PCBYTE, CSIZE);
+		VIRTUAL VOID RowFromString(PCCHAR, CSIZE);
+
+
+		// [IDbTableDef] IHELPER METHODS
+
+		VIRTUAL CBYTE TableNameLength() const;
 	};
 
 #pragma endregion
@@ -277,7 +334,7 @@ namespace IttyBitty
 
 
 	protected:
-
+		
 		friend class Database;
 	};
 	
