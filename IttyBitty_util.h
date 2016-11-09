@@ -262,7 +262,7 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 	return (tInstance->*function)(&params...);
 }
 
-// TODO: NEW
+// TODO: Integrate...
 /*
 
 VOID InitWDT() __attribute__((naked)) __attribute__((section(".init3")));

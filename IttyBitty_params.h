@@ -314,8 +314,8 @@ namespace IttyBitty
 			new (this) TypedParam<T>(value);
 		}
 
-
-		// STATIC METHODS
+		
+		// STATIC FUNCTIONS
 
 		STATIC RTYPEDPARAM<T> NULL_OBJECT()
 		{
@@ -376,7 +376,7 @@ namespace IttyBitty
 #pragma region TypedParam PARTIAL SPECIALIZATIONS
 
 	template<>
-	class TypedParam<CHAR>
+	CLASS TypedParam<CHAR>
 	{
 	protected:
 		
@@ -389,7 +389,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<BYTE>
+	CLASS TypedParam<BYTE>
 	{
 	protected:
 		
@@ -402,7 +402,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<BOOL>
+	CLASS TypedParam<BOOL>
 	{
 	protected:
 		
@@ -415,7 +415,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<SHORT>
+	CLASS TypedParam<SHORT>
 	{
 	protected:
 		
@@ -428,7 +428,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<WORD>
+	CLASS TypedParam<WORD>
 	{
 	protected:
 		
@@ -441,7 +441,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<LONG>
+	CLASS TypedParam<LONG>
 	{
 	protected:
 		
@@ -454,7 +454,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<DWORD>
+	CLASS TypedParam<DWORD>
 	{
 	protected:
 		
@@ -467,7 +467,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedParam<FLOAT>
+	CLASS TypedParam<FLOAT>
 	{
 	protected:
 		
@@ -615,7 +615,7 @@ namespace IttyBitty
 #pragma region VarLengthTypedParam PARTIAL SPECIALIZATIONS
 
 	template<>
-	class VarLengthTypedParam<PBYTE>
+	CLASS VarLengthTypedParam<PBYTE>
 	{
 	protected:
 		
@@ -628,7 +628,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class VarLengthTypedParam<PCHAR>
+	CLASS VarLengthTypedParam<PCHAR>
 	{
 	protected:
 		
@@ -641,7 +641,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class VarLengthTypedParam<BOOL>
+	CLASS VarLengthTypedParam<BOOL>
 	{
 	protected:
 		

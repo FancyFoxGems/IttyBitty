@@ -18,7 +18,7 @@
 
 #include "IttyBitty_values.h"
 	
-// TODO
+			// TODO: Remove.
 #include "IttyBitty_print.h"
 
 
@@ -133,7 +133,6 @@ namespace IttyBitty
 
 #pragma region HELPER GLOBAL FUNCTION DEFINITIONS
 
-	// TODO: BY REF?
 	template<typename T>
 	INLINE PCHAR StringInsertValue(CONST T & value, PCHAR buffer, CBYTE radix = 0x10)
 	{
@@ -265,7 +264,7 @@ namespace IttyBitty
 			if (!_Dispose)
 				return;
 
-			// TODO
+			// TODO: Remove.
 			PrintLine(F("~DatumBase"));
 
 			if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)

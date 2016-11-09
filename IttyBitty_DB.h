@@ -125,7 +125,7 @@ namespace IttyBitty
 	
 #pragma region [IDbTable] DEFINITION
 
-	class IDbTable : public ISerializable, public IStorable
+	CLASS IDbTable : public IStorable
 	{
 	public:
 		
@@ -141,7 +141,16 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowCount() const = 0;
 		VIRTUAL CSIZE RowsAvailable() const = 0;
 
-		VIRTUAL CDBRESULT Grow(CDWORD) = 0;
+		VIRTUAL CDBRESULT Grow(CDWORD, CBOOL = FALSE) = 0;
+		VIRTUAL CDBRESULT Shrink(CDWORD, CBOOL = FALSE);
+
+		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
+		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE = NULL) = 0;
+
+		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_T(SIZE)) = 0;
+		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE = NULL) = 0;
+		VIRTUAL CDBRESULT Delete(CSIZE) = 0;
+		VIRTUAL CDBRESULT Truncate() = 0;
 		
 
 	protected:
@@ -154,9 +163,9 @@ namespace IttyBitty
 	
 #pragma region [DbTable] DEFINITION
 
-	class DbTable : public IDbTable
+	CLASS DbTable : public IDbTable
 	{
-	public:
+	protected:
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
@@ -164,6 +173,9 @@ namespace IttyBitty
 
 		EXPLICIT DbTable(PCBYTE);
 		EXPLICIT DbTable(PCCHAR);
+
+				
+	public:
 
 		VIRTUAL ~DbTable();
 
@@ -184,7 +196,29 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowCount() const;
 		VIRTUAL CSIZE RowsAvailable() const;
 
-		VIRTUAL CDBRESULT Grow(CDWORD);
+		VIRTUAL CDBRESULT Grow(CDWORD, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Shrink(CDWORD, CBOOL = FALSE);
+
+		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
+
+		template<typename T>
+		CDBRESULT SelectAll(T *& resultSet, RSIZE rowCount)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE = NULL);
+
+		template<typename T>
+		CDBRESULT Find(CSIZE rowIndex, T & result)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_T(SIZE));
+		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE = NULL);
+		VIRTUAL CDBRESULT Delete(CSIZE);
+		VIRTUAL CDBRESULT Truncate();
 				
 
 		// [IStorable] IMPLEMENTATION
@@ -209,10 +243,8 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 		
-	#ifdef ARDUINO
-		
+	#ifdef ARDUINO		
 		VIRTUAL SIZE printTo(Print &) const;
-
 	#endif
 
 
@@ -247,16 +279,33 @@ namespace IttyBitty
 		}
 
 
+	protected:
+
 		// CONSTRUCTORS
 
 		TypedDbTable() : DbTable(ROW_SIZE()) { }
 
+
+	public:
 
 		// [DbTable] OVERRIDES
 
 		CSIZE GetRowSize() const
 		{
 			return ROW_SIZE();
+		}
+
+
+		// USER METHODS
+
+		CDBRESULT SelectAll(T *& resultSet, RSIZE rowCount)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		CDBRESULT Find(RCSIZE rowIndex, T & result)
+		{
+			return DbResult::SUCCESS;
 		}
 	};
 	
@@ -265,31 +314,131 @@ namespace IttyBitty
 
 #pragma region [Database] DEFINITION
 
-	class Database final : public ISerializable, public IStorable
+	CLASS Database final : protected IDbTableSet
 	{
-	public:		
+	public:
+		
+		// STATIC FUNCTIONS
+		
+		STATIC PDATABASE Open(RCISTORAGE, RCSTORAGELOCATION);
+		STATIC PDATABASE Create(RCISTORAGE, RCSTORAGELOCATION);
+		STATIC CDBRESULT Delete(RCISTORAGE, RCSTORAGELOCATION);
+
 		
 		// CONSTRUCTOR
+		
+		Database(RCSTORAGELOCATION);
 
-		Database(RCISTORAGE);
+
+	protected:
+		
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+		
+		// OPERATORS
+
+		PCIDBTABLE operator[](CBYTE) const;
+		PIDBTABLE operator[](CBYTE);
 
 
 		// USER METHODS
 		
 		CDWORD Size() const;
-		CBYTE Capacity() const;
+		CWORD Capacity() const;
+		
+		CBYTE GetTableCount() const;
+		
+		RCIDBTABLE Table(CBYTE = 0) const;
+		RIDBTABLE Table(CBYTE = 0);
 
-		CDBRESULT Create();
-		CDBRESULT Grow(CDWORD);
+		RCIDBTABLE Table(PCCHAR) const;
+		RIDBTABLE Table(PCCHAR);
+		
+		CDWORD SizeOf(CBYTE) const;
+		CDWORD SizeOf(PCCHAR) const;
 
-		CDBRESULT Open(RCSTORAGELOCATION);
-		CDBRESULT WipeAllData();
+		CDWORD CapacityOf(CBYTE) const;
+		CDWORD CapacityOf(PCCHAR) const;
 
-		CDBRESULT readRec(unsigned long, PBYTE);
-		CDBRESULT deleteRec(unsigned long);
-		CDBRESULT insertRec(unsigned long, const PBYTE);
-		CDBRESULT updateRec(unsigned long, const PBYTE);
-		CDBRESULT appendRec(PBYTE rec);
+		CSIZE RowCountFor(CBYTE) const;
+		CSIZE RowCountFor(PCCHAR) const;
+
+		CSIZE RowsAvailableFor(CBYTE) const;
+		CSIZE RowsAvailableFor(RCISTORAGE) const;
+
+		CDBRESULT CreateDatabase(RCISTORAGE);
+		CDBRESULT DeleteDatabase(RCISTORAGE);
+		
+		CDBRESULT LoadDatabase(RCISTORAGE);
+		CDBRESULT SaveDatabase(RCISTORAGE);
+
+		CDBRESULT GrowDatabase(CDWORD, CBOOL = FALSE);
+		CDBRESULT ShrinkDatabase(CDWORD, CBOOL = FALSE);
+		CDBRESULT TruncateDatabase();
+		CDBRESULT WipeDatabase();
+
+		CDBRESULT CreateTable(CSIZE, PCCHAR = NULL);
+
+		template<typename T>
+		CDBRESULT CreateTable(PCCHAR = NULL)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		CDBRESULT GrowTable(CBYTE, CDWORD, CBOOL = FALSE);
+		CDBRESULT GrowTable(PCCHAR, CDWORD, CBOOL = FALSE);
+
+		CDBRESULT ShrinkTable(CBYTE, CDWORD, CBOOL = FALSE);
+		CDBRESULT ShrinkTable(PCCHAR, CDWORD, CBOOL = FALSE);
+
+		CDBRESULT DropTable(CBYTE);
+		CDBRESULT DropTable(PCCHAR);
+
+		CDBRESULT SelectAllFrom(CBYTE, PBYTE &, RSIZE);
+		CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
+
+		template<typename T>
+		CDBRESULT SelectAllFrom(CBYTE tableIndex, T *& resultSet, RSIZE rowCount)
+		{
+			return DbResult::SUCCESS;
+		}
+		
+		template<typename T>
+		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& resultSet, RSIZE rowCount)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
+		CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
+
+		template<typename T>
+		CDBRESULT FindFrom(CBYTE tableIndex, CSIZE rowIndex, T & result)
+		{
+			return DbResult::SUCCESS;
+		}
+		
+		template<typename T>
+		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIndex, T & result)
+		{
+			return DbResult::SUCCESS;
+		}
+
+		CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
+		CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_T(SIZE));
+
+		CDBRESULT UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL);
+		CDBRESULT UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL);
+
+		CDBRESULT DeleteFrom(CBYTE, CSIZE);
+		CDBRESULT DeleteFrom(PCCHAR, CSIZE);
+
+		CDBRESULT TruncateFrom(CBYTE);
+		CDBRESULT TruncateFrom(PCCHAR);
 				
 
 		// [IStorable] IMPLEMENTATION
@@ -314,30 +463,41 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 		
-	#ifdef ARDUINO
-		
+	#ifdef ARDUINO		
 		VIRTUAL SIZE printTo(Print &) const;
-
 	#endif
 
 
 	protected:
+
+		friend class DbTableSet;
+		friend class DbTableDef;
+
 		
 		// INSTANCE VARIABLES
 
-		PIDBHEADER _Header;
+		BOOL _Dispose = FALSE;
+
+		PCSTORAGELOCATION _StorageLocation = NULL;
+		PIDBTABLESET _DatabaseDef = NULL;
 		PPIDBTABLE _Tables = NULL;
+				
 
+		// [IDbTableSet] IMPLEMENTATION
+		
+		VIRTUAL CBYTE GetTableDefCount() const;
+		
+		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
+		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
 
-		// HELPER METHODS
+		VIRTUAL RCIDBTABLEDEF TableDef(PCCHAR) const;
+		VIRTUAL RIDBTABLEDEF TableDef(PCCHAR);
 
-		void Write(unsigned long ee, const byte* p, unsigned int);
-		void Read(unsigned long ee, byte* p, unsigned int);
+		
+		// [IDbTableSet] HELPER METHODS
 
-		void writeHead();
-		void readHead();
-
-		CDBRESULT writeRec(unsigned long, const PBYTE);
+		VIRTUAL CSIZE GetTableDefsByteSize() const;
+		VIRTUAL CSIZE GetTableDefsStringSize() const;
 	};
 
 #pragma endregion

@@ -351,7 +351,7 @@ namespace IttyBitty
 		}
 
 
-		// STATIC METHODS
+		// STATIC FUNCTIONS
 
 		STATIC RTYPEDFIELD<T> NULL_OBJECT()
 		{
@@ -422,7 +422,7 @@ namespace IttyBitty
 #pragma region TypedField PARTIAL SPECIALIZATIONS
 
 	template<>
-	class TypedField<CHAR>
+	CLASS TypedField<CHAR>
 	{
 	protected:
 		
@@ -435,7 +435,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<BYTE>
+	CLASS TypedField<BYTE>
 	{
 	protected:
 		
@@ -448,7 +448,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<BOOL>
+	CLASS TypedField<BOOL>
 	{
 	protected:
 		
@@ -461,7 +461,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<SHORT>
+	CLASS TypedField<SHORT>
 	{
 	protected:
 		
@@ -474,7 +474,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<WORD>
+	CLASS TypedField<WORD>
 	{
 	protected:
 		
@@ -487,7 +487,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<LONG>
+	CLASS TypedField<LONG>
 	{
 	protected:
 		
@@ -500,7 +500,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<DWORD>
+	CLASS TypedField<DWORD>
 	{
 	protected:
 		
@@ -513,7 +513,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class TypedField<FLOAT>
+	CLASS TypedField<FLOAT>
 	{
 	protected:
 		
@@ -671,7 +671,7 @@ namespace IttyBitty
 #pragma region VarLengthTypedField PARTIAL SPECIALIZATIONS
 
 	template<>
-	class VarLengthTypedField<PBYTE>
+	CLASS VarLengthTypedField<PBYTE>
 	{
 	protected:
 		
@@ -684,7 +684,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class VarLengthTypedField<PCHAR>
+	CLASS VarLengthTypedField<PCHAR>
 	{
 	protected:
 		
@@ -697,7 +697,7 @@ namespace IttyBitty
 	};
 
 	template<>
-	class VarLengthTypedField<BOOL>
+	CLASS VarLengthTypedField<BOOL>
 	{
 	protected:
 		

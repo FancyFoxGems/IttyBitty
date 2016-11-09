@@ -90,9 +90,6 @@ BYTE _BitProxy::BitMask() const
 ByteField::ByteField()
 {
 	this->~ByteField();
-
-	// TODO: Use placement new or explicit reference assignment?
-	//*this = ByteField((BYTE)0);
 	new (this) ByteField((BYTE)0);
 }
 

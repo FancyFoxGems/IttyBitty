@@ -10,7 +10,7 @@
 #define ITTYBITTY_STORAGE_H
 
 
-#include "IttyBitty_bits.h"
+#include "IttyBitty_datum.h"
 
 
 //#include "SD.h"
@@ -121,7 +121,7 @@ namespace IttyBitty
 	
 #pragma region [IStorable] DEFINITION
 
-	class IStorable
+	CLASS IStorable : public ISerializable
 	{
 	public:
 
@@ -149,7 +149,7 @@ namespace IttyBitty
 	
 #pragma region [IStorage] DEFINITION
 
-	class IStorage
+	CLASS IStorage
 	{
 	public:
 
@@ -162,7 +162,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL Available() = 0;
 
-		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION) = 0;
+		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION, CBOOL = FALSE) = 0;
 
 		VIRTUAL MEDIARESULT Seek(RCDWORD) = 0;
 
@@ -183,7 +183,7 @@ namespace IttyBitty
 
 #pragma region [StorageBase] DEFINITION
 
-	class StorageBase
+	CLASS StorageBase
 	{
 	public:
 
@@ -191,7 +191,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL Available();
 
-		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION);
+		VIRTUAL MEDIARESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
 
 		VIRTUAL MEDIARESULT Seek(RCDWORD);
 

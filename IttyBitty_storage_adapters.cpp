@@ -16,7 +16,7 @@
 using namespace IttyBitty;
 
 
-#pragma region [DbStorageBase] IMPLEMENTATION
+#pragma region [EepromStorageAdapter] IMPLEMENTATION
 
 // CONSTRUCTOR
 
