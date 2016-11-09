@@ -18,6 +18,13 @@
 using namespace IttyBitty;
 
 
+#pragma region GLOBAL VARIABLE DEFINITION
+
+PBYTE IttyBitty::__database_buffer = NULL;
+
+#pragma endregion
+
+
 #pragma region [DataBase] IMPLEMENTATION
 /*		
 // STATIC FUNCTIONS
@@ -70,15 +77,15 @@ CWORD Database::Capacity() const
 {
 }
 		
-CBYTE Database::GetTableCount() const
+CBYTE Database::TableCount() const
 {
 }
 		
-RCIDBTABLE Database::Table(CBYTE = 0) const
+RCIDBTABLE Database::Table(CBYTE) const
 {
 }
 
-RIDBTABLE Database::Table(CBYTE = 0)
+RIDBTABLE Database::Table(CBYTE)
 {
 }
 
@@ -138,11 +145,11 @@ CDBRESULT Database::SaveDatabase(RCISTORAGE)
 {
 }
 
-CDBRESULT Database::GrowDatabase(CDWORD, CBOOL = FALSE)
+CDBRESULT Database::GrowDatabase(CDWORD, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkDatabase(CDWORD, CBOOL = FALSE)
+CDBRESULT Database::ShrinkDatabase(CDWORD, CBOOL)
 {
 }
 
@@ -154,23 +161,23 @@ CDBRESULT Database::WipeDatabase()
 {
 }
 
-CDBRESULT Database::CreateTable(CSIZE, PCCHAR = NULL)
+CDBRESULT Database::CreateTable(CSIZE, PCCHAR)
 {
 }
 
-CDBRESULT Database::GrowTable(CBYTE, CDWORD, CBOOL = FALSE)
+CDBRESULT Database::GrowTable(CBYTE, CDWORD, CBOOL)
 {
 }
 
-CDBRESULT Database::GrowTable(PCCHAR, CDWORD, CBOOL = FALSE)
+CDBRESULT Database::GrowTable(PCCHAR, CDWORD, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkTable(CBYTE, CDWORD, CBOOL = FALSE)
+CDBRESULT Database::ShrinkTable(CBYTE, CDWORD, CBOOL)
 {
 }
 
-CDBRESULT Database::ShrinkTable(PCCHAR, CDWORD, CBOOL = FALSE)
+CDBRESULT Database::ShrinkTable(PCCHAR, CDWORD, CBOOL)
 {
 }
 
@@ -190,28 +197,28 @@ CDBRESULT Database::SelectAllFrom(PCCHAR, PBYTE &, RSIZE)
 {
 }
 
-CDBRESULT Database::FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL)
+CDBRESULT Database::FindFrom(CBYTE, CSIZE, PBYTE, PSIZE)
 {
 }
 
-CDBRESULT Database::FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL)
+CDBRESULT Database::FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE)
 {
 }
 
-CDBRESULT Database::InsertInto(CBYTE, PCBYTE, CSIZE = MAX_Database::T(SIZE))
+CDBRESULT Database::InsertInto(CBYTE, PCBYTE, CSIZE)
 {
 }
 
-CDBRESULT Database::InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_Database::T(SIZE))
+CDBRESULT Database::InsertInto(PCCHAR, PCBYTE, CSIZE)
 {
 }
 
 
-CDBRESULT Database::UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL)
+CDBRESULT Database::UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE)
 {
 }
 
-CDBRESULT Database::UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL)
+CDBRESULT Database::UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE)
 {
 }
 
@@ -261,14 +268,6 @@ CSIZE Database::StringSize() const
 {
 }
 
-CSIZE Database::ByteWidth() const
-{
-}
-
-CSIZE Database::StringLength() const
-{
-}
-
 PCBYTE Database::ToBinary() const
 {
 }
@@ -296,15 +295,15 @@ SIZE Database::printTo(Print &) const
 
 // [IDbTableSet] IMPLEMENTATION
 		
-CBYTE Database::GetTableDefCount() const
+CBYTE Database::TableDefCount() const
 {
 }
 		
-RCIDBTABLEDEF Database::TableDef(CBYTE = 0) const
+RCIDBTABLEDEF Database::TableDef(CBYTE) const
 {
 }
 
-RIDBTABLEDEF Database::TableDef(CBYTE = 0)
+RIDBTABLEDEF Database::TableDef(CBYTE)
 {
 }
 
@@ -319,11 +318,11 @@ RIDBTABLEDEF Database::TableDef(PCCHAR)
 		
 // [IDbTableSet] HELPER METHODS
 
-CSIZE Database::GetTableDefsByteSize() const
+CSIZE Database::TableDefsByteSize() const
 {
 }
 
-CSIZE Database::GetTableDefsStringSize() const
+CSIZE Database::TableDefsStringSize() const
 {
 }
 */

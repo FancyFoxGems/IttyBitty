@@ -16,6 +16,15 @@
 
 namespace IttyBitty
 {
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
+		
+	// ToBinary() / ToString() BUFFER POINTERS
+	EXTERN PBYTE __db_table_set_buffer;
+	EXTERN PBYTE __db_table_def_buffer;
+
+#pragma endregion
+
+
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class IDbTableSet;
@@ -167,7 +176,7 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		VIRTUAL CBYTE GetTableDefCount() const = 0;
+		VIRTUAL CBYTE TableDefCount() const = 0;
 
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const = 0;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0) = 0;
@@ -180,8 +189,8 @@ namespace IttyBitty
 		
 		// HELPER METHODS
 
-		VIRTUAL CSIZE GetTableDefsByteSize() const = 0;
-		VIRTUAL CSIZE GetTableDefsStringSize() const = 0;
+		VIRTUAL CSIZE TableDefsByteSize() const = 0;
+		VIRTUAL CSIZE TableDefsStringSize() const = 0;
 
 
 		IDbTableSet() { }
@@ -229,7 +238,7 @@ namespace IttyBitty
 
 		// [IDbTableSet] IMPLEMENTATION
 		
-		VIRTUAL CBYTE GetTableDefCount() const;
+		VIRTUAL CBYTE TableDefCount() const;
 		
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
@@ -251,8 +260,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -277,8 +284,8 @@ namespace IttyBitty
 		
 		// [IDbTableSet] HELPER METHODS
 
-		VIRTUAL CSIZE GetTableDefsByteSize() const;
-		VIRTUAL CSIZE GetTableDefsStringSize() const;
+		VIRTUAL CSIZE TableDefsByteSize() const;
+		VIRTUAL CSIZE TableDefsStringSize() const;
 	};
 
 #pragma endregion
@@ -308,7 +315,7 @@ namespace IttyBitty
 
 		// [DbTableSet] OVERRIDES
 
-		CBYTE GetTableDefCount() const
+		CBYTE TableDefCount() const
 		{
 			return TABLE_DEF_COUNT();
 		}
@@ -336,7 +343,8 @@ namespace IttyBitty
 
 		// ACCESSORS
 		
-		VIRTUAL CSIZE GetRowSize() const = 0;
+		VIRTUAL CSIZE RowSize() const = 0;
+
 		VIRTUAL DWORD GetAddrOffset() const = 0;
 		VIRTUAL PCCHAR GetTableName() const = 0;
 		
@@ -389,7 +397,8 @@ namespace IttyBitty
 
 		// [IDbTableDef] IMPLEMENTATION
 		
-		VIRTUAL CSIZE GetRowSize() const;
+		VIRTUAL CSIZE RowSize() const;
+
 		VIRTUAL DWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 		
@@ -410,8 +419,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -428,11 +435,9 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		BOOL _Dispose = FALSE;
-
 		SIZE _RowSize = 0;
+		PCCHAR _TableName = NULL;
 		DWORD _AddrOffset = 0;
-		PCCHAR _TableName = 0;
 	};
 
 #pragma endregion
@@ -470,7 +475,7 @@ namespace IttyBitty
 
 		// [DbTableDef] OVERRIDES
 
-		CSIZE GetRowSize() const
+		CSIZE RowSize() const
 		{
 			return ROW_SIZE();
 		}

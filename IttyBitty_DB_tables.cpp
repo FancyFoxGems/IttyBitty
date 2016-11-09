@@ -18,11 +18,18 @@
 using namespace IttyBitty;
 
 
+#pragma region GLOBAL VARIABLE DEFINITION
+
+PBYTE IttyBitty::__db_table_buffer = NULL;
+
+#pragma endregion
+
+
 #pragma region [DbTable] IMPLEMENTATION
 /*
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTable::DbTable()
+DbTable::DbTable(CSIZE rowSize, PCCHAR tableName, CDWORD addrOffset)
 {
 }
 
@@ -64,11 +71,11 @@ CSIZE DbTable::RowsAvailable() const
 {
 }
 
-CDBRESULT DbTable::Grow(CDWORD, CBOOL = FALSE)
+CDBRESULT DbTable::Grow(CDWORD, CBOOL)
 {
 }
 
-CDBRESULT DbTable::Shrink(CDWORD, CBOOL = FALSE)
+CDBRESULT DbTable::Shrink(CDWORD, CBOOL)
 {
 }
 
@@ -76,15 +83,15 @@ CDBRESULT DbTable::SelectAll(PBYTE &, RSIZE)
 {
 }
 
-CDBRESULT DbTable::Find(CSIZE, PBYTE, PSIZE = NULL)
+CDBRESULT DbTable::Find(CSIZE, PBYTE, PSIZE)
 {
 }
 
-CDBRESULT DbTable::Insert(PCBYTE, CSIZE = MAX_DbTable::T(SIZE))
+CDBRESULT DbTable::Insert(PCBYTE, CSIZE)
 {
 }
 
-CDBRESULT DbTable::Update(PCBYTE, CSIZE, PSIZE = NULL)
+CDBRESULT DbTable::Update(PCBYTE, CSIZE, PSIZE)
 {
 }
 
@@ -93,6 +100,29 @@ CDBRESULT DbTable::Delete(CSIZE)
 }
 
 CDBRESULT DbTable::Truncate()
+{
+}
+		
+
+// [IDbTableDef] IMPLEMENTATION
+		
+CSIZE DbTable::RowSize() const
+{
+}
+
+DWORD DbTable::GetAddrOffset() const
+{
+}
+
+PCCHAR DbTable::GetTableName() const
+{
+}
+		
+VOID DbTable::SetAddrOffset(CDWORD)
+{
+}
+
+VOID DbTable::SetTableName(PCCHAR)
 {
 }
 				
@@ -123,14 +153,6 @@ CSIZE DbTable::BinarySize() const
 }
 
 CSIZE DbTable::StringSize() const
-{
-}
-
-CSIZE DbTable::ByteWidth() const
-{
-}
-
-CSIZE DbTable::StringLength() const
 {
 }
 

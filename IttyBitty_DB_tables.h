@@ -22,6 +22,14 @@
 
 namespace IttyBitty
 {
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
+		
+	// ToBinary() / ToString() BUFFER POINTER
+	EXTERN PBYTE __db_table_buffer;
+
+#pragma endregion
+
+
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class IDbTable;
@@ -63,7 +71,7 @@ namespace IttyBitty
 	
 #pragma region [IDbTable] DEFINITION
 
-	CLASS IDbTable : public IStorable
+	CLASS IDbTable : public IDbTableDef
 	{
 	public:
 		
@@ -76,6 +84,7 @@ namespace IttyBitty
 		
 		VIRTUAL CDWORD Size() const = 0;
 		VIRTUAL CDWORD Capacity() const = 0;
+
 		VIRTUAL CSIZE RowCount() const = 0;
 		VIRTUAL CSIZE RowsAvailable() const = 0;
 
@@ -107,7 +116,7 @@ namespace IttyBitty
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTable();
+		DbTable(CSIZE, PCCHAR = NULL, CDWORD = 0);
 
 		EXPLICIT DbTable(PCBYTE);
 		EXPLICIT DbTable(PCCHAR);
@@ -131,6 +140,7 @@ namespace IttyBitty
 		
 		VIRTUAL CDWORD Size() const;
 		VIRTUAL CDWORD Capacity() const;
+
 		VIRTUAL CSIZE RowCount() const;
 		VIRTUAL CSIZE RowsAvailable() const;
 
@@ -157,6 +167,17 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE = NULL);
 		VIRTUAL CDBRESULT Delete(CSIZE);
 		VIRTUAL CDBRESULT Truncate();
+		
+
+		// [IDbTableDef] IMPLEMENTATION
+		
+		VIRTUAL CSIZE RowSize() const;
+
+		VIRTUAL DWORD GetAddrOffset() const;
+		VIRTUAL PCCHAR GetTableName() const;
+		
+		VIRTUAL VOID SetAddrOffset(CDWORD);
+		VIRTUAL VOID SetTableName(PCCHAR);
 				
 
 		// [IStorable] IMPLEMENTATION
@@ -172,8 +193,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -220,15 +239,16 @@ namespace IttyBitty
 	protected:
 
 		// CONSTRUCTORS
-
-		TypedDbTable() : DbTable(ROW_SIZE()) { }
+		
+		TypedDbTable(PCCHAR tableName = NULL, CDWORD addrOffset = 0) 
+			: DbTable(ROW_SIZE(), tableName, addrOffset) { }
 
 
 	public:
 
 		// [DbTable] OVERRIDES
 
-		CSIZE GetRowSize() const
+		CSIZE RowSize() const
 		{
 			return ROW_SIZE();
 		}

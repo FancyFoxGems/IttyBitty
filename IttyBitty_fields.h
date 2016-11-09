@@ -138,15 +138,9 @@ namespace IttyBitty
 		{
 			return DatumBase<Value>::StringSize();
 		}
-
-		VIRTUAL CSIZE ByteWidth() const
-		{
-			return DatumBase<Value>::ByteWidth();
-		}
-		VIRTUAL CSIZE StringLength() const
-		{
-			return DatumBase<Value>::StringLength();
-		}
+		
+		
+		// [ITransmittable] IMPLEMENTATION
 
 	#ifdef ARDUINO
 
@@ -169,6 +163,15 @@ namespace IttyBitty
 
 
 		// [IDatum] IMPLEMENTATION
+
+		VIRTUAL CSIZE ByteWidth() const
+		{
+			return DatumBase<Value>::ByteWidth();
+		}
+		VIRTUAL CSIZE StringLength() const
+		{
+			return DatumBase<Value>::StringLength();
+		}
 
 		VIRTUAL CDATASIZE GetDataSize() const
 		{

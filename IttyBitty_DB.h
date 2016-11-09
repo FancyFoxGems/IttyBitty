@@ -15,6 +15,14 @@
 
 namespace IttyBitty
 {
+#pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
+		
+	// ToBinary() / ToString() BUFFER POINTER
+	EXTERN PBYTE __database_buffer;
+
+#pragma endregion
+
+
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class Database;
@@ -62,7 +70,7 @@ namespace IttyBitty
 		CDWORD Size() const;
 		CWORD Capacity() const;
 		
-		CBYTE GetTableCount() const;
+		CBYTE TableCount() const;
 		
 		RCIDBTABLE Table(CBYTE = 0) const;
 		RIDBTABLE Table(CBYTE = 0);
@@ -166,8 +174,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
@@ -197,7 +203,7 @@ namespace IttyBitty
 
 		// [IDbTableSet] IMPLEMENTATION
 		
-		VIRTUAL CBYTE GetTableDefCount() const;
+		VIRTUAL CBYTE TableDefCount() const;
 		
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
@@ -208,8 +214,8 @@ namespace IttyBitty
 		
 		// [IDbTableSet] HELPER METHODS
 
-		VIRTUAL CSIZE GetTableDefsByteSize() const;
-		VIRTUAL CSIZE GetTableDefsStringSize() const;
+		VIRTUAL CSIZE TableDefsByteSize() const;
+		VIRTUAL CSIZE TableDefsStringSize() const;
 	};
 
 #pragma endregion

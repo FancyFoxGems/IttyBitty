@@ -192,8 +192,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const = 0;
 		VIRTUAL CSIZE StringSize() const = 0;
-		VIRTUAL CSIZE ByteWidth() const = 0;
-		VIRTUAL CSIZE StringLength() const = 0;
 
 		VIRTUAL PCBYTE ToBinary() const = 0;
 		VIRTUAL PCCHAR ToString() const = 0;
@@ -237,6 +235,9 @@ namespace IttyBitty
 		VIRTUAL ~IDatum() { }
 
 		// INTERFACE METHODS
+
+		VIRTUAL CSIZE ByteWidth() const = 0;
+		VIRTUAL CSIZE StringLength() const = 0;
 
 		VIRTUAL CDATASIZE GetDataSize() const = 0;
 		VIRTUAL CDATATYPE GetDataType() const = 0;
@@ -284,16 +285,29 @@ namespace IttyBitty
 			return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
 		}
 
-		VIRTUAL CSIZE ByteWidth() const
-		{
-			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
-		}
-		VIRTUAL CSIZE StringLength() const
-		{
-			return 2 * this->ByteWidth();
-		}
-
 	#ifdef ARDUINO
+				
+		VIRTUAL SIZE printTo(Print & printer) const
+		{
+		#ifdef _DEBUG
+			SIZE size = this->StringSize();
+			PCCHAR buffer = this->ToString();
+		#else
+			SIZE size = this->BinarySize();
+			PCBYTE buffer = this->ToBinary();
+		#endif
+
+			for (SIZE i = 0; i < size; i++)
+				printer.print(buffer[i]);
+
+			delete[] __datum_buffer;
+			__datum_buffer = NULL;
+
+			return size;
+		}
+		
+		
+		// [ITransmittable] IMPLEMENTATION
 
 		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
 		{
@@ -324,30 +338,20 @@ namespace IttyBitty
 
 			return TRUE;
 		}
-				
-		VIRTUAL SIZE printTo(Print & printer) const
-		{
-		#ifdef _DEBUG
-			SIZE size = this->StringSize();
-			PCCHAR buffer = this->ToString();
-		#else
-			SIZE size = this->BinarySize();
-			PCBYTE buffer = this->ToBinary();
-		#endif
-
-			for (SIZE i = 0; i < size; i++)
-				printer.print(buffer[i]);
-
-			delete[] __datum_buffer;
-			__datum_buffer = NULL;
-
-			return size;
-		}
 
 	#endif
 
 
 		// [IDatum] IMPLEMENTATION
+
+		VIRTUAL CSIZE ByteWidth() const
+		{
+			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
+		}
+		VIRTUAL CSIZE StringLength() const
+		{
+			return 2 * this->ByteWidth();
+		}
 
 		VIRTUAL CDATASIZE GetDataSize() const
 		{

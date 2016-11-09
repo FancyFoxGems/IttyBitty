@@ -13,10 +13,20 @@
 
 #include "IttyBitty_EEPROM_I2C.h"
 
+using namespace IttyBitty;
 
-/* ExtEEPROM GLOBAL VARIABLE DEFINITION */
 
-IttyBitty::EEPROMI2C<> ExtEEPROM;
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
+
+CWORD IttyBitty::SERIAL_EEPROM_TIMEOUT_MS		= 500;
+CBYTE IttyBitty::SERIAL_EEPROM_WAIT_DELAY_MS	= 1;
+	
+CBYTE IttyBitty::SERIAL_EEPROM_ERASE_VALUE		= 0xFF;
+
+
+EEPROMI2C<> ExtEEPROM;
+
+#pragma endregion
 
 
 #endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C

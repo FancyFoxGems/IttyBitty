@@ -107,7 +107,7 @@ namespace IttyBitty
 
 #pragma region [IMessage] DEFINITION
 
-	INTERFACE IMessage : public ISerializable
+	INTERFACE IMessage : public ITransmittable
 	{
 	public:
 
@@ -123,7 +123,8 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		VIRTUAL CBYTE GetParamCount() const = 0;
+		VIRTUAL CBYTE ParamCount() const = 0;
+
 		VIRTUAL CBYTE GetMessageCode() const = 0;
 		
 		VIRTUAL RCIPARAM Param(CBYTE = 0) const = 0;
@@ -139,8 +140,8 @@ namespace IttyBitty
 		
 		// HELPER METHODS
 
-		VIRTUAL CSIZE GetParamsByteSize() const = 0;
-		VIRTUAL CSIZE GetParamsStringSize() const = 0;
+		VIRTUAL CSIZE ParamsByteSize() const = 0;
+		VIRTUAL CSIZE ParamsStringSize() const = 0;
 
 
 		IMessage() { }
@@ -191,8 +192,9 @@ namespace IttyBitty
 
 		// ACCESSORS
 		
+		VIRTUAL CBYTE ParamCount() const;
+
 		VIRTUAL CBYTE GetMessageCode() const;
-		VIRTUAL CBYTE GetParamCount() const;
 		
 		VIRTUAL RCIPARAM Param(CBYTE = 0) const;
 		VIRTUAL RIPARAM Param(CBYTE = 0);
@@ -207,14 +209,15 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE BinarySize() const;
 		VIRTUAL CSIZE StringSize() const;
-		VIRTUAL CSIZE ByteWidth() const;
-		VIRTUAL CSIZE StringLength() const;
 
 		VIRTUAL PCBYTE ToBinary() const;
 		VIRTUAL PCCHAR ToString() const;
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
+		
+
+		// [ITransmittable] IMPLEMENTATION
 		
 	#ifdef ARDUINO
 
@@ -240,8 +243,8 @@ namespace IttyBitty
 		
 		// [IMessage] HELPER METHODS
 
-		VIRTUAL CSIZE GetParamsByteSize() const;
-		VIRTUAL CSIZE GetParamsStringSize() const;
+		VIRTUAL CSIZE ParamsByteSize() const;
+		VIRTUAL CSIZE ParamsStringSize() const;
 	};
 
 #pragma endregion
@@ -287,7 +290,7 @@ namespace IttyBitty
 			return MESSAGE_CODE();
 		}
 
-		CBYTE GetParamCount() const
+		CBYTE ParamCount() const
 		{
 			return PARAM_COUNT();
 		}

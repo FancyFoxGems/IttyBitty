@@ -13,6 +13,15 @@
 #include "IttyBitty_messages.h"
 
 using namespace IttyBitty;
+
+
+#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
+
+PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
+
+PBYTE IttyBitty::__message_buffer = NULL;
+
+#pragma endregion
 	
 
 namespace IttyBitty
@@ -169,15 +178,6 @@ namespace IttyBitty
 };
 
 
-#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
-
-PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
-
-PBYTE IttyBitty::__message_buffer = NULL;
-
-#pragma endregion
-
-
 #pragma region [Message] IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
@@ -192,12 +192,12 @@ Message::Message(CBYTE messageCode, CBYTE paramCount)
 Message::Message(RCMESSAGE other)
 {
 	this->~Message();
+	
+	_Dispose = FALSE;
 
-#ifdef _DEBUG
-	_Params[0] = ParamFromString(other.ToString());
-#else
-	_Params[0] = ParamFromBytes(other.ToBinary());
-#endif
+	_MessageCode = other._MessageCode;
+	_ParamCount = other._ParamCount;
+	_Params = other._Params;
 }
 
 Message::Message(RRMESSAGE other)
@@ -248,7 +248,7 @@ VOID Message::Dispose()
 
 	if (_Dispose)
 	{
-		for (BYTE i = 0; i < this->GetParamCount(); i++)
+		for (BYTE i = 0; i < this->ParamCount(); i++)
 		{
 			if (_Params[i] != NULL)
 			{
@@ -298,14 +298,14 @@ PIPARAM Message::operator[](CBYTE i)
 
 // ACCESSORS
 
+CBYTE Message::ParamCount() const
+{
+	return _ParamCount;
+}
+
 CBYTE Message::GetMessageCode() const
 {
 	return _MessageCode;
-}
-
-CBYTE Message::GetParamCount() const
-{
-	return _ParamCount;
 }
 
 RCIPARAM Message::Param(CBYTE i) const
@@ -339,32 +339,12 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 
 CSIZE Message::BinarySize() const
 {
-	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->GetParamsByteSize();
+	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->ParamsByteSize();
 }
 
 CSIZE Message::StringSize() const
 {
-	return 2 * SIZEOF(CSIZE) + 4 * SIZEOF(CBYTE) + this->GetParamsStringSize() + 1;
-}
-
-CSIZE Message::ByteWidth() const
-{
-	SIZE size = 0;
-
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i]->ByteWidth();
-
-	return size;
-}
-
-CSIZE Message::StringLength() const
-{
-	SIZE size = 0;
-
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
-		size += _Params[i]->StringLength();
-
-	return size;
+	return 2 * SIZEOF(CSIZE) + 4 * SIZEOF(CBYTE) + this->ParamsStringSize() + 1;
 }
 
 PCBYTE Message::ToBinary() const
@@ -383,7 +363,7 @@ PCBYTE Message::ToBinary() const
 	CBYTE msgCode = this->GetMessageCode();
 	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 
-	CBYTE paramCount = this->GetParamCount();
+	CBYTE paramCount = this->ParamCount();
 	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
 
 	PIPARAM param = NULL;
@@ -408,7 +388,7 @@ PCBYTE Message::ToBinary() const
 PCCHAR Message::ToString() const
 {
 	CSIZE size = this->StringSize();
-	CBYTE paramCount = this->GetParamCount();
+	CBYTE paramCount = this->ParamCount();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
@@ -490,6 +470,32 @@ VOID Message::FromString(PCCHAR data)
 
 #ifdef ARDUINO
 
+SIZE Message::printTo(Print & printer) const
+{
+	SIZE size = strlen(MESSAGE_MARKER);
+
+#ifdef _DEBUG
+	SIZE msgSize = this->StringSize();
+	PCCHAR buffer = this->ToString();
+#else
+	SIZE msgSize = this->BinarySize();
+	PCBYTE buffer = this->ToBinary();
+#endif
+	
+	for (BYTE i = 0; i < size; i++)
+		printer.print(MESSAGE_MARKER[i]);
+
+	for (SIZE i = 0; i < msgSize; i++)
+		printer.print(buffer[i]);
+
+	size += msgSize;
+
+	return size;
+}
+
+
+// [ITransmittable] IMPLEMENTATION
+
 BOOL Message::Transmit(HardwareSerial & serial)
 {
 	if (!serial.availableForWrite())
@@ -520,49 +526,26 @@ BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 	return TRUE;
 }
 
-SIZE Message::printTo(Print & printer) const
-{
-	SIZE size = strlen(MESSAGE_MARKER);
-
-#ifdef _DEBUG
-	SIZE msgSize = this->StringSize();
-	PCCHAR buffer = this->ToString();
-#else
-	SIZE msgSize = this->BinarySize();
-	PCBYTE buffer = this->ToBinary();
-#endif
-	
-	for (BYTE i = 0; i < size; i++)
-		printer.print(MESSAGE_MARKER[i]);
-
-	for (SIZE i = 0; i < msgSize; i++)
-		printer.print(buffer[i]);
-
-	size += msgSize;
-
-	return size;
-}
-
 #endif	// #ifdef ARDUINO
 
 
 // [IMessage] HELPER METHODS
 
-CSIZE Message::GetParamsByteSize() const
+CSIZE Message::ParamsByteSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
+	for (SIZE i = 0; i < this->ParamCount(); i++)
 		size += _Params[i]->BinarySize();
 
 	return size;
 }
 
-CSIZE Message::GetParamsStringSize() const
+CSIZE Message::ParamsStringSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->GetParamCount(); i++)
+	for (SIZE i = 0; i < this->ParamCount(); i++)
 		size += _Params[i]->StringSize() - 1;
 
 	return size;
