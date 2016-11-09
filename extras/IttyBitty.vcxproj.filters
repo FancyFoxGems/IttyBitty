@@ -131,6 +131,9 @@
     <ClInclude Include="..\IttyBitty_DB_defs.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_DB_tables.h">
+      <Filter>Database</Filter>
+    </ClInclude>
     <ClInclude Include="..\avr_cpunames.h">
       <Filter>Info</Filter>
     </ClInclude>
@@ -287,6 +290,9 @@
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_DB_defs.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_DB_tables.cpp">
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_GPIO.cpp">
