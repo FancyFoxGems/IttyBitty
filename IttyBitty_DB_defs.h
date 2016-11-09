@@ -393,8 +393,8 @@ namespace IttyBitty
 		VIRTUAL DWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 		
-		VIRTUAL VOID SetAddrOffset(CDWORD) = 0;
-		VIRTUAL VOID SetTableName(PCCHAR) = 0;
+		VIRTUAL VOID SetAddrOffset(CDWORD);
+		VIRTUAL VOID SetTableName(PCCHAR);
 				
 
 		// [IStorable] IMPLEMENTATION
