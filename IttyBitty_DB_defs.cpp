@@ -20,171 +20,309 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL VARIABLE DEFINITIONS
 
-PBYTE IttyBitty::__db_table_set_buffer = NULL;
+PBYTE IttyBitty::__db_table_def_set_buffer = NULL;
 PBYTE IttyBitty::__db_table_def_buffer = NULL;
 
 #pragma endregion
-	
-
-#pragma region [DbTableSet]/[DbTableDef] PARSING GLOBAL FUNCTION DEFINITIONS
-	
-	//PIDBTABLESET DbTableSetFromBytes(PCBYTE data)
-	//{
-	//	PIDBTABLESET dbTableSet = new DbTableSet();
-
-	//	dbTableSet->FromBinary(data);
-
-	//	return dbTableSet;
-	//}
-	//
-	//PIDBTABLESET DbTableSetFromString(PCCHAR data)
-	//{
-	//	PIDBTABLESET dbTableSet = new DbTableSet();
-
-	//	dbTableSet->FromString(data);
-
-	//	return dbTableSet;
-	//}
-	
-	//PIDBTABLEDEF DbTableDefFromBytes(PCBYTE data)
-	//{
-	//	PIDBTABLEDEF dbTableDef = new DbTableDef();
-
-	//	dbTableDef->FromBinary(data);
-
-	//	return dbTableDef;
-	//}
-	//
-	//PIDBTABLEDEF DbTableDefFromString(PCCHAR data)
-	//{
-	//	PIDBTABLEDEF dbTableDef = new DbTableDef();
-
-	//	dbTableDef->FromString(data);
-
-	//	return dbTableDef;
-	//}
-
-#pragma endregion
 
 
-#pragma region [DbTableDef] IMPLEMENTATION
-/*
-DbTableDef::DbTableDef(CBYTE)
+#pragma region [DbTableDefSet] IMPLEMENTATION
+
+DbTableDefSet::DbTableDefSet(CBYTE tableDefCount)
+	: _Dispose(TRUE), _TableDefCount(tableDefCount), _TableDefs(NULL)
 {
+	if (_TableDefCount > 0)
+		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
 }
 
-DbTableDef::DbTableDef(PCBYTE)
+DbTableDefSet::DbTableDefSet(PCBYTE data)
 {
+	this->FromBinary(data);
 }
 
-DbTableDef::DbTableDef(PCCHAR)
+DbTableDefSet::DbTableDefSet(PCCHAR data)
 {
+	this->FromString(data);
 }
 
-DbTableDef::DbTableDef(RCIDBTABLEDEF)
+DbTableDefSet::DbTableDefSet(RCIDBTABLEDEF tableDef)
+	: _Dispose(TRUE), _TableDefCount(1), _TableDefs(NULL)
 {
+	_TableDefs = new PIDBTABLEDEF[_TableDefCount];
+
+#ifdef _DEBUG
+	//_TableDefs[0] = DbTableDefFromString(tableDef.ToString());
+#else
+	//_TableDefs[0] = TableDefFromBytes(tableDef.ToBinary());
+#endif
 }
 
-DbTableDef::DbTableDef(CBYTE, PPIDBTABLEDEF)
+DbTableDefSet::DbTableDefSet(CBYTE tableDefCount, PPIDBTABLEDEF tableDefs)
+	: _TableDefCount(tableDefCount), _TableDefs(tableDefs)
 {
+	if (_TableDefs == NULL)
+		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
 }
 
-DbTableDef::~DbTableDef()
+DbTableDefSet::~DbTableDefSet()
 {
+	this->Dispose();
 }
 
 		
 // PROTECTED DISPOSAL METHOD
 
-VOID DbTableDef::Dispose()
+VOID DbTableDefSet::Dispose()
 {
+	if (_TableDefs == NULL)
+		return;
+
+	if (_Dispose)
+	{
+		for (BYTE i = 0; i < this->TableDefCount(); i++)
+		{
+			if (_TableDefs[i] != NULL)
+			{
+				delete _TableDefs[i];
+				_TableDefs[i] = NULL;
+			}
+		}
+	}
+
+	delete[] _TableDefs;
+	_TableDefs = NULL;
 }
 
-PCIDBTABLEDEF operator[]DbTableDef::(CBYTE) const
+PCIDBTABLEDEF DbTableDefSet::operator[](CBYTE i) const
 {
+	if (_TableDefs == NULL)
+		return NULL;
+
+	return _TableDefs[i];
 }
 
-PIDBTABLEDEF operator[]DbTableDef::(CBYTE)
+PIDBTABLEDEF DbTableDefSet::operator[](CBYTE i)
 {
+	if (_TableDefs == NULL)
+		return NULL;
+
+	return _TableDefs[i];
 }
 				
 
-// [IDbTableDef] IMPLEMENTATION
+// [IDbTableDefSet] IMPLEMENTATION
 		
-CBYTE DbTableDef::TableDefCount() const
+CBYTE DbTableDefSet::TableDefCount() const
 {
+	return _TableDefCount;
 }
 		
-RCIDBTABLEDEF DbTableDef::TableDef(CBYTE) const
+RCIDBTABLEDEF DbTableDefSet::TableDef(CBYTE i) const
 {
+	return *this->operator[](i);
 }
 
-RIDBTABLEDEF DbTableDef::TableDef(CBYTE)
+RIDBTABLEDEF DbTableDefSet::TableDef(CBYTE i)
 {
+	return *this->operator[](i);
 }
 
-RCIDBTABLEDEF DbTableDef::TableDef(PCCHAR) const
+RCIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName) const
 {
+	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	{
+		RCIDBTABLEDEF tableDef = *this->operator[](i);
+
+		if (strcmp(tableDef.GetTableName(), tableName))
+			return tableDef;
+	}
+
+	return DbTableDef::NULL_OBJECT();
 }
 
-RIDBTABLEDEF DbTableDef::TableDef(PCCHAR)
+RIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName)
 {
+	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	{
+		RIDBTABLEDEF tableDef = *this->operator[](i);
+
+		if (strcmp(tableDef.GetTableName(), tableName))
+			return tableDef;
+	}
+
+	return DbTableDef::NULL_OBJECT();
 }
 				
 
 // [IStorable] IMPLEMENTATION
 
-STORAGERESULT DbTableDef::SaveAsBinary(RCISTORAGE storage) const
+STORAGERESULT DbTableDefSet::SaveAsBinary(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTableDef::SaveAsString(RCISTORAGE storage) const
+STORAGERESULT DbTableDefSet::SaveAsString(RCISTORAGE storage) const
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTableDef::LoadFromBinary(RCISTORAGE storage)
+STORAGERESULT DbTableDefSet::LoadFromBinary(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
 
-STORAGERESULT DbTableDef::LoadFromString(RCISTORAGE storage)
+STORAGERESULT DbTableDefSet::LoadFromString(RCISTORAGE storage)
 {
 	return StorageResult::SUCCESS;
 }
-		
+
 
 // [ISerializable] IMPLEMENTATION
 
-CSIZE DbTableDef::BinarySize() const
+CSIZE DbTableDefSet::BinarySize() const
 {
+	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TableDefsByteSize();
 }
 
-CSIZE DbTableDef::StringSize() const
+CSIZE DbTableDefSet::StringSize() const
 {
+	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->TableDefsStringSize() + 1;
 }
 
-PCBYTE DbTableDef::ToBinary() const
+PCBYTE DbTableDefSet::ToBinary() const
 {
+	CSIZE size = this->BinarySize();
+
+	if (__db_table_def_set_buffer)
+		delete[] __db_table_def_set_buffer;
+
+	__db_table_def_set_buffer = new byte[size];
+
+	PBYTE bufferPtr = __db_table_def_set_buffer;
+	
+	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+
+	CBYTE tableDefCount = this->TableDefCount();
+	memcpy(bufferPtr, &tableDefCount, SIZEOF(CBYTE));
+	bufferPtr += SIZEOF(CBYTE);
+
+	PIDBTABLEDEF tableDef = NULL;
+	PCBYTE tableDefBytes = NULL;
+	SIZE tableDefSize = 0;
+
+	for (SIZE i = 0; i < tableDefCount; i++)
+	{
+		tableDef = _TableDefs[i];
+		tableDefBytes = tableDef->ToBinary();
+		tableDefSize = tableDef->BinarySize();
+
+		memcpy(bufferPtr, tableDefBytes, tableDefSize);
+
+		bufferPtr += tableDefSize;
+	}
+
+	return __db_table_def_set_buffer;
 }
 
-PCCHAR DbTableDef::ToString() const
-{
-}
+PCCHAR DbTableDefSet::ToString() const
+{	
+	CSIZE size = this->StringSize();
+	CBYTE tableDefCount = this->TableDefCount();
+	
+	if (__db_table_def_set_buffer)
+		delete[] __db_table_def_set_buffer;
 
-VOID DbTableDef::FromBinary(PCBYTE data)
-{
-}
+	__db_table_def_set_buffer = new byte[size];
+	__db_table_def_set_buffer[size - 1] = '\0';
 
-VOID DbTableDef::FromString(PCCHAR data)
-{
-}
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__db_table_def_set_buffer);
+
+	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
+	bufferPtr = StringInsertValue<CBYTE>(tableDefCount, bufferPtr);
+	
+	PIDBTABLEDEF tableDef = NULL;
+	PCCHAR tableDefStr = NULL;
+	SIZE tableDefSize = 0;
+
+	for (SIZE i = 0; i < tableDefCount; i++)
+	{
+		tableDef = _TableDefs[i];
+		tableDefStr = tableDef->ToString();
+		tableDefSize = tableDef->StringSize() - 1;
 		
+		memcpy(bufferPtr, tableDefStr, tableDefSize);
+
+		if (i == 0)
+			bufferPtr = StringInsertValue<CBYTE>(tableDefCount, bufferPtr - 2);
+
+		bufferPtr += tableDefSize;
+	}
+	
+	return reinterpret_cast<PCCHAR>(__db_table_def_set_buffer);
+}
+
+VOID DbTableDefSet::FromBinary(PCBYTE data)
+{
+	PCBYTE bufferPtr = data;
+
+	_TableDefCount = *bufferPtr++;
+
+	this->Dispose();
+
+	if (_TableDefCount > 0)
+		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
+	
+	_Dispose = TRUE;
+
+	for (SIZE i = 0; i < _TableDefCount; i++)
+	{
+		_TableDefs[i] = new DbTableDef(bufferPtr);
+
+		bufferPtr += _TableDefs[i]->StringSize() - 1;
+	}
+}
+
+VOID DbTableDefSet::FromString(PCCHAR data)
+{
+	PCCHAR bufferPtr = data;
+
+	bufferPtr = StringReadValue<BYTE>(_TableDefCount, bufferPtr);
+
+	this->Dispose();
+
+	if (_TableDefCount > 0)
+		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
+
+	_Dispose = TRUE;
+
+	for (BYTE i = 0; i < _TableDefCount; i++)
+	{
+		_TableDefs[i] = new DbTableDef(bufferPtr);
+
+		bufferPtr += _TableDefs[i]->StringSize() - 1;
+	}
+}
+
 #ifdef ARDUINO		
 
-SIZE DbTableDef::printTo(Print & printer) const
+SIZE DbTableDefSet::printTo(Print & printer) const
 {
+#ifdef _DEBUG
+	SIZE size = this->StringSize();
+	PCCHAR buffer = this->ToString();
+#else
+	SIZE size = this->BinarySize();
+	PCBYTE buffer = this->ToBinary();
+#endif
+
+	for (SIZE i = 0; i < size; i++)
+		printer.print(buffer[i]);
+
+	delete[] __db_table_def_set_buffer;
+	__db_table_def_set_buffer = NULL;
+
+	return size;
 }
 
 #endif
@@ -192,14 +330,26 @@ SIZE DbTableDef::printTo(Print & printer) const
 		
 // [IDbTableDef] HELPER METHODS
 
-CSIZE DbTableDef::TableDefsByteSize() const
+CSIZE DbTableDefSet::TableDefsByteSize() const
 {
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->TableDefCount(); i++)
+		size += _TableDefs[i]->BinarySize();
+
+	return size;
 }
 
-CSIZE DbTableDef::TableDefsStringSize() const
+CSIZE DbTableDefSet::TableDefsStringSize() const
 {
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < this->TableDefCount(); i++)
+		size += _TableDefs[i]->StringSize();
+
+	return size;
 }
-*/
+
 #pragma endregion
 
 
@@ -222,6 +372,15 @@ DbTableDef::DbTableDef(PCCHAR data)
 DbTableDef::~DbTableDef()
 {
 	this->Dispose();
+}
+
+
+// STATIC FUNCTIONS
+
+RDBTABLEDEF DbTableDef::NULL_OBJECT()
+{
+	STATIC DbTableDef NULL_DBTABLEDEF;
+	return NULL_DBTABLEDEF;
 }
 		
 

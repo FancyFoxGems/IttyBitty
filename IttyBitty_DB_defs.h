@@ -19,7 +19,7 @@ namespace IttyBitty
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 		
 	// ToBinary() / ToString() BUFFER POINTERS
-	EXTERN PBYTE __db_table_set_buffer;
+	EXTERN PBYTE __db_table_def_set_buffer;
 	EXTERN PBYTE __db_table_def_buffer;
 
 #pragma endregion
@@ -27,42 +27,44 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IDbTableSet;
-	typedef IDbTableSet IDBTABLESET, * PIDBTABLESET, & RIDBTABLESET, ** PPIDBTABLESET, && RRIDBTABLESET;
-	typedef const IDbTableSet CIDBTABLESET, * PCIDBTABLESET, & RCIDBTABLESET, ** PPCIDBTABLESET;
+	class IDbTableDefSet;
+	typedef IDbTableDefSet IDBTABLEDEFSET, * PIDBTABLEDEFSET, & RIDBTABLEDEFSET, ** PPIDBTABLEDEFSET, && RRIDBTABLEDEFSET;
+	typedef const IDbTableDefSet CIDBTABLEDEFSET, * PCIDBTABLEDEFSET, & RCIDBTABLEDEFSET, ** PPCIDBTABLEDEFSET;
 
-	class DbTableSet;
-	typedef DbTableSet DBTABLESET, * PDBTABLESET, & RDBTABLESET, ** PPDBTABLESET, && RRDBTABLESET;
-	typedef const DbTableSet CDBTABLESET, * PCDBTABLESET, & RCDBTABLESET, ** PPCDBTABLESET;
+	class DbTableDefSet;
+	typedef DbTableDefSet DBTABLEDEFSET, * PDBTABLEDEFSET, & RDBTABLEDEFSET, ** PPDBTABLEDEFSET, && RRDBTABLEDEFSET;
+	typedef const DbTableDefSet CDBTABLEDEFSET, * PCDBTABLEDEFSET, & RCDBTABLEDEFSET, ** PPCDBTABLEDEFSET;
 
 	class IDbTableDef;
 	typedef IDbTableDef IDBTABLEDEF, * PIDBTABLEDEF, & RIDBTABLEDEF, ** PPIDBTABLEDEF, && RRIDBTABLEDEF;
 	typedef const IDbTableDef CIDBTABLEDEF, * PCIDBTABLEDEF, & RCIDBTABLEDEF, ** PPCIDBTABLEDEF;
 
 	template<CBYTE TableDefCount = 0>
-	class GenericDbTableSet;
+	class GenericDbTableDefSet;
 	template<CBYTE TableDefCount = 0>
-	using GENERICDBTABLESET = GenericDbTableSet<TableDefCount>;
+	using GENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount>;
 	template<CBYTE TableDefCount = 0>
-	using PGENERICDBTABLESET = GenericDbTableSet<TableDefCount> *;
+	using PGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> *;
 	template<CBYTE TableDefCount = 0>
-	using RGENERICDBTABLESET = GenericDbTableSet<TableDefCount> &;
+	using RGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> &;
 	template<CBYTE TableDefCount = 0>
-	using PPGENERICDBTABLESET = GenericDbTableSet<TableDefCount> **;
+	using PPGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> **;
 	template<CBYTE TableDefCount = 0>
-	using RRGENERICDBTABLESET = GenericDbTableSet<TableDefCount> &&;
+	using RRGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> &&;
 	template<CBYTE TableDefCount = 0>
-	using CGENERICDBTABLESET = const GenericDbTableSet<TableDefCount>;
+	using CGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount>;
 	template<CBYTE TableDefCount = 0>
-	using PCGENERICDBTABLESET = const GenericDbTableSet<TableDefCount> *;
+	using PCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> *;
 	template<CBYTE TableDefCount = 0>
-	using RCGENERICDBTABLESET = const GenericDbTableSet<TableDefCount> &;
+	using RCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> &;
 	template<CBYTE TableDefCount = 0>
-	using PPCGENERICDBTABLESET = const GenericDbTableSet<TableDefCount> **;
+	using PPCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> **;
 
 	class DbTableDef;
 	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
 	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
+	
+	class DbTable;
 
 	template<typename T>
 	class TypedDbTableDef;
@@ -84,6 +86,9 @@ namespace IttyBitty
 	using RCTYPEDDBTABLEDEF = const TypedDbTableDef<T> &;
 	template<typename T>
 	using PPCTYPEDDBTABLEDEF = const TypedDbTableDef<T> **;
+		
+	template<typename T>
+	class TypedDbTable;
 
 	// TODO: Not yet implemented.
 	class FieldedDbTableDef;
@@ -150,28 +155,17 @@ namespace IttyBitty
 	typedef const enum DbResult CDBRESULT, * PCDBRESULT, & RCDBRESULT, ** PPCDBRESULT;
 
 #pragma endregion
-	
-
-#pragma region [DbTableSet]/[DbTableDef] PARSING GLOBAL FUNCTION DECLARATIONS
-
-	PIDBTABLESET DbTableSetFromBytes(Stream & stream);
-	PIDBTABLESET DbTableSetFromString(Stream & stream);
-
-	PIDBTABLEDEF DbTableDefFromBytes(Stream & stream);
-	PIDBTABLEDEF DbTableDefFromString(Stream & stream);
-
-#pragma endregion
 
 	
-#pragma region [IDbTableSet] DEFINITION
+#pragma region [IDbTableDefSet] DEFINITION
 
-	CLASS IDbTableSet : public IStorable
+	CLASS IDbTableDefSet : public IStorable
 	{
 	public:
 
 		// DESTRUCTOR
 
-		VIRTUAL ~IDbTableSet() { }
+		VIRTUAL ~IDbTableDefSet() { }
 
 
 		// ACCESSORS
@@ -193,32 +187,32 @@ namespace IttyBitty
 		VIRTUAL CSIZE TableDefsStringSize() const = 0;
 
 
-		IDbTableSet() { }
+		IDbTableDefSet() { }
 	};
 
 #pragma endregion
 
 	
-#pragma region [DbTableSet] DEFINITION
+#pragma region [DbTableDefSet] DEFINITION
 
-	CLASS DbTableSet : public IDbTableSet
+	CLASS DbTableDefSet : public IDbTableDefSet
 	{
 	protected:
 		
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTableSet(CBYTE = 0);
+		DbTableDefSet(CBYTE = 0);
 
-		EXPLICIT DbTableSet(PCBYTE);
-		EXPLICIT DbTableSet(PCCHAR);
+		EXPLICIT DbTableDefSet(PCBYTE);
+		EXPLICIT DbTableDefSet(PCCHAR);
 
-		DbTableSet(RCIDBTABLEDEF);
-		DbTableSet(CBYTE, PPIDBTABLEDEF);
+		DbTableDefSet(RCIDBTABLEDEF);
+		DbTableDefSet(CBYTE, PPIDBTABLEDEF);
 
 
 	public:
 
-		VIRTUAL ~DbTableSet();
+		VIRTUAL ~DbTableDefSet();
 
 
 	protected:
@@ -236,7 +230,7 @@ namespace IttyBitty
 		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
 				
 
-		// [IDbTableSet] IMPLEMENTATION
+		// [IDbTableDefSet] IMPLEMENTATION
 		
 		VIRTUAL CBYTE TableDefCount() const;
 		
@@ -278,11 +272,11 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		BYTE _TableCount = 0;
+		BYTE _TableDefCount = 0;
 		PPIDBTABLEDEF _TableDefs = NULL;
 
 		
-		// [IDbTableSet] HELPER METHODS
+		// [IDbTableDefSet] HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
@@ -291,10 +285,10 @@ namespace IttyBitty
 #pragma endregion
 	
 
-#pragma region [GenericDbTableSet] DEFINITION
+#pragma region [GenericDbTableDefSet] DEFINITION
 
 	template<CBYTE TableDefCount>
-	CLASS GenericDbTableSet : public DbTableSet
+	CLASS GenericDbTableDefSet : public DbTableDefSet
 	{
 	public:
 
@@ -304,27 +298,32 @@ namespace IttyBitty
 		{
 			return TableDefCount;
 		}
-
+		
+	
+	protected:
 
 		// CONSTRUCTORS
 
-		GenericDbTableSet() : DbTableSet(TableDefCount) { }
+		GenericDbTableDefSet() : DbTableDefSet(TableDefCount) { }
 		
-		GenericDbTableSet(PPIDBTABLEDEF tableDefs) : DbTableSet(TableDefCount, tableDefs) { }
+		GenericDbTableDefSet(PPIDBTABLEDEF tableDefs) 
+			: DbTableDefSet(TableDefCount, tableDefs) { }
 
+		
+	public:
 
-		// [DbTableSet] OVERRIDES
+		// [DbTableDefSet] OVERRIDES
 
 		CBYTE TableDefCount() const
 		{
 			return TABLE_DEF_COUNT();
 		}
-
+		
 
 	protected:
 
-		using DbTableSet::_Dispose;
-		using DbTableSet::_TableDefs;
+		using DbTableDefSet::_Dispose;
+		using DbTableDefSet::_TableDefs;
 	};
 	
 #pragma endregion
@@ -355,9 +354,6 @@ namespace IttyBitty
 		VIRTUAL VOID SetTableName(PCCHAR) = 0;
 
 
-		// INTERFACE METHODS
-
-
 	protected:
 
 
@@ -378,15 +374,22 @@ namespace IttyBitty
 	{
 	protected:
 		
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
 		DbTableDef(CSIZE = 0, PCCHAR = NULL, CDWORD = 0);
 
 		EXPLICIT DbTableDef(PCBYTE);
 		EXPLICIT DbTableDef(PCCHAR);
+		
 
+		// STATIC FUNCTIONS
+
+		STATIC RDBTABLEDEF NULL_OBJECT();
+		
 		
 	public:
+
+		// DESTRUCTOR
 
 		VIRTUAL ~DbTableDef();
 
@@ -439,6 +442,10 @@ namespace IttyBitty
 
 	protected:
 
+		friend class DbTableDefSet;
+		friend class DbTable;
+
+
 		// INSTANCE VARIABLES
 
 		SIZE _RowSize = 0;
@@ -483,6 +490,9 @@ namespace IttyBitty
 
 		
 	public:
+
+		friend class TypedDbTable<T>;
+
 
 		// [DbTableDef] OVERRIDES
 

@@ -25,7 +25,6 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class Database;
 	typedef Database DATABASE, * PDATABASE, & RDATABASE, ** PPDATABASE, && RRDATABASE;
 	typedef const Database CDATABASE, * PCDATABASE, & RCDATABASE, ** PPCDATABASE;
 
@@ -34,7 +33,7 @@ namespace IttyBitty
 
 #pragma region [Database] DEFINITION
 
-	CLASS Database final : protected IDbTableSet
+	CLASS Database final : protected IDbTableDefSet
 	{
 	public:
 		
@@ -188,7 +187,8 @@ namespace IttyBitty
 
 	protected:
 
-		friend class DbTableSet;
+		friend class DbTableDefSet;
+		friend class DbTable;
 		friend class DbTableDef;
 
 		
@@ -197,11 +197,11 @@ namespace IttyBitty
 		BOOL _Dispose = FALSE;
 
 		PCSTORAGELOCATION _StorageLocation = NULL;
-		PIDBTABLESET _DatabaseDef = NULL;
+		PIDBTABLEDEFSET _DatabaseDef = NULL;
 		PPIDBTABLE _Tables = NULL;
 				
 
-		// [IDbTableSet] IMPLEMENTATION
+		// [IDbTableDefSet] IMPLEMENTATION
 		
 		VIRTUAL CBYTE TableDefCount() const;
 		
@@ -212,7 +212,7 @@ namespace IttyBitty
 		VIRTUAL RIDBTABLEDEF TableDef(PCCHAR);
 
 		
-		// [IDbTableSet] HELPER METHODS
+		// [IDbTableDefSet] HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;

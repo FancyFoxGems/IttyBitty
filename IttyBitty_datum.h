@@ -17,9 +17,6 @@
 #endif
 
 #include "IttyBitty_values.h"
-	
-			// TODO: Remove.
-#include "IttyBitty_print.h"
 
 
 namespace IttyBitty
@@ -265,9 +262,6 @@ namespace IttyBitty
 			if (!_Dispose)
 				return;
 
-			// TODO: Remove.
-			PrintLine(F("~DatumBase"));
-
 			if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
 				_Value.FreeData();
 		}
@@ -348,6 +342,7 @@ namespace IttyBitty
 		{
 			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 		}
+
 		VIRTUAL CSIZE StringLength() const
 		{
 			return 2 * this->ByteWidth();

@@ -465,8 +465,8 @@ Field::Field(RFLOAT value)
 
 RFIELD Field::NULL_OBJECT()
 {
-	STATIC Field NULL_DATUM;
-	return NULL_DATUM;
+	STATIC Field NULL_FIELD;
+	return NULL_FIELD;
 }
 
 

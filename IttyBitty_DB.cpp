@@ -65,11 +65,11 @@ VOID Database::Dispose()
 		
 // OPERATORS
 
-PCIDBTABLE operator[]Database::(CBYTE) const
+PCIDBTABLE Database::operator[](CBYTE) const
 {
 }
 
-PIDBTABLE operator[]Database::(CBYTE)
+PIDBTABLE Database::operator[](CBYTE)
 {
 }
 
@@ -304,7 +304,7 @@ SIZE Database::printTo(Print & printer) const
 #endif
 				
 
-// [IDbTableSet] IMPLEMENTATION
+// [IDbTableDefSet] IMPLEMENTATION
 		
 CBYTE Database::TableDefCount() const
 {
@@ -327,7 +327,7 @@ RIDBTABLEDEF Database::TableDef(PCCHAR)
 }
 
 		
-// [IDbTableSet] HELPER METHODS
+// [IDbTableDefSet] HELPER METHODS
 
 CSIZE Database::TableDefsByteSize() const
 {

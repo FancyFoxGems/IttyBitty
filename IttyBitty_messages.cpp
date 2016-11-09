@@ -65,7 +65,7 @@ namespace IttyBitty
 #pragma region [Message] PARSING/HANDLING GLOBAL FUNCTION DEFINITIONS
 
 
-	PIMESSAGE MessageFromBytes(Stream & stream)
+	PIMESSAGE ReceiveMessageAsBytes(Stream & stream)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
 			return NULL;
@@ -93,7 +93,7 @@ namespace IttyBitty
 		return newMsg;
 	}	
 
-	PIMESSAGE MessageFromString(Stream & stream)
+	PIMESSAGE ReceiveMessageAsString(Stream & stream)
 	{
 		if (!stream.find(UNCONST(MESSAGE_MARKER), strlen(MESSAGE_MARKER)))
 			return NULL;
@@ -154,9 +154,9 @@ namespace IttyBitty
 		PIMESSAGE message = NULL;
 
 	#ifdef _DEBUG
-		message = MessageFromString(stream);
+		message = ReceiveMessageAsString(stream);
 	#else
-		message = MessageFromBytes(stream);
+		message = ReceiveMessageAsBytes(stream);
 	#endif
 
 		if (message == NULL)
@@ -183,7 +183,7 @@ namespace IttyBitty
 // CONSTRUCTORS/DESTRUCTOR
 
 Message::Message(CBYTE messageCode, CBYTE paramCount)
-	: _MessageCode(messageCode), _ParamCount(paramCount), _Dispose(TRUE), _Params(NULL)
+	: _Dispose(TRUE), _MessageCode(messageCode), _ParamCount(paramCount), _Params(NULL)
 {
 	if (_ParamCount > 0)
 		_Params = new PIPARAM[_ParamCount];
@@ -218,7 +218,7 @@ Message::Message(PCCHAR data)
 }
 
 Message::Message(CBYTE messageCode, RCIPARAM param)
-	: _MessageCode(messageCode), _ParamCount(1), _Dispose(TRUE), _Params(NULL)
+	: _Dispose(TRUE), _MessageCode(messageCode), _ParamCount(1), _Params(NULL)
 {
 	_Params = new PIPARAM[_ParamCount];
 
@@ -369,7 +369,6 @@ PCBYTE Message::ToBinary() const
 	PIPARAM param = NULL;
 	PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
-
 
 	for (SIZE i = 0; i < paramCount; i++)
 	{

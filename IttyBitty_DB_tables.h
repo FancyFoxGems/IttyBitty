@@ -36,12 +36,11 @@ namespace IttyBitty
 	typedef IDbTable IDBTABLE, * PIDBTABLE, & RIDBTABLE, ** PPIDBTABLE, && RRIDBTABLE;
 	typedef const IDbTable CIDBTABLE, * PCIDBTABLE, & RCIDBTABLE, ** PPCIDBTABLE;
 
-	class DbTable;
 	typedef DbTable DBTABLE, * PDBTABLE, & RDBTABLE, ** PPDBTABLE, && RRDBTABLE;
 	typedef const DbTable CDBTABLE, * PCDBTABLE, & RCDBTABLE, ** PPCDBTABLE;
+	
+	class Database;
 
-	template<typename T>
-	class TypedDbTable;
 	template<typename T>
 	using TYPEDDBTABLE = TypedDbTable<T>;
 	template<typename T>
@@ -65,14 +64,6 @@ namespace IttyBitty
 	class FieldedDbTable;
 	typedef FieldedDbTable FIELDEDDBTABLE, * PFIELDEDDBTABLE, & RFIELDEDDBTABLE, ** PPFIELDEDDBTABLE, && RRFIELDEDDBTABLE;
 	typedef const FieldedDbTable CFIELDEDDBTABLE, * PCFIELDEDDBTABLE, & RCFIELDEDDBTABLE, ** PPCFIELDEDDBTABLE;
-
-#pragma endregion
-	
-
-#pragma region [DbTable] PARSING GLOBAL FUNCTION DECLARATIONS
-
-	PIDBTABLE DbTableFromBytes(Stream & stream);
-	PIDBTABLE DbTableFromString(Stream & stream);
 
 #pragma endregion
 
@@ -128,9 +119,16 @@ namespace IttyBitty
 
 		EXPLICIT DbTable(PCBYTE);
 		EXPLICIT DbTable(PCCHAR);
+		
+		
+		// STATIC FUNCTIONS
 
-				
+		STATIC RDBTABLE NULL_OBJECT();
+
+						
 	public:
+
+		// DESTRUCTOR
 
 		VIRTUAL ~DbTable();
 
@@ -215,6 +213,9 @@ namespace IttyBitty
 
 	protected:
 
+		friend class Database;
+
+
 		// INSTANCE VARIABLES
 
 		PIDBTABLEDEF _TableDef;
@@ -273,6 +274,11 @@ namespace IttyBitty
 		{
 			return DbResult::SUCCESS;
 		}
+
+
+	protected:
+
+		friend class Database;
 	};
 	
 #pragma endregion

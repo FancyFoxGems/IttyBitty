@@ -23,29 +23,6 @@ using namespace IttyBitty;
 PBYTE IttyBitty::__db_table_buffer = NULL;
 
 #pragma endregion
-	
-
-#pragma region [DbTable] PARSING GLOBAL FUNCTION DEFINITIONS
-	
-	//PIDBTABLE DbTableFromBytes(PCBYTE data)
-	//{
-	//	PIDBTABLE dbTable = new DbTable();
-
-	//	dbTable->FromBinary(data);
-
-	//	return dbTable;
-	//}
-	//
-	//PIDBTABLE DbTableFromString(PCCHAR data)
-	//{
-	//	PIDBTABLE dbTable = new DbTable();
-
-	//	dbTable->FromString(data);
-
-	//	return dbTable;
-	//}
-
-#pragma endregion
 
 
 #pragma region [DbTable] IMPLEMENTATION
@@ -66,6 +43,15 @@ DbTable::DbTable(PCCHAR)
 
 DbTable::~DbTable()
 {
+}
+
+
+// STATIC FUNCTIONS
+
+RDBTABLE DbTable::NULL_OBJECT()
+{
+	STATIC DbTable NULL_DBTABLE;
+	return NULL_DBTABLE;
 }
 
 		

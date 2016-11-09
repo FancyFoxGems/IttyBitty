@@ -324,8 +324,8 @@ Param::Param(RCFLOAT value)
 
 RPARAM Param::NULL_OBJECT()
 {
-	STATIC Param NULL_DATUM;
-	return NULL_DATUM;
+	STATIC Param NULL_PARAM;
+	return NULL_PARAM;
 }
 
 

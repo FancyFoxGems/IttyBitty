@@ -95,8 +95,8 @@ namespace IttyBitty
 	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
 
 
-	PIMESSAGE MessageFromBytes(Stream & stream);
-	PIMESSAGE MessageFromString(Stream & stream);
+	PIMESSAGE ReceiveMessageAsBytes(Stream & stream);
+	PIMESSAGE ReceiveMessageAsString(Stream & stream);
 	
 	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler);
 
