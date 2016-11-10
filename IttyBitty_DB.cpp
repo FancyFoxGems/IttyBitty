@@ -152,11 +152,11 @@ CDBRESULT Database::SaveDatabase(RCISTORAGE)
 {
 }
 
-CDBRESULT Database::GrowDatabase(RCFLOAT, CBOOL)
+CDBRESULT Database::GrowDatabase(RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkDatabase(RCFLOAT, CBOOL)
+CDBRESULT Database::ShrinkDatabase(RCFLOAT)
 {
 }
 
@@ -172,19 +172,19 @@ CDBRESULT Database::CreateTable(CSIZE, PCCHAR)
 {
 }
 
-CDBRESULT Database::GrowTable(CBYTE, RCFLOAT, CBOOL)
+CDBRESULT Database::GrowTable(CBYTE, RCFLOAT)
 {
 }
 
-CDBRESULT Database::GrowTable(PCCHAR, RCFLOAT, CBOOL)
+CDBRESULT Database::GrowTable(PCCHAR, RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkTable(CBYTE, RCFLOAT, CBOOL)
+CDBRESULT Database::ShrinkTable(CBYTE, RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkTable(PCCHAR, RCFLOAT, CBOOL)
+CDBRESULT Database::ShrinkTable(PCCHAR, RCFLOAT)
 {
 }
 

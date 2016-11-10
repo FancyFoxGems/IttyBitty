@@ -24,7 +24,7 @@
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-		
+
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __db_table_buffer;
 
@@ -66,37 +66,37 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [IDbTable] DEFINITION
 
 	CLASS IDbTable : public IDbTableDef
 	{
 	public:
-		
+
 		// DESTRUCTOR
 
 		VIRTUAL ~IDbTable() { }
 
-		
+
 		// INTERFACE METHODS
-		
+
 		VIRTUAL CDWORD Size() const = 0;
 		VIRTUAL CDWORD Capacity() const = 0;
 
 		VIRTUAL CSIZE RowCount() const = 0;
 		VIRTUAL CSIZE RowsAvailable() const = 0;
 
-		VIRTUAL CDBRESULT Grow(RCFLOAT, CBOOL = FALSE) = 0;
-		VIRTUAL CDBRESULT Shrink(RCFLOAT, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Grow(RCFLOAT) = 0;
+		VIRTUAL CDBRESULT Shrink(RCFLOAT) = 0;
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
-		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE = NULL) = 0;
+		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE) = 0;
 
-		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_T(SIZE)) = 0;
-		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE = NULL) = 0;
+		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE) = 0;
+		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE) = 0;
 		VIRTUAL CDBRESULT Delete(CSIZE) = 0;
 		VIRTUAL CDBRESULT Truncate() = 0;
-		
+
 
 	protected:
 
@@ -116,16 +116,16 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const = 0;
 
 		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE) = 0;
-		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE, CSIZE) = 0;
+		VIRTUAL CSTORAGERESULT LoadRowFromString(RCISTORAGE, CSIZE) = 0;
 
 		VIRTUAL CSIZE RowBinarySize() const = 0;
 		VIRTUAL CSIZE RowStringSize() const = 0;
 
-		VIRTUAL PCBYTE RowToBinary(CSIZE) const = 0;
-		VIRTUAL PCCHAR RowToString(CSIZE) const = 0;
+		VIRTUAL PCBYTE RowToBinary(PCBYTE) const = 0;
+		VIRTUAL PCCHAR RowToString(PCBYTE) const = 0;
 
-		VIRTUAL VOID RowFromBinary(PCBYTE, CSIZE) = 0;
-		VIRTUAL VOID RowFromString(PCCHAR, CSIZE) = 0;
+		VIRTUAL PBYTE RowFromBinary(PCBYTE) = 0;
+		VIRTUAL PBYTE RowFromString(PCCHAR) = 0;
 
 
 		IDbTable() { }
@@ -133,26 +133,26 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [DbTable] DEFINITION
 
 	CLASS DbTable : public IDbTable
 	{
 	protected:
-		
+
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTable(CSIZE = 0, PCCHAR = NULL, CDWORD = 0);
+		DbTable(CSIZE = 0, PCCHAR = NULL, RCDWORD = 0, RCDWORD = 0);
 
 		EXPLICIT DbTable(PCBYTE);
 		EXPLICIT DbTable(PCCHAR);
-		
-		
+
+
 		// STATIC FUNCTIONS
 
 		STATIC RDBTABLE NULL_OBJECT();
 
-						
+
 	public:
 
 		// DESTRUCTOR
@@ -161,7 +161,7 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED DISPOSAL METHOD
 
 		VIRTUAL VOID Dispose();
@@ -170,15 +170,15 @@ namespace IttyBitty
 	public:
 
 		// [IDbTable] IMPLEMENTATION
-		
+
 		VIRTUAL CDWORD Size() const;
 		VIRTUAL CDWORD Capacity() const;
 
 		VIRTUAL CSIZE RowCount() const;
 		VIRTUAL CSIZE RowsAvailable() const;
 
-		VIRTUAL CDBRESULT Grow(RCFLOAT, CBOOL = FALSE);
-		VIRTUAL CDBRESULT Shrink(RCFLOAT, CBOOL = FALSE);
+		VIRTUAL CDBRESULT Grow(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT Shrink(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
 
@@ -200,18 +200,18 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE, PSIZE = NULL);
 		VIRTUAL CDBRESULT Delete(CSIZE);
 		VIRTUAL CDBRESULT Truncate();
-		
+
 
 		// [IDbTableDef] IMPLEMENTATION
-		
+
 		VIRTUAL CSIZE RowSize() const;
 
 		VIRTUAL DWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
-		
-		VIRTUAL VOID SetAddrOffset(CDWORD);
+
+		VIRTUAL VOID SetAddrOffset(RCDWORD);
 		VIRTUAL VOID SetTableName(PCCHAR);
-				
+
 
 		// [IStorable] IMPLEMENTATION
 
@@ -232,8 +232,8 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
-	#ifdef ARDUINO		
+
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
 
@@ -245,9 +245,13 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		PIDBTABLEDEF _TableDef;
-		DWORD _RowCount = 0;
-		
+		BOOL _CapacityChanged = FALSE;
+
+		DWORD _Capacity = 0;
+		SIZE _RowCount = 0;
+
+		PIDBTABLEDEF _TableDef = NULL;
+
 
 		// [IDbTable] HELPER METHODS
 
@@ -262,16 +266,16 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const;
 
 		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE);
-		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE, CSIZE);
+		VIRTUAL CSTORAGERESULT LoadRowFromString(RCISTORAGE, CSIZE);
 
 		VIRTUAL CSIZE RowBinarySize() const;
 		VIRTUAL CSIZE RowStringSize() const;
 
-		VIRTUAL PCBYTE RowToBinary(CSIZE) const;
-		VIRTUAL PCCHAR RowToString(CSIZE) const;
+		VIRTUAL PCBYTE RowToBinary(PCBYTE) const;
+		VIRTUAL PCCHAR RowToString(PCBYTE) const;
 
-		VIRTUAL VOID RowFromBinary(PCBYTE, CSIZE);
-		VIRTUAL VOID RowFromString(PCCHAR, CSIZE);
+		VIRTUAL PBYTE RowFromBinary(PCBYTE);
+		VIRTUAL PBYTE RowFromString(PCCHAR);
 
 
 		// [IDbTableDef] IHELPER METHODS
@@ -280,10 +284,10 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region [TypedDbTable] DEFINITION
-	
+
 	template<typename T>
 	CLASS TypedDbTable : public DbTable
 	{
@@ -305,8 +309,8 @@ namespace IttyBitty
 	protected:
 
 		// CONSTRUCTORS
-		
-		TypedDbTable(PCCHAR tableName = NULL, CDWORD addrOffset = 0) 
+
+		TypedDbTable(PCCHAR tableName = NULL, RCDWORD addrOffset = 0)
 			: DbTable(ROW_SIZE(), tableName, addrOffset) { }
 
 
@@ -334,10 +338,10 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		friend class Database;
 	};
-	
+
 #pragma endregion
 }
 

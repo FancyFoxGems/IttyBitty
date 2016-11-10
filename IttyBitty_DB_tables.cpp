@@ -29,8 +29,9 @@ PBYTE IttyBitty::__db_table_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTable::DbTable(CSIZE rowSize, PCCHAR tableName, CDWORD addrOffset)
+DbTable::DbTable(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset, RCDWORD capacity) : _Capacity(capacity)
 {
+	_TableDef = new DbTableDef(rowSize, tableName, addrOffset);
 }
 
 DbTable::DbTable(PCBYTE data)
@@ -62,23 +63,8 @@ RDBTABLE DbTable::NULL_OBJECT()
 
 VOID DbTable::Dispose()
 {
-	//if (_TableDefs == NULL)
-	//	return;
-
-	//if (_Dispose)
-	//{
-	//	for (BYTE i = 0; i < this->TableDefCount(); i++)
-	//	{
-	//		if (_TableDefs[i] != NULL)
-	//		{
-	//			delete _TableDefs[i];
-	//			_TableDefs[i] = NULL;
-	//		}
-	//	}
-	//}
-
-	//delete[] _TableDefs;
-	//_TableDefs = NULL;
+	delete _TableDef;
+	_TableDef = NULL;
 }
 
 
@@ -86,38 +72,42 @@ VOID DbTable::Dispose()
 		
 CDWORD DbTable::Size() const
 {
+	return this->RowCount() * this->RowSize();
 }
 
 CDWORD DbTable::Capacity() const
 {
+	return _Capacity;
 }
 
 CSIZE DbTable::RowCount() const
 {
+	return _RowCount;
 }
 
 CSIZE DbTable::RowsAvailable() const
 {
+	return (CSIZE)(this->Capacity() - this->Size()) / this->RowSize();
 }
 
-CDBRESULT DbTable::Grow(RCFLOAT growthFactor, CBOOL)
+CDBRESULT DbTable::Grow(RCFLOAT growthFactor)
 {
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Shrink(RCFLOAT shrinkFactor, CBOOL)
+CDBRESULT DbTable::Shrink(RCFLOAT shrinkFactor)
 {
 	return DbResult::SUCCESS;
 }
 
 CDBRESULT DbTable::SelectAll(PBYTE & resultRows, RSIZE resultCount)
 {
-	return DbResult::SUCCESS;
+	return this->SelectAllRows(resultRows, resultCount);
 }
 
 CDBRESULT DbTable::Find(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
 {
-	return DbResult::SUCCESS;
+	return this->FindRow(rowIndex, resultRow, resultSize);
 }
 
 CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIndex)
@@ -145,22 +135,27 @@ CDBRESULT DbTable::Truncate()
 		
 CSIZE DbTable::RowSize() const
 {
+	return _TableDef->RowSize();
 }
 
 DWORD DbTable::GetAddrOffset() const
 {
+	return _TableDef->GetAddrOffset();
 }
 
 PCCHAR DbTable::GetTableName() const
 {
+	return _TableDef->GetTableName();
 }
 		
-VOID DbTable::SetAddrOffset(CDWORD)
+VOID DbTable::SetAddrOffset(RCDWORD addrOffset)
 {
+	_TableDef->SetAddrOffset(addrOffset);
 }
 
-VOID DbTable::SetTableName(PCCHAR)
+VOID DbTable::SetTableName(PCCHAR tableName)
 {
+	_TableDef->SetTableName(tableName);
 }
 				
 
@@ -168,21 +163,37 @@ VOID DbTable::SetTableName(PCCHAR)
 
 CSTORAGERESULT DbTable::SaveAsBinary(RCISTORAGE storage) const
 {
+	STORAGERESULT result = _TableDef->SaveAsBinary(storage);
+	if ((BOOL)result)
+		return result;
+
 	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT DbTable::SaveAsString(RCISTORAGE storage) const
 {
+	STORAGERESULT result = _TableDef->SaveAsString(storage);
+	if ((BOOL)result)
+		return result;
+
 	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT DbTable::LoadFromBinary(RCISTORAGE storage)
 {
+	STORAGERESULT result = _TableDef->LoadFromBinary(storage);
+	if ((BOOL)result)
+		return result;
+
 	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
 {
+	STORAGERESULT result = _TableDef->LoadFromString(storage);
+	if ((BOOL)result)
+		return result;
+
 	return StorageResult::SUCCESS;
 }
 
@@ -191,32 +202,120 @@ CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
 
 CSIZE DbTable::BinarySize() const
 {
+	return SIZEOF(CSIZE) + SIZEOF(CDWORD) + _TableDef->BinarySize();
 }
 
 CSIZE DbTable::StringSize() const
 {
+	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(CDWORD) + _TableDef->StringSize();
 }
 
 PCBYTE DbTable::ToBinary() const
 {
+	CSIZE size = this->BinarySize();
+
+	if (__db_table_buffer)
+		delete[] __db_table_buffer;
+
+	__db_table_buffer = new byte[size];
+
+	PBYTE bufferPtr = __db_table_buffer;
+	
+	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+
+	CDWORD capacity = this->Capacity();
+	memcpy(bufferPtr, &capacity, SIZEOF(CDWORD));
+	bufferPtr += SIZEOF(CDWORD);
+
+	CSIZE rowCount = this->RowCount();
+	memcpy(bufferPtr, &rowCount, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+	
+	PCBYTE tableDefBytes = _TableDef->ToBinary();
+	SIZE tableDefSize = _TableDef->BinarySize();
+
+	memcpy(bufferPtr, tableDefBytes, tableDefSize);
+	bufferPtr += tableDefSize;
+
+	return __db_table_buffer;
 }
 
 PCCHAR DbTable::ToString() const
 {
+	CSIZE size = this->StringSize();
+	
+	if (__db_table_buffer)
+		delete[] __db_table_buffer;
+
+	__db_table_buffer = new byte[size];
+	__db_table_buffer[size - 1] = '\0';
+
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__db_table_buffer);
+
+	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
+	bufferPtr = StringInsertValue<CDWORD>(this->Capacity(), bufferPtr);
+	bufferPtr = StringInsertValue<CSIZE>(this->RowCount(), bufferPtr);
+	
+	PCCHAR tableDefStr = _TableDef->ToString();
+	SIZE tableDefSize = _TableDef->StringSize() - 1;
+
+	memcpy(bufferPtr, tableDefStr, tableDefSize);
+	bufferPtr += tableDefSize;
+	
+	return reinterpret_cast<PCCHAR>(__db_table_buffer);
 }
 
 VOID DbTable::FromBinary(PCBYTE data)
 {
+	PCBYTE bufferPtr = data;
+	
+	bufferPtr += SIZEOF(CSIZE);
+
+	_Capacity = static_cast<DWORD>(*bufferPtr);
+	bufferPtr += SIZEOF(DWORD);
+
+	_RowCount = static_cast<SIZE>(*bufferPtr);
+	bufferPtr += SIZEOF(SIZE);	
+
+	this->Dispose();
+
+	_TableDef = new DbTableDef(bufferPtr);
 }
 
 VOID DbTable::FromString(PCCHAR data)
 {
+	PCCHAR bufferPtr = data;
+
+	bufferPtr += 2 * SIZEOF(CSIZE);
+	
+	bufferPtr = StringReadValue<DWORD>(_Capacity, bufferPtr);
+	bufferPtr = StringReadValue<SIZE>(_RowCount, bufferPtr);
+
+	this->Dispose();
+
+	_TableDef = new DbTableDef(bufferPtr);
 }
 		
 #ifdef ARDUINO
 
 SIZE DbTable::printTo(Print & printer) const
 {
+#ifdef _DEBUG
+	SIZE size = this->StringSize();
+	PCCHAR buffer = this->ToString();
+#else
+	SIZE size = this->BinarySize();
+	PCBYTE buffer = this->ToBinary();
+#endif
+
+	for (SIZE i = 0; i < size; i++)
+		printer.print(buffer[i]);
+
+	delete[] __db_table_buffer;
+	__db_table_buffer = NULL;
+
+	return size;
 }
 
 #endif
@@ -236,12 +335,12 @@ CDBRESULT DbTable::FindRow(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
 
 CDWORD DbTable::RowsBinarySize() const
 {
-	return _TableDef->RowSize();
+	return this->RowCount() * this->RowBinarySize();
 }
 
 CDWORD DbTable::RowsStringSize() const
 {
-	return 2 * _TableDef->RowSize() + 1;
+	return this->RowCount() * (this->RowStringSize() - 1);
 }
 
 CSTORAGERESULT DbTable::SaveRowAsBinary(RCISTORAGE storage, CSIZE rowIndex) const
@@ -259,7 +358,7 @@ CSTORAGERESULT DbTable::LoadRowFromBinary(RCISTORAGE storage, CSIZE rowIndex)
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage, CSIZE rowIndex)
+CSTORAGERESULT DbTable::LoadRowFromString(RCISTORAGE storage, CSIZE rowIndex)
 {
 	return StorageResult::SUCCESS;
 }
@@ -274,20 +373,25 @@ CSIZE DbTable::RowStringSize() const
 	return 2 * _TableDef->RowSize() + 1;
 }
 
-PCBYTE DbTable::RowToBinary(CSIZE rowIndex) const
+PCBYTE DbTable::RowToBinary(PCBYTE data) const
 {
+	return data;
 }
 
-PCCHAR DbTable::RowToString(CSIZE rowIndex) const
+PCCHAR DbTable::RowToString(PCBYTE data) const
 {
+	
+	return reinterpret_cast<PCCHAR>(data);
 }
 
-VOID DbTable::RowFromBinary(PCBYTE data, CSIZE rowIndex)
+PBYTE DbTable::RowFromBinary(PCBYTE data)
 {
+	return UNCONST(data);
 }
 
-VOID DbTable::RowFromString(PCCHAR data, CSIZE rowIndex)
+PBYTE DbTable::RowFromString(PCCHAR data)
 {
+	return reinterpret_cast<PBYTE>(UNCONST(data));
 }
 
 

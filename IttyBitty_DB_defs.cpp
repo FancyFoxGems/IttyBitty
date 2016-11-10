@@ -30,7 +30,7 @@ PBYTE IttyBitty::__db_table_def_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTableDef::DbTableDef(CSIZE rowSize, PCCHAR tableName, CDWORD addrOffset) 
+DbTableDef::DbTableDef(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset) 
 	: _RowSize(rowSize), _TableName(tableName), _AddrOffset(addrOffset) { }
 
 DbTableDef::DbTableDef(PCBYTE data)
@@ -83,7 +83,7 @@ PCCHAR DbTableDef::GetTableName() const
 	return _TableName;
 }
 		
-VOID DbTableDef::SetAddrOffset(CDWORD addrOffset)
+VOID DbTableDef::SetAddrOffset(RCDWORD addrOffset)
 {
 	_AddrOffset = addrOffset;
 }
@@ -165,7 +165,7 @@ PCBYTE DbTableDef::ToBinary() const
 }
 
 PCCHAR DbTableDef::ToString() const
-{	
+{
 	CSIZE size = this->StringSize();
 	
 	if (__db_table_def_buffer)
@@ -536,7 +536,7 @@ VOID DbTableDefSet::FromBinary(PCBYTE data)
 	{
 		_TableDefs[i] = new DbTableDef(bufferPtr);
 
-		bufferPtr += _TableDefs[i]->StringSize() - 1;
+		bufferPtr += _TableDefs[i]->BinarySize();
 	}
 }
 

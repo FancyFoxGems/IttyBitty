@@ -180,7 +180,7 @@ namespace IttyBitty
 
 		// MUTATORS
 		
-		VIRTUAL VOID SetAddrOffset(CDWORD) = 0;
+		VIRTUAL VOID SetAddrOffset(RCDWORD) = 0;
 		VIRTUAL VOID SetTableName(PCCHAR) = 0;
 
 
@@ -208,7 +208,7 @@ namespace IttyBitty
 		
 		// CONSTRUCTORS
 
-		DbTableDef(CSIZE = 0, PCCHAR = NULL, CDWORD = 0);
+		DbTableDef(CSIZE = 0, PCCHAR = NULL, RCDWORD = 0);
 
 		EXPLICIT DbTableDef(PCBYTE);
 		EXPLICIT DbTableDef(PCCHAR);
@@ -243,7 +243,7 @@ namespace IttyBitty
 		VIRTUAL DWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 		
-		VIRTUAL VOID SetAddrOffset(CDWORD);
+		VIRTUAL VOID SetAddrOffset(RCDWORD);
 		VIRTUAL VOID SetTableName(PCCHAR);
 				
 
@@ -317,7 +317,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		TypedDbTableDef(PCCHAR tableName = NULL, CDWORD addrOffset = 0) 
+		TypedDbTableDef(PCCHAR tableName = NULL, RCDWORD addrOffset = 0) 
 			: DbTableDef(ROW_SIZE(), tableName, addrOffset) { }
 
 		
