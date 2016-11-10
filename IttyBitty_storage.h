@@ -105,15 +105,115 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [DbLocation] DEFINITION
+#pragma region [StorageLocation] DEFINITION
 
-	UNION PACKED DbLocation
+	UNION PACKED StorageLocation
 	{
+		// UNION MEMBERS
+
+		PCCHAR FilePath;
+
 		BYTE ByteAddress;
 		WORD WordAddress;
 		DWORD DWordAddress;
 
-		PCCHAR FilePath;
+
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		EXPLICIT StorageLocation(PCCHAR filePath) : FilePath(filePath) { }
+
+		EXPLICIT StorageLocation(BYTE byteAddress) : ByteAddress(byteAddress) { }
+
+		EXPLICIT StorageLocation(WORD wordAddress) : WordAddress(wordAddress) { }
+
+		StorageLocation(RCDWORD dwordAddress = 0) : DWordAddress(dwordAddress) { }
+
+		StorageLocation(RCSTORAGELOCATION other)
+		{
+			this->DWordAddress = other.DWordAddress;
+		}
+
+		StorageLocation(RRSTORAGELOCATION other)
+		{
+			new (this) StorageLocation(other.DWordAddress);
+		}
+
+		~StorageLocation()
+		{
+			this->FreeFilePath();
+		}
+
+
+		// OPERATORS
+
+		RSTORAGELOCATION operator =(RCSTORAGELOCATION rValue)
+		{
+			*this = StorageLocation(rValue);
+			return *this;
+		}
+
+		RSTORAGELOCATION operator =(RRSTORAGELOCATION rValue)
+		{
+			*this = StorageLocation(rValue);
+			return *this;
+		}
+
+		RSTORAGELOCATION operator =(PCCHAR rValue)
+		{
+			this->FilePath = rValue;
+			return *this;
+		}
+
+		RSTORAGELOCATION operator =(CBYTE rValue)
+		{
+			this->ByteAddress = rValue;
+			return *this;
+		}
+
+		RSTORAGELOCATION operator =(CWORD rValue)
+		{
+			this->WordAddress = rValue;
+			return *this;
+		}
+
+		RSTORAGELOCATION operator =(RCDWORD rValue)
+		{
+			this->DWordAddress = rValue;
+			return *this;
+		}
+
+		operator PCCHAR() const
+		{
+			return this->FilePath;
+		}
+
+		operator CBYTE() const
+		{
+			return this->ByteAddress;
+		}
+
+		operator CWORD() const
+		{
+			return this->WordAddress;
+		}
+
+		operator RCDWORD() const
+		{
+			return this->DWordAddress;
+		}
+
+
+		// USER METHODS
+
+		VOID FreeFilePath()
+		{
+			if (this->FilePath)
+			{
+				delete[] this->FilePath;
+				this->FilePath = NULL;
+			}
+		}
 	};
 
 #pragma endregion
@@ -132,11 +232,11 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSTORAGERESULT SaveAsBinary(RCISTORAGE) const = 0;
-		VIRTUAL CSTORAGERESULT SaveAsString(RCISTORAGE) const = 0;
+		VIRTUAL CSTORAGERESULT SaveAsBinary() const = 0;
+		VIRTUAL CSTORAGERESULT SaveAsString() const = 0;
 
-		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE) = 0;
-		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE) = 0;
+		VIRTUAL CSTORAGERESULT LoadFromBinary() = 0;
+		VIRTUAL CSTORAGERESULT LoadFromString() = 0;
 
 
 	protected:
@@ -156,6 +256,12 @@ namespace IttyBitty
 		// DESTRUCTOR
 
 		VIRTUAL ~IStorage() { }
+
+
+		// ACCESSOR/MUTATOR
+
+		VIRTUAL RCSTORAGELOCATION GetStorageLocation() const = 0;
+		VIRTUAL VOID SetStorageLocation(RCSTORAGELOCATION) = 0;
 
 
 		// INTERFACE METHODS
@@ -183,28 +289,33 @@ namespace IttyBitty
 
 #pragma region [StorageBase] DEFINITION
 
-	CLASS StorageBase
+	CLASS StorageBase : public IStorage
 	{
 	public:
 
-		// [IStorage] IMPLEMENTATION
+		// CONSTRUCTOR
 
-		VIRTUAL CBOOL Available();
+		StorageBase(RCSTORAGELOCATION location) : _Location(location) { }
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
 
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+		// [IStorage] ACCESSOR/MUTATOR
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+		VIRTUAL RCSTORAGELOCATION GetStorageLocation() const
+		{
+			return _Location;
+		}
 
-		VIRTUAL CSTORAGERESULT Flush();
-
-		VIRTUAL CSTORAGERESULT Close();
+		VIRTUAL VOID SetStorageLocation(RCSTORAGELOCATION location)
+		{
+			_Location = location;
+		}
 
 
 	protected:
 
 		// INSTANCE VARIABLES
+
+		STORAGELOCATION _Location = 0;
 	};
 
 #pragma endregion

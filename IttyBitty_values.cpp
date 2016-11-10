@@ -195,14 +195,16 @@ ConstValue::operator RCFLOAT() const
 
 VOID ConstValue::FreePtr()
 {
-	if (this->Bytes)
-		delete this->Bytes;
+	this->Bytes = NULL;
 }
 
 VOID ConstValue::FreeData()
 {
 	if (this->Bytes)
+	{
 		delete[] this->Bytes;
+		this->Bytes = NULL;
+	}
 }
 
 #pragma endregion
@@ -444,13 +446,22 @@ Value::operator RFLOAT()
 VOID Value::FreePtr()
 {
 	if (this->BytesRef)
+	{
 		delete this->BytesRef;
+		this->BytesRef = NULL;
+	}
 }
 
 VOID Value::FreeData()
 {
 	if (this->BytesRef)
-		delete[] this->BytesRef;
+	{
+		delete[] *this->BytesRef;
+		*this->BytesRef = NULL;
+
+		delete this->BytesRef;
+		this->BytesRef = NULL;
+	}
 }
 
 #pragma endregion

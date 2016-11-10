@@ -95,7 +95,7 @@ CDBRESULT DbTable::Grow(RCFLOAT growthFactor)
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Shrink(RCFLOAT shrinkFactor)
+CDBRESULT DbTable::Compress(RCFLOAT shrinkFactor)
 {
 	return DbResult::SUCCESS;
 }
@@ -161,36 +161,36 @@ VOID DbTable::SetTableName(PCCHAR tableName)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT DbTable::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT DbTable::SaveAsBinary() const
 {
-	STORAGERESULT result = _TableDef->SaveAsBinary(storage);
+	STORAGERESULT result = _TableDef->SaveAsBinary();
 	if ((BOOL)result)
 		return result;
 
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT DbTable::SaveAsString() const
 {
-	STORAGERESULT result = _TableDef->SaveAsString(storage);
+	STORAGERESULT result = _TableDef->SaveAsString();
 	if ((BOOL)result)
 		return result;
 
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT DbTable::LoadFromBinary()
 {
-	STORAGERESULT result = _TableDef->LoadFromBinary(storage);
+	STORAGERESULT result = _TableDef->LoadFromBinary();
 	if ((BOOL)result)
 		return result;
 
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT DbTable::LoadFromString()
 {
-	STORAGERESULT result = _TableDef->LoadFromString(storage);
+	STORAGERESULT result = _TableDef->LoadFromString();
 	if ((BOOL)result)
 		return result;
 
@@ -343,22 +343,22 @@ CDWORD DbTable::RowsStringSize() const
 	return this->RowCount() * (this->RowStringSize() - 1);
 }
 
-CSTORAGERESULT DbTable::SaveRowAsBinary(RCISTORAGE storage, CSIZE rowIndex) const
+CSTORAGERESULT DbTable::SaveRowAsBinary(CSIZE rowIndex) const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::SaveRowAsString(RCISTORAGE storage, CSIZE rowIndex) const
+CSTORAGERESULT DbTable::SaveRowAsString(CSIZE rowIndex) const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromBinary(RCISTORAGE storage, CSIZE rowIndex)
+CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIndex)
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromString(RCISTORAGE storage, CSIZE rowIndex)
+CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIndex)
 {
 	return StorageResult::SUCCESS;
 }

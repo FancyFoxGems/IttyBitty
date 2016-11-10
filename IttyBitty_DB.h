@@ -39,14 +39,14 @@ namespace IttyBitty
 
 		// STATIC FUNCTIONS
 
-		STATIC PDATABASE Open(RCISTORAGE, RCSTORAGELOCATION);
-		STATIC PDATABASE Create(RCISTORAGE, RCSTORAGELOCATION);
-		STATIC CDBRESULT Delete(RCISTORAGE, RCSTORAGELOCATION);
+		STATIC PDATABASE Load(RCISTORAGE, RDBRESULT);
+		STATIC PDATABASE Create(RCISTORAGE, RDBRESULT);
+		STATIC CDBRESULT Delete(RCISTORAGE);
 
 
 		// CONSTRUCTOR
 
-		Database(RCSTORAGELOCATION);
+		Database(RCISTORAGE);
 
 
 	protected:
@@ -62,6 +62,16 @@ namespace IttyBitty
 
 		PCIDBTABLE operator[](CBYTE) const;
 		PIDBTABLE operator[](CBYTE);
+
+
+		// ACCESSORS
+
+		RCISTORAGE GetStorage() const;
+
+
+		// MUTATORS
+
+		VOID SetStorage(RCISTORAGE);
 
 
 		// USER METHODS
@@ -87,16 +97,16 @@ namespace IttyBitty
 		CSIZE RowCountFor(PCCHAR) const;
 
 		CSIZE RowsAvailableFor(CBYTE) const;
-		CSIZE RowsAvailableFor(RCISTORAGE) const;
+		CSIZE RowsAvailableFor() const;
 
-		CDBRESULT CreateDatabase(RCISTORAGE);
-		CDBRESULT DeleteDatabase(RCISTORAGE);
+		CDBRESULT CreateDatabase();
+		CDBRESULT DeleteDatabase();
 
-		CDBRESULT LoadDatabase(RCISTORAGE);
-		CDBRESULT SaveDatabase(RCISTORAGE);
+		CDBRESULT LoadDatabase();
+		CDBRESULT SaveDatabase();
 
 		CDBRESULT GrowDatabase(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
-		CDBRESULT ShrinkDatabase(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		CDBRESULT CompressDatabase(RCFLOAT = 0.0F);
 		CDBRESULT TruncateDatabase();
 		CDBRESULT WipeDatabase();
 
@@ -111,8 +121,8 @@ namespace IttyBitty
 		CDBRESULT GrowTable(CBYTE, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
 		CDBRESULT GrowTable(PCCHAR, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
 
-		CDBRESULT ShrinkTable(CBYTE, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
-		CDBRESULT ShrinkTable(PCCHAR, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		CDBRESULT CompressTable(CBYTE, RCFLOAT = 0.0F);
+		CDBRESULT CompressTable(PCCHAR, RCFLOAT = 0.0F);
 
 		CDBRESULT DropTable(CBYTE);
 		CDBRESULT DropTable(PCCHAR);
@@ -170,11 +180,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL CSTORAGERESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL CSTORAGERESULT SaveAsString(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
+		VIRTUAL CSTORAGERESULT SaveAsString() const;
 
-		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromBinary();
+		VIRTUAL CSTORAGERESULT LoadFromString();
 
 
 		// [ISerializable] IMPLEMENTATION
@@ -204,7 +214,7 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		PCSTORAGELOCATION _StorageLocation = NULL;
+		PISTORAGE _Storage = NULL;
 
 		PIDBTABLEDEFSET _DatabaseDef = NULL;
 		PPIDBTABLE _Tables = NULL;

@@ -47,6 +47,99 @@ namespace IttyBitty
 		& RCSDSTORAGEADAPTER, ** PPCSDSTORAGEADAPTER;
 
 #pragma endregion
-}
+
+
+#pragma region [EepromStorageAdapter] DEFINITION
+
+	CLASS EepromStorageAdapter
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		EepromStorageAdapter();
+
+		~EepromStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		VIRTUAL CSTORAGERESULT Flush();
+
+		VIRTUAL CSTORAGERESULT Close();
+	};
+
+#pragma endregion
+
+
+#pragma region [ExtEepromStorageAdapter] DEFINITION
+
+	CLASS ExtEepromStorageAdapter
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		ExtEepromStorageAdapter();
+
+		~ExtEepromStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		VIRTUAL CSTORAGERESULT Flush();
+
+		VIRTUAL CSTORAGERESULT Close();
+	};
+
+#pragma endregion
+
+
+#pragma region [SdStorageAdapter] DEFINITION
+
+	CLASS SdStorageAdapter
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		SdStorageAdapter();
+
+		~SdStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		VIRTUAL CSTORAGERESULT Flush();
+
+		VIRTUAL CSTORAGERESULT Close();
+	};
+
+#pragma endregion
+};
 
 #endif

@@ -96,22 +96,22 @@ VOID DbTableDef::SetTableName(PCCHAR tableName)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT DbTableDef::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT DbTableDef::SaveAsBinary() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDef::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT DbTableDef::SaveAsString() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDef::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT DbTableDef::LoadFromBinary()
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDef::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT DbTableDef::LoadFromString()
 {
 	return StorageResult::SUCCESS;
 }
@@ -413,22 +413,22 @@ RIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT DbTableDefSet::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT DbTableDefSet::SaveAsBinary() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDefSet::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT DbTableDefSet::SaveAsString() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDefSet::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT DbTableDefSet::LoadFromBinary()
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTableDefSet::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT DbTableDefSet::LoadFromString()
 {
 	return StorageResult::SUCCESS;
 }

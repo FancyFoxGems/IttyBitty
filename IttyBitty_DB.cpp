@@ -29,29 +29,39 @@ PBYTE IttyBitty::__database_buffer = NULL;
 /*
 // STATIC FUNCTIONS
 
-STATIC PDATABASE Database::Open(RCISTORAGE, RCSTORAGELOCATION)
+STATIC PDATABASE Database::Load(RCISTORAGE storage, RDBRESULT result)
 {
-	PDATABASE database = NULL;
+	database = new Database(storage);
+
+	result = database.LoadDatabase();
 
 	return database;
 }
 
-STATIC PDATABASE Database::Create(RCISTORAGE, RCSTORAGELOCATION)
+STATIC PDATABASE Database::Create(RCISTORAGE storage, RDBRESULT result)
 {
-	PDATABASE database = NULL;
+	database = new Database(storage);
+
+	result = database.CreateDatabase();
 
 	return database;
 }
 
-STATIC CDBRESULT Database::Delete(RCISTORAGE, RCSTORAGELOCATION)
+STATIC CDBRESULT Database::Delete(RCISTORAGE storage)
 {
-	return DbResult::SUCCESS;
+	PDATABASE database = new Database(storage);
+
+	DBRESULT result = database.DeleteDatabase();
+
+	delete database;
+
+	return result;
 }
 
 
 // CONSTRUCTOR
 
-Database::Database(RCSTORAGELOCATION)
+Database::Database(RCISTORAGE storage) : _Storage(&storage)
 {
 }
 
@@ -71,6 +81,22 @@ PCIDBTABLE Database::operator[](CBYTE) const
 
 PIDBTABLE Database::operator[](CBYTE)
 {
+}
+
+
+// ACCESSORS
+
+RCISTORAGE Database::GetStorage() const
+{
+	return *_Storage;
+}
+
+
+// MUTATORS
+
+VOID Database::SetStorage(RCISTORAGE storage)
+{
+	_Storage = &storage;
 }
 
 
@@ -132,23 +158,23 @@ CSIZE Database::RowsAvailableFor(CBYTE) const
 {
 }
 
-CSIZE Database::RowsAvailableFor(RCISTORAGE) const
+CSIZE Database::RowsAvailableFor() const
 {
 }
 
-CDBRESULT Database::CreateDatabase(RCISTORAGE)
+CDBRESULT Database::CreateDatabase()
 {
 }
 
-CDBRESULT Database::DeleteDatabase(RCISTORAGE)
+CDBRESULT Database::DeleteDatabase()
 {
 }
 
-CDBRESULT Database::LoadDatabase(RCISTORAGE)
+CDBRESULT Database::LoadDatabase()
 {
 }
 
-CDBRESULT Database::SaveDatabase(RCISTORAGE)
+CDBRESULT Database::SaveDatabase()
 {
 }
 
@@ -156,7 +182,7 @@ CDBRESULT Database::GrowDatabase(RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkDatabase(RCFLOAT)
+CDBRESULT Database::CompressDatabase(RCFLOAT)
 {
 }
 
@@ -180,11 +206,11 @@ CDBRESULT Database::GrowTable(PCCHAR, RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkTable(CBYTE, RCFLOAT)
+CDBRESULT Database::CompressTable(CBYTE, RCFLOAT)
 {
 }
 
-CDBRESULT Database::ShrinkTable(PCCHAR, RCFLOAT)
+CDBRESULT Database::CompressTable(PCCHAR, RCFLOAT)
 {
 }
 
@@ -248,22 +274,22 @@ CDBRESULT Database::TruncateFrom(PCCHAR)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT Database::SaveAsBinary(RCISTORAGE storage) const
+CSTORAGERESULT Database::SaveAsBinary() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT Database::SaveAsString(RCISTORAGE storage) const
+CSTORAGERESULT Database::SaveAsString() const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT Database::LoadFromBinary(RCISTORAGE storage)
+CSTORAGERESULT Database::LoadFromBinary()
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT Database::LoadFromString(RCISTORAGE storage)
+CSTORAGERESULT Database::LoadFromString()
 {
 	return StorageResult::SUCCESS;
 }

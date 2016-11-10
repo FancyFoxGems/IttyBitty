@@ -87,7 +87,7 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowsAvailable() const = 0;
 
 		VIRTUAL CDBRESULT Grow(RCFLOAT) = 0;
-		VIRTUAL CDBRESULT Shrink(RCFLOAT) = 0;
+		VIRTUAL CDBRESULT Compress(RCFLOAT) = 0;
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
 		VIRTUAL CDBRESULT Find(CSIZE, PBYTE, PSIZE) = 0;
@@ -112,11 +112,11 @@ namespace IttyBitty
 		VIRTUAL CDWORD RowsBinarySize() const = 0;
 		VIRTUAL CDWORD RowsStringSize() const = 0;
 
-		VIRTUAL CSTORAGERESULT SaveRowAsBinary(RCISTORAGE, CSIZE) const = 0;
-		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const = 0;
+		VIRTUAL CSTORAGERESULT SaveRowAsBinary(CSIZE) const = 0;
+		VIRTUAL CSTORAGERESULT SaveRowAsString(CSIZE) const = 0;
 
-		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE) = 0;
-		VIRTUAL CSTORAGERESULT LoadRowFromString(RCISTORAGE, CSIZE) = 0;
+		VIRTUAL CSTORAGERESULT LoadRowFromBinary(CSIZE) = 0;
+		VIRTUAL CSTORAGERESULT LoadRowFromString(CSIZE) = 0;
 
 		VIRTUAL CSIZE RowBinarySize() const = 0;
 		VIRTUAL CSIZE RowStringSize() const = 0;
@@ -178,7 +178,7 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowsAvailable() const;
 
 		VIRTUAL CDBRESULT Grow(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
-		VIRTUAL CDBRESULT Shrink(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT Compress(RCFLOAT = 0.0F);
 
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE);
 
@@ -215,11 +215,11 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL CSTORAGERESULT SaveAsBinary(RCISTORAGE) const;
-		VIRTUAL CSTORAGERESULT SaveAsString(RCISTORAGE) const;
+		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
+		VIRTUAL CSTORAGERESULT SaveAsString() const;
 
-		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE);
-		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE);
+		VIRTUAL CSTORAGERESULT LoadFromBinary();
+		VIRTUAL CSTORAGERESULT LoadFromString();
 
 
 		// [ISerializable] IMPLEMENTATION
@@ -246,6 +246,8 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 		BOOL _CapacityChanged = FALSE;
+		SIZE _DirtyRowsStart = 0;
+		SIZE _DirtyRowsCount = 0;
 
 		DWORD _Capacity = 0;
 		SIZE _RowCount = 0;
@@ -262,11 +264,11 @@ namespace IttyBitty
 		VIRTUAL CDWORD RowsBinarySize() const;
 		VIRTUAL CDWORD RowsStringSize() const;
 
-		VIRTUAL CSTORAGERESULT SaveRowAsBinary(RCISTORAGE, CSIZE) const;
-		VIRTUAL CSTORAGERESULT SaveRowAsString(RCISTORAGE, CSIZE) const;
+		VIRTUAL CSTORAGERESULT SaveRowAsBinary(CSIZE) const;
+		VIRTUAL CSTORAGERESULT SaveRowAsString(CSIZE) const;
 
-		VIRTUAL CSTORAGERESULT LoadRowFromBinary(RCISTORAGE, CSIZE);
-		VIRTUAL CSTORAGERESULT LoadRowFromString(RCISTORAGE, CSIZE);
+		VIRTUAL CSTORAGERESULT LoadRowFromBinary(CSIZE);
+		VIRTUAL CSTORAGERESULT LoadRowFromString(CSIZE);
 
 		VIRTUAL CSIZE RowBinarySize() const;
 		VIRTUAL CSIZE RowStringSize() const;
