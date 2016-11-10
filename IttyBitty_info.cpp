@@ -6,11 +6,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_INFO)
-	#define EXCLUDE_ITTYBITTY_INFO
+#if defined(NO_ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_INFO)
+	#define NO_ITTYBITTY_INFO
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_INFO
+#ifndef NO_ITTYBITTY_INFO
 
 
 #include "IttyBitty_info.h"
@@ -331,4 +331,4 @@ namespace IttyBitty
 #pragma endregion
 }
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_INFO
+#endif	// #ifndef NO_ITTYBITTY_INFO

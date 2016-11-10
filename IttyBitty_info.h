@@ -6,7 +6,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTYBITTY_INFO) && !defined(_ITTYBITTY_INFO_H)
+#if defined(NO_ITTYBITTY_INFO) && !defined(_ITTYBITTY_INFO_H)
 	#define _ITTYBITTY_INFO_H
 #endif
 

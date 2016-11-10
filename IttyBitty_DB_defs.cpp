@@ -6,11 +6,11 @@
 } SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (defined(ITTYBITTY_SLIM) || defined(EXCLUDE_ITTYBITTY_DB)) && !defined(EXCLUDE_ITTYBITTY_DB_DEFS)
-	#define EXCLUDE_ITTYBITTY_DB_DEFS
+#if (defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_DB)) && !defined(NO_ITTYBITTY_DB_DEFS)
+	#define NO_ITTYBITTY_DB_DEFS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_DB_DEFS
+#ifndef NO_ITTYBITTY_DB_DEFS
 
 
 #include "IttyBitty_DB_defs.h"
@@ -609,4 +609,4 @@ CSIZE DbTableDefSet::TableDefsStringSize() const
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DB_DEFS
+#endif	// #ifndef NO_ITTYBITTY_DB_DEFS

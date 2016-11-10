@@ -33,7 +33,7 @@ namespace IttyBitty
 
 #pragma region [Database] DEFINITION
 
-	CLASS Database final : protected IDbTableDefSet
+	CLASS Database final : public IDbTableSet
 	{
 	public:
 
@@ -76,41 +76,44 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		CDWORD Size() const;
-		CWORD Capacity() const;
-
-		CBYTE TableCount() const;
-
-		RCIDBTABLE Table(CBYTE = 0) const;
-		RIDBTABLE Table(CBYTE = 0);
-
-		RCIDBTABLE Table(PCCHAR) const;
-		RIDBTABLE Table(PCCHAR);
-
-		CDWORD SizeOf(CBYTE) const;
-		CDWORD SizeOf(PCCHAR) const;
-
-		CDWORD CapacityOf(CBYTE) const;
-		CDWORD CapacityOf(PCCHAR) const;
-
-		CSIZE RowCountFor(CBYTE) const;
-		CSIZE RowCountFor(PCCHAR) const;
-
-		CSIZE RowsAvailableFor(CBYTE) const;
-		CSIZE RowsAvailableFor() const;
-
 		CDBRESULT CreateDatabase();
 		CDBRESULT DeleteDatabase();
 
-		CDBRESULT LoadDatabase();
-		CDBRESULT SaveDatabase();
-
 		CDBRESULT GrowDatabase(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
 		CDBRESULT CompressDatabase(RCFLOAT = 0.0F);
-		CDBRESULT TruncateDatabase();
+		CDBRESULT TruncateAllTables();
 		CDBRESULT WipeDatabase();
 
-		CDBRESULT CreateTable(CSIZE, PCCHAR = NULL);
+		CDBRESULT Load();
+		CDBRESULT Save();
+
+
+		// [IDbTableSet] IMPLEMENTATION
+
+		VIRTUAL CDWORD Size() const;
+		VIRTUAL CWORD Capacity() const;
+
+		VIRTUAL CBYTE TableCount() const;
+
+		VIRTUAL RCIDBTABLE Table(CBYTE = 0) const;
+		VIRTUAL RIDBTABLE Table(CBYTE = 0);
+
+		VIRTUAL RCIDBTABLE Table(PCCHAR) const;
+		VIRTUAL RIDBTABLE Table(PCCHAR);
+
+		VIRTUAL CDWORD SizeOf(CBYTE) const;
+		VIRTUAL CDWORD SizeOf(PCCHAR) const;
+
+		VIRTUAL CDWORD CapacityOf(CBYTE) const;
+		VIRTUAL CDWORD CapacityOf(PCCHAR) const;
+
+		VIRTUAL CSIZE RowCountFor(CBYTE) const;
+		VIRTUAL CSIZE RowCountFor(PCCHAR) const;
+
+		VIRTUAL CSIZE RowsAvailableFor(CBYTE) const;
+		VIRTUAL CSIZE RowsAvailableFor() const;
+
+		VIRTUAL CDBRESULT CreateTable(CSIZE, PCCHAR = NULL);
 
 		template<typename T>
 		CDBRESULT CreateTable(PCCHAR = NULL)
@@ -118,17 +121,17 @@ namespace IttyBitty
 			return DbResult::SUCCESS;
 		}
 
-		CDBRESULT GrowTable(CBYTE, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
-		CDBRESULT GrowTable(PCCHAR, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT GrowTable(CBYTE, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT GrowTable(PCCHAR, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
 
-		CDBRESULT CompressTable(CBYTE, RCFLOAT = 0.0F);
-		CDBRESULT CompressTable(PCCHAR, RCFLOAT = 0.0F);
+		VIRTUAL CDBRESULT CompressTable(CBYTE, RCFLOAT = 0.0F);
+		VIRTUAL CDBRESULT CompressTable(PCCHAR, RCFLOAT = 0.0F);
 
-		CDBRESULT DropTable(CBYTE);
-		CDBRESULT DropTable(PCCHAR);
+		VIRTUAL CDBRESULT DropTable(CBYTE);
+		VIRTUAL CDBRESULT DropTable(PCCHAR);
 
-		CDBRESULT SelectAllFrom(CBYTE, PBYTE &, RSIZE);
-		CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
+		VIRTUAL CDBRESULT SelectAllFrom(CBYTE, PBYTE &, RSIZE);
+		VIRTUAL CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
 
 		template<typename T>
 		CDBRESULT SelectAllFrom(CBYTE tableIndex, T *& resultSet, RSIZE resultCount)
@@ -146,8 +149,8 @@ namespace IttyBitty
 			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
 		}
 
-		CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
-		CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
+		VIRTUAL CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
+		VIRTUAL CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
 
 		template<typename T>
 		CDBRESULT FindFrom(CBYTE tableIndex, CSIZE rowIndex, T * result)
@@ -165,17 +168,17 @@ namespace IttyBitty
 			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
 		}
 
-		CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
-		CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_T(SIZE));
+		VIRTUAL CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
+		VIRTUAL CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_T(SIZE));
 
-		CDBRESULT UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL);
-		CDBRESULT UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL);
+		VIRTUAL CDBRESULT UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL);
+		VIRTUAL CDBRESULT UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL);
 
-		CDBRESULT DeleteFrom(CBYTE, CSIZE);
-		CDBRESULT DeleteFrom(PCCHAR, CSIZE);
+		VIRTUAL CDBRESULT DeleteFrom(CBYTE, CSIZE);
+		VIRTUAL CDBRESULT DeleteFrom(PCCHAR, CSIZE);
 
-		CDBRESULT TruncateFrom(CBYTE);
-		CDBRESULT TruncateFrom(PCCHAR);
+		VIRTUAL CDBRESULT TruncateTable(CBYTE);
+		VIRTUAL CDBRESULT TruncateTable(PCCHAR);
 
 
 		// [IStorable] IMPLEMENTATION
@@ -218,6 +221,11 @@ namespace IttyBitty
 
 		PIDBTABLEDEFSET _DatabaseDef = NULL;
 		PPIDBTABLE _Tables = NULL;
+
+
+		// [IDbTableSet] HELPER METHODS
+
+		VIRTUAL CSTORAGERESULT MoveTables(CBYTE, RCLONG);
 
 
 		// [IDbTableDefSet] IMPLEMENTATION

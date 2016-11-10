@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTY_BITTY_FIELDS) && !defined(EXCLUDE_ITTYBITTY_CONSTVALUES)
-	#define EXCLUDE_ITTYBITTY_CONSTVALUES
+#if defined(NO_ITTYBITTY_FIELDS) && !defined(NO_ITTYBITTY_CONSTVALUES)
+	#define NO_ITTYBITTY_CONSTVALUES
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_CONSTVALUES
+#ifndef NO_ITTYBITTY_CONSTVALUES
 
 
 #include "IttyBitty_values.h"
@@ -466,4 +466,4 @@ VOID Value::FreeData()
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_CONSTVALUES
+#endif	// #ifndef NO_ITTYBITTY_CONSTVALUES

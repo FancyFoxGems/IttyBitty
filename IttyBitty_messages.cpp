@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTY_BITTY_PARAMS) && !defined(EXCLUDE_ITTYBITTY_MESSAGES)
-	#define EXCLUDE_ITTYBITTY_MESSAGES
+#if defined(NO_ITTYBITTY_PARAMS) && !defined(NO_ITTYBITTY_MESSAGES)
+	#define NO_ITTYBITTY_MESSAGES
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_MESSAGES
+#ifndef NO_ITTYBITTY_MESSAGES
 
 #include "IttyBitty_messages.h"
 
@@ -552,4 +552,4 @@ CSIZE Message::ParamsStringSize() const
 
 #pragma endregion
 
-#endif // #ifndef EXCLUDE_ITTYBITTY_MESSAGES
+#endif // #ifndef NO_ITTYBITTY_MESSAGES

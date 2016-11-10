@@ -6,11 +6,11 @@
 } SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_DB)
-	#define EXCLUDE_ITTYBITTY_DB
+#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_DB)
+	#define NO_ITTYBITTY_DB
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_DB
+#ifndef NO_ITTYBITTY_DB
 
 
 #include "IttyBitty_DB.h"
@@ -33,7 +33,7 @@ STATIC PDATABASE Database::Load(RCISTORAGE storage, RDBRESULT result)
 {
 	database = new Database(storage);
 
-	result = database.LoadDatabase();
+	result = database.Load();
 
 	return database;
 }
@@ -102,6 +102,41 @@ VOID Database::SetStorage(RCISTORAGE storage)
 
 // USER METHODS
 
+CDBRESULT Database::CreateDatabase()
+{
+}
+
+CDBRESULT Database::DeleteDatabase()
+{
+}
+
+CDBRESULT Database::GrowDatabase(RCFLOAT)
+{
+}
+
+CDBRESULT Database::CompressDatabase(RCFLOAT)
+{
+}
+
+CDBRESULT Database::TruncateAllTables()
+{
+}
+
+CDBRESULT Database::WipeDatabase()
+{
+}
+
+CDBRESULT Database::Load()
+{
+}
+
+CDBRESULT Database::Save()
+{
+}
+
+
+// [IDbTableSet] IMPLEMENTATION
+
 CDWORD Database::Size() const
 {
 }
@@ -159,38 +194,6 @@ CSIZE Database::RowsAvailableFor(CBYTE) const
 }
 
 CSIZE Database::RowsAvailableFor() const
-{
-}
-
-CDBRESULT Database::CreateDatabase()
-{
-}
-
-CDBRESULT Database::DeleteDatabase()
-{
-}
-
-CDBRESULT Database::LoadDatabase()
-{
-}
-
-CDBRESULT Database::SaveDatabase()
-{
-}
-
-CDBRESULT Database::GrowDatabase(RCFLOAT)
-{
-}
-
-CDBRESULT Database::CompressDatabase(RCFLOAT)
-{
-}
-
-CDBRESULT Database::TruncateDatabase()
-{
-}
-
-CDBRESULT Database::WipeDatabase()
 {
 }
 
@@ -263,11 +266,11 @@ CDBRESULT Database::DeleteFrom(PCCHAR, CSIZE)
 {
 }
 
-CDBRESULT Database::TruncateFrom(CBYTE)
+CDBRESULT Database::TruncateTable(CBYTE)
 {
 }
 
-CDBRESULT Database::TruncateFrom(PCCHAR)
+CDBRESULT Database::TruncateTable(PCCHAR)
 {
 }
 
@@ -330,6 +333,13 @@ SIZE Database::printTo(Print & printer) const
 #endif
 
 
+// [IDbTableSet] HELPER METHODS
+
+CSTORAGERESULT Database::MoveTables(CBYTE startTableIndex, RCLONG moveAddrOffset)
+{
+}
+
+
 // [IDbTableDefSet] IMPLEMENTATION
 
 CBYTE Database::TableDefCount() const
@@ -365,4 +375,4 @@ CSIZE Database::TableDefsStringSize() const
 */
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DB
+#endif	// #ifndef NO_ITTYBITTY_DB

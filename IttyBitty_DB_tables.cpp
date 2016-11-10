@@ -6,11 +6,11 @@
 } SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (defined(ITTYBITTY_SLIM) || defined(EXCLUDE_ITTYBITTY_DB)) && !defined(EXCLUDE_ITTYBITTY_DB_TABLES)
-	#define EXCLUDE_ITTYBITTY_DB_TABLES
+#if (defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_DB)) && !defined(NO_ITTYBITTY_DB_TABLES)
+	#define NO_ITTYBITTY_DB_TABLES
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_DB_TABLES
+#ifndef NO_ITTYBITTY_DB_TABLES
 
 
 #include "IttyBitty_DB_tables.h"
@@ -92,11 +92,35 @@ CSIZE DbTable::RowsAvailable() const
 
 CDBRESULT DbTable::Grow(RCFLOAT growthFactor)
 {
+	if (growthFactor == 1.0F)
+		return DbResult::SUCCESS;
+
+	if (growthFactor < 1.0F)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	_Capacity *= growthFactor;
+	_CapacityChanged = TRUE;
+
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Compress(RCFLOAT shrinkFactor)
+CDBRESULT DbTable::Compress(RCFLOAT compressionFactor)
 {
+	if (compressionFactor == 1.0F)
+		return DbResult::SUCCESS;
+
+	if (compressionFactor < 1.0F)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	DWORD newCapacity = (1.0F / compressionFactor) * _Capacity;
+		return DbResult::SUCCESS;
+
+	if (newCapacity < this->Size())
+		return DbResult::ERROR_ARGUMENT_DATABASE_TOO_LARGE;
+
+	_Capacity = newCapacity;
+	_CapacityChanged = TRUE;
+
 	return DbResult::SUCCESS;
 }
 
@@ -117,16 +141,26 @@ CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIndex)
 
 CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIndex, PSIZE rowsAffected)
 {
+	if (rowIndex > this->RowCount() - 1)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+
 	return DbResult::SUCCESS;
 }
 
 CDBRESULT DbTable::Delete(CSIZE rowIndex)
 {
+	if (rowIndex > this->RowCount() - 1)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
 	return DbResult::SUCCESS;
 }
 
 CDBRESULT DbTable::Truncate()
 {
+	if (this->RowCount() == 0)
+		return DbResult::SUCCESS;
+
 	return DbResult::SUCCESS;
 }
 
@@ -330,6 +364,9 @@ CDBRESULT DbTable::SelectAllRows(PBYTE & resultRows, RSIZE resultCount)
 
 CDBRESULT DbTable::FindRow(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
 {
+	if (rowIndex > this->RowCount() - 1)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
 	return DbResult::SUCCESS;
 }
 
@@ -404,4 +441,4 @@ CBYTE DbTable::TableNameLength() const
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DB_TABLES
+#endif	// #ifndef NO_ITTYBITTY_DB_TABLES

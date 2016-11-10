@@ -23,7 +23,7 @@
 *	LIBRARY - FULL BUNDLE
 *	Memory Usage:	< 7.2 KB Program Memory (Flash ROM) / < 815 B SRAM
 *		w/o full IttyBitty_bytes module:	< 6.85 KB Program Memory (Flash ROM) / < 660 B SRAM
-*		NOTE: #define EXCLUDE_ITTYBITTY_FULL_BYTES --^
+*		NOTE: #define NO_ITTYBITTY_FULL_BYTES --^
 *
 *
 * INCLUDES:
@@ -81,14 +81,14 @@
 
 /* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
 
-#if defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_INFO)
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_INFO)
 	#include "IttyBitty_info.h"
 #endif
 
 
 /* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 	#include "IttyBitty_bytes.h"
 #else
 	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
@@ -97,68 +97,68 @@
 
 /* [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY */
 
-#ifndef EXCLUDE_ITTYBITTY_REGISTERS
+#ifndef NO_ITTYBITTY_REGISTERS
 	#include "IttyBitty_registers.h"
 #endif
 
 
 /* [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS */
 
-#ifndef EXCLUDE_ITTYBITTY_GPIO
+#ifndef NO_ITTYBITTY_GPIO
 	#include "IttyBitty_GPIO.h"
 #endif
 
 
 /* [IttyBitty_interrupts.h]:  */
 
-#ifndef EXCLUDE_ITTYBITTY_INTERRUPTS
+#ifndef NO_ITTYBITTY_INTERRUPTS
 	#include "IttyBitty_interrupts.h"
 #endif
 
 
 /* [IttyBitty_LED.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING */
 
-#ifndef EXCLUDE_ITTYBITTY_LED
+#ifndef NO_ITTYBITTY_LED
 	#include "IttyBitty_LED.h"
 #endif
 
 
 /* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS */
 
-#ifndef EXCLUDE_ITTYBITTY_PRINT
+#ifndef NO_ITTYBITTY_PRINT
 	#include "IttyBitty_print.h"
 #endif
 
 
 /* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC */
 
-#ifndef EXCLUDE_ITTYBITTY_MESSAGES
+#ifndef NO_ITTYBITTY_MESSAGES
 	#include "IttyBitty_messages.h"
 #endif
 
 
 /* [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA */
 
-#if !defined(ARDUINO) || EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
+#if !defined(ARDUINO) || NO_ITTYBITTY_STORAGE_ADAPTERS
 	#include "IttyBitty_storage_adapters.h"
-	#define EXCLUDE_ITTYBITTY_STORAGE
+	#define NO_ITTYBITTY_STORAGE
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_STORAGE
+#ifndef NO_ITTYBITTY_STORAGE
 	#include "IttyBitty_storage.h"
 #endif
 
 
 /* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
 
-#if !defined(ARDUINO) || defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
+#if !defined(ARDUINO) || defined(NO_ITTYBITTY_EEPROM_I2C)
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
 
 /* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT */
 
-#ifndef EXCLUDE_ITTYBITTY_DB
+#ifndef NO_ITTYBITTY_DB
 	#include "IttyBitty_DB.h"
 #endif
 

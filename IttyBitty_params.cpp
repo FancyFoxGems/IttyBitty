@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTYBITTY_MESSAGES) && defined(EXCLUDE_ITTYBITTY_STORAGE) && !defined(EXCLUDE_ITTYBITTY_PARAMS)
-	#define EXCLUDE_ITTYBITTY_PARAMS
+#if defined(NO_ITTYBITTY_MESSAGES) && defined(NO_ITTYBITTY_STORAGE) && !defined(NO_ITTYBITTY_PARAMS)
+	#define NO_ITTYBITTY_PARAMS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_PARAMS
+#ifndef NO_ITTYBITTY_PARAMS
 
 
 #include "IttyBitty_params.h"
@@ -552,4 +552,4 @@ VOID VarLengthParam::FromString(PCCHAR data)
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_PARAMS
+#endif	// #ifndef NO_ITTYBITTY_PARAMS

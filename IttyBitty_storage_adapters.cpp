@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS)
-	#define EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
+#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(NO_ITTYBITTY_STORAGE_ADAPTERS)
+	#define NO_ITTYBITTY_STORAGE_ADAPTERS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_STORAGE_ADAPTERS
+#ifndef NO_ITTYBITTY_STORAGE_ADAPTERS
 
 
 #include "IttyBitty_storage_adapters.h"
@@ -25,4 +25,4 @@ using namespace IttyBitty;
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_STORAGE
+#endif	// #ifndef NO_ITTYBITTY_STORAGE

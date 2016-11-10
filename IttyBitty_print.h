@@ -6,8 +6,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) && !defined(EXCLUDE_ITTYBITTY_PRINT)
-	#define EXCLUDE_ITTYBITTY_PRINT
+#if !defined(ARDUINO) && !defined(NO_ITTYBITTY_PRINT)
+	#define NO_ITTYBITTY_PRINT
 	#define _ITTYBITTY_PRINT_H
 #endif
 

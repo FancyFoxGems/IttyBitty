@@ -3,11 +3,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_PRINT)
-	#define EXCLUDE_ITTYBITTY_PRINT
+#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_PRINT)
+	#define NO_ITTYBITTY_PRINT
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_PRINT
+#ifndef NO_ITTYBITTY_PRINT
 
 
 #include "IttyBitty_print.h"
@@ -169,4 +169,4 @@ namespace IttyBitty
 	}
 }
 
-#endif // #ifndef EXCLUDE_ITTYBITTY_PRINT
+#endif // #ifndef NO_ITTYBITTY_PRINT

@@ -4,14 +4,14 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_LED)
-	#define EXCLUDE_ITTYBITTY_LED
+#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_LED)
+	#define NO_ITTYBITTY_LED
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_LED
+#ifndef NO_ITTYBITTY_LED
 
 
 #include "IttyBitty_LED.h"
 
 
-#endif // #ifndef EXCLUDE_ITTYBITTY_LED
+#endif // #ifndef NO_ITTYBITTY_LED

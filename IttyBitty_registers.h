@@ -42,7 +42,7 @@
 
 
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 
 #include "IttyBitty_bytes.h"
 
@@ -52,7 +52,7 @@ namespace IttyBitty
 
 	typedef IttyBitty::BYTEFIELD REG8, * PREG8, & RREG8, ** PPREG8, && RRREG8;
 
-#ifndef EXCLUDE_ITTYBITTY_FULL_BYTES
+#ifndef NO_ITTYBITTY_FULL_BYTES
 	typedef WORDFIELD REG16, * PREG16, & RREG16, ** PPREG16, && RRREG16;
 	typedef DWORDFIELD REG32, * PREG32, & RREG32, ** PPREG32, && RRREG32;
 #endif
@@ -60,7 +60,7 @@ namespace IttyBitty
 	#define NEW_REG8(reg_addr) (new REG8((PVBYTE)reg_addr))
 }
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
+#endif	// #ifndef NO_ITTYBITTY_BYTES
 
 
 #endif

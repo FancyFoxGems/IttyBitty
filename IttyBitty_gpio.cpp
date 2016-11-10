@@ -7,11 +7,11 @@
 /* NOTE: COMMENT THE FOLLOWING LINE OUT TO ENABLE A FULLY FEATURED / FULL BUILD OF THE LIBRARY */
 //#define ITTYBITTY_SLIM
 
-#if defined(ITTYBITTY_SLIM) && !defined(EXCLUDE_ITTYBITTY_BYTES)
-	#define EXCLUDE_ITTYBITTY_BYTES
+#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_BYTES)
+	#define NO_ITTYBITTY_BYTES
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_GPIO
+#ifndef NO_ITTYBITTY_GPIO
 
 
 #include "IttyBitty_GPIO.h"
@@ -134,7 +134,7 @@ VOID ResetPin(PIN_NUMBER p)
 
 #pragma region BIT-PACKED PORT VARIABLE DEFINITION MACROS
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 
 	#define _INITIALIZE_PORT_STRUCTS(port_letter)	\
 		RBITPACK P##port_letter##_DDR	= *(PACK_BYTE_REF((RVBYTE)DDR##port_letter));	\
@@ -145,14 +145,14 @@ VOID ResetPin(PIN_NUMBER p)
 		REG8 PIN##port_letter##_REG(&PIN##port_letter);									\
 		PORT Port##port_letter(DDR##port_letter##_REG, PORT##port_letter##_REG, PIN##port_letter##_REG);
 
-#else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+#else	// #ifdef NO_ITTYBITTY_BYTES
 
 	#define _INITIALIZE_PORT_STRUCTS(port_letter)	\
 		RBITPACK P##port_letter##_DDR	= *(PACK_BYTE_REF((RVBYTE)DDR##port_letter));	\
 		RBITPACK P##port_letter##_PORT	= *(PACK_BYTE_REF((RVBYTE)PORT##port_letter));	\
 		RBITPACK P##port_letter##_PIN	= *(PACK_BYTE_REF((RVBYTE)PIN##port_letter));	\
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
+#endif	// #ifndef NO_ITTYBITTY_BYTES
 
 #pragma endregion
 
@@ -206,7 +206,7 @@ VOID ResetPin(PIN_NUMBER p)
 #pragma endregion
 
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 
 #pragma region PORT-SPECIFIC STRUCTURE DEFINITION CALLS
 
@@ -258,6 +258,6 @@ VOID ResetPin(PIN_NUMBER p)
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
+#endif	// #ifndef NO_ITTYBITTY_BYTES
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_GPIO
+#endif	// #ifndef NO_ITTYBITTY_GPIO

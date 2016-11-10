@@ -17,6 +17,7 @@
 
 #define DB_DEFAULT_GROWTH_FACTOR		2.0F
 #define DB_ERASE_GROWTH_ALLOCATION		TRUE
+#define DB_ERASE_DELETED_ROWS			TRUE
 
 #pragma endregion
 
@@ -63,6 +64,10 @@ namespace IttyBitty
 	class FieldedDbTable;
 	typedef FieldedDbTable FIELDEDDBTABLE, * PFIELDEDDBTABLE, & RFIELDEDDBTABLE, ** PPFIELDEDDBTABLE, && RRFIELDEDDBTABLE;
 	typedef const FieldedDbTable CFIELDEDDBTABLE, * PCFIELDEDDBTABLE, & RCFIELDEDDBTABLE, ** PPCFIELDEDDBTABLE;
+
+	class IDbTableSet;
+	typedef IDbTableSet IDBTABLESET, * PIDBTABLESET, & RIDBTABLESET, ** PPIDBTABLESET, && RRIDBTABLESET;
+	typedef const IDbTableSet CIDBTABLESET, * PCIDBTABLESET, & RCIDBTABLESET, ** PPCIDBTABLESET;
 
 #pragma endregion
 
@@ -246,7 +251,7 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 		BOOL _CapacityChanged = FALSE;
-		SIZE _DirtyRowsStart = 0;
+		SIZE _DirtyRowsStartIndex = 0;
 		SIZE _DirtyRowsCount = 0;
 
 		DWORD _Capacity = 0;
@@ -342,6 +347,92 @@ namespace IttyBitty
 	protected:
 
 		friend class Database;
+	};
+
+#pragma endregion
+
+
+#pragma region [IDbTableSet] DEFINITION
+
+	CLASS IDbTableSet : protected IDbTableDefSet
+	{
+	public:
+
+		// DESTRUCTOR
+
+		~IDbTableSet() { }
+
+
+		// OPERATORS
+
+		PCIDBTABLE operator[](CBYTE) const;
+		PIDBTABLE operator[](CBYTE);
+
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL CDWORD Size() const;
+		VIRTUAL CWORD Capacity() const;
+
+		VIRTUAL CBYTE TableCount() const;
+
+		VIRTUAL RCIDBTABLE Table(CBYTE = 0) const;
+		VIRTUAL RIDBTABLE Table(CBYTE = 0);
+
+		VIRTUAL RCIDBTABLE Table(PCCHAR) const;
+		VIRTUAL RIDBTABLE Table(PCCHAR);
+
+		VIRTUAL CDWORD SizeOf(CBYTE) const;
+		VIRTUAL CDWORD SizeOf(PCCHAR) const;
+
+		VIRTUAL CDWORD CapacityOf(CBYTE) const;
+		VIRTUAL CDWORD CapacityOf(PCCHAR) const;
+
+		VIRTUAL CSIZE RowCountFor(CBYTE) const;
+		VIRTUAL CSIZE RowCountFor(PCCHAR) const;
+
+		VIRTUAL CSIZE RowsAvailableFor(CBYTE) const;
+		VIRTUAL CSIZE RowsAvailableFor() const;
+
+		VIRTUAL CDBRESULT CreateTable(CSIZE, PCCHAR = NULL);
+
+		VIRTUAL CDBRESULT GrowTable(CBYTE, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT GrowTable(PCCHAR, RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+
+		VIRTUAL CDBRESULT CompressTable(CBYTE, RCFLOAT = 0.0F);
+		VIRTUAL CDBRESULT CompressTable(PCCHAR, RCFLOAT = 0.0F);
+
+		VIRTUAL CDBRESULT DropTable(CBYTE);
+		VIRTUAL CDBRESULT DropTable(PCCHAR);
+
+		VIRTUAL CDBRESULT SelectAllFrom(CBYTE, PBYTE &, RSIZE);
+		VIRTUAL CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
+
+		VIRTUAL CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
+		VIRTUAL CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
+
+		VIRTUAL CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
+		VIRTUAL CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_T(SIZE));
+
+		VIRTUAL CDBRESULT UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL);
+		VIRTUAL CDBRESULT UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL);
+
+		VIRTUAL CDBRESULT DeleteFrom(CBYTE, CSIZE);
+		VIRTUAL CDBRESULT DeleteFrom(PCCHAR, CSIZE);
+
+		VIRTUAL CDBRESULT TruncateTable(CBYTE);
+		VIRTUAL CDBRESULT TruncateTable(PCCHAR);
+
+
+	protected:
+
+		// HELPER METHODS
+
+		VIRTUAL CSTORAGERESULT MoveTables(CBYTE, RCLONG) = 0;
+
+
+		IDbTableSet() {}
 	};
 
 #pragma endregion

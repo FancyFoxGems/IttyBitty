@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(EXCLUDE_ITTYBITTY_EEPROM_I2C)
-	#define EXCLUDE_ITTYBITTY_EEPROM_I2C
+#if (!defined(ARDUINO) || defined(ITTYBITTY_BASE)) && !defined(NO_ITTYBITTY_EEPROM_I2C)
+	#define NO_ITTYBITTY_EEPROM_I2C
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
+#ifndef NO_ITTYBITTY_EEPROM_I2C
 
 
 #include "IttyBitty_EEPROM_I2C.h"
@@ -29,4 +29,4 @@ EEPROMI2C<> ExtEEPROM;
 #pragma endregion
 
 
-#endif //#ifndef EXCLUDE_ITTYBITTY_EEPROM_I2C
+#endif //#ifndef NO_ITTYBITTY_EEPROM_I2C

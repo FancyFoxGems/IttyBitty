@@ -26,7 +26,7 @@
 #pragma endregion
 
 
-#ifdef EXCLUDE_ITTYBITTY_BYTES
+#ifdef NO_ITTYBITTY_BYTES
 	#include "IttyBitty_bits.h"
 #endif
 
@@ -70,7 +70,7 @@ namespace IttyBitty
 }
 
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 
 namespace IttyBitty
 {
@@ -85,8 +85,8 @@ namespace IttyBitty
 	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
 
 	struct _GPIO;
-	typedef _GPIO _GPIO_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
-	typedef const _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
+	typedef struct _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
+	typedef const struct _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
 	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
 	struct _Pin;
@@ -379,7 +379,7 @@ namespace IttyBitty
 		EXTERN IttyBitty::REG8 PIN##port_letter##_REG;		\
 		EXTERN IttyBitty::PORT Port##port_letter;
 
-#else	// #ifdef EXCLUDE_ITTYBITTY_BYTES
+#else	// #ifdef NO_ITTYBITTY_BYTES
 
 	#include "IttyBitty_bits.h"
 
@@ -443,7 +443,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES
+#ifndef NO_ITTYBITTY_BYTES
 
 namespace IttyBitty
 {
@@ -597,7 +597,7 @@ namespace IttyBitty
 	};
 }
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
+#endif	// #ifndef NO_ITTYBITTY_BYTES
 
 
 #include "IttyBitty_GPIO_arduino.h"

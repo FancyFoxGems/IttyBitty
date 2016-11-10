@@ -4,10 +4,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#ifndef EXCLUDE_ITTYBITTY_INTERRUPTS
+#ifndef NO_ITTYBITTY_INTERRUPTS
 
 
 #include "IttyBitty_interrupts.h"
 
 
-#endif // #ifndef EXCLUDE_ITTYBITTY_INTERRUPTS
+#endif // #ifndef NO_ITTYBITTY_INTERRUPTS

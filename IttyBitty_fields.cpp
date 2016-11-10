@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(EXCLUDE_ITTYBITTY_DB) && !defined(EXCLUDE_ITTYBITTY_FIELDS)
-	#define EXCLUDE_ITTYBITTY_FIELDS
+#if defined(NO_ITTYBITTY_DB) && !defined(NO_ITTYBITTY_FIELDS)
+	#define NO_ITTYBITTY_FIELDS
 #endif
 
-#ifndef EXCLUDE_ITTYBITTY_FIELDS
+#ifndef NO_ITTYBITTY_FIELDS
 
 
 #include "IttyBitty_fields.h"
@@ -750,4 +750,4 @@ VOID VarLengthField::MetadataFromString(PCCHAR data)
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_FIELDS
+#endif	// #ifndef NO_ITTYBITTY_FIELDS

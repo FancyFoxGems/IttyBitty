@@ -4,10 +4,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#ifndef EXCLUDE_ITTYBITTY_TIMERS
+#ifndef NO_ITTYBITTY_TIMERS
 
 
 #include "IttyBitty_timers.h"
 
 
-#endif // #ifndef EXCLUDE_ITTYBITTY_TIMERS
+#endif // #ifndef NO_ITTYBITTY_TIMERS

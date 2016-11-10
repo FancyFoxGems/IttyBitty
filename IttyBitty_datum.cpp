@@ -4,7 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#ifndef EXCLUDE_ITTYBITTY_DATUM
+#ifndef NO_ITTYBITTY_DATUM
 
 
 #include "IttyBitty_datum.h"
@@ -24,4 +24,4 @@ PBYTE IttyBitty::__datum_buffer = NULL;
 
 #pragma endregion
 
-#endif	// #ifndef EXCLUDE_ITTYBITTY_DATUM
+#endif	// #ifndef NO_ITTYBITTY_DATUM
