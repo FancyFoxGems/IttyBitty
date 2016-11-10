@@ -16,7 +16,7 @@
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-		
+
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __database_buffer;
 
@@ -36,28 +36,28 @@ namespace IttyBitty
 	CLASS Database final : protected IDbTableDefSet
 	{
 	public:
-		
+
 		// STATIC FUNCTIONS
-		
+
 		STATIC PDATABASE Open(RCISTORAGE, RCSTORAGELOCATION);
 		STATIC PDATABASE Create(RCISTORAGE, RCSTORAGELOCATION);
 		STATIC CDBRESULT Delete(RCISTORAGE, RCSTORAGELOCATION);
 
-		
+
 		// CONSTRUCTOR
-		
+
 		Database(RCSTORAGELOCATION);
 
 
 	protected:
-		
+
 		// PROTECTED DISPOSAL METHOD
 
 		VIRTUAL VOID Dispose();
 
 
 	public:
-		
+
 		// OPERATORS
 
 		PCIDBTABLE operator[](CBYTE) const;
@@ -65,18 +65,18 @@ namespace IttyBitty
 
 
 		// USER METHODS
-		
+
 		CDWORD Size() const;
 		CWORD Capacity() const;
-		
+
 		CBYTE TableCount() const;
-		
+
 		RCIDBTABLE Table(CBYTE = 0) const;
 		RIDBTABLE Table(CBYTE = 0);
 
 		RCIDBTABLE Table(PCCHAR) const;
 		RIDBTABLE Table(PCCHAR);
-		
+
 		CDWORD SizeOf(CBYTE) const;
 		CDWORD SizeOf(PCCHAR) const;
 
@@ -91,7 +91,7 @@ namespace IttyBitty
 
 		CDBRESULT CreateDatabase(RCISTORAGE);
 		CDBRESULT DeleteDatabase(RCISTORAGE);
-		
+
 		CDBRESULT LoadDatabase(RCISTORAGE);
 		CDBRESULT SaveDatabase(RCISTORAGE);
 
@@ -127,7 +127,7 @@ namespace IttyBitty
 
 			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
 		}
-		
+
 		template<typename T>
 		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& resultSet, RSIZE resultCount)
 		{
@@ -146,7 +146,7 @@ namespace IttyBitty
 
 			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
 		}
-		
+
 		template<typename T>
 		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIndex, T * result)
 		{
@@ -166,7 +166,7 @@ namespace IttyBitty
 
 		CDBRESULT TruncateFrom(CBYTE);
 		CDBRESULT TruncateFrom(PCCHAR);
-				
+
 
 		// [IStorable] IMPLEMENTATION
 
@@ -187,8 +187,8 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
-	#ifdef ARDUINO		
+
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
 
@@ -199,7 +199,7 @@ namespace IttyBitty
 		friend class DbTable;
 		friend class DbTableDef;
 
-		
+
 		// INSTANCE VARIABLES
 
 		BOOL _Dispose = FALSE;
@@ -208,19 +208,19 @@ namespace IttyBitty
 
 		PIDBTABLEDEFSET _DatabaseDef = NULL;
 		PPIDBTABLE _Tables = NULL;
-				
+
 
 		// [IDbTableDefSet] IMPLEMENTATION
-		
+
 		VIRTUAL CBYTE TableDefCount() const;
-		
+
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
 
 		VIRTUAL RCIDBTABLEDEF TableDef(PCCHAR) const;
 		VIRTUAL RIDBTABLEDEF TableDef(PCCHAR);
 
-		
+
 		// [IDbTableDefSet] HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const;

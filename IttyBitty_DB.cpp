@@ -26,9 +26,9 @@ PBYTE IttyBitty::__database_buffer = NULL;
 
 
 #pragma region [DataBase] IMPLEMENTATION
-/*		
+/*
 // STATIC FUNCTIONS
-		
+
 STATIC PDATABASE Database::Open(RCISTORAGE, RCSTORAGELOCATION)
 {
 	PDATABASE database = NULL;
@@ -48,21 +48,21 @@ STATIC CDBRESULT Database::Delete(RCISTORAGE, RCSTORAGELOCATION)
 	return DbResult::SUCCESS;
 }
 
-		
+
 // CONSTRUCTOR
-		
+
 Database::Database(RCSTORAGELOCATION)
 {
 }
 
-		
+
 // PROTECTED DISPOSAL METHOD
 
 VOID Database::Dispose()
 {
 }
 
-		
+
 // OPERATORS
 
 PCIDBTABLE Database::operator[](CBYTE) const
@@ -75,7 +75,7 @@ PIDBTABLE Database::operator[](CBYTE)
 
 
 // USER METHODS
-		
+
 CDWORD Database::Size() const
 {
 }
@@ -83,11 +83,11 @@ CDWORD Database::Size() const
 CWORD Database::Capacity() const
 {
 }
-		
+
 CBYTE Database::TableCount() const
 {
 }
-		
+
 RCIDBTABLE Database::Table(CBYTE) const
 {
 }
@@ -103,7 +103,7 @@ RCIDBTABLE Database::Table(PCCHAR) const
 RIDBTABLE Database::Table(PCCHAR)
 {
 }
-		
+
 CDWORD Database::SizeOf(CBYTE) const
 {
 }
@@ -143,7 +143,7 @@ CDBRESULT Database::CreateDatabase(RCISTORAGE)
 CDBRESULT Database::DeleteDatabase(RCISTORAGE)
 {
 }
-		
+
 CDBRESULT Database::LoadDatabase(RCISTORAGE)
 {
 }
@@ -244,7 +244,7 @@ CDBRESULT Database::TruncateFrom(CBYTE)
 CDBRESULT Database::TruncateFrom(PCCHAR)
 {
 }
-				
+
 
 // [IStorable] IMPLEMENTATION
 
@@ -294,7 +294,7 @@ VOID Database::FromBinary(PCBYTE data)
 VOID Database::FromString(PCCHAR data)
 {
 }
-		
+
 #ifdef ARDUINO
 
 SIZE Database::printTo(Print & printer) const
@@ -302,14 +302,14 @@ SIZE Database::printTo(Print & printer) const
 }
 
 #endif
-				
+
 
 // [IDbTableDefSet] IMPLEMENTATION
-		
+
 CBYTE Database::TableDefCount() const
 {
 }
-		
+
 RCIDBTABLEDEF Database::TableDef(CBYTE) const
 {
 }

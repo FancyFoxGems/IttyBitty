@@ -17,7 +17,7 @@
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-		
+
 	// ToBinary() / ToString() BUFFER POINTERS
 	EXTERN PBYTE __db_table_def_set_buffer;
 	EXTERN PBYTE __db_table_def_buffer;
@@ -34,7 +34,7 @@ namespace IttyBitty
 	class DbTableDef;
 	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
 	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
-	
+
 	class DbTable;
 
 	template<typename T>
@@ -57,7 +57,7 @@ namespace IttyBitty
 	using RCTYPEDDBTABLEDEF = const TypedDbTableDef<T> &;
 	template<typename T>
 	using PPCTYPEDDBTABLEDEF = const TypedDbTableDef<T> **;
-		
+
 	template<typename T>
 	class TypedDbTable;
 
@@ -99,7 +99,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region ENUMS
 
 	ENUM DbResult : BYTE
@@ -118,7 +118,7 @@ namespace IttyBitty
 		ERROR_OPERATION							= ERROR,
 		ERROR_OPERATION_UNKOWN					= ERROR_OPERATION,
 		ERROR_OPERATION_INTERRUPTED				= ERROR_OPERATION | 0x08,
-		
+
 		ERROR_OPERATION_CREATE					= ERROR_OPERATION | 0xF0,
 		ERROR_OPERATION_DELETE					= ERROR_OPERATION | 0xE0,
 		ERROR_OPERATION_ADD						= ERROR_OPERATION | 0xD0,
@@ -158,7 +158,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [IDbTableDef] DEFINITION
 
 	class IDbTableDef : public IStorable
@@ -168,24 +168,24 @@ namespace IttyBitty
 		// DESTRUCTOR
 
 		VIRTUAL ~IDbTableDef() { }
-		
+
 
 		// ACCESSORS
-		
+
 		VIRTUAL CSIZE RowSize() const = 0;
 
 		VIRTUAL DWORD GetAddrOffset() const = 0;
 		VIRTUAL PCCHAR GetTableName() const = 0;
-		
+
 
 		// MUTATORS
-		
+
 		VIRTUAL VOID SetAddrOffset(RCDWORD) = 0;
 		VIRTUAL VOID SetTableName(PCCHAR) = 0;
 
 
 	protected:
-		
+
 		friend class DbTable;
 
 
@@ -199,26 +199,26 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [DbTableDef] DEFINITION
 
 	class DbTableDef : public IDbTableDef
 	{
 	protected:
-		
+
 		// CONSTRUCTORS
 
 		DbTableDef(CSIZE = 0, PCCHAR = NULL, RCDWORD = 0);
 
 		EXPLICIT DbTableDef(PCBYTE);
 		EXPLICIT DbTableDef(PCCHAR);
-		
+
 
 		// STATIC FUNCTIONS
 
 		STATIC RDBTABLEDEF NULL_OBJECT();
-		
-		
+
+
 	public:
 
 		// DESTRUCTOR
@@ -227,25 +227,25 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED DISPOSAL METHOD
 
 		VIRTUAL VOID Dispose();
 
 
 	public:
-		
+
 
 		// [IDbTableDef] IMPLEMENTATION
-		
+
 		VIRTUAL CSIZE RowSize() const;
 
 		VIRTUAL DWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
-		
+
 		VIRTUAL VOID SetAddrOffset(RCDWORD);
 		VIRTUAL VOID SetTableName(PCCHAR);
-				
+
 
 		// [IStorable] IMPLEMENTATION
 
@@ -266,8 +266,8 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
-	#ifdef ARDUINO		
+
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
 
@@ -291,10 +291,10 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region [TypedDbTableDef] DEFINITION
-	
+
 	template<typename T>
 	CLASS TypedDbTableDef : public DbTableDef
 	{
@@ -317,10 +317,10 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		TypedDbTableDef(PCCHAR tableName = NULL, RCDWORD addrOffset = 0) 
+		TypedDbTableDef(PCCHAR tableName = NULL, RCDWORD addrOffset = 0)
 			: DbTableDef(ROW_SIZE(), tableName, addrOffset) { }
 
-		
+
 	public:
 
 		friend class TypedDbTable<T>;
@@ -333,10 +333,10 @@ namespace IttyBitty
 			return ROW_SIZE();
 		}
 	};
-	
+
 #pragma endregion
 
-	
+
 #pragma region [IDbTableDefSet] DEFINITION
 
 	CLASS IDbTableDefSet : public IStorable
@@ -365,7 +365,7 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const = 0;
@@ -377,13 +377,13 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [DbTableDefSet] DEFINITION
 
 	CLASS DbTableDefSet : public IDbTableDefSet
 	{
 	protected:
-		
+
 		// CONSTRUCTORS/DESTRUCTOR
 
 		DbTableDefSet(CBYTE = 0);
@@ -401,30 +401,30 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED DISPOSAL METHOD
 
 		VIRTUAL VOID Dispose();
 
 
 	public:
-		
+
 		// OPERATORS
 
 		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const;
 		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
-				
+
 
 		// [IDbTableDefSet] IMPLEMENTATION
-		
+
 		VIRTUAL CBYTE TableDefCount() const;
-		
+
 		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
 		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
 
 		VIRTUAL RCIDBTABLEDEF TableDef(PCCHAR) const;
 		VIRTUAL RIDBTABLEDEF TableDef(PCCHAR);
-				
+
 
 		// [IStorable] IMPLEMENTATION
 
@@ -433,7 +433,7 @@ namespace IttyBitty
 
 		VIRTUAL CSTORAGERESULT LoadFromBinary(RCISTORAGE);
 		VIRTUAL CSTORAGERESULT LoadFromString(RCISTORAGE);
-		
+
 
 		// [ISerializable] IMPLEMENTATION
 
@@ -445,8 +445,8 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
-	#ifdef ARDUINO		
+
+	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
 
@@ -460,7 +460,7 @@ namespace IttyBitty
 		BYTE _TableDefCount = 0;
 		PPIDBTABLEDEF _TableDefs = NULL;
 
-		
+
 		// [IDbTableDefSet] HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const;
@@ -468,7 +468,7 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region [GenericDbTableDefSet] DEFINITION
 
@@ -483,18 +483,18 @@ namespace IttyBitty
 		{
 			return TableDefCount;
 		}
-		
-	
+
+
 	protected:
 
 		// CONSTRUCTORS
 
 		GenericDbTableDefSet() : DbTableDefSet(TableDefCount) { }
-		
-		GenericDbTableDefSet(PPIDBTABLEDEF tableDefs) 
+
+		GenericDbTableDefSet(PPIDBTABLEDEF tableDefs)
 			: DbTableDefSet(TableDefCount, tableDefs) { }
 
-		
+
 	public:
 
 		// [DbTableDefSet] OVERRIDES
@@ -503,7 +503,7 @@ namespace IttyBitty
 		{
 			return TABLE_DEF_COUNT();
 		}
-		
+
 
 	protected:
 
@@ -513,7 +513,7 @@ namespace IttyBitty
 		using DbTableDefSet::_Dispose;
 		using DbTableDefSet::_TableDefs;
 	};
-	
+
 #pragma endregion
 }
 

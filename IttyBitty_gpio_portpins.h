@@ -11,7 +11,7 @@
 
 
 #include "IttyBitty_GPIO.h"
-	
+
 
 #pragma region GENERAL PIN MANIPULATION MACROs
 
@@ -49,7 +49,7 @@
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_PIN(PORT##port_letter, pin_number); else CLEAR_PIN(PORT##port_letter, pin_number)
 
 #pragma endregion
-	
+
 
 #pragma region PIN-SPECIFIC MACROs
 

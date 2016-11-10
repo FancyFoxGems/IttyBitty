@@ -9,7 +9,7 @@
 #ifndef _ITTYBITTY_DATUM_H
 #define _ITTYBITTY_DATUM_H
 
-		
+
 #ifdef ARDUINO
 	#include "Printable.h"
 	#include "HardwareSerial.h"
@@ -22,13 +22,13 @@
 namespace IttyBitty
 {
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
-	
+
 #ifdef ARDUINO
 	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
 #endif
 
 	EXTERN CBYTE DATA_SIZE_MASK;
-		
+
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __datum_buffer;
 
@@ -78,7 +78,7 @@ namespace IttyBitty
 
 
 #pragma region ENUMS
-	
+
 	enum DataSize : BYTE
 	{
 		WHO_KNOWS	= 0x0,
@@ -126,7 +126,7 @@ namespace IttyBitty
 	}
 
 #pragma endregion
-	
+
 
 #pragma region HELPER GLOBAL FUNCTION DEFINITIONS
 
@@ -134,9 +134,9 @@ namespace IttyBitty
 	INLINE PCHAR StringInsertValue(CONST T & value, PCHAR buffer, CBYTE radix = 0x10)
 	{
 		CHAR valStr[2 * T_SIZE + 1];
-		
+
 		valStr[2 * T_SIZE] = '\0';
-		
+
 		itoa(value, valStr, radix);
 
 		BYTE lenDiff = 2 * T_SIZE - strlen(valStr);
@@ -150,7 +150,7 @@ namespace IttyBitty
 
 		return (PCHAR)(buffer + 2 * T_SIZE);
 	}
-	
+
 	template<typename T>
 	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
 	{
@@ -162,7 +162,7 @@ namespace IttyBitty
 		valStr[2 * T_SIZE] = '\0';
 
 		value = static_cast<T>(strtol(valStr, NULL, 0x10));
-		
+
 		return (PCCHAR)(data + 2 * T_SIZE);
 	}
 
@@ -173,7 +173,7 @@ namespace IttyBitty
 
 	// [ISerializable] DEFINITION
 
-	INTERFACE ISerializable 
+	INTERFACE ISerializable
 	#ifdef ARDUINO
 		: public Printable
 	#endif
@@ -203,7 +203,7 @@ namespace IttyBitty
 	};
 
 
-		
+
 #ifdef ARDUINO
 
 	// [ITransmittable] DEFINITION
@@ -249,14 +249,14 @@ namespace IttyBitty
 
 
 #pragma region [DatumBase] DEFINITION - TAGGED UNION BASE
-	
+
 	template<typename TVal>
 	CLASS DatumBase : public IDatum
 	{
 	public:
 
 		// /DESTRUCTOR
-		
+
 		VIRTUAL ~DatumBase()
 		{
 			if (!_Dispose)
@@ -265,8 +265,8 @@ namespace IttyBitty
 			if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
 				_Value.FreeData();
 		}
-		
-		
+
+
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL CSIZE BinarySize() const
@@ -280,7 +280,7 @@ namespace IttyBitty
 		}
 
 	#ifdef ARDUINO
-				
+
 		VIRTUAL SIZE printTo(Print & printer) const
 		{
 		#ifdef _DEBUG
@@ -299,8 +299,8 @@ namespace IttyBitty
 
 			return size;
 		}
-		
-		
+
+
 		// [ITransmittable] IMPLEMENTATION
 
 		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
@@ -325,7 +325,7 @@ namespace IttyBitty
 			if (!this->printTo(twi))
 				return FALSE;
 
-			twi.flush();	
+			twi.flush();
 
 			if (twi.endTransmission())
 				return FALSE;
@@ -357,12 +357,12 @@ namespace IttyBitty
 		{
 			return _DataType;
 		}
-		
+
 
 	protected:
 
 		// INSTANCE VARIABLES
-		
+
 		BOOL _Dispose = FALSE;
 
 		TVal _Value;

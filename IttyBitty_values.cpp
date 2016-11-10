@@ -28,7 +28,7 @@ ConstValue::ConstValue(RCCONSTVALUE other)
 }
 
 ConstValue::ConstValue(RRCONSTVALUE other)
-{	
+{
 	new (this) ConstValue(other.Bytes);
 }
 
@@ -49,7 +49,7 @@ ConstValue::ConstValue(RCSHORT value) : Short(value) { }
 ConstValue::ConstValue(RCWORD value) : Word(value) { }
 
 ConstValue::ConstValue(RCLONG value) : Long(value) { }
-		
+
 ConstValue::ConstValue(RCDWORD value) : DWord(value) { }
 
 ConstValue::ConstValue(RCFLOAT value) : Float(value) { }
@@ -220,7 +220,7 @@ Value::Value(RCVALUE other)
 }
 
 Value::Value(RRVALUE other)
-{	
+{
 	new (this) Value(*other.BytesRef);
 }
 
@@ -241,7 +241,7 @@ Value::Value(RSHORT value) : ShortRef(&value) { }
 Value::Value(RWORD value) : WordRef(&value) { }
 
 Value::Value(RLONG value) : LongRef(&value) { }
-		
+
 Value::Value(RDWORD value) : DWordRef(&value) { }
 
 Value::Value(RFLOAT value) : FloatRef(&value) { }
@@ -375,7 +375,7 @@ Value::operator RCBYTE() const
 
 Value::operator RBYTE()
 {
-	return *this->ByteRef;	
+	return *this->ByteRef;
 }
 
 Value::operator RCBOOL() const

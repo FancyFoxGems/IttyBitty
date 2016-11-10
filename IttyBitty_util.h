@@ -140,7 +140,7 @@ using std::extent;
 #define mega				kilo * kilo
 #define megabit				mega
 #define MEGA				KILO * KILO
-#define MEGABYTE			
+#define MEGABYTE
 #define MEGAbit				MEGA
 
 #define BYTE_SIZE(T)		SIZEOF(T)
@@ -155,9 +155,10 @@ using std::extent;
 #define MAKE_CONST(var)				const_cast<ONLY_CONST_TYPEOF(var)>(var)
 #define MAKE_CONST_2D(var)			((ONLY_CONST_TYPEOF((var)[0][0])(*)[CAPACITY((var)[0])])(var))
 #define MAKE_CONST_PP(var)			((ONLY_CONST_TYPE(UNPOINTER_TYPE(UNPOINTER_TYPE(TYPEOF(var)))) **)(var))
-#define FORCE_CONST(var)			(*const_cast<ONLY_CONST_TYPEOF(var) *>(&(var)))
 
-#define UNCONST(var)				(*const_cast<UNCONST_TYPEOF(var) *>(&(var)))
+#define FORCE_CONST(var)			(*const_cast<ONLY_CONST_TYPEOF(var) *>(&(var)))
+#define FORCE_UNCONST(var)			(*const_cast<UNCONST_TYPEOF(var) *>(&(var)))
+#define UNCONST(var)				FORCE_UNCONST(var)
 
 #define UNION_CAST(var, to_type)	(((UNION {TYPEOF(var) from; to_type to;})(var)).to)
 

@@ -22,7 +22,7 @@ PCCHAR IttyBitty::MESSAGE_MARKER = "FOX";
 PBYTE IttyBitty::__message_buffer = NULL;
 
 #pragma endregion
-	
+
 
 namespace IttyBitty
 {
@@ -44,11 +44,11 @@ namespace IttyBitty
 			if (!stream.available())
 			{
 				delay(SERIAL_DEFAULT_TIMEOUT_MS);
-				
+
 				if (!stream.available())
 					return FALSE;
 			}
-				
+
 			INT result = stream.read();
 			if (result < 0)
 				return FALSE;
@@ -60,7 +60,7 @@ namespace IttyBitty
 	}
 
 #pragma endregion
-	
+
 
 #pragma region [Message] PARSING/HANDLING GLOBAL FUNCTION DEFINITIONS
 
@@ -81,7 +81,7 @@ namespace IttyBitty
 		CSIZE bufferSize = msgSize - SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 
-		if (!ReadBuffer(stream, __message_buffer, bufferSize))	
+		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 			return NULL;
 
 		PIMESSAGE newMsg = new Message();
@@ -91,7 +91,7 @@ namespace IttyBitty
 		__message_buffer = NULL;
 
 		return newMsg;
-	}	
+	}
 
 	PIMESSAGE ReceiveMessageAsString(Stream & stream)
 	{
@@ -104,7 +104,7 @@ namespace IttyBitty
 
 		CHAR valStr[4];
 		ReadBuffer(stream, reinterpret_cast<PBYTE>(valStr), 2 * SIZEOF(CSIZE));
-		
+
 		SIZE msgSize = 0;
 		StringReadValue<SIZE>(msgSize, valStr);
 		if (msgSize == 0)
@@ -117,7 +117,7 @@ namespace IttyBitty
 
 		if (__message_buffer)
 			delete[] __message_buffer;
-		
+
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
 		__message_buffer[bufferSize - 1] = '\0';
@@ -134,8 +134,8 @@ namespace IttyBitty
 		PrintString(F("RAW DATA: "));
 		PrintLine((PCCHAR)__message_buffer);
 		PrintLine(F("BUFFER FILLED.  LOADING..."));
-	#endif		
-		
+	#endif
+
 		PIMESSAGE stringMsg = new Message();
 		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
@@ -148,7 +148,7 @@ namespace IttyBitty
 
 		return stringMsg;
 	}
-	
+
 	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler)
 	{
 		PIMESSAGE message = NULL;
@@ -192,7 +192,7 @@ Message::Message(CBYTE messageCode, CBYTE paramCount)
 Message::Message(RCMESSAGE other)
 {
 	this->~Message();
-	
+
 	_Dispose = FALSE;
 
 	_MessageCode = other._MessageCode;
@@ -203,7 +203,7 @@ Message::Message(RCMESSAGE other)
 Message::Message(RRMESSAGE other)
 {
 	this->~Message();
-	
+
 	new (this) Message(other._MessageCode, other._ParamCount, other._Params);
 }
 
@@ -400,7 +400,7 @@ PCCHAR Message::ToString() const
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
-	
+
 	PIPARAM param = NULL;
 	PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
@@ -410,7 +410,7 @@ PCCHAR Message::ToString() const
 		param = _Params[i];
 		paramStr = param->ToString();
 		paramSize = param->StringSize() - 1;
-		
+
 		memcpy(bufferPtr, paramStr, paramSize);
 
 		if (i == 0)
@@ -418,7 +418,7 @@ PCCHAR Message::ToString() const
 
 		bufferPtr += paramSize;
 	}
-	
+
 
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
@@ -434,7 +434,7 @@ VOID Message::FromBinary(PCBYTE data)
 
 	if (_ParamCount > 0)
 		_Params = new PIPARAM[_ParamCount];
-	
+
 	_Dispose = TRUE;
 
 	for (SIZE i = 0; i < _ParamCount; i++)
@@ -480,7 +480,7 @@ SIZE Message::printTo(Print & printer) const
 	SIZE msgSize = this->BinarySize();
 	PCBYTE buffer = this->ToBinary();
 #endif
-	
+
 	for (BYTE i = 0; i < size; i++)
 		printer.print(MESSAGE_MARKER[i]);
 

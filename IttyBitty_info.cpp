@@ -41,7 +41,7 @@ namespace IttyBitty
 
 
 #pragma region STACK/HEAP INFO GLOBAL FUNCTION DEFINITIONS
-	
+
 	// STACK SPACE FUNCTIONS
 
 	PVUINT StackPointer()
@@ -68,7 +68,7 @@ namespace IttyBitty
 	{
 		return StackSpaceTotal() - reinterpret_cast<WORD>(StackPointer());
 	}
-	
+
 
 	// HEAP SPACE FUNCTIONS
 
@@ -133,7 +133,7 @@ namespace IttyBitty
 		CWORD dummyWord = 0;
 		return reinterpret_cast<CWORD>(&dummyWord) - (__brkval == 0 ? reinterpret_cast<CWORD>(&__heap_start) : reinterpret_cast<CWORD>(__brkval));
 	}
-	
+
 
 	// XRAM  & TOTAL RAM FUNCTIONS
 
@@ -187,7 +187,7 @@ namespace IttyBitty
 	{
 		return SramTotalSize() + XramTotalSize();
 	}
-	
+
 
 	// TOTAL RAM FUNCTION ALIASES
 
@@ -196,7 +196,7 @@ namespace IttyBitty
 	CWORD (*MemoryFree)() = &TotalRamFree;
 
 #pragma endregion
-	
+
 
 
 #pragma region ROM (EEPROM/FLASH ROM) INFO GLOBAL FUNCTION DEFINITIONS
@@ -263,13 +263,13 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 
 
 #pragma region BOOTLOADER/SKETCH SPACE INFO GLOBAL FUNCTION DEFINITIONS
 
 	// BOOTLOADER SPACE FUNCTIONS & ALIASES
-	
+
 	CWORD BootloaderAllocatedSize()
 	{
 		#ifndef SPM_PAGESIZE
@@ -279,7 +279,7 @@ namespace IttyBitty
 		#else
 
 			STATIC WORD BOOTLOADER_SIZE = 0;
-	
+
 		#if defined (__AVR_ATmega88__) || defined (__AVR_ATmega168__)
 			#define BOOTSIZE_FACTOR_FUSE_BYTE	GET_EXTENDED_FUSE_BITS
 			#define BOOTSIZE_FACTOR_FACTOR		5
@@ -287,7 +287,7 @@ namespace IttyBitty
 			#define BOOTSIZE_FACTOR_FUSE_BYTE	GET_HIGH_FUSE_BITS
 			#define BOOTSIZE_FACTOR_FACTOR		4
 		#endif
-			
+
 			__fuse_byte_high_or_extended = boot_lock_fuse_bits_get(BOOTSIZE_FACTOR_FUSE_BYTE);
 			STATIC BYTE bootSizeFactor = CHECK_BITS(__fuse_byte_high_or_extended, BOOTSZ1 OR BOOTSZ0) SHR 0b1;
 
@@ -299,7 +299,7 @@ namespace IttyBitty
 	}
 
 	CWORD (*BootloaderSize)() = &BootloaderAllocatedSize;
-	
+
 
 	// SKETCH SPACE FUNCTIONS & ALIASES
 

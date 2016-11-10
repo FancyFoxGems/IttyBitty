@@ -288,7 +288,7 @@ namespace IttyBitty
 
 
 #pragma region [_Pin] DEFINITION
-	
+
 	template<PIN_NUMBER PinNum, PPORT PortPtr>
 	STRUCT _Pin
 	{

@@ -180,7 +180,7 @@
 #define BCHK(ref, bit_offset)						CHECK_BITS((ref), BMASK(bit_offset))
 #define CHECK_BIT(ref, bit_offset)					BCHK(ref, bit_offset)
 #define CHECK_SET(ref, bit_offset)					BCHK(ref, bit_offset)
-	
+
 #define BSNT(ref, bit_offset)						~BCHK(ref, bit_offset)
 #define CHECK_BIT_NOT(ref, bit_offset)				BSNT(ref, bit_offset)
 #define CHECK_UNSET(ref, bit_offset)				BSNT(ref, bit_offset)
@@ -418,7 +418,7 @@ namespace IttyBitty
 	BITFIELD_STRUCT _BitPack
 	{
 	public:
-		
+
 		_BitPack();
 
 		EXPLICIT _BitPack(RCBITPACK);
@@ -429,10 +429,10 @@ namespace IttyBitty
 		STATIC RCBITPACK NULL_OBJECT();
 
 		STATIC CSIZE BitSize();
-		
+
 		_BitPack & operator =(RCBITPACK);
 		_BitPack & operator =(RRBITPACK);
-		
+
 		_BitPack & operator =(RCVBYTE);
 
 		BIT operator[](SIZE i) const;

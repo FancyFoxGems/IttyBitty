@@ -11,7 +11,7 @@
 
 
 #include "IttyBitty_GPIO.h"
-	
+
 
 #pragma region PORT-CHECKING COMPILE-TIME LOGIC
 
@@ -63,7 +63,7 @@
 CSIZE NUM_PORTS = __COUNTER__;
 
 #pragma endregion
-	
+
 
 #pragma region ARDUINO PIN/PORT MAPPING GLOBAL VARIABLE DECLARATIONS
 
@@ -81,39 +81,39 @@ EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 #endif
 
 #pragma endregion
-	
+
 
 #pragma region ARDUINO INITIALIZATION GLOBAL FUNCTION DECLARATIONS
 
 namespace IttyBitty
 {
 	VOID InitGPIO();
-	
+
 	VOID _InitializeArduinoPortTables();
 	VOID _InitializeArduinoPinTables();
 };
 
 #pragma endregion
-	
+
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
-	
+
 IttyBitty::CPINMODE GetPinMode(PIN_NUMBER);
 VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODE = IttyBitty::PinMode::CurrentSink);
 VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODEBASIC = IttyBitty::PinModeBasic::Output);
 VOID SetPinMode(PIN_NUMBER, CBYTE = OUTPUT);
-	
+
 CBIT CheckPinSet(PIN_NUMBER);
 CBIT CheckPinUnset(PIN_NUMBER);
-	
+
 EXTERN CBIT (*ReadPin)(PIN_NUMBER);
 EXTERN CBIT (*CheckPin)(PIN_NUMBER);
-	
+
 VOID WritePin(PIN_NUMBER, CBIT = HIGH);
 VOID SetPin(PIN_NUMBER);
 VOID ClearPin(PIN_NUMBER);
 VOID TogglePin(PIN_NUMBER);
-	
+
 VOID ResetPin(PIN_NUMBER);
 
 #pragma endregion

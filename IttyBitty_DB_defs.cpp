@@ -30,7 +30,7 @@ PBYTE IttyBitty::__db_table_def_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTableDef::DbTableDef(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset) 
+DbTableDef::DbTableDef(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset)
 	: _RowSize(rowSize), _TableName(tableName), _AddrOffset(addrOffset) { }
 
 DbTableDef::DbTableDef(PCBYTE data)
@@ -55,7 +55,7 @@ RDBTABLEDEF DbTableDef::NULL_OBJECT()
 	STATIC DbTableDef NULL_DBTABLEDEF;
 	return NULL_DBTABLEDEF;
 }
-		
+
 
 // PROTECTED DISPOSAL METHOD
 
@@ -64,10 +64,10 @@ VOID DbTableDef::Dispose()
 	delete _TableName;
 	_TableName = NULL;
 }
-		
+
 
 // [IDbTableDef] IMPLEMENTATION
-		
+
 CSIZE DbTableDef::RowSize() const
 {
 	return _RowSize;
@@ -82,7 +82,7 @@ PCCHAR DbTableDef::GetTableName() const
 {
 	return _TableName;
 }
-		
+
 VOID DbTableDef::SetAddrOffset(RCDWORD addrOffset)
 {
 	_AddrOffset = addrOffset;
@@ -92,7 +92,7 @@ VOID DbTableDef::SetTableName(PCCHAR tableName)
 {
 	_TableName = tableName;
 }
-				
+
 
 // [IStorable] IMPLEMENTATION
 
@@ -139,7 +139,7 @@ PCBYTE DbTableDef::ToBinary() const
 	__db_table_def_buffer = new byte[size];
 
 	PBYTE bufferPtr = __db_table_def_buffer;
-	
+
 	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
@@ -156,7 +156,7 @@ PCBYTE DbTableDef::ToBinary() const
 		memcpy(bufferPtr, _TableName, tableNameLength);
 		bufferPtr += tableNameLength;
 	}
-	
+
 	CDWORD addrOffset = this->GetAddrOffset();
 	memcpy(bufferPtr, &addrOffset, SIZEOF(CDWORD));
 	bufferPtr += SIZEOF(CDWORD);
@@ -167,7 +167,7 @@ PCBYTE DbTableDef::ToBinary() const
 PCCHAR DbTableDef::ToString() const
 {
 	CSIZE size = this->StringSize();
-	
+
 	if (__db_table_def_buffer)
 		delete[] __db_table_def_buffer;
 
@@ -189,14 +189,14 @@ PCCHAR DbTableDef::ToString() const
 	}
 
 	bufferPtr = StringInsertValue<CDWORD>(this->GetAddrOffset(), bufferPtr);
-	
+
 	return reinterpret_cast<PCCHAR>(__db_table_def_buffer);
 }
 
 VOID DbTableDef::FromBinary(PCBYTE data)
 {
 	PCBYTE bufferPtr = data;
-	
+
 	bufferPtr += SIZEOF(CSIZE);
 
 	_RowSize = static_cast<SIZE>(*bufferPtr);
@@ -226,7 +226,7 @@ VOID DbTableDef::FromString(PCCHAR data)
 	bufferPtr += 2 * SIZEOF(CSIZE);
 
 	bufferPtr = StringReadValue<SIZE>(_RowSize, bufferPtr);
-	
+
 
 	BYTE tableNameLength = 0;
 	bufferPtr = StringReadValue<BYTE>(tableNameLength, bufferPtr);
@@ -245,8 +245,8 @@ VOID DbTableDef::FromString(PCCHAR data)
 
 	bufferPtr = StringReadValue<DWORD>(_AddrOffset, bufferPtr);
 }
-		
-#ifdef ARDUINO		
+
+#ifdef ARDUINO
 
 SIZE DbTableDef::printTo(Print & printer) const
 {
@@ -326,7 +326,7 @@ DbTableDefSet::~DbTableDefSet()
 	this->Dispose();
 }
 
-		
+
 // PROTECTED DISPOSAL METHOD
 
 VOID DbTableDefSet::Dispose()
@@ -365,15 +365,15 @@ PIDBTABLEDEF DbTableDefSet::operator[](CBYTE i)
 
 	return _TableDefs[i];
 }
-				
+
 
 // [IDbTableDefSet] IMPLEMENTATION
-		
+
 CBYTE DbTableDefSet::TableDefCount() const
 {
 	return _TableDefCount;
 }
-		
+
 RCIDBTABLEDEF DbTableDefSet::TableDef(CBYTE i) const
 {
 	return *this->operator[](i);
@@ -409,7 +409,7 @@ RIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName)
 
 	return DbTableDef::NULL_OBJECT();
 }
-				
+
 
 // [IStorable] IMPLEMENTATION
 
@@ -456,7 +456,7 @@ PCBYTE DbTableDefSet::ToBinary() const
 	__db_table_def_set_buffer = new byte[size];
 
 	PBYTE bufferPtr = __db_table_def_set_buffer;
-	
+
 	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
@@ -483,10 +483,10 @@ PCBYTE DbTableDefSet::ToBinary() const
 }
 
 PCCHAR DbTableDefSet::ToString() const
-{	
+{
 	CSIZE size = this->StringSize();
 	CBYTE tableDefCount = this->TableDefCount();
-	
+
 	if (__db_table_def_set_buffer)
 		delete[] __db_table_def_set_buffer;
 
@@ -497,7 +497,7 @@ PCCHAR DbTableDefSet::ToString() const
 
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(tableDefCount, bufferPtr);
-	
+
 	PIDBTABLEDEF tableDef = NULL;
 	PCCHAR tableDefStr = NULL;
 	SIZE tableDefSize = 0;
@@ -507,7 +507,7 @@ PCCHAR DbTableDefSet::ToString() const
 		tableDef = _TableDefs[i];
 		tableDefStr = tableDef->ToString();
 		tableDefSize = tableDef->StringSize() - 1;
-		
+
 		memcpy(bufferPtr, tableDefStr, tableDefSize);
 
 		if (i == 0)
@@ -515,7 +515,7 @@ PCCHAR DbTableDefSet::ToString() const
 
 		bufferPtr += tableDefSize;
 	}
-	
+
 	return reinterpret_cast<PCCHAR>(__db_table_def_set_buffer);
 }
 
@@ -529,7 +529,7 @@ VOID DbTableDefSet::FromBinary(PCBYTE data)
 
 	if (_TableDefCount > 0)
 		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
-	
+
 	_Dispose = TRUE;
 
 	for (SIZE i = 0; i < _TableDefCount; i++)
@@ -561,7 +561,7 @@ VOID DbTableDefSet::FromString(PCCHAR data)
 	}
 }
 
-#ifdef ARDUINO		
+#ifdef ARDUINO
 
 SIZE DbTableDefSet::printTo(Print & printer) const
 {
@@ -584,7 +584,7 @@ SIZE DbTableDefSet::printTo(Print & printer) const
 
 #endif
 
-		
+
 // [IDbTableDef] HELPER METHODS
 
 CSIZE DbTableDefSet::TableDefsByteSize() const

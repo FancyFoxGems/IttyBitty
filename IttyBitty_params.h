@@ -76,10 +76,10 @@ namespace IttyBitty
 	using PPCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> **;
 
 #pragma endregion
-	
+
 
 #pragma region [Param] PARSING GLOBAL FUNCTION DECLARATIONS
-	
+
 	PIPARAM ParamFromBytes(PCBYTE);
 	PIPARAM ParamFromString(PCCHAR);
 
@@ -107,8 +107,8 @@ namespace IttyBitty
 		// /DESTRUCTOR
 
 		VIRTUAL ~ParamBase();
-		
-		
+
+
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
@@ -126,8 +126,8 @@ namespace IttyBitty
 		{
 			return DatumBase<ConstValue>::StringSize();
 		}
-		
-		
+
+
 		// [ITransmittable] IMPLEMENTATION
 
 	#ifdef ARDUINO
@@ -141,7 +141,7 @@ namespace IttyBitty
 		{
 			return DatumBase<ConstValue>::Transmit(i2cAddr, twi);
 		}
-				
+
 		VIRTUAL SIZE printTo(Print & printer) const
 		{
 			return DatumBase<ConstValue>::printTo(printer);
@@ -203,8 +203,8 @@ namespace IttyBitty
 		// STATIC FUNCTIONS
 
 		STATIC RPARAM NULL_OBJECT();
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RPARAM operator =(RCPARAM);
@@ -245,13 +245,13 @@ namespace IttyBitty
 		EXPLICIT VarLengthParam(PCBITPACK, CSIZE = 0);
 
 		VIRTUAL ~VarLengthParam();
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RVARLENGTHPARAM operator =(RCVARLENGTHPARAM);
 		VIRTUAL RVARLENGTHPARAM operator =(RRVARLENGTHPARAM);
-		
+
 		VIRTUAL operator PCBYTE() const;
 		VIRTUAL operator PCCHAR() const;
 		VIRTUAL operator PCBITPACK() const;
@@ -263,7 +263,7 @@ namespace IttyBitty
 
 		VOID FromBinary(PCBYTE) override;
 		VOID FromString(PCCHAR) override;
-		
+
 
 	protected:
 
@@ -276,7 +276,7 @@ namespace IttyBitty
 
 
 #pragma region [TypedParam] DEFINITION - TEMPLATED TAGGED UNION
-	
+
 	template<typename T>
 	CLASS TypedParam : public DatumBase<ConstValue>, public IParam
 	{
@@ -317,7 +317,7 @@ namespace IttyBitty
 			new (this) TypedParam<T>(value);
 		}
 
-		
+
 		// STATIC FUNCTIONS
 
 		STATIC RTYPEDPARAM<T> NULL_OBJECT()
@@ -325,8 +325,8 @@ namespace IttyBitty
 			STATIC TypedParam<T> NULL_TYPEDPARAM;
 			return NULL_TYPEDPARAM;
 		}
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RTYPEDPARAM<T> operator =(RCTYPEDPARAM<T> rValue)
@@ -364,7 +364,7 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED STATIC FUNCTIONS
 
 		STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -382,7 +382,7 @@ namespace IttyBitty
 	CLASS TypedParam<CHAR>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -395,7 +395,7 @@ namespace IttyBitty
 	CLASS TypedParam<BYTE>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -408,7 +408,7 @@ namespace IttyBitty
 	CLASS TypedParam<BOOL>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -421,7 +421,7 @@ namespace IttyBitty
 	CLASS TypedParam<SHORT>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -434,7 +434,7 @@ namespace IttyBitty
 	CLASS TypedParam<WORD>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -447,7 +447,7 @@ namespace IttyBitty
 	CLASS TypedParam<LONG>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -460,7 +460,7 @@ namespace IttyBitty
 	CLASS TypedParam<DWORD>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -473,7 +473,7 @@ namespace IttyBitty
 	CLASS TypedParam<FLOAT>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -484,7 +484,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [VarLengthTypedParam] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
 	template<typename T>
@@ -547,8 +547,8 @@ namespace IttyBitty
 			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
 			//	_Value.FreeData();
 		}
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
@@ -571,16 +571,16 @@ namespace IttyBitty
 
 			return DatumBase<ConstValue>::ByteWidth();
 		}
-		
+
 		VOID FromBinary(PCBYTE data) override
 		{
 			PCBYTE bufferPtr = data;
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
-	
+
 			ParamBase::FromBinary(data);
 		}
-		
+
 		VOID FromString(PCCHAR data) override
 		{
 			PCCHAR bufferPtr = data;
@@ -598,7 +598,7 @@ namespace IttyBitty
 		using TypedParam<T>::_DataType;
 		using TypedParam<T>::IttyBitty::__datum_buffer;
 
-		
+
 		// PROTECTED STATIC FUNCTIONS
 
 		STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -621,7 +621,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedParam<PBYTE>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -634,7 +634,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedParam<PCHAR>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -647,7 +647,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedParam<BOOL>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -657,10 +657,10 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region PARAM PARSING METHODS
-	
+
 	INLINE PIPARAM ParamFromBytes(PCBYTE data)
 	{
 		PIPARAM param = NULL;
@@ -676,7 +676,7 @@ namespace IttyBitty
 
 		return param;
 	}
-	
+
 	INLINE PIPARAM ParamFromString(PCCHAR data)
 	{
 		PIPARAM param = NULL;

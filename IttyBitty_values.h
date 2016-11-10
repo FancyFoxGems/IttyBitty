@@ -27,22 +27,22 @@ namespace IttyBitty
 
 
 #pragma region [ConstValue] DEFINITION: IMMUTABLE, VALUE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
-	
+
 	UNION PACKED ConstValue
 	{
 		// UNION MEMBERS
 
 		PCBYTE Bytes;
-		PCCHAR String;	
+		PCCHAR String;
 		PCBITPACK BitFields;
-		
+
 		CHAR Char;
 		BYTE Byte;
 		BOOL Bool;
-		
+
 		SHORT Short;
 		WORD Word;
-		
+
 		LONG Long;
 		DWORD DWord;
 		FLOAT Float;
@@ -56,7 +56,7 @@ namespace IttyBitty
 		ConstValue(RRCONSTVALUE);
 
 		EXPLICIT ConstValue(PCBYTE);
-		EXPLICIT ConstValue(PCCHAR);		
+		EXPLICIT ConstValue(PCCHAR);
 		EXPLICIT ConstValue(PCBITPACK);
 
 		EXPLICIT ConstValue(RCCHAR);
@@ -86,7 +86,7 @@ namespace IttyBitty
 		RCONSTVALUE operator =(RCLONG);
 		RCONSTVALUE operator =(RCDWORD);
 		RCONSTVALUE operator =(RCFLOAT);
-		
+
 		operator PCBYTE() const;
 		operator PCCHAR() const;
 		operator PCBITPACK() const;
@@ -111,22 +111,22 @@ namespace IttyBitty
 
 
 #pragma region [Value] DEFINITION: MUTABLE, REFERENCE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
-	
+
 	UNION PACKED Value
 	{
 		// UNION MEMBERS
 
 		PPBYTE BytesRef;
-		PPCHAR StringRef;	
+		PPCHAR StringRef;
 		PPBITPACK BitFieldsRef;
-		
+
 		PCHAR CharRef;
 		PBYTE ByteRef;
 		PBOOL BoolRef;
-		
+
 		PSHORT ShortRef;
 		PWORD WordRef;
-		
+
 		PLONG LongRef;
 		PDWORD DWordRef;
 		PFLOAT FloatRef;
@@ -140,7 +140,7 @@ namespace IttyBitty
 		Value(RRVALUE);
 
 		EXPLICIT Value(PBYTE);
-		EXPLICIT Value(PCHAR);		
+		EXPLICIT Value(PCHAR);
 		EXPLICIT Value(PBITPACK);
 
 		EXPLICIT Value(RCHAR);
@@ -170,7 +170,7 @@ namespace IttyBitty
 		RVALUE operator =(RLONG);
 		RVALUE operator =(RDWORD);
 		RVALUE operator =(RFLOAT);
-		
+
 		operator PCBYTE() const;
 		operator PBYTE();
 		operator PCCHAR() const;

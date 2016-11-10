@@ -27,13 +27,13 @@ namespace IttyBitty
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 
 	EXTERN PCCHAR MESSAGE_MARKER;
-		
+
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __message_buffer;
 
 #pragma endregion
 
-	
+
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class IMessage;
@@ -66,8 +66,8 @@ namespace IttyBitty
 	using PPCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> **;
 
 #pragma endregion
-	
-	
+
+
 #ifdef ARDUINO
 
 #pragma region SERIAL/STREAM READING GLOBAL FUNCTION DECLARATIONS/DEFINITIONS
@@ -79,7 +79,7 @@ namespace IttyBitty
 	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
 	{
 		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
-		
+
 		STATIC T NULL_T = (T)0;
 		if (!result)
 			return NULL_T;
@@ -88,22 +88,22 @@ namespace IttyBitty
 	}
 
 #pragma endregion
-	
+
 
 #pragma region [Message] PARSING GLOBAL FUNCTION DECLARATIONS
-	
+
 	typedef VOID MessageHandler(PIMESSAGE), MESSAGEHANDLER(PIMESSAGE), (*PMESSAGEHANDLER)(PIMESSAGE);
 
 
 	PIMESSAGE ReceiveMessageAsBytes(Stream & stream);
 	PIMESSAGE ReceiveMessageAsString(Stream & stream);
-	
+
 	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler);
 
 #pragma endregion
 
 #endif	// #ifdef ARDUINO
-	
+
 
 #pragma region [IMessage] DEFINITION
 
@@ -119,14 +119,14 @@ namespace IttyBitty
 
 		VIRTUAL PCIPARAM operator[](CBYTE) const = 0;
 		VIRTUAL PIPARAM operator[](CBYTE) = 0;
-		
+
 
 		// ACCESSORS
 
 		VIRTUAL CBYTE ParamCount() const = 0;
 
 		VIRTUAL CBYTE GetMessageCode() const = 0;
-		
+
 		VIRTUAL RCIPARAM Param(CBYTE = 0) const = 0;
 		VIRTUAL RIPARAM Param(CBYTE = 0) = 0;
 
@@ -137,7 +137,7 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// HELPER METHODS
 
 		VIRTUAL CSIZE ParamsByteSize() const = 0;
@@ -148,14 +148,14 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region [Message] DEFINITION
 
 	CLASS Message : public IMessage
 	{
 	public:
-		
+
 		// CONSTRUCTORS/DESTRUCTOR
 
 		Message(CBYTE messageCode = 0, CBYTE paramCount = 0);
@@ -173,14 +173,14 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED DISPOSAL METHOD
 
 		VIRTUAL VOID Dispose();
 
 
 	public:
-		
+
 		// OPERATORS
 
 		VIRTUAL RMESSAGE operator=(RCMESSAGE);
@@ -188,14 +188,14 @@ namespace IttyBitty
 
 		VIRTUAL PCIPARAM operator[](CBYTE) const;
 		VIRTUAL PIPARAM operator[](CBYTE);
-		
+
 
 		// ACCESSORS
-		
+
 		VIRTUAL CBYTE ParamCount() const;
 
 		VIRTUAL CBYTE GetMessageCode() const;
-		
+
 		VIRTUAL RCIPARAM Param(CBYTE = 0) const;
 		VIRTUAL RIPARAM Param(CBYTE = 0);
 
@@ -203,7 +203,7 @@ namespace IttyBitty
 		// [IMessage] IMPLEMENTATION
 
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
-		
+
 
 		// [ISerializable] IMPLEMENTATION
 
@@ -215,15 +215,15 @@ namespace IttyBitty
 
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
-		
+
 
 		// [ITransmittable] IMPLEMENTATION
-		
+
 	#ifdef ARDUINO
 
 		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
 		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
-		
+
 		VIRTUAL SIZE printTo(Print &) const;
 
 	#endif
@@ -234,13 +234,13 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 		BOOL _Dispose = FALSE;
-		
+
 		BYTE _MessageCode;
 		BYTE _ParamCount;
 
 		PPIPARAM _Params;
 
-		
+
 		// [IMessage] HELPER METHODS
 
 		VIRTUAL CSIZE ParamsByteSize() const;
@@ -248,10 +248,10 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region [GenericMessage] DEFINITION
-	
+
 	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
 	CLASS GenericMessage : public Message
 	{
@@ -295,7 +295,7 @@ namespace IttyBitty
 			return PARAM_COUNT();
 		}
 	};
-	
+
 #pragma endregion
 }
 

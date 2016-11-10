@@ -52,11 +52,11 @@ EXTERN PINT __brkval;
 
 EXTERN PCHAR _etext;
 EXTERN PCHAR _edata;
-	
+
 EXTERN SIZE __malloc_margin;
 EXTERN PCHAR __malloc_heap_start;
 EXTERN PCHAR __malloc_heap_end;
-	
+
 EXTERN BYTE __fuse_byte_high_or_extended;
 
 #pragma endregion
@@ -78,7 +78,7 @@ namespace IttyBitty
 	CWORD StackSpaceTotal();
 	CWORD StackSpaceUsed();
 	CWORD StackSpaceFree();
-	
+
 	PCHAR HeapPointer();
 
 	CWORD HeapSpaceTotal();
@@ -89,7 +89,7 @@ namespace IttyBitty
 
 
 #pragma region RAM (SRAM & XRAM) INFO GLOBAL FUNCTION DECLARATIONS
-	
+
 	CONSTEXPR CWORD SramTotalSize();
 	CWORD SramUsed();
 	CWORD SramFree();
@@ -97,7 +97,7 @@ namespace IttyBitty
 	CONSTEXPR WORD XramTotalSize();
 	CWORD XramUsed();
 	CWORD XramFree();
-	
+
 	CONSTEXPR CWORD TotalRamSize();
 	CWORD TotalRamUsed();
 	CWORD TotalRamFree();
@@ -152,11 +152,11 @@ namespace IttyBitty
 
 
 #pragma region BOOTLOADER/SKETCH SPACE INFO GLOBAL FUNCTION DECLARATIONS
-	
+
 	CWORD BootloaderAllocatedSize();
 
 	EXTERN CWORD (*BootloaderSize)();
-	
+
 	CWORD SketchSpaceTotalSize();
 	CWORD SketchSpaceUsed();
 	CWORD SketchSpaceFree();

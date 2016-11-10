@@ -31,7 +31,7 @@ BYTE ARDUINO_PIN_TO_PORT[NUM_DIGITAL_PINS];
 BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 #pragma endregion
-	
+
 
 #pragma region ARDUINO INITIALIZATION GLOBAL FUNCTION DEFINITIONS
 
@@ -42,7 +42,7 @@ namespace IttyBitty
 		_InitializeArduinoPortTables();
 		_InitializeArduinoPinTables();
 	}
-	
+
 	VOID _InitializeArduinoPortTables()
 	{
 		for (SIZE i = 0; i < NUM_PORTS; i++)
@@ -65,7 +65,7 @@ namespace IttyBitty
 };
 
 #pragma endregion
-	
+
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
 
@@ -93,7 +93,7 @@ CBIT CheckPinSet(PIN_NUMBER p)
 {
 	return CHECK_ARDUINO_PIN_SET(p);
 }
-	
+
 CBIT (*ReadPin)(PIN_NUMBER) = &CheckPinSet;
 CBIT (*CheckPin)(PIN_NUMBER) = &CheckPinSet;
 
@@ -101,7 +101,7 @@ CBIT CheckPinUnset(PIN_NUMBER p)
 {
 	return CHECK_ARDUINO_PIN_UNSET(p);
 }
-	
+
 VOID WritePin(PIN_NUMBER p, CBIT state)
 {
 	WRITE_ARDUINO_PIN(p, state);
@@ -121,7 +121,7 @@ VOID TogglePin(PIN_NUMBER p)
 {
 	TOGGLE_ARDUINO_PIN(p);
 }
-		
+
 VOID ResetPin(PIN_NUMBER p)
 {
 	RESET_ARDUINO_PIN(p);
@@ -130,7 +130,7 @@ VOID ResetPin(PIN_NUMBER p)
 #pragma endregion
 
 #endif	// #ifdef ARDUINO
-	
+
 
 #pragma region BIT-PACKED PORT VARIABLE DEFINITION MACROS
 
@@ -155,7 +155,7 @@ VOID ResetPin(PIN_NUMBER p)
 #endif	// #ifndef EXCLUDE_ITTYBITTY_BYTES
 
 #pragma endregion
-	
+
 
 #pragma region BIT-PACKED PORT-SPECIFIC VARIABLE DEFINITION CALLS
 
@@ -206,7 +206,7 @@ VOID ResetPin(PIN_NUMBER p)
 #pragma endregion
 
 
-#ifndef EXCLUDE_ITTYBITTY_BYTES	
+#ifndef EXCLUDE_ITTYBITTY_BYTES
 
 #pragma region PORT-SPECIFIC STRUCTURE DEFINITION CALLS
 

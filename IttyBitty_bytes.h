@@ -40,7 +40,7 @@ IGNORE_WARNING(-Wpointer-arith)
 	#undef TEST_ENDIANNESS
 	#define ENDIANNESS (*(uint16_t *)"\0\xff" < 0x100)
 #endif
-	
+
 #define IS_LITTLE_ENDIAN	ENDIANNESS == LITTLE_ENDIAN
 #define IS_BIG_ENDIAN		ENDIANNESS == BIG_ENDIAN
 

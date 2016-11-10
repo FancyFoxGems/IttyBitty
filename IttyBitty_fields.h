@@ -76,10 +76,10 @@ namespace IttyBitty
 	using PPCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> **;
 
 #pragma endregion
-	
+
 
 #pragma region [Field] PARSING GLOBAL FUNCTION DECLARATIONS
-	
+
 	PIFIELD FieldFromBytes(PCBYTE);
 	PIFIELD FieldFromString(PCCHAR);
 
@@ -119,8 +119,8 @@ namespace IttyBitty
 		// /DESTRUCTOR
 
 		VIRTUAL ~FieldBase();
-		
-		
+
+
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
@@ -138,8 +138,8 @@ namespace IttyBitty
 		{
 			return DatumBase<Value>::StringSize();
 		}
-		
-		
+
+
 		// [ITransmittable] IMPLEMENTATION
 
 	#ifdef ARDUINO
@@ -153,7 +153,7 @@ namespace IttyBitty
 		{
 			return DatumBase<Value>::Transmit(i2cAddr, twi);
 		}
-				
+
 		VIRTUAL SIZE printTo(Print & printer) const
 		{
 			return DatumBase<Value>::printTo(printer);
@@ -227,8 +227,8 @@ namespace IttyBitty
 		// STATIC FUNCTIONS
 
 		STATIC RFIELD NULL_OBJECT();
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RFIELD operator =(RCFIELD);
@@ -277,13 +277,13 @@ namespace IttyBitty
 		EXPLICIT VarLengthField(PBITPACK, CSIZE = 0);
 
 		VIRTUAL ~VarLengthField();
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RVARLENGTHFIELD operator =(RCVARLENGTHFIELD);
 		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
-		
+
 		VIRTUAL operator PCBYTE() const;
 		VIRTUAL operator PBYTE();
 		VIRTUAL operator PCCHAR() const;
@@ -299,7 +299,7 @@ namespace IttyBitty
 		VOID MetadataFromBinary(PCBYTE) override;
 
 		VOID MetadataFromString(PCCHAR) override;
-		
+
 
 	protected:
 
@@ -312,7 +312,7 @@ namespace IttyBitty
 
 
 #pragma region [TypedField] DEFINITION - TEMPLATED TAGGED UNION
-	
+
 	template<typename T>
 	CLASS TypedField : public FieldBase
 	{
@@ -361,8 +361,8 @@ namespace IttyBitty
 			STATIC TypedField<T> NULL_TYPEDFIELD;
 			return NULL_TYPEDFIELD;
 		}
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL RTYPEDFIELD<T> operator =(RCTYPEDFIELD<T> rValue)
@@ -410,7 +410,7 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		// PROTECTED STATIC FUNCTIONS
 
 		STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -428,7 +428,7 @@ namespace IttyBitty
 	CLASS TypedField<CHAR>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -441,7 +441,7 @@ namespace IttyBitty
 	CLASS TypedField<BYTE>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -454,7 +454,7 @@ namespace IttyBitty
 	CLASS TypedField<BOOL>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -467,7 +467,7 @@ namespace IttyBitty
 	CLASS TypedField<SHORT>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -480,7 +480,7 @@ namespace IttyBitty
 	CLASS TypedField<WORD>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -493,7 +493,7 @@ namespace IttyBitty
 	CLASS TypedField<LONG>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -506,7 +506,7 @@ namespace IttyBitty
 	CLASS TypedField<DWORD>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -519,7 +519,7 @@ namespace IttyBitty
 	CLASS TypedField<FLOAT>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -530,7 +530,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [VarLengthTypedField] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
 	template<typename T>
@@ -593,8 +593,8 @@ namespace IttyBitty
 			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
 			//	_Value.FreeData();
 		}
-		
-		
+
+
 		// OPERATORS
 
 		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
@@ -633,7 +633,7 @@ namespace IttyBitty
 			PCBYTE bufferPtr = data;
 
 			_Length = *reinterpret_cast<PCSIZE>(bufferPtr);
-	
+
 			FieldBase::MetadataFromBinary(data);
 		}
 
@@ -654,7 +654,7 @@ namespace IttyBitty
 		using TypedField<T>::_DataType;
 		using TypedField<T>::IttyBitty::__datum_buffer;
 
-		
+
 		// PROTECTED STATIC FUNCTIONS
 
 		STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -677,7 +677,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedField<PBYTE>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -690,7 +690,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedField<PCHAR>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -703,7 +703,7 @@ namespace IttyBitty
 	CLASS VarLengthTypedField<BOOL>
 	{
 	protected:
-		
+
 			// PROTECTED STATIC FUNCTIONS
 
 			STATIC CONSTEXPR CDATATYPE FindDataType()
@@ -713,10 +713,10 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-	
+
 
 #pragma region FIELD PARSING METHODS
-	
+
 	INLINE PIFIELD FieldFromBytes(PCBYTE data)
 	{
 		PIFIELD field = NULL;
@@ -732,7 +732,7 @@ namespace IttyBitty
 
 		return field;
 	}
-	
+
 	INLINE PIFIELD FieldFromString(PCCHAR data)
 	{
 		PIFIELD field = NULL;

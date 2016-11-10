@@ -30,11 +30,11 @@ namespace IttyBitty
 	union StorageLocation;
 	typedef StorageLocation STORAGELOCATION, * PSTORAGELOCATION, & RSTORAGELOCATION, ** PPSTORAGELOCATION, && RRSTORAGELOCATION;
 	typedef const StorageLocation CSTORAGELOCATION, * PCSTORAGELOCATION, & RCSTORAGELOCATION, ** PPCSTORAGELOCATION;
-	
+
 	class IStorable;
 	typedef IStorable ISTORABLE, * PISTORABLE, & RISTORABLE, ** PPISTORABLE, && RRISTORABLE;
 	typedef const IStorable CISTORABLE, * PCISTORABLE, & RCISTORABLE, ** PPCISTORABLE;
-	
+
 	class IStorage;
 	typedef IStorage ISTORAGE, * PISTORAGE, & RISTORAGE, ** PPISTORAGE, && RRISTORAGE;
 	typedef const IStorage CISTORAGE, * PCISTORAGE, & RCISTORAGE, ** PPCISTORAGE;
@@ -45,7 +45,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region ENUMS
 
 	ENUM StorageResult : BYTE
@@ -64,7 +64,7 @@ namespace IttyBitty
 		ERROR_OPERATION							= ERROR,
 		ERROR_OPERATION_UNKOWN					= ERROR_OPERATION,
 		ERROR_OPERATION_INTERRUPTED				= ERROR_OPERATION | 0x08,
-		
+
 		ERROR_OPERATION_CREATE					= ERROR_OPERATION | 0xF0,
 		ERROR_OPERATION_DELETE					= ERROR_OPERATION | 0xE0,
 		ERROR_OPERATION_ADD						= ERROR_OPERATION | 0xD0,
@@ -104,7 +104,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [DbLocation] DEFINITION
 
 	UNION PACKED DbLocation
@@ -118,7 +118,7 @@ namespace IttyBitty
 
 #pragma endregion
 
-	
+
 #pragma region [IStorable] DEFINITION
 
 	CLASS IStorable : public ISerializable
@@ -140,13 +140,13 @@ namespace IttyBitty
 
 
 	protected:
-		
+
 		IStorable() { }
 	};
 
 #pragma endregion
 
-	
+
 #pragma region [IStorage] DEFINITION
 
 	CLASS IStorage
@@ -167,14 +167,14 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD) = 0;
 
 		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE) = 0;
-		
+
 		VIRTUAL CSTORAGERESULT Flush() = 0;
 
 		VIRTUAL CSTORAGERESULT Close() = 0;
 
 
 	protected:
-		
+
 		IStorage() { }
 	};
 
@@ -196,7 +196,7 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
 
 		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
-		
+
 		VIRTUAL CSTORAGERESULT Flush();
 
 		VIRTUAL CSTORAGERESULT Close();
