@@ -350,20 +350,50 @@ VOID DbTableDefSet::Dispose()
 	_TableDefs = NULL;
 }
 
-PCIDBTABLEDEF DbTableDefSet::operator[](CBYTE i) const
+PCIDBTABLEDEF DbTableDefSet::operator[](CBYTE tableDefIdx) const
 {
 	if (_TableDefs == NULL)
 		return NULL;
 
-	return _TableDefs[i];
+	return _TableDefs[tableDefIdx];
 }
 
-PIDBTABLEDEF DbTableDefSet::operator[](CBYTE i)
+PIDBTABLEDEF DbTableDefSet::operator[](CBYTE tableDefIdx)
 {
 	if (_TableDefs == NULL)
 		return NULL;
 
-	return _TableDefs[i];
+	return _TableDefs[tableDefIdx];
+}
+
+PCIDBTABLEDEF DbTableDefSet::operator[](PCCHAR tableName) const
+{
+	PCIDBTABLEDEF tableDefPtr = NULL;
+
+	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	{
+		tableDefPtr = this->operator[](i);
+
+		if (strcmp(tableDefPtr->GetTableName(), tableName))
+			break;
+	}
+
+	return tableDefPtr;
+}
+
+PIDBTABLEDEF DbTableDefSet::operator[](PCCHAR tableName)
+{
+	PIDBTABLEDEF tableDefPtr = NULL;
+
+	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	{
+		tableDefPtr = this->operator[](i);
+
+		if (strcmp(tableDefPtr->GetTableName(), tableName))
+			break;
+	}
+
+	return tableDefPtr;
 }
 
 
@@ -374,40 +404,44 @@ CBYTE DbTableDefSet::TableDefCount() const
 	return _TableDefCount;
 }
 
-RCIDBTABLEDEF DbTableDefSet::TableDef(CBYTE i) const
+RCIDBTABLEDEF DbTableDefSet::TableDef(CBYTE tableDefIdx) const
 {
-	return *this->operator[](i);
+	PCIDBTABLEDEF tableDefPtr = this->operator[](tableDefIdx);
+
+	if (!tableDefPtr)
+		return DbTableDef::NULL_OBJECT();
+
+	return *tableDefPtr;
 }
 
-RIDBTABLEDEF DbTableDefSet::TableDef(CBYTE i)
+RIDBTABLEDEF DbTableDefSet::TableDef(CBYTE tableDefIdx)
 {
-	return *this->operator[](i);
+	PIDBTABLEDEF tableDefPtr = this->operator[](tableDefIdx);
+
+	if (!tableDefPtr)
+		return DbTableDef::NULL_OBJECT();
+
+	return *tableDefPtr;
 }
 
 RCIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName) const
 {
-	for (BYTE i = 0; i < this->TableDefCount(); i++)
-	{
-		RCIDBTABLEDEF tableDef = *this->operator[](i);
+	PCIDBTABLEDEF tableDefPtr = this->operator[](tableName);
 
-		if (strcmp(tableDef.GetTableName(), tableName))
-			return tableDef;
-	}
+	if (!tableDefPtr)
+		return DbTableDef::NULL_OBJECT();
 
-	return DbTableDef::NULL_OBJECT();
+	return *tableDefPtr;
 }
 
 RIDBTABLEDEF DbTableDefSet::TableDef(PCCHAR tableName)
 {
-	for (BYTE i = 0; i < this->TableDefCount(); i++)
-	{
-		RIDBTABLEDEF tableDef = *this->operator[](i);
+	PIDBTABLEDEF tableDefPtr = this->operator[](tableName);
 
-		if (strcmp(tableDef.GetTableName(), tableName))
-			return tableDef;
-	}
+	if (!tableDefPtr)
+		return DbTableDef::NULL_OBJECT();
 
-	return DbTableDef::NULL_OBJECT();
+	return *tableDefPtr;
 }
 
 

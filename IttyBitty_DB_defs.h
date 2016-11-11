@@ -362,6 +362,10 @@ namespace IttyBitty
 
 	protected:
 
+		friend class IDbTableSet;
+		friend class Database;
+
+
 		// HELPER METHODS
 
 		VIRTUAL CSIZE TableDefsByteSize() const = 0;
@@ -409,6 +413,9 @@ namespace IttyBitty
 
 		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const;
 		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
+
+		VIRTUAL PCIDBTABLEDEF operator[](PCCHAR) const;
+		VIRTUAL PIDBTABLEDEF operator[](PCCHAR);
 
 
 		// [IDbTableDefSet] IMPLEMENTATION

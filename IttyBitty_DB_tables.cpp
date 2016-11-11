@@ -90,40 +90,6 @@ CSIZE DbTable::RowsAvailable() const
 	return (CSIZE)(this->Capacity() - this->Size()) / this->RowSize();
 }
 
-CDBRESULT DbTable::Grow(RIDBTABLESET tableSet, RCFLOAT growthFactor)
-{
-	if (growthFactor == 1.0F)
-		return DbResult::SUCCESS;
-
-	if (growthFactor < 1.0F)
-		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
-
-	_Capacity *= growthFactor;
-	_CapacityChanged = TRUE;
-
-	return DbResult::SUCCESS;
-}
-
-CDBRESULT DbTable::Compress(RIDBTABLESET tableSet, RCFLOAT compressionFactor)
-{
-	if (compressionFactor == 1.0F)
-		return DbResult::SUCCESS;
-
-	if (compressionFactor < 1.0F)
-		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
-
-	DWORD newCapacity = (1.0F / compressionFactor) * _Capacity;
-		return DbResult::SUCCESS;
-
-	if (newCapacity < this->Size())
-		return DbResult::ERROR_ARGUMENT_DATABASE_TOO_LARGE;
-
-	_Capacity = newCapacity;
-	_CapacityChanged = TRUE;
-
-	return DbResult::SUCCESS;
-}
-
 CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount)
 {
 	return DbResult::SUCCESS;
@@ -359,6 +325,40 @@ SIZE DbTable::printTo(Print & printer) const
 
 
 // [IDbTable] HELPER METHODS
+
+CDBRESULT DbTable::Grow(RIDBTABLESET tableSet, RCFLOAT growthFactor)
+{
+	if (growthFactor == 1.0F)
+		return DbResult::SUCCESS;
+
+	if (growthFactor < 1.0F)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	_Capacity *= growthFactor;
+	_CapacityChanged = TRUE;
+
+	return DbResult::SUCCESS;
+}
+
+CDBRESULT DbTable::Compress(RIDBTABLESET tableSet, RCFLOAT compressionFactor)
+{
+	if (compressionFactor == 1.0F)
+		return DbResult::SUCCESS;
+
+	if (compressionFactor < 1.0F)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	DWORD newCapacity = (1.0F / compressionFactor) * _Capacity;
+		return DbResult::SUCCESS;
+
+	if (newCapacity < this->Size())
+		return DbResult::ERROR_ARGUMENT_DATABASE_TOO_LARGE;
+
+	_Capacity = newCapacity;
+	_CapacityChanged = TRUE;
+
+	return DbResult::SUCCESS;
+}
 
 CDWORD DbTable::RowsBinarySize() const
 {
