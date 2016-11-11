@@ -102,27 +102,11 @@ VOID Database::SetStorage(RCISTORAGE storage)
 
 // USER METHODS
 
-CDBRESULT Database::CreateDatabase()
+CDBRESULT Database::Create()
 {
 }
 
-CDBRESULT Database::DeleteDatabase()
-{
-}
-
-CDBRESULT Database::GrowDatabase(RCFLOAT)
-{
-}
-
-CDBRESULT Database::CompressDatabase(RCFLOAT)
-{
-}
-
-CDBRESULT Database::TruncateAllTables()
-{
-}
-
-CDBRESULT Database::WipeDatabase()
+CDBRESULT Database::Delete()
 {
 }
 
@@ -145,15 +129,32 @@ CWORD Database::Capacity() const
 {
 }
 
+CDBRESULT Database::Grow(RCFLOAT growthFactor)
+{
+}
+
+CDBRESULT Database::Compress(RCFLOAT compressionFactor)
+{
+}
+
+CDBRESULT Database::TruncateAllTables()
+{
+}
+
+CDBRESULT Database::DropAllTables()
+{
+}
+
 CBYTE Database::TableCount() const
 {
+	return this->TableDefCount();
 }
 
-RCIDBTABLE Database::Table(CBYTE) const
+RCIDBTABLE Database::Table(CBYTE tableIdx) const
 {
 }
 
-RIDBTABLE Database::Table(CBYTE)
+RIDBTABLE Database::Table(CBYTE tableIdx)
 {
 }
 
@@ -161,117 +162,144 @@ RCIDBTABLE Database::Table(PCCHAR) const
 {
 }
 
-RIDBTABLE Database::Table(PCCHAR)
+RIDBTABLE Database::Table(PCCHAR tableName)
 {
 }
 
-CDWORD Database::SizeOf(CBYTE) const
+CDWORD Database::SizeOf(CBYTE tableIdx) const
 {
 }
 
-CDWORD Database::SizeOf(PCCHAR) const
+CDWORD Database::SizeOf(PCCHAR tableName) const
 {
 }
 
-CDWORD Database::CapacityOf(CBYTE) const
+CDWORD Database::CapacityOf(CBYTE tableIdx) const
 {
 }
 
-CDWORD Database::CapacityOf(PCCHAR) const
+CDWORD Database::CapacityOf(PCCHAR tableName) const
 {
 }
 
-CSIZE Database::RowCountFor(CBYTE) const
+CSIZE Database::RowCountFor(CBYTE tableIdx) const
 {
 }
 
-CSIZE Database::RowCountFor(PCCHAR) const
+CSIZE Database::RowCountFor(PCCHAR tableName) const
 {
 }
 
-CSIZE Database::RowsAvailableFor(CBYTE) const
+CSIZE Database::RowsAvailableFor(CBYTE tableIdx) const
 {
 }
 
-CSIZE Database::RowsAvailableFor() const
+CSIZE Database::RowsAvailableFor(PCCHAR tableName) const
 {
 }
 
-CDBRESULT Database::CreateTable(CSIZE, PCCHAR)
+CDBRESULT Database::CreateTable(CSIZE, PCCHAR tableName, CBYTE createIdx)
 {
 }
 
-CDBRESULT Database::GrowTable(CBYTE, RCFLOAT)
+CDBRESULT Database::GrowTable(CBYTE tableIdx, RCFLOAT growthFactor)
 {
 }
 
-CDBRESULT Database::GrowTable(PCCHAR, RCFLOAT)
+CDBRESULT Database::GrowTable(PCCHAR tableName, RCFLOAT growthFactor)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::CompressTable(CBYTE tableIdx, RCFLOAT compressionFactor)
 {
 }
 
-CDBRESULT Database::CompressTable(CBYTE, RCFLOAT)
+CDBRESULT Database::CompressTable(PCCHAR tableName, RCFLOAT compressionFactor)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::DropTable(CBYTE tableIdx)
 {
 }
 
-CDBRESULT Database::CompressTable(PCCHAR, RCFLOAT)
+CDBRESULT Database::DropTable(PCCHAR tableName)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::SelectAllFrom(CBYTE tableIdx, PBYTE & recordSet, RSIZE recordCount)
 {
 }
 
-CDBRESULT Database::DropTable(CBYTE)
+CDBRESULT Database::SelectAllFrom(PCCHAR tableName, PBYTE & recordSet, RSIZE recordCount)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::FindFrom(CBYTE tableIdx, CSIZE rowIdx, PBYTE record, PSIZE recordSize)
 {
 }
 
-CDBRESULT Database::DropTable(PCCHAR)
+CDBRESULT Database::FindFrom(PCCHAR, CSIZE rowIdx, PBYTE record, PSIZE recordSize)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::InsertInto(CBYTE tableIdx, PCBYTE rowData, CSIZE insertIdx)
 {
 }
 
-CDBRESULT Database::SelectAllFrom(CBYTE, PBYTE &, RSIZE)
+CDBRESULT Database::InsertInto(PCCHAR tableName, PCBYTE rowData, CSIZE insertIdx)
 {
-}
+	PIDBTABLE table = this->Table(tableName);
 
-CDBRESULT Database::SelectAllFrom(PCCHAR, PBYTE &, RSIZE)
-{
-}
-
-CDBRESULT Database::FindFrom(CBYTE, CSIZE, PBYTE, PSIZE)
-{
-}
-
-CDBRESULT Database::FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE)
-{
-}
-
-CDBRESULT Database::InsertInto(CBYTE, PCBYTE, CSIZE)
-{
-}
-
-CDBRESULT Database::InsertInto(PCCHAR, PCBYTE, CSIZE)
-{
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
 }
 
 
-CDBRESULT Database::UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE)
+CDBRESULT Database::UpdateTo(CBYTE tableIdx, CSIZE rowIdx, PCBYTE rowData)
 {
 }
 
-CDBRESULT Database::UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE)
+CDBRESULT Database::UpdateTo(PCCHAR tableName, CSIZE rowIdx, PCBYTE rowData)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx)
 {
 }
 
-CDBRESULT Database::DeleteFrom(CBYTE, CSIZE)
+CDBRESULT Database::DeleteFrom(PCCHAR tableName, CSIZE rowIdx)
+{
+	PIDBTABLE table = this->Table(tableName);
+
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
+}
+
+CDBRESULT Database::TruncateTable(CBYTE tableIdx)
 {
 }
 
-CDBRESULT Database::DeleteFrom(PCCHAR, CSIZE)
+CDBRESULT Database::TruncateTable(PCCHAR tableName)
 {
-}
+	PIDBTABLE table = this->Table(tableName);
 
-CDBRESULT Database::TruncateTable(CBYTE)
-{
-}
-
-CDBRESULT Database::TruncateTable(PCCHAR)
-{
+	return table->SelectAllRows(reinterpret_cast<PBYTE &>(recordSet), recordCount);
 }
 
 
@@ -335,7 +363,7 @@ SIZE Database::printTo(Print & printer) const
 
 // [IDbTableSet] HELPER METHODS
 
-CSTORAGERESULT Database::MoveTables(CBYTE startTableIndex, RCLONG moveAddrOffset)
+CSTORAGERESULT Database::MoveTables(CSIZE startAddrOffset, RCLONG addrOffsetDelta)
 {
 }
 

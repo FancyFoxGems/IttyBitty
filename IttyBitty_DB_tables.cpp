@@ -90,7 +90,7 @@ CSIZE DbTable::RowsAvailable() const
 	return (CSIZE)(this->Capacity() - this->Size()) / this->RowSize();
 }
 
-CDBRESULT DbTable::Grow(RCFLOAT growthFactor)
+CDBRESULT DbTable::Grow(RIDBTABLESET tableSet, RCFLOAT growthFactor)
 {
 	if (growthFactor == 1.0F)
 		return DbResult::SUCCESS;
@@ -104,7 +104,7 @@ CDBRESULT DbTable::Grow(RCFLOAT growthFactor)
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Compress(RCFLOAT compressionFactor)
+CDBRESULT DbTable::Compress(RIDBTABLESET tableSet, RCFLOAT compressionFactor)
 {
 	if (compressionFactor == 1.0F)
 		return DbResult::SUCCESS;
@@ -124,33 +124,36 @@ CDBRESULT DbTable::Compress(RCFLOAT compressionFactor)
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::SelectAll(PBYTE & resultRows, RSIZE resultCount)
-{
-	return this->SelectAllRows(resultRows, resultCount);
-}
-
-CDBRESULT DbTable::Find(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
-{
-	return this->FindRow(rowIndex, resultRow, resultSize);
-}
-
-CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIndex)
+CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount)
 {
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIndex, PSIZE rowsAffected)
+CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE resultRow, PSIZE resultSize)
 {
-	if (rowIndex > this->RowCount() - 1)
+	if (rowIdx > this->RowCount() - 1)
+		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	return DbResult::SUCCESS;
+}
+
+CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
+{
+	return DbResult::SUCCESS;
+}
+
+CDBRESULT DbTable::Update(CSIZE rowIdx, PCBYTE rowData)
+{
+	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
 
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Delete(CSIZE rowIndex)
+CDBRESULT DbTable::Delete(CSIZE rowIdx)
 {
-	if (rowIndex > this->RowCount() - 1)
+	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
 	return DbResult::SUCCESS;
@@ -262,8 +265,8 @@ PCBYTE DbTable::ToBinary() const
 	memcpy(bufferPtr, &capacity, SIZEOF(CDWORD));
 	bufferPtr += SIZEOF(CDWORD);
 
-	CSIZE rowCount = this->RowCount();
-	memcpy(bufferPtr, &rowCount, SIZEOF(CSIZE));
+	CSIZE recordCount = this->RowCount();
+	memcpy(bufferPtr, &recordCount, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
 	PCBYTE tableDefBytes = _TableDef->ToBinary();
@@ -357,19 +360,6 @@ SIZE DbTable::printTo(Print & printer) const
 
 // [IDbTable] HELPER METHODS
 
-CDBRESULT DbTable::SelectAllRows(PBYTE & resultRows, RSIZE resultCount)
-{
-	return DbResult::SUCCESS;
-}
-
-CDBRESULT DbTable::FindRow(CSIZE rowIndex, PBYTE resultRow, PSIZE resultSize)
-{
-	if (rowIndex > this->RowCount() - 1)
-		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
-
-	return DbResult::SUCCESS;
-}
-
 CDWORD DbTable::RowsBinarySize() const
 {
 	return this->RowCount() * this->RowBinarySize();
@@ -380,22 +370,22 @@ CDWORD DbTable::RowsStringSize() const
 	return this->RowCount() * (this->RowStringSize() - 1);
 }
 
-CSTORAGERESULT DbTable::SaveRowAsBinary(CSIZE rowIndex) const
+CSTORAGERESULT DbTable::SaveRowAsBinary(CSIZE rowIdx) const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::SaveRowAsString(CSIZE rowIndex) const
+CSTORAGERESULT DbTable::SaveRowAsString(CSIZE rowIdx) const
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIndex)
+CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIdx)
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIndex)
+CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIdx)
 {
 	return StorageResult::SUCCESS;
 }

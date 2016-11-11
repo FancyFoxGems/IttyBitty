@@ -60,8 +60,8 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		PCIDBTABLE operator[](CBYTE) const;
-		PIDBTABLE operator[](CBYTE);
+		VIRTUAL PCIDBTABLE operator[](CBYTE) const;
+		VIRTUAL PIDBTABLE operator[](CBYTE);
 
 
 		// ACCESSORS
@@ -76,13 +76,8 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		CDBRESULT CreateDatabase();
-		CDBRESULT DeleteDatabase();
-
-		CDBRESULT GrowDatabase(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
-		CDBRESULT CompressDatabase(RCFLOAT = 0.0F);
-		CDBRESULT TruncateAllTables();
-		CDBRESULT WipeDatabase();
+		CDBRESULT Create();
+		CDBRESULT Delete();
 
 		CDBRESULT Load();
 		CDBRESULT Save();
@@ -93,7 +88,13 @@ namespace IttyBitty
 		VIRTUAL CDWORD Size() const;
 		VIRTUAL CWORD Capacity() const;
 
+		VIRTUAL CDBRESULT Grow(RCFLOAT = DB_DEFAULT_GROWTH_FACTOR);
+		VIRTUAL CDBRESULT Compress(RCFLOAT = 0.0F);
+
 		VIRTUAL CBYTE TableCount() const;
+
+		VIRTUAL CDBRESULT TruncateAllTables();
+		VIRTUAL CDBRESULT DropAllTables();
 
 		VIRTUAL RCIDBTABLE Table(CBYTE = 0) const;
 		VIRTUAL RIDBTABLE Table(CBYTE = 0);
@@ -111,9 +112,9 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowCountFor(PCCHAR) const;
 
 		VIRTUAL CSIZE RowsAvailableFor(CBYTE) const;
-		VIRTUAL CSIZE RowsAvailableFor() const;
+		VIRTUAL CSIZE RowsAvailableFor(PCCHAR) const;
 
-		VIRTUAL CDBRESULT CreateTable(CSIZE, PCCHAR = NULL);
+		VIRTUAL CDBRESULT CreateTable(CSIZE, PCCHAR = NULL, CBYTE = MAX_T(BYTE));
 
 		template<typename T>
 		CDBRESULT CreateTable(PCCHAR = NULL)
@@ -134,45 +135,77 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE);
 
 		template<typename T>
-		CDBRESULT SelectAllFrom(CBYTE tableIndex, T *& resultSet, RSIZE resultCount)
+		CDBRESULT SelectAllFrom(CBYTE tableIdx, T *& recordSet, RSIZE recordCount)
 		{
-			PIDBTABLE table = this->Table(tableIndex);
+			PIDBTABLE table = this->Table(tableIdx);
 
-			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
+			return table->SelectAll(reinterpret_cast<PBYTE &>(recordSet), recordCount);
 		}
 
 		template<typename T>
-		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& resultSet, RSIZE resultCount)
+		CDBRESULT SelectAllFrom(PCCHAR tableName, T *& recordSet, RSIZE recordCount)
 		{
 			PIDBTABLE table = this->Table(tableName);
 
-			return table->SelectAllRows(reinterpret_cast<PBYTE &>(resultSet), resultCount);
+			return table->SelectAll(reinterpret_cast<PBYTE &>(recordSet), recordCount);
 		}
 
-		VIRTUAL CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE = NULL);
-		VIRTUAL CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE = NULL);
+		VIRTUAL CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE, PSIZE);
+		VIRTUAL CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE, PSIZE);
 
 		template<typename T>
-		CDBRESULT FindFrom(CBYTE tableIndex, CSIZE rowIndex, T * result)
+		CDBRESULT FindFrom(CBYTE tableIdx, CSIZE rowIdx, T * record)
 		{
-			PIDBTABLE table = this->Table(tableIndex);
+			PIDBTABLE table = this->Table(tableIdx);
 
-			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
+			return table->Find(rowIdx, reinterpret_cast<PBYTE>(record));
 		}
 
 		template<typename T>
-		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIndex, T * result)
+		CDBRESULT FindFrom(PCCHAR tableName, CSIZE rowIdx, T * record)
 		{
 			PIDBTABLE table = this->Table(tableName);
 
-			return table->FindRow(rowIndex, reinterpret_cast<PBYTE>(result));
+			return table->Find(rowIdx, reinterpret_cast<PBYTE>(record));
 		}
 
 		VIRTUAL CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_T(SIZE));
 		VIRTUAL CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_T(SIZE));
 
-		VIRTUAL CDBRESULT UpdateTo(CBYTE, PCBYTE, CSIZE, PSIZE = NULL);
-		VIRTUAL CDBRESULT UpdateTo(PCCHAR, PCBYTE, CSIZE, PSIZE = NULL);
+		template<typename T>
+		CDBRESULT InsertInto(CBYTE tableIdx, CONST T & rowData, CSIZE insertIdx = MAX_T(SIZE))
+		{
+			PIDBTABLE table = this->Table(tableIdx);
+
+			return table->Insert(reinterpret_cast<PCBYTE>(rowData), insertIdx);
+		}
+
+		template<typename T>
+		CDBRESULT InsertInto(PCCHAR tableName, CONST T & rowData, CSIZE insertIdx = MAX_T(SIZE))
+		{
+			PIDBTABLE table = this->Table(tableName);
+
+			return table->Insert(reinterpret_cast<PCBYTE>(rowData), insertIdx);
+		}
+
+		VIRTUAL CDBRESULT UpdateTo(CBYTE, CSIZE, PCBYTE);
+		VIRTUAL CDBRESULT UpdateTo(PCCHAR, CSIZE, PCBYTE);
+
+		template<typename T>
+		CDBRESULT UpdateTo(CBYTE tableIdx, CSIZE rowIdx, CONST T & rowData)
+		{
+			PIDBTABLE table = this->Table(tableIdx);
+
+			return table->Update(rowIdx, reinterpret_cast<PCBYTE>(rowData));
+		}
+
+		template<typename T>
+		CDBRESULT UpdateTo(PCCHAR tableName, CSIZE rowIdx, CONST T & rowData)
+		{
+			PIDBTABLE table = this->Table(tableName);
+
+			return table->Update(rowIdx, reinterpret_cast<PCBYTE>(rowData));
+		}
 
 		VIRTUAL CDBRESULT DeleteFrom(CBYTE, CSIZE);
 		VIRTUAL CDBRESULT DeleteFrom(PCCHAR, CSIZE);
@@ -225,7 +258,7 @@ namespace IttyBitty
 
 		// [IDbTableSet] HELPER METHODS
 
-		VIRTUAL CSTORAGERESULT MoveTables(CBYTE, RCLONG);
+		VIRTUAL CSTORAGERESULT MoveTables(CSIZE, RCLONG);
 
 
 		// [IDbTableDefSet] IMPLEMENTATION
