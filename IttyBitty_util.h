@@ -23,20 +23,6 @@
 #include <avr/wdt.h>
 
 
-/* MACRO EXPANSION MACROS (META-MACROS) */
-
-#define NULL_MACRO(x)
-#define EXPAND(x)					x
-#define STR(x)						#x
-#define EXPAND_STR(x)				STR(x)
-#define CONCAT(x, y)				x##y
-#define EXPAND_CONCAT(x, y)			CONCAT(x, y)
-
-#define __VA_MACRO(MACRO, _0, _1, _2, _3, _4, ARGS...) MACRO##_##_4
-#define _VA_MACRO(MACRO, ARGS...)	__VA_MACRO(MACRO, ##ARGS, 4, 3, 2, 1, 0)
-#define VA_MACRO(MACRO, ARGS...)	_VA_MACRO(MACRO, ##ARGS)(, ##ARGS)
-
-
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
 #define ALWAYS_INLINE				__attribute__((always_inline))
@@ -158,7 +144,8 @@ using std::extent;
 
 #define FORCE_CONST(var)			(*const_cast<ONLY_CONST_TYPEOF(var) *>(&(var)))
 #define FORCE_UNCONST(var)			(*const_cast<UNCONST_TYPEOF(var) *>(&(var)))
-#define UNCONST(var)				FORCE_UNCONST(var)
+#define MAKE_UNCONST(var)			FORCE_UNCONST(var)
+#define UNCONST(var)				MAKE_UNCONST(var)
 
 #define UNION_CAST(var, to_type)	(((UNION {TYPEOF(var) from; to_type to;})(var)).to)
 
@@ -170,11 +157,11 @@ using std::extent;
 	#define F(const_c_string)					(reinterpret_cast<const __FlashStringHelper *>(PSTR(const_c_string)))
 #endif
 
-#define FLASH_STRING(string_addr)				((CSTR_P)(string_addr))
-#define _CSTR_P(string_addr)					FLASH_STRING(string_addr)
+#define _CSTR_P(string_addr)					((CSTR_P)(string_addr))
+#define FLASH_STRING(string_addr)				_CSTR_P(string_addr)
 
-#define FLASH_FUNCTION_VARIATION(func)			func ## _P
-#define PASS_FLASH_STRING(func, flash_string)	(FLASH_FUNCTION_VARIATION(func)(PSTR(#flash_string)))
+#define FLASH_FUNCTION_VARIATION(func)			EXPAND_CONCAT(func, _P)
+#define PASS_FLASH_STRING(func, flash_string)	(FLASH_FUNCTION_VARIATION(func)(F(#flash_string)))
 
 
 /* COMPILER MACROS */

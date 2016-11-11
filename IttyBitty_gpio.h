@@ -88,14 +88,18 @@ namespace IttyBitty
 	typedef struct _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
 	typedef const struct _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
 
+	#define _PIN_T_CLAUSE	<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	#define _PIN_T_ARGS		<PinNum, PortPtr>
+
 	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
 	struct _Pin;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using _pin_t = struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using Pin = struct _Pin<PinNum, PortPtr>;
-	template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
-	using PIN = struct _Pin<PinNum, PortPtr>;
+	TEMPLATE_USING_STRUCT_ALIASES(CSL(_PIN_T_CLAUSE), CSL(_PIN_T_ARGS), Pin, pin, PIN);
+	//template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	//using _pin_t = struct _Pin<PinNum, PortPtr>;
+	//template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	//using Pin = struct _Pin<PinNum, PortPtr>;
+	//template<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	//using PIN = struct _Pin<PinNum, PortPtr>;
 
 #pragma endregion
 

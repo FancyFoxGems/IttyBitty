@@ -64,8 +64,8 @@
 #define CONSTPTR		const *
 #define VOLATILE		volatile
 #define CONST_VOLATILE	const volatile
+#define CONSTVOL 		const volatile
 #define cv				const volatile
-#define CV				const volatile
 
 #define ENUM			enum class
 #define UNION			union
@@ -74,14 +74,153 @@
 #define INTERFACE		class
 
 #define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)
-#define TEMPLATE_STRUCT(T_clause)		template<T_clause> STRUCT
-#define TEMPLATE_CLASS(T_clause)		template<T_clause> CLASS
-#define TEMPLATE_INTERFACE(T_clause)	template<T_clause> INTERFACE
+#define TEMPLATE_STRUCT(T_clause)		template T_clause STRUCT
+#define TEMPLATE_CLASS(T_clause)		template T_clause CLASS
+#define TEMPLATE_INTERFACE(T_clause)	template T_clause INTERFACE
+
+
+/* MACRO EXPANSION MACROS (META-MACROS) */
+
+#define NULL_MACRO(x)
+#define EXPAND(x)					x
+#define STR(x)						#x
+#define EXPAND_STR(x)				STR(x)
+#define CONCAT(x, y)				x##y
+#define EXPAND_CONCAT(x, y)			CONCAT(x, y)
+#define CSL(...)					__VA_ARGS__
+
+#define __VA_MACRO(MACRO, _0, _1, _2, _3, _4, ARGS...) MACRO##_##_4
+#define _VA_MACRO(MACRO, ARGS...)	__VA_MACRO(MACRO, ##ARGS, 4, 3, 2, 1, 0)
+#define VA_MACRO(MACRO, ARGS...)	_VA_MACRO(MACRO, ##ARGS)(, ##ARGS)
+
+
+/* TYPEDEF & TEMPLATED USING ALIAS MACROS */
+
+#define TYPEDEF_MODIFIER_ALIASES(modified_type_name, TYPE_ALIAS)		\
+	typedef modified_type_name TYPE_ALIAS, * P##TYPE_ALIAS, & R##TYPE_ALIAS
+#define TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS)		TYPEDEF_MODIFIER_ALIASES(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_CONST_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_MODIFIER_ALIASES(const type_name, C##TYPE_ALIAS)
+#define TYPEDEF_VOLATILE_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_MODIFIER_ALIASES(volatile type_name, V##TYPE_ALIAS)
+#define TYPEDEF_CONST_VOLATILE_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_MODIFIER_ALIASES(const volatile type_name, CV##TYPE_ALIAS)
+
+#define TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)			typedef type_name PROGMEM type_name##_P
+
+#define TYPEDEF_ALIASES_PP(type_name, TYPE_ALIAS)						\
+	typedef type_name ** PP##TYPE_ALIAS, && RR##TYPE_ALIAS;				\
+	typedef const type_name ** PPC##TYPE_ALIAS, && RRC##TYPE_ALIAS
+
+#define TYPEDEF_ALIASES(type_name, TYPE_ALIAS)							\
+	TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS);					\
+	TYPEDEF_CONST_ALIASES(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_AS_VOLATILE(type_name, TYPE_ALIAS)				\
+	TYPEDEF_MODIFIER_ALIASES(volatile type_name, TYPE_ALIAS);			\
+	TYPEDEF_CONST_ALIASES(volatile type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(type_name, TYPE_ALIAS)		\
+	TYPEDEF_ALIASES_AS_VOLATILE(type_name, TYPE_ALIAS);					\
+	TYPEDEF_ALIASES_PP(volatile type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_WITH_VOLATILE(type_name, TYPE_ALIAS)			\
+	TYPEDEF_ALIASES(type_name, TYPE_ALIAS);								\
+	TYPEDEF_VOLATILE_ALIASES(type_name, TYPE_ALIAS);					\
+	TYPEDEF_CONST_VOLATILE_ALIASES(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_WITH_PROGMEM(type_name, TYPE_ALIAS)				\
+	TYPEDEF_ALIASES(type_name, TYPE_ALIAS);								\
+	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_WITH_PP(type_name, TYPE_ALIAS)					\
+	TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS);					\
+	TYPEDEF_CONST_ALIASES(type_name, TYPE_ALIAS);						\
+	TYPEDEF_ALIASES_PP(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_WITH_VOLATILE_AND_PP(type_name, TYPE_ALIAS)		\
+	TYPEDEF_ALIASES_WITH_PP(type_name, TYPE_ALIAS);						\
+	TYPEDEF_VOLATILE_ALIASES(type_name, TYPE_ALIAS);					\
+	TYPEDEF_CONST_VOLATILE_ALIASES(type_name, TYPE_ALIAS);				\
+	typedef volatile type_name ** PPV##TYPE_ALIAS, && RRV##TYPE_ALIAS;	\
+	typedef const volatile type_name ** PPCV##TYPE_ALIAS, && RRCV##TYPE_ALIAS
+
+#define TYPEDEF_ALIASES_WITH_PP_AND_PROGMEM(type_name, TYPE_ALIAS)		\
+	TYPEDEF_ALIASES_WITH_PP(type_name, TYPE_ALIAS);						\
+	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(type_name, TYPE_ALIAS)	\
+	TYPEDEF_ALIASES_WITH_VOLATILE_AND_PP(type_name, TYPE_ALIAS);		\
+	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
+
+#define TYPEDEF_ENUM_ALIASES(type_name, TYPE_ALIAS)				TYPEDEF_ALIASES(enum type_name, TYPE_ALIAS)
+
+#define TYPEDEF_UNION_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_ALIASES_WITH_PP(union type_name, TYPE_ALIAS)
+#define TYPEDEF_VOLATILE_UNION_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(union type_name, TYPE_ALIAS)
+
+#define TYPEDEF_CLASS_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_ALIASES_WITH_PP(class type_name, TYPE_ALIAS)
+#define TYPEDEF_VOLATILE_CLASS_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(class type_name, TYPE_ALIAS)
+
+#define TYPEDEF_STRUCT_ALIASES(type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
+	typedef struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;			\
+	TYPEDEF_ALIASES_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
+
+#define TYPEDEF_VOLATILE_STRUCT_ALIASES(type_alias, lower_type_alias, UPPER_TYPE_ALIAS)	\
+	typedef volatile struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;	\
+	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
+
+#define TEMPLATE_USING_ALIASES(T_clause, T_args, type_name, TYPE_ALIAS)					\
+	template T_clause																	\
+	using TYPE_ALIAS = type_name T_args;												\
+	template T_clause																	\
+	using P##TYPE_ALIAS = type_name T_args *;											\
+	template T_clause																	\
+	using R##TYPE_ALIAS = type_name T_args &;											\
+	template T_clause																	\
+	using PP##TYPE_ALIAS = type_name T_args **;											\
+	template T_clause																	\
+	using RR##TYPE_ALIAS = type_name T_args &&;											\
+	template T_clause																	\
+	using C##TYPE_ALIAS = const type_name T_args;										\
+	template T_clause																	\
+	using PC##TYPE_ALIAS = const type_name T_args *;									\
+	template T_clause																	\
+	using RC##TYPE_ALIAS = const type_name T_args &;									\
+	template T_clause																	\
+	using PPC##TYPE_ALIAS = const type_name T_args **;									\
+	template T_clause																	\
+	using RRC##TYPE_ALIAS = const type_name T_args &&
+
+#define TEMPLATE_USING_STRUCT_ALIASES(T_clause, T_args, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)				\
+	template T_clause																	\
+	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_args;		\
+	template T_clause																	\
+	using type_alias = struct EXPAND_CONCAT(_, type_alias) T_args;						\
+	template T_clause																	\
+	using UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args;				\
+	template T_clause																	\
+	using P##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args *;			\
+	template T_clause																	\
+	using R##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args &;			\
+	template T_clause																	\
+	using PP##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args **;			\
+	template T_clause																	\
+	using RR##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args &&;			\
+	template T_clause																	\
+	using C##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args;		\
+	template T_clause																	\
+	using PC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args *;	\
+	template T_clause																	\
+	using RC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args &;	\
+	template T_clause																	\
+	using PPC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args **;	\
+	template T_clause																	\
+	using RRC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args &&
+
+
 
 
 /* (NATIVE) FUNDAMENTAL DATA TYPE ALIASES FOR WIN32 API-STYLE TYPE REFERENCES  */
 
-typedef void VOID, * PTR, * PVOID, ** PPVOID, * PROGMEM VOID_P;
+typedef void VOID, * PTR, * PVOID, ** PPVOID, * PROGMEM PVOID_P;
 typedef const void * PCVOID, ** PPCVOID;
 
 typedef bool bit, BIT, * PBIT, & RBIT, ** PPBIT, BOOL, * PBOOL, & RBOOL, ** PPBOOL, PROGMEM BOOL_P;
@@ -132,7 +271,6 @@ typedef volatile int VINT, * PVINT, & RVINT, ** PPVINT;
 typedef unsigned int UINT, * PUINT, & RUINT, ** PPUINT, PROGMEM UINT_P;
 typedef const unsigned int CUINT, * PCUINT, & RCUINT, ** PPCUINT;
 typedef volatile unsigned int VUINT, * PVUINT, & RVUINT, ** PPVUINT;
-
 typedef float FLOAT, * PFLOAT, & RFLOAT, ** PPFLOAT, PROGMEM FLOAT_P;
 typedef const float CFLOAT, * PCFLOAT, & RCFLOAT, ** PPCFLOAT;
 typedef volatile float VFLOAT, * PVFLOAT, & RVFLOAT, ** PPVFLOAT;

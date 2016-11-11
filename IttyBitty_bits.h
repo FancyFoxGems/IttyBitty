@@ -392,10 +392,10 @@ IGNORE_WARNING(-Wstrict-aliasing)
 
 #define PACK_BYTE(byte_addr)		reinterpret_cast<IttyBitty::PBITPACK>(byte_addr)
 #define PACK_BYTE_REF(byte_ref)		PACK_BYTE(&(byte_ref))
-#define PACK_BYTE_CREF(byte_val)		MAKE_CONST(PACK_BYTE(&(byte_val)))
+#define PACK_BYTE_CREF(byte_val)	MAKE_CONST(PACK_BYTE(&(byte_val)))
 #define PACK_BYTE_VAL(byte_val)		PACK_BYTE_CREF(byte_val)
 
-#define _B(byte_addr, i)		(PACK_BYTE(byte_addr)->b##i)
+#define _B(byte_addr, i)	(PACK_BYTE(byte_addr)->b##i)
 
 #define BIT0(byte_addr)		_B(byte_addr, 0)
 #define BIT1(byte_addr)		_B(byte_addr, 1)
@@ -412,8 +412,7 @@ namespace IttyBitty
 	/* [_BitPack]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
 
 	struct _BitPack;
-	typedef volatile struct _BitPack BitPack, BITPACK, * PBITPACK, & RBITPACK, ** PPBITPACK, && RRBITPACK;
-	typedef const volatile struct _BitPack CBITPACK, * PCBITPACK, & RCBITPACK, ** PPCBITPACK;
+	TYPEDEF_VOLATILE_STRUCT_ALIASES(BitPack, bitpack, BITPACK);
 
 	BITFIELD_STRUCT _BitPack
 	{

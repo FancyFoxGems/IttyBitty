@@ -57,13 +57,13 @@ namespace std
 	template<typename T>
 	STRUCT add_const<VOLATILE T *>
 	{
-		typedef CV T * type;
+		typedef CONSTVOL T * type;
 	};
 
 	template<typename T>
-	STRUCT add_const<CV T *>
+	STRUCT add_const<CONSTVOL T *>
 	{
-		typedef CV T * type;
+		typedef CONSTVOL T * type;
 	};
 
 	template<typename T>
@@ -100,7 +100,7 @@ namespace std
 	};
 
 	template<typename T>
-	STRUCT remove_const<CV T *>
+	STRUCT remove_const<CONSTVOL T *>
 	{
 		typedef VOLATILE T * type;
 	};
@@ -118,7 +118,7 @@ namespace std
 	};
 
 	template<typename T>
-	STRUCT remove_const<CV T[]>
+	STRUCT remove_const<CONSTVOL T[]>
 	{
 		typedef VOLATILE T type[];
 	};
@@ -130,7 +130,7 @@ namespace std
 	};
 
 	template<typename T, SIZE N>
-	STRUCT remove_const<CV T[N]>
+	STRUCT remove_const<CONSTVOL T[N]>
 	{
 		typedef VOLATILE T type[N];
 	};
@@ -156,13 +156,13 @@ namespace std
 	template<typename T>
 	STRUCT add_volatile<CONST T *>
 	{
-		typedef CV T * type;
+		typedef CONSTVOL T * type;
 	};
 
 	template<typename T>
-	STRUCT add_volatile<CV T *>
+	STRUCT add_volatile<CONSTVOL T *>
 	{
-		typedef CV T * type;
+		typedef CONSTVOL T * type;
 	};
 
 	template<typename T>
@@ -193,7 +193,7 @@ namespace std
 	};
 
 	template<typename T>
-	STRUCT remove_volatile<CV T *>
+	STRUCT remove_volatile<CONSTVOL T *>
 	{
 		typedef CONST T * type;
 	};
@@ -205,7 +205,7 @@ namespace std
 	};
 
 	template<typename T>
-	STRUCT remove_volatile<CV T[]>
+	STRUCT remove_volatile<CONSTVOL T[]>
 	{
 		typedef CONST T type[];
 	};
@@ -217,7 +217,7 @@ namespace std
 	};
 
 	template<typename T, SIZE N>
-	STRUCT remove_volatile<CV T[N]>
+	STRUCT remove_volatile<CONSTVOL T[N]>
 	{
 		typedef CONST T type[N];
 	};
@@ -253,32 +253,32 @@ namespace std
 	/* [add_pointer]: METAFUNCTION W/ SPECIALIZATION ON POINTER TYPE-NESS FOR POINTER TYPE REFERENCE */
 
 	template<typename T = VOID>
-	struct remove_reference;
+	STRUCT remove_reference;
 
 	template<typename T = VOID>
 	using remove_reference_t = typename remove_reference<T>::type;
 
 
 	template<typename T = VOID, bool is_function = FALSE >
-	struct add_pointer
+	STRUCT add_pointer
 	{
 		using type = remove_reference_t<T> *;
 	};
 
 	template<typename T>
-	struct add_pointer<T, TRUE>
+	STRUCT add_pointer<T, TRUE>
 	{
 		using type = T;
 	};
 
 	template<typename T, typename... args>
-	struct add_pointer<T(args...), TRUE>
+	STRUCT add_pointer<T(args...), TRUE>
 	{
 		using type = T(*)(args...);
 	};
 
 	template<typename T, typename... args>
-	struct add_pointer<T(args..., ...), TRUE>
+	STRUCT add_pointer<T(args..., ...), TRUE>
 	{
 		using type = T(*)(args..., ...);
 	};
@@ -520,7 +520,7 @@ namespace std
 	};
 
 	template<typename T>
-	struct extent<T[], 0>
+	STRUCT extent<T[], 0>
 	{
 		STATIC CONSTEXPR T value = 0;
 	};
