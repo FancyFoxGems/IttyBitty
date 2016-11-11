@@ -167,7 +167,7 @@
 	typedef volatile struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;	\
 	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
 
-#define TEMPLATE_USING_ALIASES(T_clause, T_args, type_name, TYPE_ALIAS)					\
+#define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_args, type_name, TYPE_ALIAS)			\
 	template T_clause																	\
 	using TYPE_ALIAS = type_name T_args;												\
 	template T_clause																	\
@@ -189,9 +189,9 @@
 	template T_clause																	\
 	using RRC##TYPE_ALIAS = const type_name T_args &&
 
-#define TEMPLATE_USING_STRUCT_ALIASES(T_clause, T_args, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)				\
+#define TEMPLATE_STRUCT_USING_ALIASES(T_clause, T_args, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
 	template T_clause																	\
-	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_args;		\
+	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_args;	\
 	template T_clause																	\
 	using type_alias = struct EXPAND_CONCAT(_, type_alias) T_args;						\
 	template T_clause																	\

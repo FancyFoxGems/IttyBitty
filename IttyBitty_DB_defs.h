@@ -35,31 +35,9 @@ namespace IttyBitty
 	typedef DbTableDef DBTABLEDEF, * PDBTABLEDEF, & RDBTABLEDEF, ** PPDBTABLEDEF, && RRDBTABLEDEF;
 	typedef const DbTableDef CDBTABLEDEF, * PCDBTABLEDEF, & RCDBTABLEDEF, ** PPCDBTABLEDEF;
 
-	class DbTable;
-
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	class TypedDbTableDef;
-	template<typename T>
-	using TYPEDDBTABLEDEF = TypedDbTableDef<T>;
-	template<typename T>
-	using PTYPEDDBTABLEDEF = TypedDbTableDef<T> *;
-	template<typename T>
-	using RTYPEDDBTABLEDEF = TypedDbTableDef<T> &;
-	template<typename T>
-	using PPTYPEDDBTABLEDEF = TypedDbTableDef<T> **;
-	template<typename T>
-	using RRTYPEDDBTABLEDEF = TypedDbTableDef<T> &&;
-	template<typename T>
-	using CTYPEDDBTABLEDEF = const TypedDbTableDef<T>;
-	template<typename T>
-	using PCTYPEDDBTABLEDEF = const TypedDbTableDef<T> *;
-	template<typename T>
-	using RCTYPEDDBTABLEDEF = const TypedDbTableDef<T> &;
-	template<typename T>
-	using PPCTYPEDDBTABLEDEF = const TypedDbTableDef<T> **;
-
-	template<typename T>
-	class TypedDbTable;
+	TEMPLATE_CLASS_USING_ALIASES(DEFAULT_T_CLAUSE, DEFAULT_T_ARGS, TypedDbTableDef, TYPEDDBTABLEDEF);
 
 	// TODO: Not yet implemented.
 	class FieldedDbTableDef;
@@ -74,26 +52,19 @@ namespace IttyBitty
 	typedef DbTableDefSet DBTABLEDEFSET, * PDBTABLEDEFSET, & RDBTABLEDEFSET, ** PPDBTABLEDEFSET, && RRDBTABLEDEFSET;
 	typedef const DbTableDefSet CDBTABLEDEFSET, * PCDBTABLEDEFSET, & RCDBTABLEDEFSET, ** PPCDBTABLEDEFSET;
 
-	template<CBYTE TableDefCount = 0>
+	#define GENERICDBTABLEDEFSET_T_CLAUSE_DEF	<CBYTE TableDefCount>
+	#define GENERICDBTABLEDEFSET_T_CLAUSE		<CBYTE TableDefCount = 0>
+	#define GENERICDBTABLEDEFSET_T_ARGS			<TableDefCount>
+
+	template GENERICDBTABLEDEFSET_T_CLAUSE
 	class GenericDbTableDefSet;
-	template<CBYTE TableDefCount = 0>
-	using GENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount>;
-	template<CBYTE TableDefCount = 0>
-	using PGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> *;
-	template<CBYTE TableDefCount = 0>
-	using RGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> &;
-	template<CBYTE TableDefCount = 0>
-	using PPGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> **;
-	template<CBYTE TableDefCount = 0>
-	using RRGENERICDBTABLEDEFSET = GenericDbTableDefSet<TableDefCount> &&;
-	template<CBYTE TableDefCount = 0>
-	using CGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount>;
-	template<CBYTE TableDefCount = 0>
-	using PCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> *;
-	template<CBYTE TableDefCount = 0>
-	using RCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> &;
-	template<CBYTE TableDefCount = 0>
-	using PPCGENERICDBTABLEDEFSET = const GenericDbTableDefSet<TableDefCount> **;
+	TEMPLATE_CLASS_USING_ALIASES(GENERICDBTABLEDEFSET_T_CLAUSE, GENERICDBTABLEDEFSET_T_ARGS, GenericDbTableDefSet, GENERICDBTABLEDEFSET);
+
+
+	class DbTable;
+
+	template DEFAULT_T_CLAUSE
+	class TypedDbTable;
 
 	class Database;
 
@@ -296,7 +267,7 @@ namespace IttyBitty
 
 #pragma region [TypedDbTableDef] DEFINITION
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS TypedDbTableDef : public DbTableDef
 	{
 	public:
@@ -475,7 +446,7 @@ namespace IttyBitty
 
 #pragma region [GenericDbTableDefSet] DEFINITION
 
-	template<CBYTE TableDefCount>
+	template GENERICDBTABLEDEFSET_T_CLAUSE_DEF
 	CLASS GenericDbTableDefSet : public DbTableDefSet
 	{
 	public:

@@ -53,26 +53,13 @@ namespace IttyBitty
 	typedef IDatum IDATUM, * PIDATUM, & RIDATUM, ** PPIDATUM, && RRIDATUM;
 	typedef const IDatum CIDATUM, *PCIDATUM, & RCIDATUM, ** PPCIDATUM;
 
-	template<typename TVal = CONSTVALUE>
+	#define DATUMBASE_T_CLAUSE_DEF	<typename TVal>
+	#define DATUMBASE_T_CLAUSE		<typename TVal = CONSTVALUE>
+	#define DATUMBASE_T_ARGS		<TVal>
+
+	template DATUMBASE_T_CLAUSE
 	class DatumBase;
-	template<typename TVal = CONSTVALUE>
-	using DATUMBASE = DatumBase<TVal>;
-	template<typename TVal = CONSTVALUE>
-	using PDATUMBASE = DatumBase<TVal> *;
-	template<typename TVal = CONSTVALUE>
-	using RDATUMBASE = DatumBase<TVal> &;
-	template<typename TVal = CONSTVALUE>
-	using PPDATUMBASE = DatumBase<TVal> **;
-	template<typename TVal = CONSTVALUE>
-	using RRDATUMBASE = DatumBase<TVal> &&;
-	template<typename TVal = CONSTVALUE>
-	using CDATUMBASE = const DatumBase<TVal>;
-	template<typename TVal = CONSTVALUE>
-	using PCDATUMBASE = const DatumBase<TVal> *;
-	template<typename TVal = CONSTVALUE>
-	using RCDATUMBASE = const DatumBase<TVal> &;
-	template<typename TVal = CONSTVALUE>
-	using PPCDATUMBASE = const DatumBase<TVal> **;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DATUMBASE_T_CLAUSE), CSL(DATUMBASE_T_ARGS), DatumBase, DATUMBASE);
 
 #pragma endregion
 
@@ -130,7 +117,7 @@ namespace IttyBitty
 
 #pragma region HELPER GLOBAL FUNCTION DEFINITIONS
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	INLINE PCHAR StringInsertValue(CONST T & value, PCHAR buffer, CBYTE radix = 0x10)
 	{
 		CHAR valStr[2 * T_SIZE + 1];
@@ -151,7 +138,7 @@ namespace IttyBitty
 		return (PCHAR)(buffer + 2 * T_SIZE);
 	}
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	INLINE PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
 	{
 		CHAR valStr[2 * T_SIZE + 1];
@@ -250,7 +237,7 @@ namespace IttyBitty
 
 #pragma region [DatumBase] DEFINITION - TAGGED UNION BASE
 
-	template<typename TVal>
+	template DATUMBASE_T_CLAUSE_DEF
 	CLASS DatumBase : public IDatum
 	{
 	public:

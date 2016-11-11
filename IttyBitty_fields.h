@@ -33,47 +33,17 @@ namespace IttyBitty
 	typedef VarLengthField VARLENGTHFIELD, * PVARLENGTHFIELD, & RVARLENGTHFIELD, ** PPVARLENGTHFIELD, && RRVARLENGTHFIELD;
 	typedef const VarLengthField CVARLENGTHFIELD, * PCVARLENGTHFIELD, & RCVARLENGTHFIELD, ** PPCVARLENGTHFIELD;
 
-	template<typename T = BYTE>
-	class TypedField;
-	template<typename T = BYTE>
-	using TYPEDFIELD = TypedField<T>;
-	template<typename T = BYTE>
-	using PTYPEDFIELD = TypedField<T> *;
-	template<typename T = BYTE>
-	using RTYPEDFIELD = TypedField<T> &;
-	template<typename T = BYTE>
-	using PPTYPEDFIELD = TypedField<T> **;
-	template<typename T = BYTE>
-	using RRTYPEDFIELD = TypedField<T> &&;
-	template<typename T = BYTE>
-	using CTYPEDFIELD = const TypedField<T>;
-	template<typename T = BYTE>
-	using PCTYPEDFIELD = const TypedField<T> *;
-	template<typename T = BYTE>
-	using RCTYPEDFIELD = const TypedField<T> &;
-	template<typename T = BYTE>
-	using PPCTYPEDFIELD = const TypedField<T> **;
+	#define TYPEDFIELD_T_CLAUSE				<typename T = PBYTE>
 
-	template<typename T = PBYTE>
+	template TYPEDFIELD_T_CLAUSE
+	class TypedField;
+	TEMPLATE_CLASS_USING_ALIASES(TYPEDFIELD_T_CLAUSE, DEFAULT_T_ARGS, TypedField, TYPEDFIELD);
+
+	#define VARLENGTHTYPEDFIELD_T_CLAUSE	<typename T = PBYTE>
+
+	template VARLENGTHTYPEDFIELD_T_CLAUSE
 	class VarLengthTypedField;
-	template<typename T = PBYTE>
-	using VARLENGTHTYPEDFIELD = VarLengthTypedField<T>;
-	template<typename T = PBYTE>
-	using PVARLENGTHTYPEDFIELD = VarLengthTypedField<T> *;
-	template<typename T = PBYTE>
-	using RVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &;
-	template<typename T = PBYTE>
-	using PPVARLENGTHTYPEDFIELD = VarLengthTypedField<T> **;
-	template<typename T = PBYTE>
-	using RRVARLENGTHTYPEDFIELD = VarLengthTypedField<T> &&;
-	template<typename T = PBYTE>
-	using CVARLENGTHTYPEDFIELD = const VarLengthTypedField<T>;
-	template<typename T = PBYTE>
-	using PCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> *;
-	template<typename T = PBYTE>
-	using RCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> &;
-	template<typename T = PBYTE>
-	using PPCVARLENGTHTYPEDFIELD = const VarLengthTypedField<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(VARLENGTHTYPEDFIELD_T_CLAUSE, DEFAULT_T_ARGS, VarLengthTypedField, VARLENGTHTYPEDFIELD);
 
 #pragma endregion
 
@@ -313,7 +283,7 @@ namespace IttyBitty
 
 #pragma region [TypedField] DEFINITION - TEMPLATED TAGGED UNION
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS TypedField : public FieldBase
 	{
 	public:
@@ -533,7 +503,7 @@ namespace IttyBitty
 
 #pragma region [VarLengthTypedField] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS VarLengthTypedField : public TypedField<T>
 	{
 	public:

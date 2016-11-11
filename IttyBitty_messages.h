@@ -44,26 +44,13 @@ namespace IttyBitty
 	typedef Message MESSAGE, * PMESSAGE, & RMESSAGE, ** PPMESSAGE, && RRMESSAGE;
 	typedef const Message CMESSAGE, * PCMESSAGE, & RCMESSAGE, ** PPCMESSAGE;
 
-	template<CBYTE MsgCode, CBYTE ParamCnt>
+	#define GENERICMESSAGE_T_CLAUSE_DEF	<CBYTE MsgCode, CBYTE ParamCnt>
+	#define GENERICMESSAGE_T_CLAUSE		<CBYTE MsgCode, CBYTE ParamCnt = 0>
+	#define GENERICMESSAGE_T_ARGS		<MsgCode, ParamCnt>
+
+	template GENERICMESSAGE_T_CLAUSE
 	class GenericMessage;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using GENERICMESSAGE = GenericMessage<MsgCode, ParamCnt>;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> *;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> &;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PPGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> **;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RRGENERICMESSAGE = GenericMessage<MsgCode, ParamCnt> &&;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using CGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt>;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> *;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using RCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> &;
-	template<CBYTE MsgCode, CBYTE ParamCnt>
-	using PPCGENERICMESSAGE = const GenericMessage<MsgCode, ParamCnt> **;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(GENERICMESSAGE_T_CLAUSE), CSL(GENERICMESSAGE_T_ARGS), GenericMessage, GENERICMESSAGE);
 
 #pragma endregion
 
@@ -75,7 +62,7 @@ namespace IttyBitty
 	CBOOL operator >(Stream & stream, PBYTE b);
 	CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length = 1);
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
 	{
 		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
@@ -252,7 +239,7 @@ namespace IttyBitty
 
 #pragma region [GenericMessage] DEFINITION
 
-	template<CBYTE MsgCode, CBYTE ParamCnt = 0>
+	template GENERICMESSAGE_T_CLAUSE_DEF
 	CLASS GenericMessage : public Message
 	{
 	public:

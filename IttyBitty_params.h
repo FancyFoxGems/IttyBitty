@@ -33,47 +33,17 @@ namespace IttyBitty
 	typedef VarLengthParam VARLENGTHPARAM, * PVARLENGTHPARAM, & RVARLENGTHPARAM, ** PPVARLENGTHPARAM, && RRVARLENGTHPARAM;
 	typedef const VarLengthParam CVARLENGTHPARAM, * PCVARLENGTHPARAM, & RCVARLENGTHPARAM, ** PPCVARLENGTHPARAM;
 
-	template<typename T = BYTE>
-	class TypedParam;
-	template<typename T = BYTE>
-	using TYPEDPARAM = TypedParam<T>;
-	template<typename T = BYTE>
-	using PTYPEDPARAM = TypedParam<T> *;
-	template<typename T = BYTE>
-	using RTYPEDPARAM = TypedParam<T> &;
-	template<typename T = BYTE>
-	using PPTYPEDPARAM = TypedParam<T> **;
-	template<typename T = BYTE>
-	using RRTYPEDPARAM = TypedParam<T> &&;
-	template<typename T = BYTE>
-	using CTYPEDPARAM = const TypedParam<T>;
-	template<typename T = BYTE>
-	using PCTYPEDPARAM = const TypedParam<T> *;
-	template<typename T = BYTE>
-	using RCTYPEDPARAM = const TypedParam<T> &;
-	template<typename T = BYTE>
-	using PPCTYPEDPARAM = const TypedParam<T> **;
+	#define TYPEDPARAM_T_CLAUSE				<typename T = BYTE>
 
-	template<typename T = PBYTE>
+	template TYPEDPARAM_T_CLAUSE
+	class TypedParam;
+	TEMPLATE_CLASS_USING_ALIASES(TYPEDPARAM_T_CLAUSE, DEFAULT_T_ARGS, TypedParam, TYPEDPARAM);
+
+	#define VARLENGTHTYPEDPARAM_T_CLAUSE	<typename T = PBYTE>
+
+	template VARLENGTHTYPEDPARAM_T_CLAUSE
 	class VarLengthTypedParam;
-	template<typename T = PBYTE>
-	using VARLENGTHTYPEDPARAM = VarLengthTypedParam<T>;
-	template<typename T = PBYTE>
-	using PVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> *;
-	template<typename T = PBYTE>
-	using RVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> &;
-	template<typename T = PBYTE>
-	using PPVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> **;
-	template<typename T = PBYTE>
-	using RRVARLENGTHTYPEDPARAM = VarLengthTypedParam<T> &&;
-	template<typename T = PBYTE>
-	using CVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T>;
-	template<typename T = PBYTE>
-	using PCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> *;
-	template<typename T = PBYTE>
-	using RCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> &;
-	template<typename T = PBYTE>
-	using PPCVARLENGTHTYPEDPARAM = const VarLengthTypedParam<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(VARLENGTHTYPEDPARAM_T_CLAUSE, DEFAULT_T_ARGS, VarLengthTypedParam, VARLENGTHTYPEDPARAM);
 
 #pragma endregion
 
@@ -277,7 +247,7 @@ namespace IttyBitty
 
 #pragma region [TypedParam] DEFINITION - TEMPLATED TAGGED UNION
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS TypedParam : public DatumBase<ConstValue>, public IParam
 	{
 	public:
@@ -487,7 +457,7 @@ namespace IttyBitty
 
 #pragma region [VarLengthTypedParam] DEFINITION - TEMPLATED, VARIABLE-LENGTH TAGGED UNION
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS VarLengthTypedParam : public TypedParam<T>
 	{
 	public:

@@ -202,12 +202,13 @@ using std::extent;
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
 
-#define ever		(;;)
-#define forever		for ever
+#define ever				(;;)
+#define forever				for ever
 
-#define T_SIZE		SIZEOF(T)
+#define T_SIZE				SIZEOF(T)
 
-#define MAX_T(T)	((T)T(0) - 0b1)
+#define MAX_VALUE_OF(T)		((T)T(0) - 0b1)
+#define MAX_OF(T)			MAX_VALUE_OF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)	(constructor_expr)
 #define _CONSTRUCT(constructor_expr)					FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)

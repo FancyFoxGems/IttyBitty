@@ -65,26 +65,11 @@ namespace IttyBitty
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
 
-	template<typename T = BYTE>
+	#define IBITFIELD_T_CLAUSE		<typename T = BYTE>
+
+	template IBITFIELD_T_CLAUSE
 	class IBitField;
-	template<typename T = BYTE>
-	using IBITFIELD = IBitField<T>;
-	template<typename T = BYTE>
-	using PIBITFIELD = IBitField<T> *;
-	template<typename T = BYTE>
-	using RIBITFIELD = IBitField<T> &;
-	template<typename T = BYTE>
-	using PPIBITFIELD = IBitField<T> **;
-	template<typename T = BYTE>
-	using RRIBITFIELD = IBitField<T> &&;
-	template<typename T = BYTE>
-	using CIBITFIELD =  const IBitField<T>;
-	template<typename T = BYTE>
-	using PCIBITFIELD = const IBitField<T> *;
-	template<typename T = BYTE>
-	using RCIBITFIELD = const IBitField<T> &;
-	template<typename T = BYTE>
-	using PPCIBITFIELD = const IBitField<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(IBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, IBitField, IBITFIELD);
 
 #endif	// #ifndef NO_ITTYBITTY_FULL_BYTES
 
@@ -100,51 +85,21 @@ namespace IttyBitty
 	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD, && RRIWORDFIELD;
 	typedef const class IWordField CIWORDFIELD, * PCIWORDFIELD, & RCIWORDFIELD, ** PPCIWORDFIELD;
 
-	template<typename T = DWORD>
+	#define IMANYBITFIELD_T_CLAUSE	<typename T = DWORD>
+
+	template IMANYBITFIELD_T_CLAUSE
 	class IManyBitField;
-	template<typename T = DWORD>
-	using IMANYBITFIELD = IManyBitField<T>;
-	template<typename T = DWORD>
-	using PIMANYBITFIELD = IManyBitField<T> *;
-	template<typename T = DWORD>
-	using RIMANYBITFIELD = IManyBitField<T> &;
-	template<typename T = DWORD>
-	using PPIMANYBITFIELD = IManyBitField<T> **;
-	template<typename T = DWORD>
-	using RRIMANYBITFIELD = IManyBitField<T> &&;
-	template<typename T = DWORD>
-	using CIMANYBITFIELD =  const IManyBitField<T>;
-	template<typename T = DWORD>
-	using PCIMANYBITFIELD = const IManyBitField<T> *;
-	template<typename T = DWORD>
-	using RCIMANYBITFIELD = const IManyBitField<T> &;
-	template<typename T = DWORD>
-	using PPCIMANYBITFIELD = const IManyBitField<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(IMANYBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, IManyBitField, IMANYBITFIELD);
 
 	class IDWordField;
 	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD, && RRIDWORDFIELD;
 	typedef const class IDWordField CIDWORDFIELD, * PCIDWORDFIELD, & RCIDWORDFIELD, ** PPCIDWORDFIELD;
 
-	template<typename T = BYTE>
+	#define BITFIELD_T_CLAUSE		<typename T = BYTE>
+
+	template BITFIELD_T_CLAUSE
 	class BitField;
-	template<typename T = BYTE>
-	using BITFIELD = BitField<T>;
-	template<typename T = BYTE>
-	using PBITFIELD = BitField<T> *;
-	template<typename T = BYTE>
-	using RBITFIELD = BitField<T> &;
-	template<typename T = BYTE>
-	using PPBITFIELD = BitField<T> **;
-	template<typename T = BYTE>
-	using RRBITFIELD = BitField<T> &&;
-	template<typename T = BYTE>
-	using CBITFIELD =  const BitField<T>;
-	template<typename T = BYTE>
-	using PCBITFIELD = const BitField<T> *;
-	template<typename T = BYTE>
-	using RCBITFIELD = const BitField<T> &;
-	template<typename T = BYTE>
-	using PPCBITFIELD = const BitField<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(BITFIELD_T_CLAUSE, DEFAULT_T_ARGS, BitField, BITFIELD);
 
 #endif	// #ifndef NO_ITTYBITTY_FULL_BYTES
 
@@ -160,26 +115,11 @@ namespace IttyBitty
 	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD, && RRWORDFIELD;
 	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD, ** PPCWORDFIELD;
 
-	template<typename T = DWORD>
+	#define MANYBITFIELD_T_CLAUSE	<typename T = DWORD>
+
+	template MANYBITFIELD_T_CLAUSE
 	class ManyBitField;
-	template<typename T = DWORD>
-	using MANYBITFIELD = ManyBitField<T>;
-	template<typename T = DWORD>
-	using PMANYBITFIELD = ManyBitField<T> *;
-	template<typename T = DWORD>
-	using RMANYBITFIELD = ManyBitField<T> &;
-	template<typename T = DWORD>
-	using PPMANYBITFIELD = ManyBitField<T> **;
-	template<typename T = DWORD>
-	using RRMANYBITFIELD = ManyBitField<T> &&;
-	template<typename T = DWORD>
-	using CMANYBITFIELD =  const ManyBitField<T>;
-	template<typename T = DWORD>
-	using PCMANYBITFIELD = const ManyBitField<T> *;
-	template<typename T = DWORD>
-	using RCMANYBITFIELD = const ManyBitField<T> &;
-	template<typename T = DWORD>
-	using PPCMANYBITFIELD = const ManyBitField<T> **;
+	TEMPLATE_CLASS_USING_ALIASES(MANYBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, ManyBitField, MANYBITFIELD);
 
 	class DWordField;
 	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
@@ -236,7 +176,7 @@ namespace IttyBitty
 
 	/* [IBITFIELD]: INTERFACE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	INTERFACE IBitField
 	{
 	public:
@@ -393,7 +333,7 @@ namespace IttyBitty
 
 	/* [IMANYBITFIELD]: INTERFACE FOR WORD-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	INTERFACE IManyBitField : public virtual IBitField<T>
 	{
 	public:
@@ -563,7 +503,7 @@ namespace IttyBitty
 
 	/* [BitField]: [IBitField] BASE IMPLEMENTATION TO ENCAPSULATE BIT-PACKED BYTE REFERENCES */
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS BitField : public virtual IBitField<T>
 	{
 	public:
@@ -998,7 +938,7 @@ namespace IttyBitty
 
 	/* [MANYBITFIELD]: TEMPLATED BASE CLASS TO ENCAPSULATE BIT-PACKED MEMORY OF ARBITRARY BYTE-WIDTH */
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	CLASS ManyBitField : public BitField<T>, public virtual IManyBitField<T>
 	{
 	public:

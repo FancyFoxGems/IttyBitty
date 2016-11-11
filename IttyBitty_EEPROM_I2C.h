@@ -102,101 +102,37 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
+	#define _EEEPTR_T_CLAUSE_DEF <CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
+	#define _EEEPTR_T_CLAUSE		<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,	\
 		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
+	#define _EEEPTR_T_ARGS		<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>
+
+	template _EEEPTR_T_CLAUSE
 	struct _EEEPtr;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using EEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using EEEPTR = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using REEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PPEEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using RREEEPtr = _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &&;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using CEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using RCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PPCEEEPtr = const _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
+	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEPTR_T_CLAUSE), CSL(_EEEPTR_T_ARGS), EEEPtr, eeeptr, EEEPTR);
 
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
+	#define _EEEREF_T_CLAUSE_DEF _EEEPTR_T_CLAUSE_DEF
+	#define _EEEREF_T_CLAUSE		_EEEPTR_T_CLAUSE
+	#define _EEEREF_T_ARGS		_EEEPTR_T_ARGS
+
+	template _EEEREF_T_CLAUSE
 	struct _EEERef;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using EEERef = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using EEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PEEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using REEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PPEEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using RREEEREF = _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &&;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using CEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> *;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using RCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> &;
-	template<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	using PPCEEEREF = const _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> **;
+	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEREF_T_CLAUSE), CSL(_EEEREF_T_ARGS), EEERef, eeeref, EEEREF);
 
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	#define EEPROMI2C_T_CLAUSE_DEF	<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum>
+	#define EEPROMI2C_T_CLAUSE		<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
+	#define EEPROMI2C_T_ARGS		<ChipType, DeviceNum>
+
+	template EEPROMI2C_T_CLAUSE
 	class EEPROM_I2C;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using EEPROMI2C = EEPROM_I2C<ChipType, DeviceNum>;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using PEEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> *;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using REEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> &;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using PPEEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> **;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using RREEPROMI2C = EEPROM_I2C<ChipType, DeviceNum> &&;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using CEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum>;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using PCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> *;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using RCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> &;
-	template<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	using PPCEEPROMI2C = const EEPROM_I2C<ChipType, DeviceNum> **;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(EEPROMI2C_T_CLAUSE), CSL(EEPROMI2C_T_ARGS), EEPROM_I2C, EEPROMI2C);
 
 #pragma endregion
 
 
 #pragma region [_EEEPtr] DEFINITION
 
-	template<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
+	template _EEEPTR_T_CLAUSE_DEF
 	struct _EEEPtr //: public EEPtr
 	{
 	protected:
@@ -285,7 +221,7 @@ namespace IttyBitty
 
 #pragma region [_EEERef] DEFINITION
 
-	template<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
+	template _EEEREF_T_CLAUSE_DEF
 	struct _EEERef //: public EERef
 	{
 	protected:
@@ -465,7 +401,7 @@ namespace IttyBitty
 				delay(SERIAL_EEPROM_WAIT_DELAY_MS);
 			}
 
-			return MAX_T(BYTE);
+			return MAX_OF(BYTE);
 		}
 
 		CBYTE SendDeviceAddressWord(RCBOOL waitForReady = TRUE) const
@@ -621,7 +557,7 @@ namespace IttyBitty
 
 #pragma region [EEPROM_I2C] DEFINITION
 
-	template<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum>
+	template EEPROMI2C_T_CLAUSE_DEF
 	class EEPROM_I2C
 	{
 	public:
@@ -884,7 +820,7 @@ namespace IttyBitty
 			return this->Clear(size);
 		}
 
-		template<typename T>
+		template DEFAULT_T_CLAUSE
 		CSIZE Load(T & datum) const
 		{
 			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
@@ -897,14 +833,14 @@ namespace IttyBitty
 			return i;
 		}
 
-		template<typename T>
+		template DEFAULT_T_CLAUSE
 		CSIZE Load(RCTADDR addr, T & datum) const
 		{
 			this->seek(addr);
 			return this->Load(datum);
 		}
 
-		template<typename T>
+		template DEFAULT_T_CLAUSE
 		CSIZE Save(CONST T & datum)
 		{
 			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
@@ -917,7 +853,7 @@ namespace IttyBitty
 			return i;
 		}
 
-		template<typename T>
+		template DEFAULT_T_CLAUSE
 		CSIZE Save(RCTADDR addr, CONST T & datum)
 		{
 			this->seek(addr);

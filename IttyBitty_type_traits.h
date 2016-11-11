@@ -20,6 +20,12 @@
 #include "IttyBitty_aliases.h"
 
 
+/* TEMPLATE MACROS */
+
+#define DEFAULT_T_CLAUSE	<typename T>
+#define DEFAULT_T_ARGS		<T>
+
+
 namespace std
 {
 	/* [identity]: METAFUNCTION BASE WHICH ENCAPSULATES ITS OWN TEMPLATED TYPE */
@@ -48,31 +54,31 @@ namespace std
 		typedef CONST T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_const<T *>
 	{
 		typedef CONST T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_const<VOLATILE T *>
 	{
 		typedef CONSTVOL T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_const<CONSTVOL T *>
 	{
 		typedef CONSTVOL T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_const<T **>
 	{
 		typedef CONST T ** type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_const<T &>
 	{
 		typedef CONST T & type;
@@ -87,37 +93,37 @@ namespace std
 	template<typename T = VOID>
 	STRUCT remove_const : identity<T> { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONST T>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONST T *>
 	{
 		typedef T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONSTVOL T *>
 	{
 		typedef VOLATILE T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONST T &>
 	{
 		typedef T & type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONST T[]>
 	{
 		typedef T type[];
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_const<CONSTVOL T[]>
 	{
 		typedef VOLATILE T type[];
@@ -147,25 +153,25 @@ namespace std
 		typedef VOLATILE T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_volatile<T *>
 	{
 		typedef VOLATILE T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_volatile<CONST T *>
 	{
 		typedef CONSTVOL T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_volatile<CONSTVOL T *>
 	{
 		typedef CONSTVOL T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_volatile<T &>
 	{
 		typedef T & type;
@@ -180,31 +186,31 @@ namespace std
 	template<typename T = VOID>
 	STRUCT remove_volatile : identity<T> { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_volatile<VOLATILE T>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_volatile<VOLATILE T *>
 	{
 		typedef T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_volatile<CONSTVOL T *>
 	{
 		typedef CONST T * type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_volatile<VOLATILE T[]>
 	{
 		typedef T type[];
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_volatile<CONSTVOL T[]>
 	{
 		typedef CONST T type[];
@@ -265,7 +271,7 @@ namespace std
 		using type = remove_reference_t<T> *;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_pointer<T, TRUE>
 	{
 		using type = T;
@@ -292,25 +298,25 @@ namespace std
 	template<typename T = VOID>
 	STRUCT remove_pointer : identity<T> { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_pointer<T *>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_pointer<T * const>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_pointer<T * volatile>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_pointer<T * cv>
 	{
 		typedef T type;
@@ -328,13 +334,13 @@ namespace std
 		using type = remove_pointer_t<T> &&;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_rvalue_ref<T &>
 	{
 		typedef T && type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_rvalue_ref<T &&>
 	{
 		typedef T && type;
@@ -350,13 +356,13 @@ namespace std
 		using type = remove_pointer_t<T> &;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_reference<T &>
 	{
 		using type = add_rvalue_ref_t<T &>;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT add_reference<T &&>
 	{
 		typedef T && type;
@@ -371,13 +377,13 @@ namespace std
 	template<typename T = VOID>
 	STRUCT remove_rvalue_ref : identity<T> { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_rvalue_ref<T &&>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_rvalue_ref<CONST T &&>
 	{
 		typedef T type;
@@ -387,22 +393,22 @@ namespace std
 	using remove_rvalue_ref_t = typename remove_rvalue_ref<T>::type;
 
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_reference : identity<T> { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_reference<T &>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_reference<CONST T &>
 	{
 		typedef T type;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT remove_reference<T &&>
 	{
 		using type = remove_rvalue_ref_t<T &&>;
@@ -492,7 +498,7 @@ namespace std
 	template<bool condition, typename T = VOID>
 	STRUCT enable_if { };
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT enable_if<TRUE, T> : identity<T> { };
 
 	template<bool condition, typename T = VOID>
@@ -519,7 +525,7 @@ namespace std
 		STATIC CONSTEXPR T value = N;
 	};
 
-	template<typename T>
+	template DEFAULT_T_CLAUSE
 	STRUCT extent<T[], 0>
 	{
 		STATIC CONSTEXPR T value = 0;
