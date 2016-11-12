@@ -252,6 +252,8 @@ VOID Message::Dispose()
 
 	delete[] _Params;
 	_Params = NULL;
+
+	_ParamCount = 0;
 }
 
 
@@ -540,7 +542,7 @@ CSIZE Message::ParamsBinarySize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < _ParamCount; i++)
+	for (BYTE i = 0; i < _ParamCount; i++)
 		size += _Params[i]->BinarySize();
 
 	return size;
@@ -550,7 +552,7 @@ CSIZE Message::ParamsStringSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < _ParamCount; i++)
+	for (BYTE i = 0; i < _ParamCount; i++)
 		size += _Params[i]->StringSize() - 1;
 
 	return size;

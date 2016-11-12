@@ -57,7 +57,7 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VIRTUAL VOID Dispose(CBOOL forceDispose = FALSE);
 
 
 	public:
@@ -191,6 +191,9 @@ namespace IttyBitty
 		// [IDbTableSet] HELPER METHODS
 
 		VIRTUAL CDBRESULT MoveTables(CSIZE, RCLONG);
+
+		VIRTUAL CDWORD TablesSize() const;
+		VIRTUAL CDWORD TablesCapacity() const;
 
 		VIRTUAL CSIZE TablesBinarySize() const;
 		VIRTUAL CSIZE TablesStringSize() const;

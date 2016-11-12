@@ -111,6 +111,8 @@ CSIZE DbTable::RowsAvailable() const
 
 CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount)
 {
+	// TODO
+
 	return DbResult::SUCCESS;
 }
 
@@ -119,11 +121,15 @@ CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE resultRow, PSIZE resultSize)
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
+	// TODO
+
 	return DbResult::SUCCESS;
 }
 
 CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
 {
+	// TODO
+
 	return DbResult::SUCCESS;
 }
 
@@ -132,6 +138,7 @@ CDBRESULT DbTable::Update(CSIZE rowIdx, PCBYTE rowData)
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
+	// TODO
 
 	return DbResult::SUCCESS;
 }
@@ -141,6 +148,8 @@ CDBRESULT DbTable::Delete(CSIZE rowIdx)
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
+	// TODO
+
 	return DbResult::SUCCESS;
 }
 
@@ -148,6 +157,8 @@ CDBRESULT DbTable::Truncate()
 {
 	if (this->RowCount() == 0)
 		return DbResult::SUCCESS;
+
+	// TODO
 
 	return DbResult::SUCCESS;
 }
@@ -186,8 +197,10 @@ VOID DbTable::SetTableName(PCCHAR tableName)
 CSTORAGERESULT DbTable::SaveAsBinary() const
 {
 	STORAGERESULT result = _TableDef->SaveAsBinary();
-	if ((BOOL)result)
+	if ((BYTE)result)
 		return result;
+
+	// TODO
 
 	return StorageResult::SUCCESS;
 }
@@ -195,8 +208,10 @@ CSTORAGERESULT DbTable::SaveAsBinary() const
 CSTORAGERESULT DbTable::SaveAsString() const
 {
 	STORAGERESULT result = _TableDef->SaveAsString();
-	if ((BOOL)result)
+	if ((BYTE)result)
 		return result;
+
+	// TODO
 
 	return StorageResult::SUCCESS;
 }
@@ -204,8 +219,10 @@ CSTORAGERESULT DbTable::SaveAsString() const
 CSTORAGERESULT DbTable::LoadFromBinary()
 {
 	STORAGERESULT result = _TableDef->LoadFromBinary();
-	if ((BOOL)result)
+	if ((BYTE)result)
 		return result;
+
+	// TODO
 
 	return StorageResult::SUCCESS;
 }
@@ -213,8 +230,10 @@ CSTORAGERESULT DbTable::LoadFromBinary()
 CSTORAGERESULT DbTable::LoadFromString()
 {
 	STORAGERESULT result = _TableDef->LoadFromString();
-	if ((BOOL)result)
+	if ((BYTE)result)
 		return result;
+
+	// TODO
 
 	return StorageResult::SUCCESS;
 }
@@ -436,7 +455,6 @@ PCBYTE DbTable::RowToBinary(PCBYTE data) const
 
 PCCHAR DbTable::RowToString(PCBYTE data) const
 {
-
 	return reinterpret_cast<PCCHAR>(data);
 }
 
