@@ -103,8 +103,8 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		VOID FreePtr();
 		VOID FreeData();
+		VOID FreeReference();
 	};
 
 #pragma endregion
@@ -198,8 +198,8 @@ namespace IttyBitty
 
 		// USER METHODS
 
-		VOID FreePtr();
 		VOID FreeData();
+		VOID FreeReference();
 	};
 
 #pragma endregion

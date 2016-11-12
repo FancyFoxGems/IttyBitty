@@ -84,11 +84,6 @@ namespace IttyBitty
 	{
 	public:
 
-		// /DESTRUCTOR
-
-		VIRTUAL ~FieldBase();
-
-
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
@@ -231,7 +226,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
 		EXPLICIT VarLengthField(CDATATYPE = DataType::BYTES_DATUM, CSIZE = 0);
 
@@ -243,8 +238,6 @@ namespace IttyBitty
 		EXPLICIT VarLengthField(PBYTE, CSIZE = 0);
 		EXPLICIT VarLengthField(PCHAR);
 		EXPLICIT VarLengthField(PBITPACK, CSIZE = 0);
-
-		VIRTUAL ~VarLengthField();
 
 
 		// OPERATORS
@@ -286,7 +279,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUYCTORS/DESTRUCTOR
+		// CONSTRUYCTORS
 
 		TypedField()
 		{
@@ -506,7 +499,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUYCTORS/DESTRUCTOR
+		// CONSTRUYCTORS
 
 		VarLengthTypedField(CSIZE length = 0) : TypedField<T>()
 		{
@@ -551,15 +544,6 @@ namespace IttyBitty
 		EXPLICIT VarLengthTypedField(T & value)
 		{
 			new (this) VarLengthTypedField<T>(value);
-		}
-
-		VIRTUAL ~VarLengthTypedField()
-		{
-			if (!_Dispose)
-				return;
-
-			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
-			//	_Value.FreeData();
 		}
 
 

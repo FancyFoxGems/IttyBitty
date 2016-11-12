@@ -246,11 +246,11 @@ namespace IttyBitty
 
 		VIRTUAL ~DatumBase()
 		{
-			if (!_Dispose)
-				return;
-
-			if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
+			if (_Dispose && (_DataType == DataType::BYTES_DATUM
+					|| _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM))
 				_Value.FreeData();
+			else
+				_Value.FreeReference();
 		}
 
 

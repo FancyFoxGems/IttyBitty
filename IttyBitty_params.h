@@ -72,11 +72,6 @@ namespace IttyBitty
 	{
 	public:
 
-		// /DESTRUCTOR
-
-		VIRTUAL ~ParamBase();
-
-
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL PCBYTE ToBinary() const;
@@ -149,7 +144,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
 		EXPLICIT Param(CDATATYPE = DataType::BYTE_DATUM);
 
@@ -199,7 +194,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
 		EXPLICIT VarLengthParam(CDATATYPE = DataType::BYTES_DATUM, CSIZE = 0);
 
@@ -211,8 +206,6 @@ namespace IttyBitty
 		EXPLICIT VarLengthParam(PCBYTE, CSIZE = 0);
 		EXPLICIT VarLengthParam(PCCHAR);
 		EXPLICIT VarLengthParam(PCBITPACK, CSIZE = 0);
-
-		VIRTUAL ~VarLengthParam();
 
 
 		// OPERATORS
@@ -250,7 +243,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUYCTORS/DESTRUCTOR
+		// CONSTRUYCTORS
 
 		TypedParam()
 		{
@@ -460,7 +453,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUYCTORS/DESTRUCTOR
+		// CONSTRUYCTORS
 
 		VarLengthTypedParam(CSIZE length = 0) : TypedParam<T>()
 		{
@@ -505,15 +498,6 @@ namespace IttyBitty
 		EXPLICIT VarLengthTypedParam(CONST T & value)
 		{
 			new (this) VarLengthTypedParam<T>(value);
-		}
-
-		VIRTUAL ~VarLengthTypedParam()
-		{
-			if (!_Dispose)
-				return;
-
-			//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
-			//	_Value.FreeData();
 		}
 
 

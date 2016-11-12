@@ -21,65 +21,88 @@
 #include "IttyBitty_util.h"
 
 
-/* SERIAL OPTIONS */
+#pragma region DEFINES
+
+// NOTE: To use a value other than  its default here, #define the constant before including IttyBitty.
+
+// SERIAL OPTIONS
 
 #ifndef SERIAL_PRINT_DELAY_MS
 	#define SERIAL_PRINT_DELAY_MS		5
 #endif
 
-#ifndef DEFAULT_SERIAL
-	#define DEFAULT_SERIAL				SERIAL_PORT_MONITOR
+#ifndef SERIAL_PRINT_DEFAULT_PORT
+	#define SERIAL_PRINT_DEFAULT_PORT	SERIAL_PORT_MONITOR
 #endif
 
-#define ON_STRING						"1"
-#define OFF_STRING						"0"
 
-#define TRUE_STRING						"TRUE"
-#define FALSE_STRING					"FALSE"
+// PRINTED VALUE LITERALS
+
+#ifndef ON_STRING
+	#define ON_STRING					"1"
+#endif
+
+#ifndef OFF_STRING
+	#define OFF_STRING					"0"
+#endif
+
+#ifndef TRUE_STRING
+	#define TRUE_STRING					"TRUE"
+#endif
+
+#ifndef FALSE_STRING
+	#define FALSE_STRING				"FALSE"
+#endif
+
+#pragma endregion
 
 
 namespace IttyBitty
 {
-	VOID FlushAndDelay(HardwareSerial & = DEFAULT_SERIAL);
+#pragma region SERIAL PRINT GLOBAL FUNCTION DECLARATIONS
 
-	VOID PrintBytes(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, HardwareSerial & = DEFAULT_SERIAL);
+	VOID FlushAndDelay(HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintBit(CBIT, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintBitLine(CBIT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBytes(PCBYTE, CSIZE size, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CBOOL, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CBOOL, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintBit(CBIT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintBitLine(CBIT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CCHAR, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CCHAR, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CBOOL, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CBOOL, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CBYTE, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CBYTE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CSHORT, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CSHORT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CBYTE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CBYTE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CWORD, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CSHORT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CSHORT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CSIZE, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CSIZE, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(CLONG, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CLONG, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CSIZE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CSIZE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCDWORD, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(CLONG, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CLONG, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintVal(RCFLOAT, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(RCFLOAT, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(RCDWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(RCDWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintString(PCCHAR, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(PCCHAR = "", HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintVal(RCFLOAT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(RCFLOAT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintString(CONST __FlashStringHelper *, HardwareSerial & = DEFAULT_SERIAL);
-	VOID PrintLine(CONST __FlashStringHelper *, HardwareSerial & = DEFAULT_SERIAL);
+	VOID PrintString(PCCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(PCCHAR = "", HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+
+	VOID PrintString(CONST __FlashStringHelper *, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(CONST __FlashStringHelper *, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+
+#pragma endregion
 }
 
 #endif

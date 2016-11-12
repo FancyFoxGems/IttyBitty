@@ -56,18 +56,6 @@ using namespace IttyBitty;
 
 #pragma region [ParamBase] IMPLEMENTATION
 
-// DESTRUCTOR
-
-ParamBase::~ParamBase()
-{
-	if (!_Dispose)
-		return;
-
-	if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
-		_Value.FreeData();
-}
-
-
 // [ISerializable] IMPLEMENTATION
 
 PCBYTE ParamBase::ToBinary() const
@@ -479,15 +467,6 @@ VarLengthParam::VarLengthParam(PCBITPACK value, CSIZE length)
 	_Dispose = FALSE;
 
 	_Value = value;
-}
-
-VarLengthParam::~VarLengthParam()
-{
-	if (!_Dispose)
-		return;
-
-	//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
-	//	_Value.FreeData();
 }
 
 

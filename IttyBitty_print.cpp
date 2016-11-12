@@ -17,6 +17,8 @@ using namespace IttyBitty;
 
 namespace IttyBitty
 {
+#pragma region SERIAL PRINT GLOBAL FUNCTION DEFINITIONS
+
 	VOID PrintBytes(PCBYTE buffer, CSIZE size, HardwareSerial & printer)
 	{
 		for (SIZE i = 0; i < size; i++)
@@ -167,6 +169,8 @@ namespace IttyBitty
 		printer.flush();
 		delay(SERIAL_PRINT_DELAY_MS);
 	}
+
+#pragma endregion
 }
 
 #endif // #ifndef NO_ITTYBITTY_PRINT

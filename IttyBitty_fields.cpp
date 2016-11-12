@@ -56,18 +56,6 @@ using namespace IttyBitty;
 
 #pragma region [FieldBase] IMPLEMENTATION
 
-// DESTRUCTOR
-
-FieldBase::~FieldBase()
-{
-	if (!_Dispose)
-		return;
-
-	if (_DataType == DataType::BYTES_DATUM || _DataType == DataType::STRING_DATUM || _DataType == DataType::BIT_DATUM)
-		_Value.FreeData();
-}
-
-
 // [ISerializable] IMPLEMENTATION
 
 PCBYTE FieldBase::ToBinary() const
@@ -661,15 +649,6 @@ VarLengthField::VarLengthField(PBITPACK value, CSIZE length)
 	_Dispose = FALSE;
 
 	_Value = value;
-}
-
-VarLengthField::~VarLengthField()
-{
-	if (!_Dispose)
-		return;
-
-	//if (_Length > 0 || _DataType == DataType::STRING_DATUM)
-	//	_Value.FreeData();
 }
 
 
