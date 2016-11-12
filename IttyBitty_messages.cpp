@@ -248,9 +248,7 @@ VOID Message::Dispose()
 
 	if (_Dispose)
 	{
-		CBYTE paramCount = this->ParamCount();
-
-		for (BYTE i = 0; i < paramCount; i++)
+		for (BYTE i = 0; i < _ParamCount; i++)
 		{
 			if (_Params[i] != NULL)
 			{
@@ -365,14 +363,13 @@ PCBYTE Message::ToBinary() const
 	CBYTE msgCode = this->GetMessageCode();
 	memcpy(bufferPtr++, &msgCode, SIZEOF(CBYTE));
 
-	CBYTE paramCount = this->ParamCount();
-	memcpy(bufferPtr++, &paramCount, SIZEOF(CBYTE));
+	memcpy(bufferPtr++, &_ParamCount, SIZEOF(CBYTE));
 
 	PIPARAM param = NULL;
 	PCBYTE paramBytes = NULL;
 	SIZE paramSize = 0;
 
-	for (SIZE i = 0; i < paramCount; i++)
+	for (SIZE i = 0; i < _ParamCount; i++)
 	{
 		param = _Params[i];
 		paramBytes = param->ToBinary();
@@ -389,7 +386,6 @@ PCBYTE Message::ToBinary() const
 PCCHAR Message::ToString() const
 {
 	CSIZE size = this->StringSize();
-	CBYTE paramCount = this->ParamCount();
 
 	if (__message_buffer)
 		delete[] __message_buffer;
@@ -401,13 +397,13 @@ PCCHAR Message::ToString() const
 
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
 	bufferPtr = StringInsertValue<CBYTE>(this->GetMessageCode(), bufferPtr);
-	bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr);
+	bufferPtr = StringInsertValue<CBYTE>(_ParamCount, bufferPtr);
 
 	PIPARAM param = NULL;
 	PCCHAR paramStr = NULL;
 	SIZE paramSize = 0;
 
-	for (SIZE i = 0; i < paramCount; i++)
+	for (SIZE i = 0; i < _ParamCount; i++)
 	{
 		param = _Params[i];
 		paramStr = param->ToString();
@@ -415,8 +411,9 @@ PCCHAR Message::ToString() const
 
 		memcpy(bufferPtr, paramStr, paramSize);
 
+		// TODO: Why..?
 		if (i == 0)
-			bufferPtr = StringInsertValue<CBYTE>(paramCount, bufferPtr - 2);
+			bufferPtr = StringInsertValue<CBYTE>(_ParamCount, bufferPtr - 2);
 
 		bufferPtr += paramSize;
 	}
@@ -536,7 +533,7 @@ CSIZE Message::ParamsByteSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->ParamCount(); i++)
+	for (SIZE i = 0; i < _ParamCount; i++)
 		size += _Params[i]->BinarySize();
 
 	return size;
@@ -546,7 +543,7 @@ CSIZE Message::ParamsStringSize() const
 {
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->ParamCount(); i++)
+	for (SIZE i = 0; i < _ParamCount; i++)
 		size += _Params[i]->StringSize() - 1;
 
 	return size;

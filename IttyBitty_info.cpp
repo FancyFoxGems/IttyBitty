@@ -30,6 +30,40 @@
 
 namespace IttyBitty
 {
+#pragma region GLOBAL VARIABLE DEFINITIONS
+
+	BYTE _MCUSR;
+
+#pragma endregion
+
+
+#pragma region WATCHDOG TIMER GLOBAL FUNCTION DEFINITIONS
+
+	VOID DisableWdt()
+	{
+		_MCUSR = MCUSR;
+		MCUSR = 0;
+
+		wdt_disable();
+	}
+
+	CRESETSOURCE GetResetSource()
+	{
+		if (_MCUSR > ResetSource::POWER_ON)
+			_MCUSR &= ~0x1;
+
+		return (CRESETSOURCE)_MCUSR;
+	}
+
+	VOID SetWdtInterval(CWDTINTERVAL wdtInterval)
+	{
+		wdt_enable(wdtInterval);
+		WDR();
+	}
+
+#pragma endregion
+
+
 #pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DEFINITIONS
 
 	CONSTEXPR PCCHAR CPUType()

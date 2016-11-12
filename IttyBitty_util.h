@@ -20,8 +20,6 @@
 
 #include "IttyBitty_type_traits.h"
 
-#include <avr/wdt.h>
-
 
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
@@ -227,15 +225,15 @@ using std::extent;
 
 #if !defined(ARDUINO) || ARDUINO < 20000 // NOTE: Assume Arduino 2.0+ will define placement new??
 
-	INLINE PVOID operator new(SIZE size, PVOID ptr)
-	{
-		return ptr;
-	}
+INLINE PVOID operator new(SIZE size, PVOID ptr)
+{
+	return ptr;
+}
 
-	INLINE PVOID operator new[](SIZE size, PVOID ptr)
-	{
-		return ptr;
-	}
+INLINE PVOID operator new[](SIZE size, PVOID ptr)
+{
+	return ptr;
+}
 
 #endif	// if !defined(ARDUINO)...
 
@@ -250,45 +248,5 @@ INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
 {
 	return (tInstance->*function)(&params...);
 }
-
-// TODO: Integrate...
-/*
-
-VOID InitWDT() __attribute__((naked)) __attribute__((section(".init3")));
-
-VOID InitWDT()
-{
-	MCUSR = 0;
-	wdt_disable();
-
-	return;
-}
-*/
-
-/*
-void my_init_portb (void) __attribute__ ((naked)) \
-	__attribute__ ((section (".init3")));
-
-void
-my_init_portb (void)
-{
-		PORTB = 0xff;
-		DDRB = 0xff;
-}
-*/
-
-
-/*
-;; begin xram.S
-
-#include <avr/io.h>
-
-		.section .init1,"ax",@progbits
-
-		ldi r16,_BV(SRE) | _BV(SRW)
-		out _SFR_IO_ADDR(MCUCR),r16
-
-;; end xram.S
-*/
 
 #endif

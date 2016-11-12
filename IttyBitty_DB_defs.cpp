@@ -336,7 +336,7 @@ VOID DbTableDefSet::Dispose()
 
 	if (_Dispose)
 	{
-		for (BYTE i = 0; i < this->TableDefCount(); i++)
+		for (BYTE i = 0; i < _TableDefCount; i++)
 		{
 			if (_TableDefs[i] != NULL)
 			{
@@ -370,7 +370,7 @@ PCIDBTABLEDEF DbTableDefSet::operator[](PCCHAR tableName) const
 {
 	PCIDBTABLEDEF tableDefPtr = NULL;
 
-	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	for (BYTE i = 0; i < _TableDefCount; i++)
 	{
 		tableDefPtr = this->operator[](i);
 
@@ -385,7 +385,7 @@ PIDBTABLEDEF DbTableDefSet::operator[](PCCHAR tableName)
 {
 	PIDBTABLEDEF tableDefPtr = NULL;
 
-	for (BYTE i = 0; i < this->TableDefCount(); i++)
+	for (BYTE i = 0; i < _TableDefCount; i++)
 	{
 		tableDefPtr = this->operator[](i);
 
@@ -494,15 +494,14 @@ PCBYTE DbTableDefSet::ToBinary() const
 	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
 	bufferPtr += SIZEOF(CSIZE);
 
-	CBYTE tableDefCount = this->TableDefCount();
-	memcpy(bufferPtr, &tableDefCount, SIZEOF(CBYTE));
+	memcpy(bufferPtr, &_TableDefCount, SIZEOF(CBYTE));
 	bufferPtr += SIZEOF(CBYTE);
 
 	PIDBTABLEDEF tableDef = NULL;
 	PCBYTE tableDefBytes = NULL;
 	SIZE tableDefSize = 0;
 
-	for (SIZE i = 0; i < tableDefCount; i++)
+	for (SIZE i = 0; i < _TableDefCount; i++)
 	{
 		tableDef = _TableDefs[i];
 		tableDefBytes = tableDef->ToBinary();
@@ -519,7 +518,6 @@ PCBYTE DbTableDefSet::ToBinary() const
 PCCHAR DbTableDefSet::ToString() const
 {
 	CSIZE size = this->StringSize();
-	CBYTE tableDefCount = this->TableDefCount();
 
 	if (__db_table_def_set_buffer)
 		delete[] __db_table_def_set_buffer;
@@ -530,22 +528,19 @@ PCCHAR DbTableDefSet::ToString() const
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__db_table_def_set_buffer);
 
 	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
-	bufferPtr = StringInsertValue<CBYTE>(tableDefCount, bufferPtr);
+	bufferPtr = StringInsertValue<CBYTE>(_TableDefCount, bufferPtr);
 
 	PIDBTABLEDEF tableDef = NULL;
 	PCCHAR tableDefStr = NULL;
 	SIZE tableDefSize = 0;
 
-	for (SIZE i = 0; i < tableDefCount; i++)
+	for (SIZE i = 0; i < _TableDefCount; i++)
 	{
 		tableDef = _TableDefs[i];
 		tableDefStr = tableDef->ToString();
 		tableDefSize = tableDef->StringSize() - 1;
 
 		memcpy(bufferPtr, tableDefStr, tableDefSize);
-
-		if (i == 0)
-			bufferPtr = StringInsertValue<CBYTE>(tableDefCount, bufferPtr - 2);
 
 		bufferPtr += tableDefSize;
 	}
@@ -623,9 +618,10 @@ SIZE DbTableDefSet::printTo(Print & printer) const
 
 CSIZE DbTableDefSet::TableDefsByteSize() const
 {
+	CBYTE tableDefCount = this->TableDefCount();
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->TableDefCount(); i++)
+	for (SIZE i = 0; i < tableDefCount; i++)
 		size += _TableDefs[i]->BinarySize();
 
 	return size;
@@ -633,9 +629,10 @@ CSIZE DbTableDefSet::TableDefsByteSize() const
 
 CSIZE DbTableDefSet::TableDefsStringSize() const
 {
+	CBYTE tableDefCount = this->TableDefCount();
 	SIZE size = 0;
 
-	for (SIZE i = 0; i < this->TableDefCount(); i++)
+	for (SIZE i = 0; i < tableDefCount; i++)
 		size += _TableDefs[i]->StringSize();
 
 	return size;

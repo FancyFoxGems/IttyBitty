@@ -243,6 +243,12 @@ typedef bool bit;
 typedef bool boolean;
 #endif
 
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(char, NYBBLE);
+
+typedef char nybble;
+
+
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(char, CHAR);
 
 // NOTE: No CONST aliases for INT8 because {PCINT8} is an identifier reserved for an AVR interrupt vector constant...

@@ -162,12 +162,20 @@ CDBRESULT Database::Delete()
 
 CDBRESULT Database::Load()
 {
-	return DbResult::SUCCESS;
+#ifdef _DEBUG
+	return (CDBRESULT)this->LoadFromString();
+#else
+	return (CDBRESULT)this->LoadFromBinary();
+#endif
 }
 
 CDBRESULT Database::Save()
 {
-	return DbResult::SUCCESS;
+#ifdef _DEBUG
+	return (CDBRESULT)this->SaveAsString();
+#else
+	return (CDBRESULT)this->SaveAsBinary();
+#endif
 }
 
 

@@ -27,17 +27,24 @@
 #include <avr/boot.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
+#include <avr/wdt.h>
 
 
 #pragma region DEFINES
 
 #define ROM_USED_DETECTION_TOLERANCE_DWORDS	4
 
-#define BOOTSZ0 _BV(1)
-#define BOOTSZ1 _BV(2)
+#define BOOTSZ0		_BV(1)
+#define BOOTSZ1		_BV(2)
 
 #pragma endregion
 
+
+#pragma region MACROS
+
+#define WDR()		ASM("wdr")
+
+#pragma endregion
 
 #pragma region MEMORY AREA/ALLOCATION VARIABLES (FROM AVR LibC & COMPILER, e.g. AVR-GCC)
 
@@ -64,6 +71,54 @@ EXTERN BYTE __fuse_byte_high_or_extended;
 
 namespace IttyBitty
 {
+#pragma region GLOBAL VARIABLE DECLARATIONS
+
+	EXTERN BYTE _MCUSR __attribute__ ((section (".noinit")));
+
+#pragma endregion
+
+
+#pragma region ENUMS
+
+	enum ResetSource : NYBBLE
+	{
+		POWER_ON		= 0x1,
+		EXTERNAL_RESET	= 0x2,
+		BROWN_OUT		= 0x4,
+		WDT_TIMEOUT		= 0x8
+	};
+
+	TYPEDEF_ENUM_ALIASES(ResetSource, RESETSOURCE);
+
+
+	enum WdtInterval : BYTE
+	{
+		WDT_15MS	= WDTO_15MS,
+		WDT_30MS	= WDTO_30MS,
+		WDT_60MS	= WDTO_60MS,
+		WDT_120MS	= WDTO_120MS,
+		WDT_250MS	= WDTO_250MS,
+		WDT_500MS	= WDTO_500MS,
+		WDT_1S		= WDTO_1S,
+		WDT_2S		= WDTO_2S,
+		WDT_4S		= WDTO_4S,
+		WDT_8S		= WDTO_8S
+	};
+
+	TYPEDEF_ENUM_ALIASES(WdtInterval, WDTINTERVAL);
+
+#pragma endregion
+
+
+#pragma region WATCHDOG TIMER GLOBAL FUNCTION DECLARATIONS
+
+	VOID DisableWdt() __attribute__((naked)) __attribute__((section(".init3")));
+	CRESETSOURCE GetResetSource();
+	VOID SetWdtInterval(CWDTINTERVAL);
+
+#pragma endregion
+
+
 #pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DECLARATIONS
 
 	CONSTEXPR PCCHAR CPUType();

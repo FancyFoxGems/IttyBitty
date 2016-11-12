@@ -31,6 +31,9 @@ namespace IttyBitty
 	class MemoryResidentStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(MemoryResidentStorageAdapter, MEMORYRESIDENTSTORAGEADAPTER);
 
+	class FlashRomStorageAdapter;
+	TYPEDEF_CLASS_ALIASES(FlashRomStorageAdapter, FLASHROMSTORAGEADAPTER);
+
 	class EepromStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(EepromStorageAdapter, EEPROMSTORAGEADAPTER);
 
@@ -39,6 +42,68 @@ namespace IttyBitty
 
 	class SdStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
+
+#pragma endregion
+
+
+#pragma region [MemoryResidentStorageAdapter] DEFINITION
+
+	CLASS MemoryResidentStorageAdapter
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MemoryResidentStorageAdapter();
+
+		~MemoryResidentStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		VIRTUAL CSTORAGERESULT Flush();
+
+		VIRTUAL CSTORAGERESULT Close();
+	};
+
+#pragma endregion
+
+
+#pragma region [FlashRomStorageAdapter] DEFINITION
+
+	CLASS FlashRomStorageAdapter
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		FlashRomStorageAdapter();
+
+		~FlashRomStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		VIRTUAL CSTORAGERESULT Flush();
+
+		VIRTUAL CSTORAGERESULT Close();
+	};
 
 #pragma endregion
 
