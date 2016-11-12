@@ -53,6 +53,9 @@ namespace IttyBitty
 		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
 	};
 
+	TYPEDEF_ENUM_ALIASES(PinMode, PINMODE);
+
+
 	ENUM PinModeBasic : BYTE
 	{
 		Input	= INPUT,
@@ -60,11 +63,7 @@ namespace IttyBitty
 		PullUp	= INPUT_PULLUP
 	};
 
-	typedef enum PinMode PINMODE;
-	typedef const enum PinMode CPINMODE;
-
-	typedef enum PinModeBasic PINMODEBASIC;
-	typedef const enum PinModeBasic CPINMODEBASIC;
+	TYPEDEF_ENUM_ALIASES(PinModeBasic, PINMODEBASIC);
 
 #pragma endregion
 }
@@ -77,16 +76,15 @@ namespace IttyBitty
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	struct _PortRegisters;
-	typedef struct _PortRegisters _portregisters_t, PortReg, PORTREG, * PPORTREG, & RPORTREG, ** PPPORTREG, && RRPORTREG;
-	typedef const struct _PortRegisters CPORTREG, * PCPORTREG, & RCPORTREG, ** PPCPORTREG;
+	typedef struct _PortRegisters PortReg;
+	TYPEDEF_STRUCT_ALIASES(PortRegisters, portregisters, PORTREG);
 
 	struct _Port;
-	typedef struct _Port _port_t, Port, PORT, * PPORT, & RPORT, ** PPPORT, && RRPORT;
-	typedef const struct _Port CPORT, * PCPORT, & RCPORT, ** PPCPORT;
+	TYPEDEF_STRUCT_ALIASES(Port, port, PORT);
 
 	struct _GPIO;
-	typedef struct _GPIO _gpio_t, GPIO, * PGPIO, & RGPIO, ** PPGPIO, && RRGPIO;
-	typedef const struct _GPIO CGPIO, * PCGPIO, & RCGPIO, ** PPCGPIO;
+	TYPEDEF_SINGLETON_STRUCT_ALIASES(GPIO, GPIO);
+
 
 	#define _PIN_T_CLAUSE_DEF	<PIN_NUMBER PinNum, PPORT PortPtr>
 	#define _PIN_T_CLAUSE		<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>

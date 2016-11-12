@@ -74,38 +74,43 @@
 
 /* BIT-WISE OPERATOR ALIASES */
 
-#define NOT							~
-#define AND							&
-#define NAND(val1, val2)			(NOT ((val1) AND (val2)))
-#define OR							|
-#define NOR(val1, val2)				(NOT ((val1) OR (val2)))
-#define XOR							^
+#define NOT							!
+#define AND							&&
+#define OR							||
+
+#define INVERSE						~
+#define INV							INVERSE
+#define BAND						&
+#define NAND(val1, val2)			(INV ((val1) BAND (val2)))
+#define BOR							|
+#define NOR(val1, val2)				(INV ((val1) BOR (val2)))
+#define BXOR						^
 #define SHIFT_RIGHT					>>
 #define SHR							SHIFT_RIGHT
 #define SHIFT_LEFT					<<
 #define SHL							SHIFT_LEFT
 
-#define MASK(ref, mask)				((ref) & (mask))
-#define INVERSE_MASK(ref, mask)		((ref) & ~(mask))
+#define MASK(ref, mask)				((ref) BAND (mask))
+#define INVERSE_MASK(ref, mask)		((ref) BAND ~(mask))
 
 
 /* MASK GENERATOR MACROS */
 
 #define BIT_MASK(bit_offset)		_BV(bit_offset)
 #define BMASK(bit_offset)			BIT_MASK(bit_offset)
-#define NOT_BIT(bit_offset)			NOT BIT_MASK(bit_offset)
+#define NOT_BIT(bit_offset)			INV BIT_MASK(bit_offset)
 
 #define NYBBLE_MASK(nybble_offset)	(0x0F << ((nybble_offset) * BITS_PER_BYTE / 2))
-#define NOT_NYBBLE(nybble_offset)	NOT NYBBLE_MASK(nybble_offset)
+#define NOT_NYBBLE(nybble_offset)	INV NYBBLE_MASK(nybble_offset)
 
 #define BYTE_MASK(byte_offset)		(0xFF << ((byte_offset) * BITS_PER_BYTE))
-#define NOT_BYTE(byte_offset)		NOT BYTE_MASK(byte_offset)
+#define NOT_BYTE(byte_offset)		INV BYTE_MASK(byte_offset)
 
 #define WORD_MASK(word_offset)		(0xFFFF << ((word_offset) * BIT_SIZE(WORD)))
-#define NOT_WORD(word_offset)		NOT WORD_MASK(word_offset)
+#define NOT_WORD(word_offset)		INV WORD_MASK(word_offset)
 
 #define DWORD_MASK(dword_offset)	(0xFFFF << ((dword_offset) * BIT_SIZE(DWORD)))
-#define NOT_DWORD(dword_offset)		NOT DWORD_MASK(dword_offset)
+#define NOT_DWORD(dword_offset)		INV DWORD_MASK(dword_offset)
 
 
 /* BITMASK MACROS (FOR MULTI-BIT MANIPULATION OPERATIONS) */

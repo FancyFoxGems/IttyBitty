@@ -94,8 +94,7 @@ namespace IttyBitty
 		mc24XX102x	= 0x0400
 	};
 
-	typedef enum SerialEepromChipFamily SERIALEEPROMCHIPFAMILY;
-	typedef const enum SerialEepromChipFamily CSERIALEEPROMCHIPFAMILY;
+	TYPEDEF_ENUM_ALIASES(SerialEepromChipFamily, SERIALEEPROMCHIPFAMILY);
 
 #pragma endregion
 
@@ -111,6 +110,7 @@ namespace IttyBitty
 	struct _EEEPtr;
 	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEPTR_T_CLAUSE), CSL(_EEEPTR_T_ARGS), EEEPtr, eeeptr, EEEPTR);
 
+
 	#define _EEEREF_T_CLAUSE_DEF _EEEPTR_T_CLAUSE_DEF
 	#define _EEEREF_T_CLAUSE		_EEEPTR_T_CLAUSE
 	#define _EEEREF_T_ARGS		_EEEPTR_T_ARGS
@@ -118,6 +118,7 @@ namespace IttyBitty
 	template _EEEREF_T_CLAUSE
 	struct _EEERef;
 	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEREF_T_CLAUSE), CSL(_EEEREF_T_ARGS), EEERef, eeeref, EEEREF);
+
 
 	#define EEPROMI2C_T_CLAUSE_DEF	<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum>
 	#define EEPROMI2C_T_CLAUSE		<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>

@@ -31,7 +31,7 @@
 /* C++ KEYWORD/SPECIFIER/MODIFIER ALIASES */
 
 #ifndef null
-	#define null		0
+	#define null		((void *)0)
 #endif
 
 #ifndef NULL
@@ -40,6 +40,10 @@
 
 #ifndef nil
 	#define nil			null
+#endif
+
+#ifndef NIL
+	#define NIL			null
 #endif
 
 #ifndef TRUE
@@ -104,7 +108,7 @@
 #define TYPEDEF_VOLATILE_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_MODIFIER_ALIASES(volatile type_name, V##TYPE_ALIAS)
 #define TYPEDEF_CONST_VOLATILE_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_MODIFIER_ALIASES(const volatile type_name, CV##TYPE_ALIAS)
 
-#define TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)			typedef type_name PROGMEM type_name##_P
+#define TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)			typedef type_name PROGMEM TYPE_ALIAS##_P
 
 #define TYPEDEF_ALIASES_PP(type_name, TYPE_ALIAS)						\
 	typedef type_name ** PP##TYPE_ALIAS, && RR##TYPE_ALIAS;				\
@@ -159,6 +163,9 @@
 #define TYPEDEF_CLASS_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_ALIASES_WITH_PP(class type_name, TYPE_ALIAS)
 #define TYPEDEF_VOLATILE_CLASS_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(class type_name, TYPE_ALIAS)
 
+#define TYPEDEF_SINGLETON_CLASS_ALIASES(type_name, TYPE_ALIAS)			\
+	typedef const type_name & RC##TYPE_ALIAS
+
 #define TYPEDEF_STRUCT_ALIASES(type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
 	typedef struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;			\
 	TYPEDEF_ALIASES_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
@@ -166,6 +173,10 @@
 #define TYPEDEF_VOLATILE_STRUCT_ALIASES(type_alias, lower_type_alias, UPPER_TYPE_ALIAS)	\
 	typedef volatile struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;	\
 	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
+
+#define TYPEDEF_SINGLETON_STRUCT_ALIASES(type_alias, TYPE_ALIAS)			\
+	typedef struct EXPAND_CONCAT(_, type_alias)  TYPE_ALIAS;			\
+	typedef const struct EXPAND_CONCAT(_, type_alias) & RC##TYPE_ALIAS
 
 #define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_args, type_name, TYPE_ALIAS)			\
 	template T_clause																	\
@@ -223,70 +234,119 @@
 typedef void VOID, * PTR, * PVOID, ** PPVOID, * PROGMEM PVOID_P;
 typedef const void * PCVOID, ** PPCVOID;
 
-typedef bool bit, BIT, * PBIT, & RBIT, ** PPBIT, BOOL, * PBOOL, & RBOOL, ** PPBOOL, PROGMEM BOOL_P;
-typedef const bool CBIT, * PCBIT, & RCBIT, ** PPCBIT, CBOOL, * PCBOOL, & RCBOOL, ** PPCBOOL;
-typedef volatile bool VBIT, * PVBIT, & RVBIT, ** PPVBIT, VBOOL, * PVBOOL, & RVBOOL, ** PPVBOOL;
 
-typedef char int8, INT8, i8, I8, CHAR, * PCHAR, & RCHAR, ** PPCHAR, PROGMEM CHAR_P;
-typedef const char CCHAR, * PCCHAR, & RCCHAR, ** PPCCHAR, * PROGMEM CSTR_P;
-typedef volatile char V8, VCHAR, * PVCHAR, & RVCHAR, ** PPVCHAR;
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(bool, BOOL);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(bool, BIT);
 
-typedef unsigned char uint8, UINT8, u8, U8, BYTE, * PBYTE, & RBYTE, ** PPBYTE, PROGMEM BYTE_P;
-typedef const unsigned char CBYTE, * PCBYTE, & RCBYTE, ** PPCBYTE;
-typedef volatile unsigned char VU8, VBYTE, * PVBYTE, & RVBYTE, ** PPVBYTE;
-typedef const volatile unsigned char CVU8, CVBYTE, * PCVBYTE, & RCVBYTE, ** PPCVBYTE;
+typedef bool bit;
 
-typedef short int16, INT16, i16, I16, SHORT, * PSHORT, & RSHORT, ** PPSHORT, PROGMEM SHORT_P;
-typedef const short CSHORT, * PCSHORT, & RCSHORT, ** PPCSHORT;
-typedef volatile short V16, VSHORT, * PVSHORT, & RVSHORT, ** PPVSHORT;
+#ifndef ARDUINO
+	typedef bool boolean;
+#endif
 
-typedef unsigned short uint16, UINT16, u16, U16, WORD, * PWORD, & RWORD, ** PPWORD, PROGMEM WORD_P;
-typedef const unsigned short CWORD, * PCWORD, & RCWORD, ** PPCWORD;
-typedef volatile unsigned short VU16, VWORD, * PVWORD, & RVWORD, ** PPVWORD;
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(char, CHAR);
 
-typedef wchar_t wchar, WCHAR, * PWCHAR, & RWCHAR, ** PPWCHAR, PROGMEM WCHAR_P;
-typedef const wchar_t CWCHAR, * PCWCHAR, & RCWCHAR, ** PPCWCHAR;
-typedef volatile wchar_t VWCHAR, * PVWCHAR, & RVWCHAR, ** PPVWCHAR;
+// NOTE: No CONST aliases for INT8 because {PCINT8} is an identifier taken for an AVR interrupt vector constant...
+TYPEDEF_ALIASES_NOMODIFIER(char, INT8);
+TYPEDEF_VOLATILE_ALIASES(char, INT8);
+TYPEDEF_CONST_VOLATILE_ALIASES(char, INT8);
+TYPEDEF_ALIASES_PP(char, INT8);
 
-typedef long int32, INT32, i32, I32, LONG, * PLONG, & RLONG, ** PPLONG, PROGMEM LONG_P;
-typedef const long CLONG, * PCLONG, & RCLONG, ** PPCLONG;
-typedef volatile long V32, VLONG, * PVLONG, & RVLONG, ** PPVLONG;
+typedef char int8, I8;
+typedef char * cstring, * CSTRING, * CSTRING_P PROGMEM;
+typedef const char * CCSTRING;
+typedef volatile char V8;
 
-typedef unsigned long uint32, UINT32, u32, U32, dword, DWORD, * PDWORD, & RDWORD, ** PPDWORD, PROGMEM DWORD_P;
-typedef const unsigned long CDWORD, * PCDWORD, & RCDWORD, ** PPCDWORD;
-typedef volatile unsigned long VU32, VDWORD, * PVDWORD, & RVDWORD, ** PPVDWORD;
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned char, BYTE);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned char, UINT8);
 
-typedef long long int64, INT64, i64, I64, verylong, VERYLONG, longlong, LONGLONG, * PLONGLONG, & RLONGLONG, ** PPLONGLONG, PROGMEM LONGLONG_P;
-typedef const long long CLONGLONG, * PCLONGLONG, & RCLONGLONG, ** PPCLONGLONG;
-typedef volatile long long V64, VLONGLONG, * PVLONGLONG, & RVLONGLONG, ** PPVLONGLONG;
+typedef unsigned char uint8, U8;
+typedef volatile unsigned char VU8;
 
-typedef unsigned long long uint64, UINT64, u64, U64, qword, QWORD, * PQWORD, & RQWORD, ** PPQWORD, PROGMEM QWORD_P;
-typedef const unsigned long long CQWORD, * PCQWORD, & RCQWORD, ** PPCQWORD;
-typedef volatile unsigned long long VU64, VQWORD, * PVQWORD, & RVQWORD, ** PPVQWORD;
+#ifndef ARDUINO
+	typedef unsigned char byte;
+#endif
 
-typedef int INT, * PINT, & RINT, ** PPINT, PROGMEM INT_P;
-typedef const int CINT, * PCINT, & RCINT, ** PPCINT;
-typedef volatile int VINT, * PVINT, & RVINT, ** PPVINT;
 
-typedef unsigned int UINT, * PUINT, & RUINT, ** PPUINT, PROGMEM UINT_P;
-typedef const unsigned int CUINT, * PCUINT, & RCUINT, ** PPCUINT;
-typedef volatile unsigned int VUINT, * PVUINT, & RVUINT, ** PPVUINT;
-typedef float FLOAT, * PFLOAT, & RFLOAT, ** PPFLOAT, PROGMEM FLOAT_P;
-typedef const float CFLOAT, * PCFLOAT, & RCFLOAT, ** PPCFLOAT;
-typedef volatile float VFLOAT, * PVFLOAT, & RVFLOAT, ** PPVFLOAT;
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(short, SHORT);
 
-typedef double DOUBLE, * PDOUBLE, & RDOUBLE, ** PPDOUBLE, PROGMEM DOUBLE_P;
-typedef const double CDOUBLE, * PCDOUBLE, & RCDOUBLE, ** PPCDOUBLE;
-typedef volatile double VDOUBLE, * PVDOUBLE, & RVDOUBLE, ** PPVDOUBLE;
+// ...and same for {PCINT16}.
+TYPEDEF_ALIASES_NOMODIFIER(short, INT16);
+TYPEDEF_VOLATILE_ALIASES(short, INT16);
+TYPEDEF_CONST_VOLATILE_ALIASES(short, INT16);
+TYPEDEF_ALIASES_PP(short, INT16);
 
-typedef size_t SIZE, * PSIZE, & RSIZE, ** PPSIZE, PROGMEM SIZE_P;
-typedef const size_t CSIZE, * PCSIZE, & RCSIZE, ** PPCSIZE;
+typedef short int16, I16;
+typedef volatile short V16;
 
-typedef ptrdiff_t PTRDIFF, * PPTRDIFF, & RPTRDIFF, ** PPPTRDIFF;
-typedef const ptrdiff_t CPTRDIFF, * PCPTRDIFF, & RCPTRDIFF, ** PPCPTRDIFF;
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned short, WORD);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned short, UINT16);
 
-typedef nullptr_t NULLPTR, * PNULLPTR, & RNULLPTR, ** PPNULLPTR;
-typedef const nullptr_t CNULLPTR, * PCNULLPTR, & RCNULLPTR, ** PPCNULLPTR;
+typedef unsigned short uint16, U16;
+typedef volatile unsigned short VU16;
+
+#ifndef ARDUINO
+	typedef unsigned short word;
+#endif
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(wchar_t, WCHAR);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(wchar_t, CHAR16);
+
+
+typedef wchar_t wchar, unicode, UNICODE, unicode16, UNICODE16;
+typedef wchar_t * widestring, * WIDE_STRING, * UNICODE_STRING, * UNICODE16_STRING;
+typedef wchar_t * WIDE_STRING_STRING_P PROGMEM, * UNICODE_STRING_P PROGMEM, * UNICODE16_STRING_P PROGMEM;
+typedef const wchar_t * CWIDE_STRING, * CUNICODE_STRING, * CUNICODE16_STRING;
+
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long, LONG);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long, INT32);
+
+typedef long dword, int32, I32;
+typedef volatile long V32;
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long, DWORD);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long, UINT32);
+
+typedef unsigned long uint32, U32;
+typedef volatile unsigned long VU32;
+
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long long, LONGLONG);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long long, INT64);
+
+typedef long long qword, int64, I64, verylong, VERYLONG, muchlong, somuchslong;
+typedef volatile long long V64;
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long long, QWORD);
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long long, UINT64);
+
+typedef unsigned long long uint64, U64;
+typedef volatile unsigned long long VU64;
+
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(int, INT);
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned int, UINT);
+
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(size_t, SIZE);
+typedef size_t size;
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(ptrdiff_t, PTRDIFF);
+typedef ptrdiff_t ptrdiff;
+
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(float, FLOAT);
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(double, DOUBLE);
+
+
+#ifndef nullptr_t
+	typedef decltype(nullptr) nullptr_t;
+#endif
+
+TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(nullptr_t, NULLPTR);
 
 
 /* DATA TYPE ALIAS MACROS FOR SIGNAGE */

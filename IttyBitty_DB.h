@@ -25,8 +25,7 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef Database DATABASE, * PDATABASE, & RDATABASE, ** PPDATABASE, && RRDATABASE;
-	typedef const Database CDATABASE, * PCDATABASE, & RCDATABASE, ** PPCDATABASE;
+	TYPEDEF_CLASS_ALIASES(Database, DATABASE);
 
 #pragma endregion
 

@@ -17,11 +17,11 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	typedef union ConstValue CONSTVALUE, * PCONSTVALUE, & RCONSTVALUE, ** PPCONSTVALUE, && RRCONSTVALUE;
-	typedef const union ConstValue CCONSTVALUE, * PCCONSTVALUE, & RCCONSTVALUE, ** PPCCONSTVALUE;
+	union ConstValue;
+	TYPEDEF_UNION_ALIASES(ConstValue, CONSTVALUE);
 
-	typedef union Value VALUE, * PVALUE, & RVALUE, ** PPVALUE, && RRVALUE;
-	typedef const union Value CVALUE, * PCVALUE, & RCVALUE, ** PPCVALUE;
+	union Value;
+	TYPEDEF_UNION_ALIASES(Value, VALUE);
 
 #pragma endregion
 

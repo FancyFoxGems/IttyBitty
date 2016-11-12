@@ -59,8 +59,8 @@ namespace IttyBitty
 	/* TYPE (FORWARD) DECLARATIONS WITH TYPEDEFS */
 
 	struct _BitProxy;
-	typedef struct _BitProxy _bitproxy_t, BitRef, BITREF, * PBITREF, & RBITREF, ** PPBITREF, && RRBITREF;
-	typedef const struct _BitProxy CBITREF, * PCBITREF, & RCBITREF, ** PPCBITREF;
+	typedef struct _BitProxy BitRef;
+	TYPEDEF_STRUCT_ALIASES(BitProxy, bitproxy, BITREF);
 
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
@@ -75,15 +75,14 @@ namespace IttyBitty
 
 
 	class IByteField;
-	typedef class IByteField IBYTEFIELD, * PIBYTEFIELD, & RIBYTEFIELD, ** PPIBYTEFIELD, && RRIBYTEFIELD;
-	typedef const class IByteField CIBYTEFIELD, * PCIBYTEFIELD, & RCIBYTEFIELD, ** PPCIBYTEFIELD;
+	TYPEDEF_CLASS_ALIASES(IByteField, IBYTEFIELD);
 
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
 
 	class IWordField;
-	typedef class IWordField IWORDFIELD, * PIWORDFIELD, & RIWORDFIELD, ** PPIWORDFIELD, && RRIWORDFIELD;
-	typedef const class IWordField CIWORDFIELD, * PCIWORDFIELD, & RCIWORDFIELD, ** PPCIWORDFIELD;
+	TYPEDEF_CLASS_ALIASES(IWordField, IWORDFIELD);
+
 
 	#define IMANYBITFIELD_T_CLAUSE	<typename T = DWORD>
 
@@ -91,9 +90,10 @@ namespace IttyBitty
 	class IManyBitField;
 	TEMPLATE_CLASS_USING_ALIASES(IMANYBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, IManyBitField, IMANYBITFIELD);
 
+
 	class IDWordField;
-	typedef class IDWordField IDWORDFIELD, * PIDWORDFIELD, & RIDWORDFIELD, ** PPIDWORDFIELD, && RRIDWORDFIELD;
-	typedef const class IDWordField CIDWORDFIELD, * PCIDWORDFIELD, & RCIDWORDFIELD, ** PPCIDWORDFIELD;
+	TYPEDEF_CLASS_ALIASES(IDWordField, IDWORDFIELD);
+
 
 	#define BITFIELD_T_CLAUSE		<typename T = BYTE>
 
@@ -105,15 +105,14 @@ namespace IttyBitty
 
 
 	class ByteField;
-	typedef class ByteField BYTEFIELD, * PBYTEFIELD, & RBYTEFIELD, ** PPBYTEFIELD, && RRBYTEFIELD;
-	typedef const class ByteField CBYTEFIELD, * PCBYTEFIELD, & RCBYTEFIELD, ** PPCBYTEFIELD;
+	TYPEDEF_CLASS_ALIASES(ByteField, BYTEFIELD);
 
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
 
 	class WordField;
-	typedef class WordField WORDFIELD, * PWORDFIELD, & RWORDFIELD, ** PPWORDFIELD, && RRWORDFIELD;
-	typedef const class WordField CWORDFIELD, * PCWORDFIELD, & RCWORDFIELD, ** PPCWORDFIELD;
+	TYPEDEF_CLASS_ALIASES(WordField, WORDFIELD);
+
 
 	#define MANYBITFIELD_T_CLAUSE	<typename T = DWORD>
 
@@ -121,9 +120,9 @@ namespace IttyBitty
 	class ManyBitField;
 	TEMPLATE_CLASS_USING_ALIASES(MANYBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, ManyBitField, MANYBITFIELD);
 
+
 	class DWordField;
-	typedef class DWordField DWORDFIELD, * PDWORDFIELD, & RDWORDFIELD, ** PPDWORDFIELD, && RRDWORDFIELD;
-	typedef const class DWordField CDWORDFIELD, * PCDWORDFIELD, & RCDWORDFIELD, ** PPCDWORDFIELD;
+	TYPEDEF_CLASS_ALIASES(DWordField, DWORDFIELD);
 
 #endif	// #ifndef NO_ITTYBITTY_FULL_BYTES
 

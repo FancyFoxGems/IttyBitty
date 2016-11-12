@@ -38,20 +38,18 @@ namespace IttyBitty
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	class ISerializable;
-	typedef ISerializable ISERIALIZABLE, * PISERIALIZABLE, & RISERIALIZABLE, ** PPISERIALIZABLE, && RRISERIALIZABLE;
-	typedef const ISerializable CISERIALIZABLE, * PCISERIALIZABLE, & RCISERIALIZABLE, ** PPCISERIALIZABLE;
+	TYPEDEF_CLASS_ALIASES(ISerializable, ISERIALIZABLE);
 
 #ifdef ARDUINO
 
 	class ITransmittable;
-	typedef ITransmittable ITRANSMITTABLE, * PITRANSMITTABLE, & RITRANSMITTABLE, ** PPITRANSMITTABLE, && RRITRANSMITTABLE;
-	typedef const ITransmittable CITRANSMITTABLE, * PCITRANSMITTABLE, & RCITRANSMITTABLE, ** PPCITRANSMITTABLE;
+	TYPEDEF_CLASS_ALIASES(ITransmittable, ITRANSMITTABLE);
 
 #endif
 
 	class IDatum;
-	typedef IDatum IDATUM, * PIDATUM, & RIDATUM, ** PPIDATUM, && RRIDATUM;
-	typedef const IDatum CIDATUM, *PCIDATUM, & RCIDATUM, ** PPCIDATUM;
+	TYPEDEF_CLASS_ALIASES(IDatum, IDATUM);
+
 
 	#define DATUMBASE_T_CLAUSE_DEF	<typename TVal>
 	#define DATUMBASE_T_CLAUSE		<typename TVal = CONSTVALUE>
@@ -75,12 +73,18 @@ namespace IttyBitty
 		FOUR_BYTES	= 0x80
 	};
 
+	TYPEDEF_ENUM_ALIASES(DataSize, DATASIZE);
+
+
 	enum DataTypeFormat : BYTE
 	{
 		UNSIGNED_DATA_TYPE	= 0x0,
 		SIGNED_DATA_TYPE	= 0x1,
 		SPECIAL_DATA_TYPE	= 0x2
 	};
+
+	TYPEDEF_ENUM_ALIASES(DataTypeFormat, DATATYPEFORMAT);
+
 
 	ENUM DataType : BYTE
 	{
@@ -100,11 +104,7 @@ namespace IttyBitty
 		FLOAT_DATUM		= FOUR_BYTES | SPECIAL_DATA_TYPE
 	};
 
-	typedef enum DataSize DATASIZE;
-	typedef const enum DataSize CDATASIZE;
-
-	typedef enum DataType DATATYPE;
-	typedef const enum DataType CDATATYPE;
+	TYPEDEF_ENUM_ALIASES(DataType, DATATYPE);
 
 
 	INLINE CDATASIZE DataTypeToDataSize(CDATATYPE dataType)
