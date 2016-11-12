@@ -155,8 +155,7 @@
 	TYPEDEF_ALIASES_WITH_VOLATILE_AND_PP(type_name, TYPE_ALIAS);		\
 	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
 
-#define TYPEDEF_ENUM_ALIASES(type_name, TYPE_ALIAS)				TYPEDEF_ALIASES(enum type_name, TYPE_ALIAS)
-
+#define TYPEDEF_ENUM_ALIASES(type_name, TYPE_ALIAS)				TYPEDEF_ALIASES_WITH_PP(enum type_name, TYPE_ALIAS)
 #define TYPEDEF_UNION_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_ALIASES_WITH_PP(union type_name, TYPE_ALIAS)
 #define TYPEDEF_VOLATILE_UNION_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(union type_name, TYPE_ALIAS)
 
@@ -241,7 +240,7 @@ TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(bool, BIT);
 typedef bool bit;
 
 #ifndef ARDUINO
-	typedef bool boolean;
+typedef bool boolean;
 #endif
 
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(char, CHAR);
@@ -264,7 +263,7 @@ typedef unsigned char uint8, U8;
 typedef volatile unsigned char VU8;
 
 #ifndef ARDUINO
-	typedef unsigned char byte;
+typedef unsigned char byte;
 #endif
 
 
@@ -286,7 +285,7 @@ typedef unsigned short uint16, U16;
 typedef volatile unsigned short VU16;
 
 #ifndef ARDUINO
-	typedef unsigned short word;
+typedef unsigned short word;
 #endif
 
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(wchar_t, WCHAR);
@@ -302,13 +301,13 @@ typedef const wchar_t * CWIDE_STRING, * CUNICODE_STRING, * CUNICODE16_STRING;
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long, LONG);
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long, INT32);
 
-typedef long dword, int32, I32;
+typedef long int32, I32;
 typedef volatile long V32;
 
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long, DWORD);
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long, UINT32);
 
-typedef unsigned long uint32, U32;
+typedef unsigned long dword, uint32, U32;
 typedef volatile unsigned long VU32;
 
 
@@ -343,7 +342,7 @@ TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(double, DOUBLE);
 
 
 #ifndef nullptr_t
-	typedef decltype(nullptr) nullptr_t;
+typedef decltype(nullptr) nullptr_t;
 #endif
 
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(nullptr_t, NULLPTR);
