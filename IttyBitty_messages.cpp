@@ -159,7 +159,7 @@ namespace IttyBitty
 		message = ReceiveMessageAsBytes(stream);
 	#endif
 
-		if (message == NULL)
+		if (!message)
 			return;
 
 		msgHandler(message);
@@ -228,7 +228,7 @@ Message::Message(CBYTE messageCode, RCIPARAM param)
 Message::Message(CBYTE messageCode, CBYTE paramCount, PPIPARAM params)
 	: _MessageCode(messageCode), _ParamCount(paramCount), _Params(params)
 {
-	if (_Params == NULL)
+	if (!_Params)
 		_Params = new PIPARAM[_ParamCount];
 }
 
@@ -239,14 +239,14 @@ Message::~Message()
 
 VOID Message::Dispose()
 {
-	if (_Params == NULL)
+	if (!_Params)
 		return;
 
 	if (_Dispose)
 	{
 		for (BYTE i = 0; i < _ParamCount; i++)
 		{
-			if (_Params[i] != NULL)
+			if (_Params[i])
 			{
 				delete _Params[i];
 				_Params[i] = NULL;
@@ -277,7 +277,7 @@ RMESSAGE Message::operator=(RCMESSAGE other)
 
 PCIPARAM Message::operator[](CBYTE i) const
 {
-	if (_Params == NULL)
+	if (!_Params)
 		return NULL;
 
 	return _Params[i];
@@ -285,7 +285,7 @@ PCIPARAM Message::operator[](CBYTE i) const
 
 PIPARAM Message::operator[](CBYTE i)
 {
-	if (_Params == NULL)
+	if (!_Params)
 		return NULL;
 
 	return _Params[i];
@@ -335,7 +335,7 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 
 CSIZE Message::BinarySize() const
 {
-	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->ParamsByteSize();
+	return SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->ParamsBinarySize();
 }
 
 CSIZE Message::StringSize() const
@@ -523,7 +523,7 @@ BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
 
 // [IMessage] HELPER METHODS
 
-CSIZE Message::ParamsByteSize() const
+CSIZE Message::ParamsBinarySize() const
 {
 	SIZE size = 0;
 

@@ -609,7 +609,7 @@ VarLengthField::VarLengthField(RVALUE value, CDATATYPE dataType, CSIZE length)
 {
 	if (_DataType == DataType::STRING_DATUM)
 	{
-		if (value.StringRef == NULL)
+		if (!value.StringRef)
 			_Length = 0;
 		else
 			_Length = strlen((PCCHAR)_Value);
@@ -635,7 +635,7 @@ VarLengthField::VarLengthField(PCHAR value)
 
 	_Value = value;
 
-	if (value == NULL)
+	if (!value)
 		_Length = 0;
 	else
 		_Length = strlen(value);

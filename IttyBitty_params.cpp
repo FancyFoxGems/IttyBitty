@@ -427,7 +427,7 @@ VarLengthParam::VarLengthParam(RCCONSTVALUE value, CDATATYPE dataType, CSIZE len
 {
 	if (_DataType == DataType::STRING_DATUM)
 	{
-		if (value.String == NULL)
+		if (!value.String)
 			_Length = 0;
 		else
 			_Length = strlen((PCCHAR)_Value);
@@ -453,7 +453,7 @@ VarLengthParam::VarLengthParam(PCCHAR value)
 
 	_Value = value;
 
-	if (value == NULL)
+	if (!value)
 		_Length = 0;
 	else
 		_Length = strlen(value);

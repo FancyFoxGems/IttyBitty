@@ -67,7 +67,7 @@ VOID Database::Dispose()
 	delete _DatabaseDef;
 	_DatabaseDef = NULL;
 
-	if (_Tables == NULL)
+	if (!_Tables)
 		return;
 
 	if (_Dispose)
@@ -76,7 +76,7 @@ VOID Database::Dispose()
 
 		for (BYTE i = 0; i < tableCount; i++)
 		{
-			if (_Tables[i] != NULL)
+			if (_Tables[i])
 			{
 				delete _Tables[i];
 				_Tables[i] = NULL;
@@ -93,11 +93,17 @@ VOID Database::Dispose()
 
 PCIDBTABLE Database::operator[](CBYTE tableIdx) const
 {
+	if (!_Tables)
+		return NULL;
+
 	return _Tables[tableIdx];
 }
 
 PIDBTABLE Database::operator[](CBYTE tableIdx)
 {
+	if (!_Tables)
+		return NULL;
+
 	return _Tables[tableIdx];
 }
 
@@ -462,7 +468,7 @@ CSTORAGERESULT Database::LoadFromString()
 
 CSIZE Database::BinarySize() const
 {
-	return 0;
+	return _DatabaseDef->BinarySize();
 }
 
 CSIZE Database::StringSize() const
@@ -518,7 +524,7 @@ CDBRESULT Database::MoveTables(CSIZE startAddrOffset, RCLONG addrOffsetDelta)
 	return DbResult::SUCCESS;
 }
 
-CSIZE Database::TablesByteSize() const
+CSIZE Database::TablesBinarySize() const
 {
 	return 0;
 }
@@ -559,9 +565,9 @@ RIDBTABLEDEF Database::TableDef(PCCHAR tableName)
 
 // [IDbTableDefSet] HELPER METHODS
 
-CSIZE Database::TableDefsByteSize() const
+CSIZE Database::TableDefsBinarySize() const
 {
-	return _DatabaseDef->TableDefsByteSize();
+	return _DatabaseDef->TableDefsBinarySize();
 }
 
 CSIZE Database::TableDefsStringSize() const

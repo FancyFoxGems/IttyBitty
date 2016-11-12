@@ -126,7 +126,7 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VIRTUAL CSIZE ParamsByteSize() const = 0;
+		VIRTUAL CSIZE ParamsBinarySize() const = 0;
 		VIRTUAL CSIZE ParamsStringSize() const = 0;
 
 
@@ -229,7 +229,7 @@ namespace IttyBitty
 
 		// [IMessage] HELPER METHODS
 
-		VIRTUAL CSIZE ParamsByteSize() const;
+		VIRTUAL CSIZE ParamsBinarySize() const;
 		VIRTUAL CSIZE ParamsStringSize() const;
 
 

@@ -505,7 +505,7 @@ namespace IttyBitty
 
 		VIRTUAL CDBRESULT MoveTables(CSIZE, RCLONG) = 0;
 
-		VIRTUAL CSIZE TablesByteSize() const = 0;
+		VIRTUAL CSIZE TablesBinarySize() const = 0;
 		VIRTUAL CSIZE TablesStringSize() const = 0;
 
 

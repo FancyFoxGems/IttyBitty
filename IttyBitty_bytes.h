@@ -1106,7 +1106,7 @@ namespace IttyBitty
 
 		VIRTUAL VOID InitWordFields()
 		{
-			if (_WordFieldPtrs != NULL)
+			if (_WordFieldPtrs)
 				delete[] _WordFieldPtrs;
 
 			_WordFieldPtrs = new PWORDFIELD[this->WordSize()];

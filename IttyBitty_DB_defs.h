@@ -341,7 +341,7 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VIRTUAL CSIZE TableDefsByteSize() const = 0;
+		VIRTUAL CSIZE TableDefsBinarySize() const = 0;
 		VIRTUAL CSIZE TableDefsStringSize() const = 0;
 
 
@@ -439,7 +439,7 @@ namespace IttyBitty
 
 		// [IDbTableDefSet] HELPER METHODS
 
-		VIRTUAL CSIZE TableDefsByteSize() const;
+		VIRTUAL CSIZE TableDefsBinarySize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
 
 

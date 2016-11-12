@@ -489,7 +489,7 @@ namespace IttyBitty
 
 			if (_DataType == DataType::STRING_DATUM)
 			{
-				if (value.String == NULL)
+				if (!value.String)
 					_Length = 0;
 				else
 					_Length = strlen((PCCHAR)_Value);

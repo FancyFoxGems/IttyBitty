@@ -126,7 +126,7 @@ CSIZE DbTableDef::BinarySize() const
 
 CSIZE DbTableDef::StringSize() const
 {
-	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->TableNameLength() + 2 * SIZEOF(CDWORD) + 1;
+	return 2 * this->BinarySize() + 1;
 }
 
 PCBYTE DbTableDef::ToBinary() const
@@ -271,7 +271,7 @@ SIZE DbTableDef::printTo(Print & printer) const
 
 CBYTE DbTableDef::TableNameLength() const
 {
-	if (_TableName == NULL)
+	if (!_TableName)
 		return (CBYTE)0;
 
 	return (CBYTE)strlen(_TableName);
@@ -326,7 +326,7 @@ DbTableDefSet::DbTableDefSet(RCIDBTABLEDEF tableDef)
 DbTableDefSet::DbTableDefSet(CBYTE tableDefCount, PPIDBTABLEDEF tableDefs)
 	: _TableDefCount(tableDefCount), _TableDefs(tableDefs)
 {
-	if (_TableDefs == NULL)
+	if (!_TableDefs)
 		_TableDefs = new PIDBTABLEDEF[_TableDefCount];
 }
 
@@ -340,14 +340,14 @@ DbTableDefSet::~DbTableDefSet()
 
 VOID DbTableDefSet::Dispose()
 {
-	if (_TableDefs == NULL)
+	if (!_TableDefs)
 		return;
 
 	if (_Dispose)
 	{
 		for (BYTE i = 0; i < _TableDefCount; i++)
 		{
-			if (_TableDefs[i] != NULL)
+			if (_TableDefs[i])
 			{
 				delete _TableDefs[i];
 				_TableDefs[i] = NULL;
@@ -361,7 +361,7 @@ VOID DbTableDefSet::Dispose()
 
 PCIDBTABLEDEF DbTableDefSet::operator[](CBYTE tableDefIdx) const
 {
-	if (_TableDefs == NULL)
+	if (!_TableDefs)
 		return NULL;
 
 	return _TableDefs[tableDefIdx];
@@ -369,7 +369,7 @@ PCIDBTABLEDEF DbTableDefSet::operator[](CBYTE tableDefIdx) const
 
 PIDBTABLEDEF DbTableDefSet::operator[](CBYTE tableDefIdx)
 {
-	if (_TableDefs == NULL)
+	if (!_TableDefs)
 		return NULL;
 
 	return _TableDefs[tableDefIdx];
@@ -481,7 +481,7 @@ CSTORAGERESULT DbTableDefSet::LoadFromString()
 
 CSIZE DbTableDefSet::BinarySize() const
 {
-	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TableDefsByteSize();
+	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TableDefsBinarySize();
 }
 
 CSIZE DbTableDefSet::StringSize() const
@@ -622,7 +622,7 @@ SIZE DbTableDefSet::printTo(Print & printer) const
 
 // [IDbTableDef] HELPER METHODS
 
-CSIZE DbTableDefSet::TableDefsByteSize() const
+CSIZE DbTableDefSet::TableDefsBinarySize() const
 {
 	CBYTE tableDefCount = this->TableDefCount();
 	SIZE size = 0;
@@ -639,7 +639,7 @@ CSIZE DbTableDefSet::TableDefsStringSize() const
 	SIZE size = 0;
 
 	for (SIZE i = 0; i < tableDefCount; i++)
-		size += _TableDefs[i]->StringSize();
+		size += _TableDefs[i]->StringSize() - 1;
 
 	return size;
 }

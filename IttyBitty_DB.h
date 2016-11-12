@@ -189,7 +189,7 @@ namespace IttyBitty
 
 		VIRTUAL CDBRESULT MoveTables(CSIZE, RCLONG);
 
-		VIRTUAL CSIZE TablesByteSize() const;
+		VIRTUAL CSIZE TablesBinarySize() const;
 		VIRTUAL CSIZE TablesStringSize() const;
 
 
@@ -206,7 +206,7 @@ namespace IttyBitty
 
 		// [IDbTableDefSet] HELPER METHODS
 
-		VIRTUAL CSIZE TableDefsByteSize() const;
+		VIRTUAL CSIZE TableDefsBinarySize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
 
 

@@ -268,7 +268,7 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE StringSize() const
 		{
-			return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(DataType) + this->StringLength() + 1;
+			return 2 * this->BinarySize() + 1;
 		}
 
 	#ifdef ARDUINO
