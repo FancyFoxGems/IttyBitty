@@ -157,6 +157,16 @@ namespace IttyBitty
 
 		VIRTUAL VOID MetadataFromString(PCCHAR);
 		VIRTUAL VOID ValueFromString(PCCHAR);
+
+
+	protected:
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const
+		{
+			DatumBase<Value>::FreeBuffer();
+		}
 	};
 
 #pragma endregion

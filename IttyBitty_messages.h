@@ -231,6 +231,11 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE ParamsByteSize() const;
 		VIRTUAL CSIZE ParamsStringSize() const;
+
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion

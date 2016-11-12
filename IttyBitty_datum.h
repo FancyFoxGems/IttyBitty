@@ -186,6 +186,11 @@ namespace IttyBitty
 
 	protected:
 
+		// HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const = 0;
+
+
 		ISerializable() { }
 	};
 
@@ -281,8 +286,7 @@ namespace IttyBitty
 			for (SIZE i = 0; i < size; i++)
 				printer.print(buffer[i]);
 
-			delete[] __datum_buffer;
-			__datum_buffer = NULL;
+			this->FreeBuffer();
 
 			return size;
 		}
@@ -354,6 +358,18 @@ namespace IttyBitty
 
 		TVal _Value;
 		DATATYPE _DataType;
+
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const
+		{
+			if (!__datum_buffer)
+				return;
+
+			delete[] __datum_buffer;
+			__datum_buffer = NULL;
+		}
 	};
 
 #pragma endregion

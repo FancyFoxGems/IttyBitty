@@ -84,13 +84,13 @@ namespace IttyBitty
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 			return NULL;
 
-		PIMESSAGE newMsg = new Message();
-		newMsg->FromBinary(__message_buffer);
+		PIMESSAGE message = new Message();
+		message->FromBinary(__message_buffer);
 
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return newMsg;
+		return message;
 	}
 
 	PIMESSAGE ReceiveMessageAsString(Stream & stream)
@@ -136,8 +136,8 @@ namespace IttyBitty
 		PrintLine(F("BUFFER FILLED.  LOADING..."));
 	#endif
 
-		PIMESSAGE stringMsg = new Message();
-		stringMsg->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		PIMESSAGE message = new Message();
+		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		PrintLine(F("MESSAGE LOADED.\n"));
@@ -146,7 +146,7 @@ namespace IttyBitty
 		delete[] __message_buffer;
 		__message_buffer = NULL;
 
-		return stringMsg;
+		return message;
 	}
 
 	VOID WaitForMessage(Stream & stream, PMESSAGEHANDLER msgHandler)
@@ -161,10 +161,6 @@ namespace IttyBitty
 
 		if (message == NULL)
 			return;
-
-		if (__message_buffer != NULL)
-			delete[] __message_buffer;
-		__message_buffer = NULL;
 
 		msgHandler(message);
 
@@ -351,8 +347,7 @@ PCBYTE Message::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__message_buffer)
-		delete[] __message_buffer;
+	this->FreeBuffer();
 
 	__message_buffer = new byte[size];
 
@@ -387,8 +382,7 @@ PCCHAR Message::ToString() const
 {
 	CSIZE size = this->StringSize();
 
-	if (__message_buffer)
-		delete[] __message_buffer;
+	this->FreeBuffer();
 
 	__message_buffer = new byte[size];
 	__message_buffer[size - 1] = '\0';
@@ -547,6 +541,18 @@ CSIZE Message::ParamsStringSize() const
 		size += _Params[i]->StringSize() - 1;
 
 	return size;
+}
+
+
+// [ISerializable] HELPER METHODS
+
+VOID Message::FreeBuffer() const
+{
+	if (!__message_buffer)
+		return;
+
+	delete[] __message_buffer;
+	__message_buffer = NULL;
 }
 
 #pragma endregion

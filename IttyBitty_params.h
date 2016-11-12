@@ -56,12 +56,7 @@ namespace IttyBitty
 
 #pragma region [IParam] DEFINITION
 
-	INTERFACE IParam : public IDatum
-	{
-	public:
-
-		// INTERFACE METHODS
-	};
+	INTERFACE IParam : public IDatum { };
 
 #pragma endregion
 
@@ -132,6 +127,16 @@ namespace IttyBitty
 		VIRTUAL CDATATYPE GetDataType() const
 		{
 			return DatumBase<ConstValue>::GetDataType();
+		}
+
+
+	protected:
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const
+		{
+			DatumBase<ConstValue>::FreeBuffer();
 		}
 	};
 

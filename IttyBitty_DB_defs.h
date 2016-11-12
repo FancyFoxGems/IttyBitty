@@ -257,6 +257,11 @@ namespace IttyBitty
 		// [IDbTableDef] IHELPER METHODS
 
 		VIRTUAL CBYTE TableNameLength() const;
+
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion
@@ -436,6 +441,11 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE TableDefsByteSize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
+
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion

@@ -208,6 +208,11 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE TableDefsByteSize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
+
+
+		// [ISerializable] HELPER METHODS
+
+		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion

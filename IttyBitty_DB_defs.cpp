@@ -133,8 +133,7 @@ PCBYTE DbTableDef::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__db_table_def_buffer)
-		delete[] __db_table_def_buffer;
+	this->FreeBuffer();
 
 	__db_table_def_buffer = new byte[size];
 
@@ -168,8 +167,7 @@ PCCHAR DbTableDef::ToString() const
 {
 	CSIZE size = this->StringSize();
 
-	if (__db_table_def_buffer)
-		delete[] __db_table_def_buffer;
+	this->FreeBuffer();
 
 	__db_table_def_buffer = new byte[size];
 	__db_table_def_buffer[size - 1] = '\0';
@@ -261,8 +259,7 @@ SIZE DbTableDef::printTo(Print & printer) const
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
 
-	delete[] __db_table_def_buffer;
-	__db_table_def_buffer = NULL;
+	this->FreeBuffer();
 
 	return size;
 }
@@ -278,6 +275,18 @@ CBYTE DbTableDef::TableNameLength() const
 		return (CBYTE)0;
 
 	return (CBYTE)strlen(_TableName);
+}
+
+
+// [ISerializable] HELPER METHODS
+
+VOID DbTableDef::FreeBuffer() const
+{
+	if (!__db_table_def_buffer)
+		return;
+
+	delete[] __db_table_def_buffer;
+	__db_table_def_buffer = NULL;
 }
 
 #pragma endregion
@@ -484,8 +493,7 @@ PCBYTE DbTableDefSet::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__db_table_def_set_buffer)
-		delete[] __db_table_def_set_buffer;
+	this->FreeBuffer();
 
 	__db_table_def_set_buffer = new byte[size];
 
@@ -519,8 +527,7 @@ PCCHAR DbTableDefSet::ToString() const
 {
 	CSIZE size = this->StringSize();
 
-	if (__db_table_def_set_buffer)
-		delete[] __db_table_def_set_buffer;
+	this->FreeBuffer();
 
 	__db_table_def_set_buffer = new byte[size];
 	__db_table_def_set_buffer[size - 1] = '\0';
@@ -605,8 +612,7 @@ SIZE DbTableDefSet::printTo(Print & printer) const
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
 
-	delete[] __db_table_def_set_buffer;
-	__db_table_def_set_buffer = NULL;
+	this->FreeBuffer();
 
 	return size;
 }
@@ -637,6 +643,19 @@ CSIZE DbTableDefSet::TableDefsStringSize() const
 
 	return size;
 }
+
+
+// [ISerializable] HELPER METHODS
+
+VOID DbTableDefSet::FreeBuffer() const
+{
+	if (!__db_table_def_set_buffer)
+		return;
+
+	delete[] __db_table_def_set_buffer;
+	__db_table_def_set_buffer = NULL;
+}
+
 
 #pragma endregion
 

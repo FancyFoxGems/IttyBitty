@@ -62,8 +62,7 @@ PCBYTE ParamBase::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__datum_buffer)
-		delete[] __datum_buffer;
+	this->FreeBuffer();
 
 	__datum_buffer = new byte[size];
 
@@ -87,8 +86,7 @@ PCCHAR ParamBase::ToString() const
 	CSIZE size = this->StringSize();
 	CSIZE byteWidth = this->ByteWidth();
 
-	if (__datum_buffer)
-		delete[] __datum_buffer;
+	this->FreeBuffer();
 
 	__datum_buffer = new byte[size];
 	__datum_buffer[size - 1] = '\0';

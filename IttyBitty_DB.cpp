@@ -503,8 +503,7 @@ SIZE Database::printTo(Print & printer) const
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
 
-	delete[] __database_buffer;
-	__database_buffer = NULL;
+	this->FreeBuffer();
 
 	return size;
 }
@@ -568,6 +567,18 @@ CSIZE Database::TableDefsByteSize() const
 CSIZE Database::TableDefsStringSize() const
 {
 	return _DatabaseDef->TableDefsStringSize();
+}
+
+
+// [ISerializable] HELPER METHODS
+
+VOID Database::FreeBuffer() const
+{
+	if (!__database_buffer)
+		return;
+
+	delete[] __database_buffer;
+	__database_buffer = NULL;
 }
 
 #pragma endregion

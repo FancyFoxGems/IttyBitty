@@ -217,8 +217,7 @@ PCBYTE DbTable::ToBinary() const
 {
 	CSIZE size = this->BinarySize();
 
-	if (__db_table_buffer)
-		delete[] __db_table_buffer;
+	this->FreeBuffer();
 
 	__db_table_buffer = new byte[size];
 
@@ -248,8 +247,7 @@ PCCHAR DbTable::ToString() const
 {
 	CSIZE size = this->StringSize();
 
-	if (__db_table_buffer)
-		delete[] __db_table_buffer;
+	this->FreeBuffer();
 
 	__db_table_buffer = new byte[size];
 	__db_table_buffer[size - 1] = '\0';
@@ -315,8 +313,7 @@ SIZE DbTable::printTo(Print & printer) const
 	for (SIZE i = 0; i < size; i++)
 		printer.print(buffer[i]);
 
-	delete[] __db_table_buffer;
-	__db_table_buffer = NULL;
+	this->FreeBuffer();
 
 	return size;
 }
@@ -427,6 +424,18 @@ PBYTE DbTable::RowFromString(PCCHAR data)
 CBYTE DbTable::TableNameLength() const
 {
 	return _TableDef->TableNameLength();
+}
+
+
+// [ISerializable] HELPER METHODS
+
+VOID DbTable::FreeBuffer() const
+{
+	if (!__db_table_buffer)
+		return;
+
+	delete[] __db_table_buffer;
+	__db_table_buffer = NULL;
 }
 
 #pragma endregion
