@@ -64,6 +64,28 @@ Database::Database(RISTORAGE storage) : _Storage(&storage)
 
 VOID Database::Dispose()
 {
+	delete _DatabaseDef;
+	_DatabaseDef = NULL;
+
+	if (_Tables == NULL)
+		return;
+
+	if (_Dispose)
+	{
+		CBYTE tableCount = this->TableCount();
+
+		for (BYTE i = 0; i < tableCount; i++)
+		{
+			if (_Tables[i] != NULL)
+			{
+				delete _Tables[i];
+				_Tables[i] = NULL;
+			}
+		}
+	}
+
+	delete[] _Tables;
+	_Tables = NULL;
 }
 
 

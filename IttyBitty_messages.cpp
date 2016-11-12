@@ -248,7 +248,9 @@ VOID Message::Dispose()
 
 	if (_Dispose)
 	{
-		for (BYTE i = 0; i < this->ParamCount(); i++)
+		CBYTE paramCount = this->ParamCount();
+
+		for (BYTE i = 0; i < paramCount; i++)
 		{
 			if (_Params[i] != NULL)
 			{
