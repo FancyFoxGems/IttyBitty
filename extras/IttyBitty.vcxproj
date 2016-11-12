@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;_DEBUG=1;EXCLUDE_ITTYBITTY_FULL_BYTES;F_CPU=16000000L;ARDUINO=10608;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\RC\Sketchbook\libraries\..\utility;C:\RC\Sketchbook\libraries\Stepper\utility;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\Wire\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;C:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\libraries\HalfStepper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\RC\Sketchbook\libraries\..\utility;C:\RC\Sketchbook\libraries\Stepper\utility;C:\RC\Sketchbook\libraries\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\RC\Sketchbook\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\Foxetron\Foxetron_AngleDriver;C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs;C:\RC\Sketchbook\libraries\IttyBitty;C:\RC\Sketchbook\libraries\Wire;C:\RC\Sketchbook\libraries\Stepper;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\iyanzvn1.cat\Micro Platforms\default\debuggers;C:\RC\Sketchbook\libraries;C:\RC\Sketchbook\libraries\utility;C:\Program Files (x86)\Arduino\hardware\tools\avr\avr\include;C:\Program Files (x86)\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;C:\RC\Sketchbook\Foxetron;C:\RC\Sketchbook\libraries\HalfStepper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -58,8 +58,16 @@
     <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Wire\Wire.h" />
-    <ClInclude Include="..\Wire\utility\twi.h" />
+    <ClInclude Include="..\SD.h" />
+    <ClInclude Include="..\utility\FatStructs.h" />
+    <ClInclude Include="..\utility\Sd2Card.h" />
+    <ClInclude Include="..\utility\Sd2PinMap.h" />
+    <ClInclude Include="..\utility\SdFat.h" />
+    <ClInclude Include="..\utility\SdFatmainpage.h" />
+    <ClInclude Include="..\utility\SdFatUtil.h" />
+    <ClInclude Include="..\utility\SdInfo.h" />
+    <ClInclude Include="..\Wire.h" />
+    <ClInclude Include="..\utility\twi.h" />
     <ClInclude Include="..\avr_cpunames.h" />
     <ClCompile Include="..\IttyBitty.h" />
     <ClCompile Include="..\IttyBitty_base.h" />
@@ -94,8 +102,13 @@
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Wire\Wire.cpp" />
-    <ClCompile Include="..\Wire\utility\twi.c" />
+    <ClCompile Include="..\SD.cpp" />
+    <ClCompile Include="..\File.cpp" />
+    <ClCompile Include="..\utility\Sd2Card.cpp" />
+    <ClCompile Include="..\utility\Sd2File.cpp" />
+    <ClCompile Include="..\utility\SdVolume.cpp" />
+    <ClCompile Include="..\Wire.cpp" />
+    <ClCompile Include="..\utility\twi.c" />
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
     <ClCompile Include="..\IttyBitty_datum.cpp" />

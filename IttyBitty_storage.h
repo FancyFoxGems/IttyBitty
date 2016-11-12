@@ -13,9 +13,6 @@
 #include "IttyBitty_datum.h"
 
 
-//#include "SD.h"
-
-
 #pragma region DEFINES
 
 
@@ -119,7 +116,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		EXPLICIT StorageLocation(PCCHAR filePath) : FilePath(filePath) { }
+		StorageLocation(PCCHAR filePath) : FilePath(filePath) { }
 
 		EXPLICIT StorageLocation(BYTE byteAddress) : ByteAddress(byteAddress) { }
 
@@ -275,15 +272,16 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL Available() = 0;
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE) = 0;
+		VIRTUAL CSTORAGERESULT Open(CBOOL = FALSE) = 0;
+		VIRTUAL CSTORAGERESULT Close() = 0;
 
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD) = 0;
 
+		VIRTUAL CSTORAGERESULT Read(PBYTE, CSIZE) = 0;
 		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE) = 0;
 
 		VIRTUAL CSTORAGERESULT Flush() = 0;
 
-		VIRTUAL CSTORAGERESULT Close() = 0;
 
 
 	protected:
@@ -331,12 +329,22 @@ namespace IttyBitty
 			return TRUE;
 		}
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE)
+		VIRTUAL CSTORAGERESULT Open(CBOOL = FALSE)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Close()
 		{
 			return StorageResult::SUCCESS;
 		}
 
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Read(PBYTE, CSIZE)
 		{
 			return StorageResult::SUCCESS;
 		}
@@ -347,11 +355,6 @@ namespace IttyBitty
 		}
 
 		VIRTUAL CSTORAGERESULT Flush()
-		{
-			return StorageResult::SUCCESS;
-		}
-
-		VIRTUAL CSTORAGERESULT Close()
 		{
 			return StorageResult::SUCCESS;
 		}
@@ -374,9 +377,14 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTOR
+		// CONSTRUCTOR/DESTRUCTOR
 
 		StorageBase(RCSTORAGELOCATION location) : _Location(location) { }
+
+		VIRTUAL ~StorageBase()
+		{
+			this->Close();
+		}
 
 
 		// [IStorage] ACCESSOR/MUTATOR
@@ -392,11 +400,24 @@ namespace IttyBitty
 		}
 
 
+		// USER METHODS
+
+		VIRTUAL CBOOL Available()
+		{
+			return TRUE;
+		}
+
+		VIRTUAL CSTORAGERESULT Flush()
+		{
+			return StorageResult::SUCCESS;
+		}
+
+
 	protected:
 
 		// INSTANCE VARIABLES
 
-		STORAGELOCATION _Location = 0;
+		STORAGELOCATION _Location = StorageLocation();
 	};
 
 #pragma endregion

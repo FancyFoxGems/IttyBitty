@@ -10,18 +10,7 @@
 
 #ifndef NO_ITTYBITTY_STORAGE
 
-
 #include "IttyBitty_storage.h"
-
-using namespace IttyBitty;
-
-
-#pragma region [DbStorageBase] IMPLEMENTATION
-
-// CONSTRUCTOR
-
-
-// USER METHODS
 
 #pragma endregion
 

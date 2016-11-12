@@ -714,13 +714,14 @@ namespace IttyBitty
 			return _Iterator;
 		}
 
-		TEEEPTR Seek(RCTADDR addr)
-		{
-			return this->seek(addr);
-		}
-
 
 		// USER METHODS
+
+		TEEEPTR Seek(RCTADDR addr)
+		{
+			(RTADDR)_Iterator = addr;
+			return _Iterator;
+		}
 
 		CBYTE Read() const
 		{

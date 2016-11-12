@@ -11,10 +11,10 @@
 
 
 #include "IttyBitty_storage.h"
-#include "IttyBitty_EEPROM_I2C.h"
 
-
-//#include "SD.h"
+#ifdef ARDUINO
+	#include "IttyBitty_EEPROM_I2C.h"
+#endif
 
 
 #pragma region DEFINES
@@ -34,44 +34,46 @@ namespace IttyBitty
 	class FlashRomStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(FlashRomStorageAdapter, FLASHROMSTORAGEADAPTER);
 
+#ifdef ARDUINO
+
 	class EepromStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(EepromStorageAdapter, EEPROMSTORAGEADAPTER);
+
+	class SdStorageAdapter;
+	TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
 
 	class ExtEepromStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(ExtEepromStorageAdapter, EXTEEPROMSTORAGEADAPTER);
 
-	class SdStorageAdapter;
-	TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
+#endif  // #ifdef ARDUINO
 
 #pragma endregion
 
 
 #pragma region [MemoryResidentStorageAdapter] DEFINITION
 
-	CLASS MemoryResidentStorageAdapter
+	CLASS MemoryResidentStorageAdapter : public StorageBase
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
-		MemoryResidentStorageAdapter();
-
-		~MemoryResidentStorageAdapter();
+		MemoryResidentStorageAdapter(CDWORD);
 
 
 		// [IStorage] IMPLEMENTATION
 
-		VIRTUAL CBOOL Available();
+		CBOOL Available();
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+		CSTORAGERESULT Open(CBOOL = FALSE);
+		CSTORAGERESULT Close();
 
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+		CSTORAGERESULT Seek(RCDWORD);
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, CSIZE);
+		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
-		VIRTUAL CSTORAGERESULT Flush();
-
-		VIRTUAL CSTORAGERESULT Close();
+		CSTORAGERESULT Flush();
 	};
 
 #pragma endregion
@@ -79,92 +81,60 @@ namespace IttyBitty
 
 #pragma region [FlashRomStorageAdapter] DEFINITION
 
-	CLASS FlashRomStorageAdapter
+	CLASS FlashRomStorageAdapter : public StorageBase
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
-		FlashRomStorageAdapter();
-
-		~FlashRomStorageAdapter();
+		FlashRomStorageAdapter(CDWORD);
 
 
 		// [IStorage] IMPLEMENTATION
 
-		VIRTUAL CBOOL Available();
+		CBOOL Available();
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+		CSTORAGERESULT Open(CBOOL = FALSE);
+		CSTORAGERESULT Close();
 
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+		CSTORAGERESULT Seek(RCDWORD);
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, CSIZE);
+		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
-		VIRTUAL CSTORAGERESULT Flush();
-
-		VIRTUAL CSTORAGERESULT Close();
+		CSTORAGERESULT Flush();
 	};
 
 #pragma endregion
 
+
+#ifdef ARDUINO
 
 #pragma region [EepromStorageAdapter] DEFINITION
 
-	CLASS EepromStorageAdapter
+	CLASS EepromStorageAdapter : public StorageBase
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
-		EepromStorageAdapter();
-
-		~EepromStorageAdapter();
+		EepromStorageAdapter(CWORD);
 
 
 		// [IStorage] IMPLEMENTATION
 
-		VIRTUAL CBOOL Available();
+		CBOOL Available();
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+		CSTORAGERESULT Open(CBOOL = FALSE);
+		CSTORAGERESULT Close();
 
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+		CSTORAGERESULT Seek(RCDWORD);
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, CSIZE);
+		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
-		VIRTUAL CSTORAGERESULT Flush();
+		CSTORAGERESULT Flush();
 
-		VIRTUAL CSTORAGERESULT Close();
-	};
-
-#pragma endregion
-
-
-#pragma region [ExtEepromStorageAdapter] DEFINITION
-
-	CLASS ExtEepromStorageAdapter
-	{
-	public:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		ExtEepromStorageAdapter();
-
-		~ExtEepromStorageAdapter();
-
-
-		// [IStorage] IMPLEMENTATION
-
-		VIRTUAL CBOOL Available();
-
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
-
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
-
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
-
-		VIRTUAL CSTORAGERESULT Flush();
-
-		VIRTUAL CSTORAGERESULT Close();
 	};
 
 #pragma endregion
@@ -172,33 +142,62 @@ namespace IttyBitty
 
 #pragma region [SdStorageAdapter] DEFINITION
 
-	CLASS SdStorageAdapter
+	CLASS SdStorageAdapter : public StorageBase
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTORS
 
-		SdStorageAdapter();
-
-		~SdStorageAdapter();
+		SdStorageAdapter(PCCHAR);
 
 
 		// [IStorage] IMPLEMENTATION
 
-		VIRTUAL CBOOL Available();
+		CBOOL Available();
 
-		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE);
+		CSTORAGERESULT Open(CBOOL = FALSE);
+		CSTORAGERESULT Close();
 
-		VIRTUAL CSTORAGERESULT Seek(RCDWORD);
+		CSTORAGERESULT Seek(RCDWORD);
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, CSIZE);
+		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
-		VIRTUAL CSTORAGERESULT Flush();
-
-		VIRTUAL CSTORAGERESULT Close();
+		CSTORAGERESULT Flush();
 	};
 
 #pragma endregion
+
+
+#pragma region [ExtEepromStorageAdapter] DEFINITION
+
+	CLASS ExtEepromStorageAdapter : public StorageBase
+	{
+	public:
+
+		// CONSTRUCTORS
+
+		ExtEepromStorageAdapter();
+
+
+		// [IStorage] IMPLEMENTATION
+
+		CBOOL Available();
+
+		CSTORAGERESULT Open(CBOOL = FALSE);
+		CSTORAGERESULT Close();
+
+		CSTORAGERESULT Seek(RCDWORD);
+
+		CSTORAGERESULT Read(PBYTE, CSIZE);
+		CSTORAGERESULT Write(PCBYTE, CSIZE);
+
+		CSTORAGERESULT Flush();
+	};
+
+#pragma endregion
+
+#endif  // #ifdef ARDUINO
 };
 
 #endif
