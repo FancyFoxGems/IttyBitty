@@ -62,7 +62,7 @@ namespace IttyBitty
 	CBOOL ReadBuffer(Stream & stream, PBYTE buffer, CSIZE length = 1);
 
 	template DEFAULT_T_CLAUSE
-	INLINE CONST T & Read(Stream & stream, PBYTE buffer)
+	STATIC CONST T & Read(Stream & stream, PBYTE buffer)
 	{
 		CBOOL result = ReadBuffer(stream, buffer, T_SIZE);
 

@@ -674,44 +674,6 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-
-
-#pragma region FIELD PARSING METHODS
-
-	INLINE PIFIELD FieldFromBytes(PCBYTE data)
-	{
-		PIFIELD field = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			field = new VarLengthField();
-		else
-			field = new Field();
-
-		field->FromBinary(data);
-
-		return field;
-	}
-
-	INLINE PIFIELD FieldFromString(PCCHAR data)
-	{
-		PIFIELD field = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			field = new VarLengthField();
-		else
-			field = new Field();
-
-		field->FromString(data);
-
-		return field;
-	}
-
-#pragma endregion
 }
 
 

@@ -36,6 +36,9 @@ namespace IttyBitty
 	class IStorage;
 	TYPEDEF_CLASS_ALIASES(IStorage, ISTORAGE);
 
+	class NullStorage;
+	TYPEDEF_CLASS_ALIASES(NullStorage, NULLSTORAGE);
+
 	class StorageBase;
 	TYPEDEF_CLASS_ALIASES(StorageBase, STORAGEBASE);
 
@@ -137,6 +140,15 @@ namespace IttyBitty
 		~StorageLocation()
 		{
 			this->FreeFilePath();
+		}
+
+
+		// STATIC FUNCTIONS
+
+		STATIC RCSTORAGELOCATION NULL_OBJECT()
+		{
+			STATIC STORAGELOCATION NULL_STORAGELOCATION;
+			return NULL_STORAGELOCATION;
 		}
 
 
@@ -278,6 +290,80 @@ namespace IttyBitty
 
 		IStorage() { }
 	};
+
+#pragma endregion
+
+
+#pragma region [NullStorage] DEFINITION
+
+	CLASS NullStorage final : public IStorage
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		NullStorage() { }
+
+
+		// STATIC FUNCTIONS
+
+		STATIC RNULLSTORAGE NULL_OBJECT()
+		{
+			STATIC NULLSTORAGE NULL_STORAGE;
+			return NULL_STORAGE;
+		}
+
+
+		// [IStorage] ACCESSOR/MUTATOR
+
+		VIRTUAL RCSTORAGELOCATION GetStorageLocation() const
+		{
+			return StorageLocation::NULL_OBJECT();
+		}
+
+		VIRTUAL VOID SetStorageLocation(RCSTORAGELOCATION location) { }
+
+
+		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CBOOL Available()
+		{
+			return TRUE;
+		}
+
+		VIRTUAL CSTORAGERESULT Open(RCSTORAGELOCATION, CBOOL = FALSE)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Flush()
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Close()
+		{
+			return StorageResult::SUCCESS;
+		}
+	};
+
+
+	// GLOBAL NULL STORAGE REFERENCE FUNCTION
+
+	STATIC RISTORAGE NULL_STORAGE()
+	{
+		return NullStorage::NULL_OBJECT();
+	}
 
 #pragma endregion
 

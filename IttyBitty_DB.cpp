@@ -55,16 +55,14 @@ CDBRESULT Database::Delete(RISTORAGE storage)
 
 // CONSTRUCTORS/DESTRUCTOR
 
-Database::Database(RISTORAGE storage) : _Storage(&storage)
-{
-}
+Database::Database(RISTORAGE storage) : _Storage(storage) { }
 
-Database::Database(PCBYTE data)
+Database::Database(PCBYTE data, RISTORAGE storage) : Database(storage)
 {
 	this->FromBinary(data);
 }
 
-Database::Database(PCCHAR data)
+Database::Database(PCCHAR data, RISTORAGE storage) : Database(storage)
 {
 	this->FromString(data);
 }
@@ -154,7 +152,7 @@ PIDBTABLE Database::operator[](PCCHAR tableName)
 
 RISTORAGE Database::GetStorage() const
 {
-	return *_Storage;
+	return _Storage;
 }
 
 
@@ -162,7 +160,7 @@ RISTORAGE Database::GetStorage() const
 
 VOID Database::SetStorage(RISTORAGE storage)
 {
-	_Storage = &storage;
+	_Storage = storage;
 }
 
 

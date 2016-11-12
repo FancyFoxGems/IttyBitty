@@ -613,44 +613,6 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-
-
-#pragma region PARAM PARSING METHODS
-
-	INLINE PIPARAM ParamFromBytes(PCBYTE data)
-	{
-		PIPARAM param = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			param = new VarLengthParam();
-		else
-			param = new Param();
-
-		param->FromBinary(data);
-
-		return param;
-	}
-
-	INLINE PIPARAM ParamFromString(PCCHAR data)
-	{
-		PIPARAM param = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			param = new VarLengthParam();
-		else
-			param = new Param();
-
-		param->FromString(data);
-
-		return param;
-	}
-
-#pragma endregion
 }
 
 

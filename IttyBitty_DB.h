@@ -45,10 +45,10 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Database(RISTORAGE);
+		Database(RISTORAGE = IttyBitty::NULL_STORAGE());
 
-		EXPLICIT Database(PCBYTE);
-		EXPLICIT Database(PCCHAR);
+		EXPLICIT Database(PCBYTE, RISTORAGE = IttyBitty::NULL_STORAGE());
+		EXPLICIT Database(PCCHAR, RISTORAGE = IttyBitty::NULL_STORAGE());
 
 		VIRTUAL ~Database();
 
@@ -182,7 +182,7 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		PISTORAGE _Storage = NULL;
+		RISTORAGE _Storage = IttyBitty::NULL_STORAGE();
 
 		BYTE _TableCount = 0;
 		PPIDBTABLE _Tables = NULL;
