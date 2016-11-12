@@ -46,14 +46,6 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [Param] PARSING GLOBAL FUNCTION DECLARATIONS
-
-	PIPARAM ParamFromBytes(PCBYTE);
-	PIPARAM ParamFromString(PCCHAR);
-
-#pragma endregion
-
-
 #pragma region [IParam] DEFINITION
 
 	INTERFACE IParam : public IDatum { };
@@ -611,6 +603,44 @@ namespace IttyBitty
 				return DataType::BIT_DATUM;
 			}
 	};
+
+#pragma endregion
+
+
+#pragma region [Param] PARSING GLOBAL FUNCTION DEFINITIONS
+
+	INLINE PIPARAM ParamFromBytes(PCBYTE data)
+	{
+		PIPARAM datum = NULL;
+
+		SIZE length = static_cast<SIZE>(*data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthParam();
+		else
+			datum = new Param();
+
+		datum->FromBinary(data);
+
+		return datum;
+	}
+
+	INLINE PIPARAM ParamFromString(PCCHAR data)
+	{
+		PIPARAM datum = NULL;
+		SIZE length = 0;
+
+		StringReadValue<SIZE>(length, data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthParam();
+		else
+			datum = new Param();
+
+		datum->FromString(data);
+
+		return datum;
+	}
 
 #pragma endregion
 }

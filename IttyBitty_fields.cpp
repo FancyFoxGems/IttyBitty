@@ -16,44 +16,6 @@
 using namespace IttyBitty;
 
 
-#pragma region [Field] PARSING GLOBAL FUNCTION DEFINITIONS
-
-	PIFIELD FieldFromBytes(PCBYTE data)
-	{
-		PIFIELD datum = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthField();
-		else
-			datum = new Field();
-
-		datum->FromBinary(data);
-
-		return datum;
-	}
-
-	PIFIELD FieldFromString(PCCHAR data)
-	{
-		PIFIELD datum = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthField();
-		else
-			datum = new Field();
-
-		datum->FromString(data);
-
-		return datum;
-	}
-
-#pragma endregion
-
-
 #pragma region [FieldBase] IMPLEMENTATION
 
 // [ISerializable] IMPLEMENTATION

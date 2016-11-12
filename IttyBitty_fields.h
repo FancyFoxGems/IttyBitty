@@ -46,14 +46,6 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [Field] PARSING GLOBAL FUNCTION DECLARATIONS
-
-	PIFIELD FieldFromBytes(PCBYTE);
-	PIFIELD FieldFromString(PCCHAR);
-
-#pragma endregion
-
-
 #pragma region [IField] DEFINITION
 
 	INTERFACE IField : public IDatum
@@ -672,6 +664,44 @@ namespace IttyBitty
 				return DataType::BIT_DATUM;
 			}
 	};
+
+#pragma endregion
+
+
+#pragma region [Field] PARSING GLOBAL FUNCTION DEFINITIONS
+
+	INLINE PIFIELD FieldFromBytes(PCBYTE data)
+	{
+		PIFIELD datum = NULL;
+
+		SIZE length = static_cast<SIZE>(*data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthField();
+		else
+			datum = new Field();
+
+		datum->FromBinary(data);
+
+		return datum;
+	}
+
+	INLINE PIFIELD FieldFromString(PCCHAR data)
+	{
+		PIFIELD datum = NULL;
+		SIZE length = 0;
+
+		StringReadValue<SIZE>(length, data);
+
+		if (length == 0 || length > 4)
+			datum = new VarLengthField();
+		else
+			datum = new Field();
+
+		datum->FromString(data);
+
+		return datum;
+	}
 
 #pragma endregion
 }

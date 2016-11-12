@@ -16,44 +16,6 @@
 using namespace IttyBitty;
 
 
-#pragma region [Param] PARSING GLOBAL FUNCTION DEFINITIONS
-
-	PIPARAM ParamFromBytes(PCBYTE data)
-	{
-		PIPARAM datum = NULL;
-
-		SIZE length = static_cast<SIZE>(*data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthParam();
-		else
-			datum = new Param();
-
-		datum->FromBinary(data);
-
-		return datum;
-	}
-
-	PIPARAM ParamFromString(PCCHAR data)
-	{
-		PIPARAM datum = NULL;
-		SIZE length = 0;
-
-		StringReadValue<SIZE>(length, data);
-
-		if (length == 0 || length > 4)
-			datum = new VarLengthParam();
-		else
-			datum = new Param();
-
-		datum->FromString(data);
-
-		return datum;
-	}
-
-#pragma endregion
-
-
 #pragma region [ParamBase] IMPLEMENTATION
 
 // [ISerializable] IMPLEMENTATION
