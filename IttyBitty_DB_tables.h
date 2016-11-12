@@ -10,7 +10,7 @@
 #define _ITTYBITTY_DB_TABLES_H
 
 
-#include "IttyBitty_DB_defs.h"
+#include "IttyBitty_DB_table_defs.h"
 
 
 #pragma region DEFINES
@@ -63,6 +63,12 @@ namespace IttyBitty
 		// DESTRUCTOR
 
 		VIRTUAL ~IDbTable() { }
+
+
+		// ACCESSORS
+
+		VIRTUAL RCIDBTABLEDEF TableDef() const = 0;
+		VIRTUAL RIDBTABLEDEF TableDef() = 0;
 
 
 		// INTERFACE METHODS
@@ -178,6 +184,12 @@ namespace IttyBitty
 
 
 	public:
+
+		// ACCESSORS
+
+		VIRTUAL RCIDBTABLEDEF TableDef() const;
+		VIRTUAL RIDBTABLEDEF TableDef();
+
 
 		// [IDbTable] IMPLEMENTATION
 

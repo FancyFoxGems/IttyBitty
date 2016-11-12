@@ -128,7 +128,7 @@
     <ClInclude Include="..\IttyBitty_DB.h">
       <Filter>Database</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_DB_defs.h">
+    <ClInclude Include="..\IttyBitty_DB_table_defs.h">
       <Filter>Database</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_DB_tables.h">
@@ -289,7 +289,7 @@
     <ClCompile Include="..\IttyBitty_DB.cpp">
       <Filter>Database</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_DB_defs.cpp">
+    <ClCompile Include="..\IttyBitty_DB_table_defs.cpp">
       <Filter>Database</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_DB_tables.cpp">

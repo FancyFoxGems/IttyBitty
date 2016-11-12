@@ -53,10 +53,25 @@ CDBRESULT Database::Delete(RISTORAGE storage)
 }
 
 
-// CONSTRUCTOR
+// CONSTRUCTORS/DESTRUCTOR
 
 Database::Database(RISTORAGE storage) : _Storage(&storage)
 {
+}
+
+Database::Database(PCBYTE data)
+{
+	this->FromBinary(data);
+}
+
+Database::Database(PCCHAR data)
+{
+	this->FromString(data);
+}
+
+Database::~Database()
+{
+	this->Dispose();
 }
 
 
@@ -64,9 +79,6 @@ Database::Database(RISTORAGE storage) : _Storage(&storage)
 
 VOID Database::Dispose()
 {
-	delete _DatabaseDef;
-	_DatabaseDef = NULL;
-
 	if (!_Tables)
 		return;
 
@@ -468,30 +480,124 @@ CSTORAGERESULT Database::LoadFromString()
 
 CSIZE Database::BinarySize() const
 {
-	return _DatabaseDef->BinarySize();
+	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->BinarySize() + 1;
 }
 
 CSIZE Database::StringSize() const
 {
-	return 0;
+	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TablesStringSize() + 1;
 }
 
 PCBYTE Database::ToBinary() const
 {
-	return NULL;
+	CSIZE size = this->BinarySize();
+
+	this->FreeBuffer();
+
+	__database_buffer = new byte[size];
+
+	PBYTE bufferPtr = __database_buffer;
+
+	memcpy(bufferPtr, &size, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
+
+	memcpy(bufferPtr, &_TableCount, SIZEOF(CBYTE));
+	bufferPtr += SIZEOF(CBYTE);
+
+	PIDBTABLE table = NULL;
+	PCBYTE tableBytes = NULL;
+	SIZE tableSize = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+	{
+		table = _Tables[i];
+		tableBytes = table->ToBinary();
+		tableSize = table->BinarySize();
+
+		memcpy(bufferPtr, tableBytes, tableSize);
+
+		table->FreeBuffer();
+
+		bufferPtr += tableSize;
+	}
+
+	return __database_buffer;
 }
 
 PCCHAR Database::ToString() const
 {
-	return NULL;
+	CSIZE size = this->StringSize();
+
+	this->FreeBuffer();
+
+	__database_buffer = new byte[size];
+	__database_buffer[size - 1] = '\0';
+
+	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__database_buffer);
+
+	bufferPtr = StringInsertValue<CSIZE>(size, bufferPtr);
+	bufferPtr = StringInsertValue<CBYTE>(_TableCount, bufferPtr);
+
+	PIDBTABLE table = NULL;
+	PCCHAR tableStr = NULL;
+	SIZE tableSize = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+	{
+		table = _Tables[i];
+		tableStr = table->ToString();
+		tableSize = table->StringSize() - 1;
+
+		memcpy(bufferPtr, tableStr, tableSize);
+
+		table->FreeBuffer();
+
+		bufferPtr += tableSize;
+	}
+
+	return reinterpret_cast<PCCHAR>(__database_buffer);
 }
 
 VOID Database::FromBinary(PCBYTE data)
 {
+	PCBYTE bufferPtr = data;
+
+	_TableCount = *bufferPtr++;
+
+	this->Dispose();
+
+	if (_TableCount > 0)
+		_Tables = new PIDBTABLE[_TableCount];
+
+	_Dispose = TRUE;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+	{
+		_Tables[i] = new DbTable(bufferPtr);
+
+		bufferPtr += _Tables[i]->BinarySize();
+	}
 }
 
 VOID Database::FromString(PCCHAR data)
 {
+	PCCHAR bufferPtr = data;
+
+	bufferPtr = StringReadValue<BYTE>(_TableCount, bufferPtr);
+
+	this->Dispose();
+
+	if (_TableCount > 0)
+		_Tables = new PIDBTABLE[_TableCount];
+
+	_Dispose = TRUE;
+
+	for (BYTE i = 0; i < _TableCount; i++)
+	{
+		_Tables[i] = new DbTable(bufferPtr);
+
+		bufferPtr += _Tables[i]->StringSize() - 1;
+	}
 }
 
 VOID Database::FreeBuffer() const
@@ -535,12 +641,22 @@ CDBRESULT Database::MoveTables(CSIZE startAddrOffset, RCLONG addrOffsetDelta)
 
 CSIZE Database::TablesBinarySize() const
 {
-	return 0;
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+		size += _Tables[i]->BinarySize();
+
+	return size;
 }
 
 CSIZE Database::TablesStringSize() const
 {
-	return 0;
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+		size += _Tables[i]->StringSize() - 1;
+
+	return size;
 }
 
 
@@ -548,27 +664,27 @@ CSIZE Database::TablesStringSize() const
 
 CBYTE Database::TableDefCount() const
 {
-	return _DatabaseDef->TableDefCount();
+	return _TableCount;
 }
 
 RCIDBTABLEDEF Database::TableDef(CBYTE tableDefIdx) const
 {
-	return _DatabaseDef->TableDef(tableDefIdx);
+	return this->Table(tableDefIdx).TableDef();
 }
 
 RIDBTABLEDEF Database::TableDef(CBYTE tableDefIdx)
 {
-	return _DatabaseDef->TableDef(tableDefIdx);
+	return this->Table(tableDefIdx).TableDef();
 }
 
 RCIDBTABLEDEF Database::TableDef(PCCHAR tableName) const
 {
-	return _DatabaseDef->TableDef(tableName);
+	return this->Table(tableName).TableDef();
 }
 
 RIDBTABLEDEF Database::TableDef(PCCHAR tableName)
 {
-	return _DatabaseDef->TableDef(tableName);
+	return this->Table(tableName).TableDef();
 }
 
 
@@ -576,12 +692,22 @@ RIDBTABLEDEF Database::TableDef(PCCHAR tableName)
 
 CSIZE Database::TableDefsBinarySize() const
 {
-	return _DatabaseDef->TableDefsBinarySize();
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+		size += _Tables[i]->TableDef().BinarySize();
+
+	return size;
 }
 
 CSIZE Database::TableDefsStringSize() const
 {
-	return _DatabaseDef->TableDefsStringSize();
+	SIZE size = 0;
+
+	for (SIZE i = 0; i < _TableCount; i++)
+		size += _Tables[i]->TableDef().StringSize() - 1;
+
+	return size;
 }
 
 #pragma endregion

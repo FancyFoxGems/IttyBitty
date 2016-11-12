@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_DB_defs.h]: HEADERS/TABLE DEFINITIONS FOR STRUCTURED DATA STORAGE SUPPORT
+* [IttyBitty_DB_table_defs.h]: HEADERS/TABLE DEFINITIONS FOR STRUCTURED DATA STORAGE SUPPORT
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -47,17 +47,11 @@ namespace IttyBitty
 	class IDbTableDefSet;
 	TYPEDEF_CLASS_ALIASES(IDbTableDefSet, IDBTABLEDEFSET);
 
-	class DbTableDefSet;
-	TYPEDEF_CLASS_ALIASES(DbTableDefSet, DBTABLEDEFSET);
-
 
 	class DbTable;
 
 	template DEFAULT_T_CLAUSE
 	class TypedDbTable;
-
-	// TODO
-	class Database;
 
 #pragma endregion
 
@@ -238,8 +232,6 @@ namespace IttyBitty
 
 	protected:
 
-		// TODO
-		friend class DbTableDefSet;
 		friend class DbTable;
 
 
@@ -327,8 +319,6 @@ namespace IttyBitty
 	protected:
 
 		friend class IDbTableSet;
-		// TODO
-		friend class Database;
 
 
 		// HELPER METHODS
@@ -338,103 +328,6 @@ namespace IttyBitty
 
 
 		IDbTableDefSet() { }
-	};
-
-#pragma endregion
-
-
-#pragma region [DbTableDefSet] DEFINITION
-
-	CLASS DbTableDefSet : public IDbTableDefSet
-	{
-	protected:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		DbTableDefSet(CBYTE = 0);
-
-		EXPLICIT DbTableDefSet(PCBYTE);
-		EXPLICIT DbTableDefSet(PCCHAR);
-
-		DbTableDefSet(RCIDBTABLEDEF);
-		DbTableDefSet(CBYTE, PPIDBTABLEDEF);
-
-
-	public:
-
-		VIRTUAL ~DbTableDefSet();
-
-
-	protected:
-
-		// PROTECTED DISPOSAL METHOD
-
-		VIRTUAL VOID Dispose();
-
-
-	public:
-
-		// OPERATORS
-
-		VIRTUAL PCIDBTABLEDEF operator[](CBYTE) const;
-		VIRTUAL PIDBTABLEDEF operator[](CBYTE);
-
-		VIRTUAL PCIDBTABLEDEF operator[](PCCHAR) const;
-		VIRTUAL PIDBTABLEDEF operator[](PCCHAR);
-
-
-		// [IDbTableDefSet] IMPLEMENTATION
-
-		VIRTUAL CBYTE TableDefCount() const;
-
-		VIRTUAL RCIDBTABLEDEF TableDef(CBYTE = 0) const;
-		VIRTUAL RIDBTABLEDEF TableDef(CBYTE = 0);
-
-		VIRTUAL RCIDBTABLEDEF TableDef(PCCHAR) const;
-		VIRTUAL RIDBTABLEDEF TableDef(PCCHAR);
-
-
-		// [IStorable] IMPLEMENTATION
-
-		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
-		VIRTUAL CSTORAGERESULT SaveAsString() const;
-
-		VIRTUAL CSTORAGERESULT LoadFromBinary();
-		VIRTUAL CSTORAGERESULT LoadFromString();
-
-
-		// [ISerializable] IMPLEMENTATION
-
-		VIRTUAL CSIZE BinarySize() const;
-		VIRTUAL CSIZE StringSize() const;
-
-		VIRTUAL PCBYTE ToBinary() const;
-		VIRTUAL PCCHAR ToString() const;
-
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
-
-		VIRTUAL VOID FreeBuffer() const;
-
-	#ifdef ARDUINO
-		VIRTUAL SIZE printTo(Print &) const;
-	#endif
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		BOOL _Dispose = FALSE;
-
-		BYTE _TableDefCount = 0;
-		PPIDBTABLEDEF _TableDefs = NULL;
-
-
-		// [IDbTableDefSet] HELPER METHODS
-
-		VIRTUAL CSIZE TableDefsBinarySize() const;
-		VIRTUAL CSIZE TableDefsStringSize() const;
 	};
 
 #pragma endregion

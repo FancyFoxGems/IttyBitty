@@ -43,9 +43,14 @@ namespace IttyBitty
 		STATIC CDBRESULT Delete(RISTORAGE);
 
 
-		// CONSTRUCTOR
+		// CONSTRUCTORS/DESTRUCTOR
 
 		Database(RISTORAGE);
+
+		EXPLICIT Database(PCBYTE);
+		EXPLICIT Database(PCCHAR);
+
+		VIRTUAL ~Database();
 
 
 	protected:
@@ -179,7 +184,7 @@ namespace IttyBitty
 
 		PISTORAGE _Storage = NULL;
 
-		PIDBTABLEDEFSET _DatabaseDef = NULL;
+		BYTE _TableCount = 0;
 		PPIDBTABLE _Tables = NULL;
 
 

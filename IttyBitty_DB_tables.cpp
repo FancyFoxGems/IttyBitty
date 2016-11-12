@@ -68,6 +68,25 @@ VOID DbTable::Dispose()
 }
 
 
+// ACCESSORS
+
+RCIDBTABLEDEF DbTable::TableDef() const
+{
+	if (!_TableDef)
+		return DbTableDef::NULL_OBJECT();
+
+	return *_TableDef;
+}
+
+RIDBTABLEDEF DbTable::TableDef()
+{
+	if (!_TableDef)
+		return DbTableDef::NULL_OBJECT();
+
+	return *_TableDef;
+}
+
+
 // [IDbTable] IMPLEMENTATION
 
 CDWORD DbTable::Size() const
