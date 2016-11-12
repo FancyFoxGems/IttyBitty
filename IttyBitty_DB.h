@@ -163,16 +163,14 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
+		VIRTUAL VOID FreeBuffer() const;
+
 	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
 
 
 	protected:
-
-		friend class DbTableDefSet;
-		friend class DbTable;
-		friend class DbTableDef;
 
 
 		// INSTANCE VARIABLES
@@ -208,11 +206,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE TableDefsBinarySize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion

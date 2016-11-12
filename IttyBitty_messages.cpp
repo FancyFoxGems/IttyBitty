@@ -84,11 +84,9 @@ namespace IttyBitty
 		if (!ReadBuffer(stream, __message_buffer, bufferSize))
 			return NULL;
 
-		PIMESSAGE message = new Message();
-		message->FromBinary(__message_buffer);
+		PIMESSAGE message = new Message(__message_buffer);
 
-		delete[] __message_buffer;
-		__message_buffer = NULL;
+		message->FreeBuffer();
 
 		return message;
 	}
@@ -136,15 +134,13 @@ namespace IttyBitty
 		PrintLine(F("BUFFER FILLED.  LOADING..."));
 	#endif
 
-		PIMESSAGE message = new Message();
-		message->FromString(reinterpret_cast<PCCHAR>(__message_buffer));
+		PIMESSAGE message = new Message(reinterpret_cast<PCCHAR>(__message_buffer));
 
 	#ifdef DEBUG_MESSAGES
 		PrintLine(F("MESSAGE LOADED.\n"));
 	#endif
 
-		delete[] __message_buffer;
-		__message_buffer = NULL;
+		message->FreeBuffer();
 
 		return message;
 	}
@@ -331,6 +327,43 @@ BOOL Message::Handle(PVOID results, PCVOID state)
 }
 
 
+// [ITransmittable] IMPLEMENTATION
+
+#ifdef ARDUINO
+
+BOOL Message::Transmit(HardwareSerial & serial)
+{
+	if (!serial.availableForWrite())
+		delay(SERIAL_DEFAULT_TIMEOUT_MS);
+	if (!serial.availableForWrite())
+		return FALSE;
+
+	if (!this->printTo(serial))
+		return FALSE;
+
+	serial.flush();
+
+	return TRUE;
+}
+
+BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
+{
+	twi.beginTransmission(i2cAddr);
+
+	if (!this->printTo(twi))
+		return FALSE;
+
+	twi.flush();
+
+	if (twi.endTransmission())
+		return FALSE;
+
+	return TRUE;
+}
+
+#endif	// #ifdef ARDUINO
+
+
 // [ISerializable] IMPLEMENTATION
 
 CSIZE Message::BinarySize() const
@@ -372,6 +405,8 @@ PCBYTE Message::ToBinary() const
 
 		memcpy(bufferPtr, paramBytes, paramSize);
 
+		param->FreeBuffer();
+
 		bufferPtr += paramSize;
 	}
 
@@ -404,6 +439,8 @@ PCCHAR Message::ToString() const
 		paramSize = param->StringSize() - 1;
 
 		memcpy(bufferPtr, paramStr, paramSize);
+
+		param->FreeBuffer();
 
 		// TODO: Why..?
 		if (i == 0)
@@ -460,6 +497,15 @@ VOID Message::FromString(PCCHAR data)
 	}
 }
 
+VOID Message::FreeBuffer() const
+{
+	if (!__message_buffer)
+		return;
+
+	delete[] __message_buffer;
+	__message_buffer = NULL;
+}
+
 #ifdef ARDUINO
 
 SIZE Message::printTo(Print & printer) const
@@ -485,39 +531,6 @@ SIZE Message::printTo(Print & printer) const
 	return size;
 }
 
-
-// [ITransmittable] IMPLEMENTATION
-
-BOOL Message::Transmit(HardwareSerial & serial)
-{
-	if (!serial.availableForWrite())
-		delay(SERIAL_DEFAULT_TIMEOUT_MS);
-	if (!serial.availableForWrite())
-		return FALSE;
-
-	if (!this->printTo(serial))
-		return FALSE;
-
-	serial.flush();
-
-	return TRUE;
-}
-
-BOOL Message::Transmit(BYTE i2cAddr, TwoWire & twi)
-{
-	twi.beginTransmission(i2cAddr);
-
-	if (!this->printTo(twi))
-		return FALSE;
-
-	twi.flush();
-
-	if (twi.endTransmission())
-		return FALSE;
-
-	return TRUE;
-}
-
 #endif	// #ifdef ARDUINO
 
 
@@ -541,18 +554,6 @@ CSIZE Message::ParamsStringSize() const
 		size += _Params[i]->StringSize() - 1;
 
 	return size;
-}
-
-
-// [ISerializable] HELPER METHODS
-
-VOID Message::FreeBuffer() const
-{
-	if (!__message_buffer)
-		return;
-
-	delete[] __message_buffer;
-	__message_buffer = NULL;
 }
 
 #pragma endregion

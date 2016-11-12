@@ -84,47 +84,6 @@ namespace IttyBitty
 	{
 	public:
 
-		// [ISerializable] IMPLEMENTATION
-
-		VIRTUAL PCBYTE ToBinary() const;
-		VIRTUAL PCCHAR ToString() const;
-
-		VIRTUAL VOID FromBinary(PCBYTE);
-		VIRTUAL VOID FromString(PCCHAR);
-
-		VIRTUAL CSIZE BinarySize() const
-		{
-			return DatumBase<Value>::BinarySize();
-		}
-
-		VIRTUAL CSIZE StringSize() const
-		{
-			return DatumBase<Value>::StringSize();
-		}
-
-
-		// [ITransmittable] IMPLEMENTATION
-
-	#ifdef ARDUINO
-
-		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
-		{
-			return DatumBase<Value>::Transmit(serial);
-		}
-
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & twi = Wire)
-		{
-			return DatumBase<Value>::Transmit(i2cAddr, twi);
-		}
-
-		VIRTUAL SIZE printTo(Print & printer) const
-		{
-			return DatumBase<Value>::printTo(printer);
-		}
-
-	#endif
-
-
 		// [IDatum] IMPLEMENTATION
 
 		VIRTUAL CSIZE ByteWidth() const
@@ -159,14 +118,54 @@ namespace IttyBitty
 		VIRTUAL VOID ValueFromString(PCCHAR);
 
 
-	protected:
+		// [ITransmittable] IMPLEMENTATION
 
-		// [ISerializable] HELPER METHODS
+	#ifdef ARDUINO
+
+		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
+		{
+			return DatumBase<Value>::Transmit(serial);
+		}
+
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & twi = Wire)
+		{
+			return DatumBase<Value>::Transmit(i2cAddr, twi);
+		}
+
+	#endif
+
+
+		// [ISerializable] IMPLEMENTATION
+
+		VIRTUAL PCBYTE ToBinary() const;
+		VIRTUAL PCCHAR ToString() const;
+
+		VIRTUAL VOID FromBinary(PCBYTE);
+		VIRTUAL VOID FromString(PCCHAR);
+
+		VIRTUAL CSIZE BinarySize() const
+		{
+			return DatumBase<Value>::BinarySize();
+		}
+
+		VIRTUAL CSIZE StringSize() const
+		{
+			return DatumBase<Value>::StringSize();
+		}
 
 		VIRTUAL VOID FreeBuffer() const
 		{
 			DatumBase<Value>::FreeBuffer();
 		}
+
+	#ifdef ARDUINO
+
+		VIRTUAL SIZE printTo(Print & printer) const
+		{
+			return DatumBase<Value>::printTo(printer);
+		}
+
+	#endif
 	};
 
 #pragma endregion

@@ -191,6 +191,14 @@ namespace IttyBitty
 		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
 
 
+		// [ITransmittable] IMPLEMENTATION
+
+	#ifdef ARDUINO
+		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
+		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
+	#endif
+
+
 		// [ISerializable] IMPLEMENTATION
 
 		VIRTUAL CSIZE BinarySize() const;
@@ -202,16 +210,10 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
-
-		// [ITransmittable] IMPLEMENTATION
+		VIRTUAL VOID FreeBuffer() const;
 
 	#ifdef ARDUINO
-
-		VIRTUAL BOOL Transmit(HardwareSerial & = SERIAL_PORT_HARDWARE);
-		VIRTUAL BOOL Transmit(BYTE i2cAddr, TwoWire & = Wire);
-
 		VIRTUAL SIZE printTo(Print &) const;
-
 	#endif
 
 
@@ -231,11 +233,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE ParamsBinarySize() const;
 		VIRTUAL CSIZE ParamsStringSize() const;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion

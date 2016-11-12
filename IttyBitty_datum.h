@@ -183,13 +183,10 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE) = 0;
 		VIRTUAL VOID FromString(PCCHAR) = 0;
 
-
-	protected:
-
-		// HELPER METHODS
-
 		VIRTUAL VOID FreeBuffer() const = 0;
 
+
+	protected:
 
 		ISerializable() { }
 	};
@@ -259,40 +256,32 @@ namespace IttyBitty
 		}
 
 
-		// [ISerializable] IMPLEMENTATION
+		// [IDatum] IMPLEMENTATION
 
-		VIRTUAL CSIZE BinarySize() const
+		VIRTUAL CSIZE ByteWidth() const
 		{
-			return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
+			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
 		}
 
-		VIRTUAL CSIZE StringSize() const
+		VIRTUAL CSIZE StringLength() const
 		{
-			return 2 * this->BinarySize() + 1;
+			return 2 * this->ByteWidth();
 		}
 
-	#ifdef ARDUINO
-
-		VIRTUAL SIZE printTo(Print & printer) const
+		VIRTUAL CDATASIZE GetDataSize() const
 		{
-		#ifdef _DEBUG
-			SIZE size = this->StringSize();
-			PCCHAR buffer = this->ToString();
-		#else
-			SIZE size = this->BinarySize();
-			PCBYTE buffer = this->ToBinary();
-		#endif
+			return DataTypeToDataSize(_DataType);
+		}
 
-			for (SIZE i = 0; i < size; i++)
-				printer.print(buffer[i]);
-
-			this->FreeBuffer();
-
-			return size;
+		VIRTUAL CDATATYPE GetDataType() const
+		{
+			return _DataType;
 		}
 
 
 		// [ITransmittable] IMPLEMENTATION
+
+	#ifdef ARDUINO
 
 		VIRTUAL BOOL Transmit(HardwareSerial & serial = SERIAL_PORT_HARDWARE)
 		{
@@ -327,27 +316,48 @@ namespace IttyBitty
 	#endif
 
 
-		// [IDatum] IMPLEMENTATION
+		// [ISerializable] IMPLEMENTATION
 
-		VIRTUAL CSIZE ByteWidth() const
+		VIRTUAL CSIZE BinarySize() const
 		{
-			return TRAILING_ZERO_BITS(static_cast<BYTE>(this->GetDataSize())) - 0x3;
+			return SIZEOF(CSIZE) + SIZEOF(DataType) + this->ByteWidth();
 		}
 
-		VIRTUAL CSIZE StringLength() const
+		VIRTUAL CSIZE StringSize() const
 		{
-			return 2 * this->ByteWidth();
+			return 2 * this->BinarySize() + 1;
 		}
 
-		VIRTUAL CDATASIZE GetDataSize() const
+		VIRTUAL VOID FreeBuffer() const
 		{
-			return DataTypeToDataSize(_DataType);
+			if (!__datum_buffer)
+				return;
+
+			delete[] __datum_buffer;
+			__datum_buffer = NULL;
 		}
 
-		VIRTUAL CDATATYPE GetDataType() const
+	#ifdef ARDUINO
+
+		VIRTUAL SIZE printTo(Print & printer) const
 		{
-			return _DataType;
+		#ifdef _DEBUG
+			SIZE size = this->StringSize();
+			PCCHAR buffer = this->ToString();
+		#else
+			SIZE size = this->BinarySize();
+			PCBYTE buffer = this->ToBinary();
+		#endif
+
+			for (SIZE i = 0; i < size; i++)
+				printer.print(buffer[i]);
+
+			this->FreeBuffer();
+
+			return size;
 		}
+
+	#endif
 
 
 	protected:
@@ -358,18 +368,6 @@ namespace IttyBitty
 
 		TVal _Value;
 		DATATYPE _DataType;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const
-		{
-			if (!__datum_buffer)
-				return;
-
-			delete[] __datum_buffer;
-			__datum_buffer = NULL;
-		}
 	};
 
 #pragma endregion

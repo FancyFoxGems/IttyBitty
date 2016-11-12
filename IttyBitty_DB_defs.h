@@ -43,6 +43,7 @@ namespace IttyBitty
 	class FieldedDbTableDef;
 	TYPEDEF_CLASS_ALIASES(FieldedDbTableDef, FIELDEDDBTABLEDEF);
 
+
 	class IDbTableDefSet;
 	TYPEDEF_CLASS_ALIASES(IDbTableDefSet, IDBTABLEDEFSET);
 
@@ -50,20 +51,12 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(DbTableDefSet, DBTABLEDEFSET);
 
 
-	#define GENERICDBTABLEDEFSET_T_CLAUSE_DEF	<CBYTE TableDefCount>
-	#define GENERICDBTABLEDEFSET_T_CLAUSE		<CBYTE TableDefCount = 0>
-	#define GENERICDBTABLEDEFSET_T_ARGS			<TableDefCount>
-
-	template GENERICDBTABLEDEFSET_T_CLAUSE
-	class GenericDbTableDefSet;
-	TEMPLATE_CLASS_USING_ALIASES(GENERICDBTABLEDEFSET_T_CLAUSE, GENERICDBTABLEDEFSET_T_ARGS, GenericDbTableDefSet, GENERICDBTABLEDEFSET);
-
-
 	class DbTable;
 
 	template DEFAULT_T_CLAUSE
 	class TypedDbTable;
 
+	// TODO
 	class Database;
 
 #pragma endregion
@@ -236,6 +229,8 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
+		VIRTUAL VOID FreeBuffer() const;
+
 	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
@@ -243,6 +238,7 @@ namespace IttyBitty
 
 	protected:
 
+		// TODO
 		friend class DbTableDefSet;
 		friend class DbTable;
 
@@ -257,11 +253,6 @@ namespace IttyBitty
 		// [IDbTableDef] IHELPER METHODS
 
 		VIRTUAL CBYTE TableNameLength() const;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion
@@ -336,6 +327,7 @@ namespace IttyBitty
 	protected:
 
 		friend class IDbTableSet;
+		// TODO
 		friend class Database;
 
 
@@ -422,6 +414,8 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
+		VIRTUAL VOID FreeBuffer() const;
+
 	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
@@ -441,58 +435,6 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE TableDefsBinarySize() const;
 		VIRTUAL CSIZE TableDefsStringSize() const;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const;
-	};
-
-#pragma endregion
-
-
-#pragma region [GenericDbTableDefSet] DEFINITION
-
-	template GENERICDBTABLEDEFSET_T_CLAUSE_DEF
-	CLASS GenericDbTableDefSet : public DbTableDefSet
-	{
-	public:
-
-		// STATIC CONSTEXPR METHODS
-
-		STATIC CONSTEXPR CBYTE TABLE_DEF_COUNT()
-		{
-			return TableDefCount;
-		}
-
-
-	protected:
-
-		// CONSTRUCTORS
-
-		GenericDbTableDefSet() : DbTableDefSet(TableDefCount) { }
-
-		GenericDbTableDefSet(PPIDBTABLEDEF tableDefs)
-			: DbTableDefSet(TableDefCount, tableDefs) { }
-
-
-	public:
-
-		// [DbTableDefSet] OVERRIDES
-
-		CBYTE TableDefCount() const
-		{
-			return TABLE_DEF_COUNT();
-		}
-
-
-	protected:
-
-		friend class Database;
-
-
-		using DbTableDefSet::_Dispose;
-		using DbTableDefSet::_TableDefs;
 	};
 
 #pragma endregion

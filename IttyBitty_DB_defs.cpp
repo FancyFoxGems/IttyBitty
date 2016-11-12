@@ -244,6 +244,15 @@ VOID DbTableDef::FromString(PCCHAR data)
 	bufferPtr = StringReadValue<DWORD>(_AddrOffset, bufferPtr);
 }
 
+VOID DbTableDef::FreeBuffer() const
+{
+	if (!__db_table_def_buffer)
+		return;
+
+	delete[] __db_table_def_buffer;
+	__db_table_def_buffer = NULL;
+}
+
 #ifdef ARDUINO
 
 SIZE DbTableDef::printTo(Print & printer) const
@@ -275,18 +284,6 @@ CBYTE DbTableDef::TableNameLength() const
 		return (CBYTE)0;
 
 	return (CBYTE)strlen(_TableName);
-}
-
-
-// [ISerializable] HELPER METHODS
-
-VOID DbTableDef::FreeBuffer() const
-{
-	if (!__db_table_def_buffer)
-		return;
-
-	delete[] __db_table_def_buffer;
-	__db_table_def_buffer = NULL;
 }
 
 #pragma endregion
@@ -517,6 +514,8 @@ PCBYTE DbTableDefSet::ToBinary() const
 
 		memcpy(bufferPtr, tableDefBytes, tableDefSize);
 
+		tableDef->FreeBuffer();
+
 		bufferPtr += tableDefSize;
 	}
 
@@ -548,6 +547,8 @@ PCCHAR DbTableDefSet::ToString() const
 		tableDefSize = tableDef->StringSize() - 1;
 
 		memcpy(bufferPtr, tableDefStr, tableDefSize);
+
+		tableDef->FreeBuffer();
 
 		bufferPtr += tableDefSize;
 	}
@@ -597,6 +598,15 @@ VOID DbTableDefSet::FromString(PCCHAR data)
 	}
 }
 
+VOID DbTableDefSet::FreeBuffer() const
+{
+	if (!__db_table_def_set_buffer)
+		return;
+
+	delete[] __db_table_def_set_buffer;
+	__db_table_def_set_buffer = NULL;
+}
+
 #ifdef ARDUINO
 
 SIZE DbTableDefSet::printTo(Print & printer) const
@@ -643,19 +653,6 @@ CSIZE DbTableDefSet::TableDefsStringSize() const
 
 	return size;
 }
-
-
-// [ISerializable] HELPER METHODS
-
-VOID DbTableDefSet::FreeBuffer() const
-{
-	if (!__db_table_def_set_buffer)
-		return;
-
-	delete[] __db_table_def_set_buffer;
-	__db_table_def_set_buffer = NULL;
-}
-
 
 #pragma endregion
 

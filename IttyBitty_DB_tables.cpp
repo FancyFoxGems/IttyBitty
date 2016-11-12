@@ -298,6 +298,15 @@ VOID DbTable::FromString(PCCHAR data)
 	_TableDef = new DbTableDef(bufferPtr);
 }
 
+VOID DbTable::FreeBuffer() const
+{
+	if (!__db_table_buffer)
+		return;
+
+	delete[] __db_table_buffer;
+	__db_table_buffer = NULL;
+}
+
 #ifdef ARDUINO
 
 SIZE DbTable::printTo(Print & printer) const
@@ -331,8 +340,11 @@ CDBRESULT DbTable::Grow(RIDBTABLESET tableSet, RCFLOAT growthFactor)
 	if (growthFactor < 1.0F)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	_Capacity *= growthFactor;
-	_CapacityChanged = TRUE;
+	 DWORD newCapacity = _Capacity * growthFactor;
+
+	tableSet.MoveTables(this->GetAddrOffset(), newCapacity - _Capacity);
+
+	_Capacity = newCapacity;
 
 	return DbResult::SUCCESS;
 }
@@ -351,8 +363,9 @@ CDBRESULT DbTable::Compress(RIDBTABLESET tableSet, RCFLOAT compressionFactor)
 	if (newCapacity < this->Size())
 		return DbResult::ERROR_ARGUMENT_DATABASE_TOO_LARGE;
 
+	tableSet.MoveTables(this->GetAddrOffset(), newCapacity - _Capacity);
+
 	_Capacity = newCapacity;
-	_CapacityChanged = TRUE;
 
 	return DbResult::SUCCESS;
 }
@@ -424,18 +437,6 @@ PBYTE DbTable::RowFromString(PCCHAR data)
 CBYTE DbTable::TableNameLength() const
 {
 	return _TableDef->TableNameLength();
-}
-
-
-// [ISerializable] HELPER METHODS
-
-VOID DbTable::FreeBuffer() const
-{
-	if (!__db_table_buffer)
-		return;
-
-	delete[] __db_table_buffer;
-	__db_table_buffer = NULL;
 }
 
 #pragma endregion

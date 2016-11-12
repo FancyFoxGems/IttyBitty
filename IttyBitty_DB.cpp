@@ -494,6 +494,15 @@ VOID Database::FromString(PCCHAR data)
 {
 }
 
+VOID Database::FreeBuffer() const
+{
+	if (!__database_buffer)
+		return;
+
+	delete[] __database_buffer;
+	__database_buffer = NULL;
+}
+
 #ifdef ARDUINO
 
 SIZE Database::printTo(Print & printer) const
@@ -573,18 +582,6 @@ CSIZE Database::TableDefsBinarySize() const
 CSIZE Database::TableDefsStringSize() const
 {
 	return _DatabaseDef->TableDefsStringSize();
-}
-
-
-// [ISerializable] HELPER METHODS
-
-VOID Database::FreeBuffer() const
-{
-	if (!__database_buffer)
-		return;
-
-	delete[] __database_buffer;
-	__database_buffer = NULL;
 }
 
 #pragma endregion

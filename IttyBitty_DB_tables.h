@@ -48,6 +48,9 @@ namespace IttyBitty
 	class IDbTableSet;
 	TYPEDEF_CLASS_ALIASES(IDbTableSet, IDBTABLESET);
 
+
+	class Database;
+
 #pragma endregion
 
 
@@ -225,6 +228,8 @@ namespace IttyBitty
 		VIRTUAL VOID FromBinary(PCBYTE);
 		VIRTUAL VOID FromString(PCCHAR);
 
+		VIRTUAL VOID FreeBuffer() const;
+
 	#ifdef ARDUINO
 		VIRTUAL SIZE printTo(Print &) const;
 	#endif
@@ -236,8 +241,6 @@ namespace IttyBitty
 
 
 		// INSTANCE VARIABLES
-
-		BOOL _CapacityChanged = FALSE;
 
 		DWORD _Capacity = 0;
 		SIZE _RowCount = 0;
@@ -272,11 +275,6 @@ namespace IttyBitty
 		// [IDbTableDef] IHELPER METHODS
 
 		VIRTUAL CBYTE TableNameLength() const;
-
-
-		// [ISerializable] HELPER METHODS
-
-		VIRTUAL VOID FreeBuffer() const;
 	};
 
 #pragma endregion
@@ -500,6 +498,9 @@ namespace IttyBitty
 
 
 	protected:
+
+		friend class DbTable;
+
 
 		// HELPER METHODS
 
