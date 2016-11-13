@@ -58,6 +58,7 @@
     <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
+  	<!-
     <ClInclude Include="..\SD.h" />
     <ClInclude Include="..\utility\FatStructs.h" />
     <ClInclude Include="..\utility\Sd2Card.h" />
@@ -66,6 +67,7 @@
     <ClInclude Include="..\utility\SdFatmainpage.h" />
     <ClInclude Include="..\utility\SdFatUtil.h" />
     <ClInclude Include="..\utility\SdInfo.h" />
+	-->
     <ClInclude Include="..\Wire.h" />
     <ClInclude Include="..\utility\twi.h" />
     <ClInclude Include="..\avr_cpunames.h" />
@@ -102,11 +104,13 @@
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+  	<!-
     <ClCompile Include="..\SD.cpp" />
     <ClCompile Include="..\File.cpp" />
     <ClCompile Include="..\utility\Sd2Card.cpp" />
     <ClCompile Include="..\utility\Sd2File.cpp" />
     <ClCompile Include="..\utility\SdVolume.cpp" />
+	-->
     <ClCompile Include="..\Wire.cpp" />
     <ClCompile Include="..\utility\twi.c" />
     <ClCompile Include="..\IttyBitty_bits.cpp" />

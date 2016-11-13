@@ -121,7 +121,10 @@ namespace IttyBitty
 
 #pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DECLARATIONS
 
-	CONSTEXPR PCCHAR CPUType();
+	CONSTEXPR PCCHAR CPUType()
+	{
+		return _AVR_CPU_NAME_;
+	}
 
 #pragma endregion
 
@@ -134,6 +137,7 @@ namespace IttyBitty
 	CWORD StackSpaceUsed();
 	CWORD StackSpaceFree();
 
+
 	PCHAR HeapPointer();
 
 	CWORD HeapSpaceTotal();
@@ -145,17 +149,32 @@ namespace IttyBitty
 
 #pragma region RAM (SRAM & XRAM) INFO GLOBAL FUNCTION DECLARATIONS
 
-	CONSTEXPR CWORD SramTotalSize();
+	CONSTEXPR CWORD SramTotalSize()
+	{
+		return static_cast<CWORD>(RAMEND) + 1 - static_cast<CWORD>(RAMSTART);
+	}
+
 	CWORD SramUsed();
 	CWORD SramFree();
 
-	CONSTEXPR WORD XramTotalSize();
+
+	CONSTEXPR WORD XramTotalSize()
+	{
+		return static_cast<CWORD>(XRAMSIZE);
+	}
+
 	CWORD XramUsed();
 	CWORD XramFree();
 
-	CONSTEXPR CWORD TotalRamSize();
+
+	CONSTEXPR CWORD TotalRamSize()
+	{
+		return SramTotalSize() + XramTotalSize();
+	}
+
 	CWORD TotalRamUsed();
 	CWORD TotalRamFree();
+
 
 	EXTERN CWORD (*MemorySize)();
 	EXTERN CWORD (*MemoryUsed)();
@@ -167,7 +186,7 @@ namespace IttyBitty
 #pragma region ROM (EEPROM/FLASH ROM) INFO GLOBAL FUNCTION DECLARATIONS
 
 	template<typename T = WORD, typename P = T>
-	CONST T DetectRomUsed(DWORD (&rom_read_dword)(P), CWORD romSize)
+	CONST T DetectRomUsed(DWORD (&rom_read_dword)(P), CONST T romSize)
 	{
 		T lastUsedAddr = 0x0;
 		DWORD value = 0;
@@ -191,32 +210,47 @@ namespace IttyBitty
 		return static_cast<CONST T>(lastUsedAddr + 1);
 	}
 
-	CONSTEXPR CDWORD EepromTotalSize();
+
+	CONSTEXPR CDWORD EepromTotalSize()
+	{
+	#if E2END == 0
+		return 0;
+	#else
+		return static_cast<CWORD>(E2END) + 1;
+	#endif
+	}
+
 	CDWORD EepromUsed();
 	CDWORD EepromFree();
 
-	CONSTEXPR CWORD FlashRomTotalSize();
-	CWORD FlashRomUsed();
-	CWORD FlashRomFree();
 
-	EXTERN CWORD (*ProgMemTotalSize)();
-	EXTERN CWORD (*ProgMemUsed)();
-	EXTERN CWORD (*ProgMemFree)();
+	CONSTEXPR CDWORD FlashRomTotalSize()
+	{
+		return static_cast<CDWORD>(FLASHEND) + 1;
+	}
+
+	CDWORD FlashRomUsed();
+	CDWORD FlashRomFree();
+
+	EXTERN CDWORD (*ProgMemTotalSize)();
+	EXTERN CDWORD (*ProgMemUsed)();
+	EXTERN CDWORD (*ProgMemFree)();
 
 #pragma endregion
 
 
 #pragma region BOOTLOADER/SKETCH SPACE INFO GLOBAL FUNCTION DECLARATIONS
 
-	CWORD BootloaderAllocatedSize();
+	CDWORD BootloaderAllocatedSize();
 
-	EXTERN CWORD (*BootloaderSize)();
+	EXTERN CDWORD (*BootloaderSize)();
 
-	CWORD SketchSpaceTotalSize();
-	CWORD SketchSpaceUsed();
-	CWORD SketchSpaceFree();
 
-	EXTERN CWORD (*SketchSize)();
+	CDWORD SketchSpaceTotalSize();
+	CDWORD SketchSpaceUsed();
+	CDWORD SketchSpaceFree();
+
+	EXTERN CDWORD (*SketchSize)();
 
 #pragma endregion
 }

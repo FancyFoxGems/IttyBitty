@@ -92,6 +92,7 @@ namespace IttyBitty
 
 		ERROR_MEDIA_WRITE						= ERROR_MEDIA | ERROR_OPERATION_WRITE,
 		ERROR_MEDIA_WRITE_FAILURE				= ERROR_MEDIA_WRITE,
+		ERROR_MEDIA_WRITE_NOT_ALLOWED			= ERROR_MEDIA_WRITE,
 		ERROR_MEDIA_WRITE_INTERRUPTED			= ERROR_MEDIA_WRITE | ERROR_OPERATION_INTERRUPTED,
 	};
 
@@ -270,6 +271,8 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
+		VIRTUAL CDWORD Capacity() = 0;
+
 		VIRTUAL CBOOL Available() = 0;
 
 		VIRTUAL CSTORAGERESULT Open(CBOOL = FALSE) = 0;
@@ -323,6 +326,11 @@ namespace IttyBitty
 
 
 		// [IStorage] IMPLEMENTATION
+
+		VIRTUAL CDWORD Capacity()
+		{
+			return 0;
+		}
 
 		VIRTUAL CBOOL Available()
 		{
@@ -379,7 +387,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		StorageBase(RCSTORAGELOCATION location) : _Location(location) { }
+		StorageBase(RCSTORAGELOCATION location = StorageLocation::NULL_OBJECT()) : _Location(location) { }
 
 		VIRTUAL ~StorageBase()
 		{
@@ -402,9 +410,31 @@ namespace IttyBitty
 
 		// USER METHODS
 
+		VIRTUAL CDWORD Capacity()
+		{
+			return 0;
+		}
+
 		VIRTUAL CBOOL Available()
 		{
 			return TRUE;
+		}
+
+		VIRTUAL CSTORAGERESULT Open(CBOOL rwFlag)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Close()
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Seek(RCDWORD address)
+		{
+			this->_Location.DWordAddress = address;
+
+			return StorageResult::SUCCESS;
 		}
 
 		VIRTUAL CSTORAGERESULT Flush()

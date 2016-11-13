@@ -64,16 +64,6 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DEFINITIONS
-
-	CONSTEXPR PCCHAR CPUType()
-	{
-		return _AVR_CPU_NAME_;
-	}
-
-#pragma endregion
-
-
 #pragma region STACK/HEAP INFO GLOBAL FUNCTION DEFINITIONS
 
 	// STACK SPACE FUNCTIONS
@@ -136,11 +126,6 @@ namespace IttyBitty
 
 	// SRAM FUNCTIONS
 
-	CONSTEXPR CWORD SramTotalSize()
-	{
-		return static_cast<CWORD>(RAMEND) + 1 - static_cast<CWORD>(RAMSTART);
-	}
-
 	CWORD SramUsed()
 	{
 	#ifdef XRAMSTART
@@ -170,11 +155,6 @@ namespace IttyBitty
 
 
 	// XRAM  & TOTAL RAM FUNCTIONS
-
-	CONSTEXPR WORD XramTotalSize()
-	{
-		return static_cast<CWORD>(XRAMSIZE);
-	}
 
 	#ifdef XRAMSTART
 
@@ -217,11 +197,6 @@ namespace IttyBitty
 
 	#endif	// #ifdef XRAMSTART
 
-	CONSTEXPR CWORD TotalRamSize()
-	{
-		return SramTotalSize() + XramTotalSize();
-	}
-
 
 	// TOTAL RAM FUNCTION ALIASES
 
@@ -236,15 +211,6 @@ namespace IttyBitty
 #pragma region ROM (EEPROM/FLASH ROM) INFO GLOBAL FUNCTION DEFINITIONS
 
 	// EPPROM FUNCTIONS
-
-	CONSTEXPR CDWORD EepromTotalSize()
-	{
-	#if E2END == 0
-		return 0;
-	#else
-		return static_cast<CWORD>(E2END) + 1;
-	#endif
-	}
 
 	CDWORD EepromUsed()
 	{
@@ -267,23 +233,18 @@ namespace IttyBitty
 
 	// (NAND) FLASH ROM FUNCTIONS
 
-	CONSTEXPR CWORD FlashRomTotalSize()
-	{
-		return static_cast<CWORD>(FLASHEND) + 1;
-	}
-
 	//STATIC DWORD __pgm_read_dword(WORD dwordPtr)
 	//{
 	//	return pgm_read_dword(dwordPtr);
 	//}
 
-	CWORD FlashDetectRomUsed()
+	CDWORD FlashDetectRomUsed()
 	{
 		//return DetectRomUsed<>(__pgm_read_dword, FlashRomTotalSize());
 		return BootloaderSize() + SketchSpaceUsed();
 	}
 
-	CWORD FlashRomFree()
+	CDWORD FlashRomFree()
 	{
 		return FlashRomTotalSize() - FlashDetectRomUsed();
 	}
@@ -291,9 +252,9 @@ namespace IttyBitty
 
 	// FLASH ROM FUNCTION ALIASES
 
-	CWORD (*ProgMemTotalSize)() = &FlashRomTotalSize;
-	CWORD (*ProgMemUsed)() = &FlashDetectRomUsed;
-	CWORD (*ProgMemFree)() = &FlashRomFree;
+	CDWORD (*ProgMemTotalSize)() = &FlashRomTotalSize;
+	CDWORD (*ProgMemUsed)() = &FlashDetectRomUsed;
+	CDWORD (*ProgMemFree)() = &FlashRomFree;
 
 #pragma endregion
 
@@ -304,7 +265,7 @@ namespace IttyBitty
 
 	// BOOTLOADER SPACE FUNCTIONS & ALIASES
 
-	CWORD BootloaderAllocatedSize()
+	CDWORD BootloaderAllocatedSize()
 	{
 		#ifndef SPM_PAGESIZE
 
@@ -312,7 +273,7 @@ namespace IttyBitty
 
 		#else
 
-			STATIC WORD BOOTLOADER_SIZE = 0;
+			STATIC DWORD BOOTLOADER_SIZE = 0;
 
 		#if defined (__AVR_ATmega88__) || defined (__AVR_ATmega168__)
 			#define BOOTSIZE_FACTOR_FUSE_BYTE	GET_EXTENDED_FUSE_BITS
@@ -327,40 +288,40 @@ namespace IttyBitty
 
 			BOOTLOADER_SIZE = 2 ^ (BOOTSIZE_FACTOR_FACTOR - bootSizeFactor) * SPM_PAGESIZE;
 
-			return static_cast<CWORD>(BOOTLOADER_SIZE);
+			return static_cast<CDWORD>(BOOTLOADER_SIZE);
 
 		#endif
 	}
 
-	CWORD (*BootloaderSize)() = &BootloaderAllocatedSize;
+	CDWORD (*BootloaderSize)() = &BootloaderAllocatedSize;
 
 
 	// SKETCH SPACE FUNCTIONS & ALIASES
 
-	CWORD SketchSpaceTotalSize()
+	CDWORD SketchSpaceTotalSize()
 	{
 		return FlashRomTotalSize() - BootloaderSize();
 	}
 
-	CWORD SketchSpaceUsed()
+	CDWORD SketchSpaceUsed()
 	{
-		WORD textAndDataSize = reinterpret_cast<WORD>(&_etext) + reinterpret_cast<WORD>(&_edata);
+		DWORD textAndDataSize = reinterpret_cast<WORD>(&_etext) + reinterpret_cast<WORD>(&_edata);
 
 		#ifndef SPM_PAGESIZE
-			STATIC CONST CWORD FLASH_PAGE_SIZE = 0;
+			STATIC CONST CDWORD FLASH_PAGE_SIZE = 0;
 		#else
-			STATIC CONST CWORD FLASH_PAGE_SIZE = SPM_PAGESIZE;
+			STATIC CONST CDWORD FLASH_PAGE_SIZE = SPM_PAGESIZE;
 		#endif
 
-		return static_cast<CWORD>(textAndDataSize) + FLASH_PAGE_SIZE;
+		return static_cast<CDWORD>(textAndDataSize) + FLASH_PAGE_SIZE;
 	}
 
-	CWORD SketchSpaceFree()
+	CDWORD SketchSpaceFree()
 	{
 		return SketchSpaceTotalSize() - SketchSpaceUsed();
 	}
 
-	CWORD (*SketchSize)() = &SketchSpaceUsed;
+	CDWORD (*SketchSize)() = &SketchSpaceUsed;
 
 #pragma endregion
 }

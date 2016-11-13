@@ -12,9 +12,23 @@
 
 #include "IttyBitty_storage.h"
 
+#include "IttyBitty_info.h"
+
 #ifdef ARDUINO
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
+
+#ifdef ARDUINO
+
+	#include "EEPROM.h"
+
+	#ifndef NO_ITTYBITTY_SD
+		#include "SD.h"
+	#endif
+
+#endif
+
+#include <avr/pgmspace.h>
 
 
 #pragma region DEFINES
@@ -34,16 +48,22 @@ namespace IttyBitty
 	class FlashRomStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(FlashRomStorageAdapter, FLASHROMSTORAGEADAPTER);
 
+
 #ifdef ARDUINO
 
 	class EepromStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(EepromStorageAdapter, EEPROMSTORAGEADAPTER);
 
-	class SdStorageAdapter;
-	TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
+	#ifndef NO_ITTYBITTY_SD
+		class SdStorageAdapter;
+		TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
+	#endif
 
-	class ExtEepromStorageAdapter;
-	TYPEDEF_CLASS_ALIASES(ExtEepromStorageAdapter, EXTEEPROMSTORAGEADAPTER);
+	#ifndef NO_ITTYBITTY_EEPROM_I2C
+		template EEPROMI2C_T_CLAUSE
+		class ExtEepromStorageAdapter;
+		TEMPLATE_CLASS_USING_ALIASES(CSL(EEPROMI2C_T_CLAUSE), CSL(EEPROMI2C_T_ARGS), ExtEepromStorageAdapter, EXTEEPROMSTORAGEADAPTER);
+	#endif
 
 #endif  // #ifdef ARDUINO
 
@@ -63,17 +83,19 @@ namespace IttyBitty
 
 		// [IStorage] IMPLEMENTATION
 
-		CBOOL Available();
+		CDWORD Capacity();
 
-		CSTORAGERESULT Open(CBOOL = FALSE);
 		CSTORAGERESULT Close();
-
-		CSTORAGERESULT Seek(RCDWORD);
 
 		CSTORAGERESULT Read(PBYTE, CSIZE);
 		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
-		CSTORAGERESULT Flush();
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		CDWORD _BufferSize = 0;
 	};
 
 #pragma endregion
@@ -92,17 +114,12 @@ namespace IttyBitty
 
 		// [IStorage] IMPLEMENTATION
 
-		CBOOL Available();
+		CDWORD Capacity();
 
 		CSTORAGERESULT Open(CBOOL = FALSE);
-		CSTORAGERESULT Close();
-
-		CSTORAGERESULT Seek(RCDWORD);
 
 		CSTORAGERESULT Read(PBYTE, CSIZE);
 		CSTORAGERESULT Write(PCBYTE, CSIZE);
-
-		CSTORAGERESULT Flush();
 	};
 
 #pragma endregion
@@ -123,22 +140,17 @@ namespace IttyBitty
 
 		// [IStorage] IMPLEMENTATION
 
-		CBOOL Available();
-
-		CSTORAGERESULT Open(CBOOL = FALSE);
-		CSTORAGERESULT Close();
-
-		CSTORAGERESULT Seek(RCDWORD);
+		CDWORD Capacity();
 
 		CSTORAGERESULT Read(PBYTE, CSIZE);
 		CSTORAGERESULT Write(PCBYTE, CSIZE);
-
-		CSTORAGERESULT Flush();
 
 	};
 
 #pragma endregion
 
+
+#ifndef NO_ITTYBITTY_SD
 
 #pragma region [SdStorageAdapter] DEFINITION
 
@@ -148,10 +160,12 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		SdStorageAdapter(PCCHAR);
+		SdStorageAdapter(PCCHAR, CBYTE = 10);
 
 
 		// [IStorage] IMPLEMENTATION
+
+		CDWORD Capacity();
 
 		CBOOL Available();
 
@@ -164,38 +178,86 @@ namespace IttyBitty
 		CSTORAGERESULT Write(PCBYTE, CSIZE);
 
 		CSTORAGERESULT Flush();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		File _File;
 	};
 
 #pragma endregion
 
+#endif	//#ifndef NO_ITTYBITTY_SD
+
+
+#ifndef NO_ITTYBITTY_EEPROM_I2C
 
 #pragma region [ExtEepromStorageAdapter] DEFINITION
 
+	template EEPROMI2C_T_CLAUSE_DEF
 	CLASS ExtEepromStorageAdapter : public StorageBase
 	{
+	protected:
+
+		// META-TYPEDEF ALIASES
+
+		typedef EEPROMI2C<ChipType, DeviceNum> TEEPROMI2C;
+		typedef typename TEEPROMI2C::TADDR TADDR;
+		typedef typename TEEPROMI2C::CTADDR CTADDR;
+
+
 	public:
 
 		// CONSTRUCTORS
 
-		ExtEepromStorageAdapter();
+		ExtEepromStorageAdapter(CBOOL use400KHz = FALSE, RCDWORD startAddress = (CDWORD)0) : StorageBase(startAddress)
+		{
+			_ExtEEPROM = TEEPROMI2C(use400KHz, (CTADDR)startAddress);
+		}
 
 
 		// [IStorage] IMPLEMENTATION
 
-		CBOOL Available();
+		CDWORD Capacity()
+		{
+			return (CDWORD)_ExtEEPROM.Capacity();
+		}
 
-		CSTORAGERESULT Open(CBOOL = FALSE);
-		CSTORAGERESULT Close();
+		CSTORAGERESULT Seek(RCDWORD address)
+		{
+			_ExtEEPROM.Seek((CTADDR)address);
 
-		CSTORAGERESULT Seek(RCDWORD);
+			return StorageResult::SUCCESS;
+		}
 
-		CSTORAGERESULT Read(PBYTE, CSIZE);
-		CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE buffer, CSIZE size)
+		{
+			if (_ExtEEPROM.Read(buffer, size) == size)
+				return StorageResult::SUCCESS;
 
-		CSTORAGERESULT Flush();
+			return StorageResult::ERROR_MEDIA_READ_FAILURE;
+		}
+
+		CSTORAGERESULT Write(PCBYTE data, CSIZE size)
+		{
+			if (_ExtEEPROM.Write(data, size) == size)
+				return StorageResult::SUCCESS;
+
+			return StorageResult::ERROR_MEDIA_READ_FAILURE;
+		}
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		TEEPROMI2C _ExtEEPROM;
 	};
 
 #pragma endregion
+
+#endif	// #ifndef NO_ITTYBITTY_EEPROM_I2C
 
 #endif  // #ifdef ARDUINO
 };

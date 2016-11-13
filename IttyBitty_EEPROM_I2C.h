@@ -381,7 +381,7 @@ namespace IttyBitty
 			return GetDataAddressMSB() SHL 0b1;
 		}
 
-		CBYTE BuildDeviceAddressWord(RCBOOL setReadFlag = FALSE) const
+		CBYTE BuildDeviceAddressWord(CBOOL setReadFlag = FALSE) const
 		{
 			return DeviceAddr OR GetPageBitsFromAddress() OR ((CBYTE)setReadFlag);
 		}
@@ -405,7 +405,7 @@ namespace IttyBitty
 			return MAX_OF(BYTE);
 		}
 
-		CBYTE SendDeviceAddressWord(RCBOOL waitForReady = TRUE) const
+		CBYTE SendDeviceAddressWord(CBOOL waitForReady = TRUE) const
 		{
 			if (waitForReady)
 			{
@@ -419,7 +419,7 @@ namespace IttyBitty
 			return 0;
 		}
 
-		CBYTE SendAddressWords(RCBOOL waitForReady = TRUE) const
+		CBYTE SendAddressWords(CBOOL waitForReady = TRUE) const
 		{
 			BYTE errCode = this->SendDeviceAddressWord(waitForReady);
 			if (errCode)
@@ -609,8 +609,13 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIASES
 
-		typedef TYPE_IF((CapacityKb() >= 0x0400), DWORD, TYPE_IF((CapacityKb() >= 0x0004), WORD, BYTE)) TAddr, & RTADDR;
+		typedef TYPE_IF((CapacityKb() >= 0x0400), DWORD, TYPE_IF((CapacityKb() >= 0x0004), WORD, BYTE)) TAddr, TADDR, & RTADDR;
+
+	public:
+
 		typedef const TAddr CTADDR, & RCTADDR;
+
+	protected:
 
 		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
 		typedef const TEEEPtr & RCTEEEPTR;
@@ -628,7 +633,7 @@ namespace IttyBitty
 			return CapacityKb() * KILObit / BITS_PER_BYTE;
 		}
 
-		STATIC CONSTEXPR CTADDR (*CapacityBytes)() = &Size;
+		STATIC CONSTEXPR CTADDR (*Capacity)() = &Size;
 
 
 		// STATIC CONSTEXPR FUNCTION ALIASES
@@ -643,7 +648,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		EEPROM_I2C(RCBOOL use400KHz = FALSE, RCTADDR startAddr = (CTADDR)0) : _Iterator(TEEEPtr(startAddr))
+		EEPROM_I2C(CBOOL use400KHz = FALSE, RCTADDR startAddr = (CTADDR)0) : _Iterator(TEEEPtr(startAddr))
 		{
 			Wire.begin();
 

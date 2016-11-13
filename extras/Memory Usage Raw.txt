@@ -1,0 +1,277 @@
+cls
+avr-nm -C -S -l -f sysv C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty.ino.elf
+
+Name                  Value   Class        Type         Size     Line  Section
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+.do_clear_bss_loop  |00000108|   t  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:673
+.do_clear_bss_start |0000010a|   t  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:673
+__bad_interrupt     |0000012e|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__brkval            |0080042a|   B  |            OBJECT|00000002|     |.bss
+__bss_end           |0080042e|   B  |            NOTYPE|        |     |.bss
+__bss_start         |0080025c|   B  |            NOTYPE|        |     |.bss
+__ctors_end         |000000c4|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:662
+__ctors_start       |000000bc|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:661
+__cxa_pure_virtual  |00001516|   T  |              FUNC|00000004|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/abi.cpp:24
+__data_end          |0080025c|   D  |            NOTYPE|        |     |.data
+__data_load_end     |00001cca|   A  |            NOTYPE|        |     |*ABS*
+__data_load_start   |00001b6e|   A  |            NOTYPE|        |     |*ABS*
+__data_start        |00800100|   D  |            NOTYPE|        |     |.data
+__do_clear_bss      |00000100|   T  |            NOTYPE|00000010|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:672
+__do_copy_data      |000000ea|   T  |            NOTYPE|00000016|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+__do_global_ctors   |00000110|   T  |            NOTYPE|00000016|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:673
+__do_global_dtors   |00001b56|   T  |            NOTYPE|00000016|     |.text
+__dtors_end         |000000c6|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:662
+__dtors_start       |000000c4|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:662
+__eeprom_end        |00810000|   N  |            NOTYPE|        |     |.comment
+__epilogue_restores__|000018ca|   T  |            NOTYPE|00000036|     |.text
+__flp               |0080042c|   B  |            OBJECT|00000002|     |.bss
+__fuse_byte_high_or_extended|        |   U  |            NOTYPE|        |     |*UND*
+__heap_end          |00000000|   W  |            NOTYPE|        |     |*ABS*
+__heap_start        |0080042f|   B  |            NOTYPE|        |     |.noinit
+__init              |000000c6|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:662
+__malloc_heap_end   |00800100|   D  |            OBJECT|00000002|     |.data
+__malloc_heap_start |00800102|   D  |            OBJECT|00000002|     |.data
+__malloc_margin     |00800104|   D  |            OBJECT|00000002|     |.data
+__prologue_saves__  |00001892|   T  |            NOTYPE|00000038|     |.text
+__stack             |000008ff|   W  |            NOTYPE|        |     |*ABS*
+__stop_program      |00001b6c|   t  |            NOTYPE|        |     |.text
+__tablejump__       |0000188a|   T  |            NOTYPE|00000008|     |.text
+__tablejump2__      |00001886|   T  |            NOTYPE|00000004|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/Print.cpp:42
+__tcf_2             |0000019e|   t  |              FUNC|0000000e|     |.text
+__tcf_3             |000002b0|   t  |              FUNC|0000000a|     |.text
+__trampolines_end   |00000076|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+__trampolines_start |00000076|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:668
+__vector_1          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_10         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_11         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_12         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_13         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_14         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_15         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_16         |0000135a|   T  |              FUNC|00000094|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:45
+__vector_17         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_18         |000016d8|   T  |              FUNC|00000064|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:40
+__vector_19         |0000173c|   T  |              FUNC|0000004c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:59
+__vector_2          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_20         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_21         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_22         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_23         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_24         |00001108|   T  |              FUNC|00000256|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:365
+__vector_25         |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_3          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_4          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_5          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_6          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_7          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_8          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_9          |0000012e|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/WString.cpp:675
+__vector_default    |00000000|   W  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/hooks.c:28
+__vectors           |00000000|   T  |            NOTYPE|        |     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/hooks.c:28
+_edata              |0080025c|   d  |            NOTYPE|        |     |.data
+_end                |0080042f|   B  |            NOTYPE|        |     |.noinit
+_etext              |00001b6e|   t  |            NOTYPE|        |     |.text
+_exit               |00001b56|   T  |            NOTYPE|        |     |.text
+_GLOBAL__sub_D_ARDUINO_PORT_TO_MODE|00000f00|   t  |              FUNC|00000062|     |.text
+_GLOBAL__sub_I___vector_18|00001798|   t  |              FUNC|00000086|     |.text
+_GLOBAL__sub_I__ZN7TwoWire8rxBufferE|00001076|   t  |              FUNC|0000000a|     |.text
+_GLOBAL__sub_I__ZN9IttyBitty24SERIAL_EEPROM_TIMEOUT_MSE|00000880|   t  |              FUNC|00000012|     |.text
+_GLOBAL__sub_I_ARDUINO_PORT_TO_MODE|00000e6e|   t  |              FUNC|000000aa|     |.text
+serialEvent()       |        |   w  |            NOTYPE|        |     |*UND*
+serialEventRun()    |00001572|   W  |              FUNC|0000001c|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial.cpp:63
+Serial0_available() |00001786|   T  |              FUNC|00000014|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:75
+operator delete(void*)|00001842|   T  |              FUNC|00000006|     |.text  C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/new.cpp:39
+guard variable for IttyBitty::_BitProxy::NULL_OBJECT()::NULL_BITREF|00800282|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::NULL_OBJECT()::NULL_BYTEFIELD|0080027a|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::operator IttyBitty::ByteField**()::sillyPtr|00800272|   b  |            OBJECT|00000008|     |.bss
+guard variable for IttyBitty::ByteField::Bytes() const::thisClone|0080026a|   b  |            OBJECT|00000008|     |.bss
+HardwareSerial::_tx_udr_empty_irq()|0000158c|   T  |              FUNC|00000042|     |.text
+HardwareSerial::peek()|0000152e|   T  |              FUNC|0000001c|     |.text
+HardwareSerial::read()|0000154a|   T  |              FUNC|00000028|     |.text
+HardwareSerial::flush()|000015ce|   T  |              FUNC|00000044|     |.text
+HardwareSerial::write(unsigned char)|00001610|   T  |              FUNC|000000ca|     |.text
+HardwareSerial::available()|00001518|   T  |              FUNC|00000016|     |.text
+Print::write(unsigned char const*, unsigned int)|00001846|   T  |              FUNC|00000044|     |.text
+SDLib::SD           |        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::seek(unsigned long)|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::size() |        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::close()|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::flush()|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::write(unsigned char const*, unsigned int)|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::available()|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::File::File() |        |   U  |            NOTYPE|        |     |*UND*
+SDLib::SDClass::open(char const*, unsigned char)|        |   U  |            NOTYPE|        |     |*UND*
+SDLib::SDClass::begin(unsigned char)|        |   U  |            NOTYPE|        |     |*UND*
+TwoWire::transmitting|008002d1|   B  |            OBJECT|00000001|     |.bss
+TwoWire::rxBufferIndex|008002f5|   B  |            OBJECT|00000001|     |.bss
+TwoWire::txBufferIndex|008002d3|   B  |            OBJECT|00000001|     |.bss
+TwoWire::rxBufferLength|008002f4|   B  |            OBJECT|00000001|     |.bss
+TwoWire::txBufferLength|008002d2|   B  |            OBJECT|00000001|     |.bss
+TwoWire::peek()     |00000f80|   T  |              FUNC|0000001e|     |.text
+TwoWire::read()     |00000f5a|   T  |              FUNC|00000026|     |.text
+TwoWire::begin()    |00001062|   T  |              FUNC|00000016|     |.text
+TwoWire::flush()    |00000f9e|   T  |              FUNC|00000002|     |.text
+TwoWire::write(unsigned char)|00000fe8|   T  |              FUNC|00000060|     |.text
+TwoWire::write(unsigned char const*, unsigned int)|00000fa0|   T  |              FUNC|0000004e|     |.text
+TwoWire::rxBuffer   |008002f6|   B  |            OBJECT|00000020|     |.bss
+TwoWire::txBuffer   |008002d4|   B  |            OBJECT|00000020|     |.bss
+TwoWire::available()|00000f4a|   T  |              FUNC|00000010|     |.text
+TwoWire::TwoWire()  |00001042|   T  |              FUNC|00000020|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/Wire.cpp:965
+TwoWire::TwoWire()  |00001042|   T  |              FUNC|00000020|     |.text
+IttyBitty::DisableWdt()|000000d2|   T  |              FUNC|00000018|     |.text
+IttyBitty::_PortRegisters::operator=(IttyBitty::_PortRegisters const&)|000009ae|   W  |              FUNC|00000036|     |.text
+IttyBitty::_PortRegisters::_PortRegisters(IttyBitty::_PortRegisters const&)|0000095a|   W  |              FUNC|0000005c|     |.text     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.h:180
+IttyBitty::_PortRegisters::_PortRegisters(IttyBitty::_PortRegisters const&)|0000095a|   W  |              FUNC|0000005c|     |.text
+IttyBitty::_PortRegisters::~_PortRegisters()|0000093a|   W  |              FUNC|00000010|     |.text
+IttyBitty::_PortRegisters::~_PortRegisters()|00000890|   W  |              FUNC|0000000c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.h:130
+IttyBitty::_PortRegisters::~_PortRegisters()|00000890|   W  |              FUNC|0000000c|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, unsigned char)|00000900|   W  |              FUNC|00000010|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, IttyBitty::PinModeBasic)|000008f0|   W  |              FUNC|00000010|     |.text
+IttyBitty::_Port::SetPinMode(unsigned int, IttyBitty::PinMode)|00000af8|   W  |              FUNC|00000088|     |.text
+IttyBitty::_Port::SetPin(unsigned int)|00000cc2|   W  |              FUNC|00000048|     |.text
+IttyBitty::_Port::ClearPin(unsigned int)|00000d02|   W  |              FUNC|00000048|     |.text
+IttyBitty::_Port::PinState(unsigned int)|00000910|   W  |              FUNC|0000002a|     |.text
+IttyBitty::_Port::ResetPin(unsigned int)|00000d9a|   W  |              FUNC|000000e8|     |.text
+IttyBitty::_Port::WritePin(unsigned int, bool)|00000c7e|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::TogglePin(unsigned int)|00000d42|   W  |              FUNC|00000060|     |.text
+IttyBitty::_Port::operator=(IttyBitty::_Port const&)|000009de|   W  |              FUNC|0000005c|     |.text
+IttyBitty::_Port::_Port(IttyBitty::ByteField&, IttyBitty::ByteField&, IttyBitty::ByteField&)|00000a30|   W  |              FUNC|0000004c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO:192
+IttyBitty::_Port::_Port(IttyBitty::ByteField&, IttyBitty::ByteField&, IttyBitty::ByteField&)|00000a30|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::~_Port()|00000948|   W  |              FUNC|00000016|     |.text
+IttyBitty::_Port::~_Port()|0000089c|   W  |              FUNC|00000028|     |.text      C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.h:178
+IttyBitty::_Port::~_Port()|0000089c|   W  |              FUNC|00000028|     |.text
+IttyBitty::_Port::operator[](unsigned int)|000008d4|   W  |              FUNC|0000001c|     |.text
+IttyBitty::_MCUSR   |0080042e|   B  |            OBJECT|00000001|     |.noinit
+IttyBitty::_BitPack::BitSize()|00000134|   T  |              FUNC|00000006|     |.text
+IttyBitty::_BitProxy::NULL_OBJECT()|0000061e|   T  |              FUNC|00000034|     |.text
+IttyBitty::_BitProxy::Flip()|00000264|   T  |              FUNC|00000026|     |.text
+IttyBitty::_BitProxy::operator=(bool)|0000020c|   T  |              FUNC|00000058|     |.text
+IttyBitty::_BitProxy::operator=(IttyBitty::_BitProxy const&)|000001d6|   T  |              FUNC|00000036|     |.text
+IttyBitty::_BitProxy::~_BitProxy()|0000058a|   T  |              FUNC|00000010|     |.text
+IttyBitty::_BitProxy::~_BitProxy()|00000192|   T  |              FUNC|0000000c|     |.text      C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_bytes.cpp:43
+IttyBitty::_BitProxy::~_BitProxy()|00000192|   T  |              FUNC|0000000c|     |.text
+IttyBitty::ByteField::NULL_OBJECT()|0000081a|   T  |              FUNC|00000024|     |.text
+IttyBitty::ByteField::SetLowNybble(unsigned char)|000004c8|   T  |              FUNC|00000056|     |.text
+IttyBitty::ByteField::ReferenceFrom(IttyBitty::IBitField<unsigned char> const&)|0000040e|   T  |              FUNC|00000020|     |.text
+IttyBitty::ByteField::SetHighNybble(unsigned char)|00000530|   T  |              FUNC|0000004e|     |.text
+IttyBitty::ByteField::Bit(unsigned int)|00000652|   T  |              FUNC|00000078|     |.text
+IttyBitty::ByteField::Byte(unsigned int)|000003a8|   T  |              FUNC|00000014|     |.text
+IttyBitty::ByteField::Flip(unsigned int)|0000035c|   T  |              FUNC|00000032|     |.text
+IttyBitty::ByteField::PointTo(unsigned char volatile*)|00000406|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::CopyFrom(IttyBitty::IBitField<unsigned char> const&)|000003d8|   T  |              FUNC|00000026|     |.text
+IttyBitty::ByteField::SetValue(unsigned char)|000003ca|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::operator=(IttyBitty::ByteField&&)|0000079e|   T  |              FUNC|00000042|     |.text
+IttyBitty::ByteField::operator=(IttyBitty::ByteField const&)|000007dc|   T  |              FUNC|00000042|     |.text
+IttyBitty::ByteField::ByteField(unsigned char volatile*)|0000077a|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::ByteField(unsigned char const&)|000006c8|   T  |              FUNC|00000034|     |.text
+IttyBitty::ByteField::ByteField(IttyBitty::ByteField const&)|0000078c|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::ByteField()|000006fc|   T  |              FUNC|0000002c|     |.text
+IttyBitty::ByteField::operator IttyBitty::ByteField**()|00000308|   T  |              FUNC|0000001c|     |.text
+IttyBitty::ByteField::operator char volatile**()|000002f2|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char volatile**()|000002de|   T  |              FUNC|00000004|     |.text
+IttyBitty::ByteField::operator char volatile*()|00000496|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator unsigned char volatile*()|00000486|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator IttyBitty::_BitPack volatile*()|000004ae|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator char volatile&()|0000049e|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator unsigned char volatile&()|0000048e|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::~ByteField()|0000059a|   T  |              FUNC|00000016|     |.text
+IttyBitty::ByteField::~ByteField()|0000028a|   T  |              FUNC|00000026|     |.text
+IttyBitty::ByteField::operator[](unsigned int)|00000334|   T  |              FUNC|0000001c|     |.text
+IttyBitty::IBitField<unsigned char>::~IBitField()|000005ae|   W  |              FUNC|00000010|     |.text
+IttyBitty::IBitField<unsigned char>::~IBitField()|0000057e|   W  |              FUNC|0000000c|     |.text       C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_bytes.h:183
+IttyBitty::IBitField<unsigned char>::~IBitField()|0000057e|   W  |              FUNC|0000000c|     |.text
+IttyBitty::_Port::GetPinMode(unsigned int) const|00000a76|   W  |              FUNC|0000008e|     |.text
+IttyBitty::_Port::CheckPinSet(unsigned int) const|00000bf8|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::CheckPinUnset(unsigned int) const|00000c3a|   W  |              FUNC|0000004c|     |.text
+IttyBitty::_Port::ReadPin(unsigned int) const|00000b74|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::CheckPin(unsigned int) const|00000bb6|   W  |              FUNC|0000004a|     |.text
+IttyBitty::_Port::operator[](unsigned int) const|000008c4|   W  |              FUNC|00000010|     |.text
+IttyBitty::_BitPack::Bit(unsigned int) const|0000013a|   T  |              FUNC|00000058|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_bits.cpp:73
+IttyBitty::_BitProxy::operator bool() const|000001ac|   T  |              FUNC|0000002a|     |.text
+IttyBitty::ByteField::HighNybble() const|0000051e|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::CloneByValue() const|00000726|   T  |              FUNC|00000056|     |.text
+IttyBitty::ByteField::CloneByReference() const|000005be|   T  |              FUNC|0000002a|     |.text
+IttyBitty::ByteField::Bit(unsigned int) const|00000614|   T  |              FUNC|0000000c|     |.text
+IttyBitty::ByteField::Byte(unsigned int) const|0000083a|   T  |              FUNC|00000048|     |.text
+IttyBitty::ByteField::Mask(unsigned char) const|0000042e|   T  |              FUNC|00000028|     |.text
+IttyBitty::ByteField::Mask(IttyBitty::IBitField<unsigned char> const&) const|00000456|   T  |              FUNC|00000030|     |.text
+IttyBitty::ByteField::Size() const|00000350|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::Bytes() const|0000038c|   T  |              FUNC|0000001c|     |.text
+IttyBitty::ByteField::Value() const|000003bc|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::Pointer() const|000003fe|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::BitWidth() const|000005e8|   T  |              FUNC|0000002e|     |.text
+IttyBitty::ByteField::ByteSize() const|00000356|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::LowNybble() const|000004b6|   T  |              FUNC|00000012|     |.text
+IttyBitty::ByteField::operator char const() const|000002c6|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char const() const|000002b8|   T  |              FUNC|0000000e|     |.text
+IttyBitty::ByteField::operator char const*() const|000002e2|   T  |              FUNC|00000010|     |.text
+IttyBitty::ByteField::operator unsigned char const*() const|000002d6|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator IttyBitty::ByteField*() const|00000302|   T  |              FUNC|00000006|     |.text
+IttyBitty::ByteField::operator IttyBitty::_BitPack const volatile*() const|000004a6|   T  |              FUNC|00000008|     |.text
+IttyBitty::ByteField::operator[](unsigned int) const|00000324|   T  |              FUNC|00000010|     |.text
+operator new(unsigned int)|0000183e|   T  |              FUNC|00000006|     |.text      C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/new.cpp:31
+VTT for IttyBitty::ByteField|00800158|   V  |            OBJECT|00000004|     |.data
+vtable for HardwareSerial|0080024c|   V  |            OBJECT|00000010|     |.data
+vtable for TwoWire  |0080023c|   V  |            OBJECT|00000010|     |.data
+vtable for IttyBitty::_PortRegisters|00800208|   V  |            OBJECT|0000000a|     |.data
+vtable for IttyBitty::_Port|00800212|   V  |            OBJECT|0000002a|     |.data
+vtable for IttyBitty::_BitProxy|00800148|   V  |            OBJECT|00000010|     |.data
+vtable for IttyBitty::ByteField|0080015c|   V  |            OBJECT|000000ac|     |.data
+vtable for IttyBitty::IBitField<unsigned char>|00800106|   V  |            OBJECT|00000042|     |.data
+IttyBitty::_BitProxy::NULL_OBJECT()::NULL_BITREF|00800265|   b  |            OBJECT|00000005|     |.bss
+IttyBitty::ByteField::NULL_OBJECT()::NULL_BYTEFIELD|00800260|   b  |            OBJECT|00000005|     |.bss
+IttyBitty::ByteField::operator IttyBitty::ByteField**()::sillyPtr|0080025e|   b  |            OBJECT|00000002|     |.bss
+IttyBitty::ByteField::Bytes() const::thisClone|0080025c|   b  |            OBJECT|00000002|     |.bss
+abort               |00001b4e|   T  |              FUNC|0000000a|     |.text
+atexit              |0000181e|   W  |              FUNC|00000006|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:23
+DDRB_REG            |008002c0|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:167
+DDRC_REG            |008002ad|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:171
+DDRD_REG            |0080029a|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:175
+digital_pin_to_bit_mask_PGM|0000008a|   T  |            OBJECT|00000014|     |.text     C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:155
+digital_pin_to_port_PGM|0000009e|   T  |            OBJECT|00000014|     |.text C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:132
+digital_pin_to_timer_PGM|00000076|   T  |            OBJECT|00000014|     |.text        C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:178
+digitalWrite        |000014b6|   T  |              FUNC|00000066|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring_digital.c:138
+exit                |00001b56|   W  |            NOTYPE|        |     |.text
+ExtEEPROM           |0080028a|   B  |            OBJECT|00000002|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_EEPROM_I2C.cpp:27
+free                |00001a30|   T  |              FUNC|0000011e|     |.text
+init                |000013ee|   T  |              FUNC|00000076|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:241
+initVariant         |00001824|   W  |              FUNC|00000002|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:28
+loop                |00000132|   T  |              FUNC|00000002|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328/IttyBitty.cpp:11
+main                |00001826|   T  |              FUNC|0000001e|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/main.cpp:33
+malloc              |00001900|   T  |              FUNC|00000130|     |.text
+PINB_REG            |008002b6|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:167
+PINC_REG            |008002a3|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:171
+PIND_REG            |00800290|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:175
+port_to_output_PGM  |000000b2|   T  |            OBJECT|0000000a|     |.text    C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\eightanaloginputs/../standard/pins_arduino.h:116
+PortB               |008002b2|   B  |            OBJECT|00000004|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:167
+PORTB_REG           |008002bb|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:167
+PortC               |0080029f|   B  |            OBJECT|00000004|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:171
+PORTC_REG           |008002a8|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:171
+PortD               |0080028c|   B  |            OBJECT|00000004|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:175
+PORTD_REG           |00800295|   B  |            OBJECT|00000005|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/IttyBitty_GPIO.cpp:175
+Serial              |0080038d|   B  |            OBJECT|0000009d|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/HardwareSerial0.cpp:70
+setup               |00000130|   T  |              FUNC|00000002|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328/IttyBitty.cpp:9
+timer0_fract        |00800384|   b  |            OBJECT|00000001|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:40
+timer0_millis       |00800385|   B  |            OBJECT|00000004|     |.bss     C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:39
+timer0_overflow_count|00800389|   B  |            OBJECT|00000004|     |.bss    C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino/wiring.c:38
+turnOffPWM          |00001464|   t  |              FUNC|00000052|     |.text
+twi_error           |00800316|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:62
+twi_init            |0000107e|   T  |              FUNC|0000003c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:70
+twi_inRepStart      |00800380|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:46
+twi_masterBuffer    |0080035c|   b  |            OBJECT|00000020|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:51
+twi_masterBufferIndex|0080035b|   b  |            OBJECT|00000001|     |.bss    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:52
+twi_masterBufferLength|0080035a|   b  |            OBJECT|00000001|     |.bss   C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:53
+twi_onSlaveReceive  |0080037c|   b  |            OBJECT|00000002|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:49
+twi_onSlaveTransmit |0080037e|   b  |            OBJECT|00000002|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:48
+twi_releaseBus      |000010fc|   T  |              FUNC|0000000c|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:356
+twi_rxBuffer        |00800318|   b  |            OBJECT|00000020|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:59
+twi_rxBufferIndex   |00800317|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:60
+twi_sendStop        |00800381|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:45
+twi_slarw           |00800382|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:44
+twi_state           |00800383|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:43
+twi_stop            |000010e8|   T  |              FUNC|00000014|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:335
+twi_transmit        |000010b6|   T  |              FUNC|00000032|     |.text    C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:268
+twi_txBuffer        |0080033a|   b  |            OBJECT|00000020|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:55
+twi_txBufferIndex   |00800339|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:56
+twi_txBufferLength  |00800338|   b  |            OBJECT|00000001|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty\utility/twi.c:57
+Wire                |008002c5|   B  |            OBJECT|0000000c|     |.bss     C:\Users\Tom\AppData\Local\Temp\VMicroBuilds\IttyBitty\nano_atmega328\IttyBitty/Wire.cpp:1082

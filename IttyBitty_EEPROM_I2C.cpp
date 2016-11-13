@@ -29,4 +29,4 @@ EEPROMI2C<> ExtEEPROM;
 #pragma endregion
 
 
-#endif //#ifndef NO_ITTYBITTY_EEPROM_I2C
+#endif // #ifndef NO_ITTYBITTY_EEPROM_I2C

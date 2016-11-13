@@ -15,55 +15,40 @@
 
 using namespace IttyBitty;
 
-#include <avr/pgmspace.h>
-
-#ifdef ARDUINO
-	#include "EEPROM.h"
-	#include "SD.h"
-#endif
-
 
 #pragma region [MemoryResidentStorageAdapter] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-MemoryResidentStorageAdapter::MemoryResidentStorageAdapter(CDWORD addr) : StorageBase(addr) { }
+MemoryResidentStorageAdapter::MemoryResidentStorageAdapter(CDWORD bufferSize)
+	: StorageBase((WORD)new byte[bufferSize]), _BufferSize(bufferSize) { }
 
 
 // [IStorage] IMPLEMENTATION
 
-CBOOL MemoryResidentStorageAdapter::Available()
+CDWORD MemoryResidentStorageAdapter::Capacity()
 {
-	return TRUE;
-}
-
-CSTORAGERESULT MemoryResidentStorageAdapter::Open(CBOOL)
-{
-	return StorageResult::SUCCESS;
+	return _BufferSize;
 }
 
 CSTORAGERESULT MemoryResidentStorageAdapter::Close()
 {
+	delete[] (PBYTE)_Location.WordAddress;
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT MemoryResidentStorageAdapter::Seek(RCDWORD)
+CSTORAGERESULT MemoryResidentStorageAdapter::Read(PBYTE buffer, CSIZE size)
 {
+	memcpy(buffer, (PCBYTE)_Location.WordAddress, size);
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT MemoryResidentStorageAdapter::Read(PBYTE, CSIZE)
+CSTORAGERESULT MemoryResidentStorageAdapter::Write(PCBYTE data, CSIZE size)
 {
-	return StorageResult::SUCCESS;
-}
+	memcpy((PBYTE)_Location.WordAddress, data, size);
 
-CSTORAGERESULT MemoryResidentStorageAdapter::Write(PCBYTE, CSIZE)
-{
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT MemoryResidentStorageAdapter::Flush()
-{
 	return StorageResult::SUCCESS;
 }
 
@@ -79,39 +64,41 @@ FlashRomStorageAdapter::FlashRomStorageAdapter(CDWORD addr) : StorageBase(addr) 
 
 // [IStorage] IMPLEMENTATION
 
-CBOOL FlashRomStorageAdapter::Available()
+CSTORAGERESULT FlashRomStorageAdapter::Open(CBOOL rwFlag)
 {
-	return TRUE;
-}
+	if (rwFlag)
+		return StorageResult::ERROR_MEDIA_WRITE_NOT_ALLOWED;
 
-CSTORAGERESULT FlashRomStorageAdapter::Open(CBOOL)
-{
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT FlashRomStorageAdapter::Close()
+CDWORD FlashRomStorageAdapter::Capacity()
 {
+	return FlashRomTotalSize();
+}
+
+CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE buffer, CSIZE size)
+{
+	SIZE bytesRead = 0;
+
+	while (bytesRead < size)
+	{
+	#ifdef pgm_read_byte_far
+		if (_Location.DWordAddress <= MAX_OF(WORD))
+			buffer[bytesRead++] = pgm_read_byte_near(_Location.WordAddress++);
+		else
+			buffer[bytesRead++] = pgm_read_byte_far(_Location.DWordAddress++);
+	#else
+		buffer[bytesRead++] = pgm_read_byte_near(_Location.WordAddress++);
+	#endif
+	}
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT FlashRomStorageAdapter::Seek(RCDWORD)
+CSTORAGERESULT FlashRomStorageAdapter::Write(PCBYTE data, CSIZE size)
 {
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE, CSIZE)
-{
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT FlashRomStorageAdapter::Write(PCBYTE, CSIZE)
-{
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT FlashRomStorageAdapter::Flush()
-{
-	return StorageResult::SUCCESS;
+	return StorageResult::ERROR_MEDIA_WRITE_NOT_ALLOWED;
 }
 
 #pragma endregion
@@ -123,94 +110,111 @@ CSTORAGERESULT FlashRomStorageAdapter::Flush()
 
 // CONSTRUCTOR
 
-EepromStorageAdapter::EepromStorageAdapter(CWORD addr) : StorageBase(addr) { }
+EepromStorageAdapter::EepromStorageAdapter(CWORD addr) : StorageBase((WORD)addr) { }
 
 
 // [IStorage] IMPLEMENTATION
 
-CBOOL EepromStorageAdapter::Available()
+CDWORD EepromStorageAdapter::Capacity()
 {
-	return TRUE;
+	return EepromTotalSize();
 }
 
-CSTORAGERESULT EepromStorageAdapter::Open(CBOOL)
+CSTORAGERESULT EepromStorageAdapter::Read(PBYTE buffer, CSIZE size)
 {
+	SIZE bytesRead = 0;
+
+	while (bytesRead < size)
+		buffer[bytesRead++] = EEPROM.read((INT)_Location.WordAddress++);
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT EepromStorageAdapter::Close()
+CSTORAGERESULT EepromStorageAdapter::Write(PCBYTE data, CSIZE size)
 {
-	return StorageResult::SUCCESS;
-}
+	SIZE bytesWritten = 0;
 
-CSTORAGERESULT EepromStorageAdapter::Seek(RCDWORD)
-{
-	return StorageResult::SUCCESS;
-}
+	while (bytesWritten < size)
+		EEPROM.write((INT)_Location.WordAddress++, data[bytesWritten++]);
 
-CSTORAGERESULT EepromStorageAdapter::Read(PBYTE, CSIZE)
-{
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT EepromStorageAdapter::Write(PCBYTE, CSIZE)
-{
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT EepromStorageAdapter::Flush()
-{
 	return StorageResult::SUCCESS;
 }
 
 #pragma endregion
 
+
+#ifndef NO_ITTYBITTY_SD
 
 #pragma region [SdStorageAdapter] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-SdStorageAdapter::SdStorageAdapter(PCCHAR filePath) : StorageBase(filePath) { }
+SdStorageAdapter::SdStorageAdapter(PCCHAR filePath, CBYTE csPin) : StorageBase(filePath)
+{
+	SD.begin(csPin);
+}
 
 
 // [IStorage] IMPLEMENTATION
 
-CBOOL SdStorageAdapter::Available()
+CDWORD SdStorageAdapter::Capacity()
 {
-	return TRUE;
+	return _File.size();
 }
 
-CSTORAGERESULT SdStorageAdapter::Open(CBOOL)
+CBOOL SdStorageAdapter::Available()
 {
+	return _File.available();
+}
+
+CSTORAGERESULT SdStorageAdapter::Open(CBOOL rwFlag)
+{
+	_File = SD.open(_Location.FilePath, rwFlag);
+
 	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT SdStorageAdapter::Close()
 {
+	_File.close();
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT SdStorageAdapter::Seek(RCDWORD)
+CSTORAGERESULT SdStorageAdapter::Seek(RCDWORD address)
 {
+	if (!_File.seek(address))
+		return StorageResult::ERROR_MEDIA_UNKNOWN_FAILURE;
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT SdStorageAdapter::Read(PBYTE, CSIZE)
+CSTORAGERESULT SdStorageAdapter::Read(PBYTE buffer, CSIZE size)
 {
-	return StorageResult::SUCCESS;
+	if (_File.readBytes(buffer, size) == size)
+		return StorageResult::ERROR_MEDIA_READ_FAILURE;
+
+	return StorageResult::ERROR_MEDIA_READ_FAILURE;
 }
 
-CSTORAGERESULT SdStorageAdapter::Write(PCBYTE, CSIZE)
+CSTORAGERESULT SdStorageAdapter::Write(PCBYTE data, CSIZE size)
 {
-	return StorageResult::SUCCESS;
+	if (_File.write(data, size) == size)
+		return StorageResult::ERROR_MEDIA_WRITE_FAILURE;
+
+	return StorageResult::ERROR_MEDIA_WRITE_FAILURE;
 }
 
 CSTORAGERESULT SdStorageAdapter::Flush()
 {
+	_File.flush();
+
 	return StorageResult::SUCCESS;
 }
 
 #pragma endregion
+
+#endif	// #ifndef NO_ITTYBITTY_SD
 
 #endif  // #ifdef ARDUINO
 
