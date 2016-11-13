@@ -118,7 +118,7 @@ namespace IttyBitty
 #pragma region HELPER GLOBAL FUNCTION DEFINITIONS
 
 	template DEFAULT_T_CLAUSE
-	STATIC PCHAR StringInsertValue(CONST T & value, PCHAR buffer, CBYTE radix = 0x10)
+	STATIC PCHAR StringInsertValue(CONST T & value, PCHAR buffer)
 	{
 		CHAR valStr[2 * T_SIZE + 1];
 
@@ -139,7 +139,7 @@ namespace IttyBitty
 	}
 
 	template DEFAULT_T_CLAUSE
-	STATIC PCCHAR StringReadValue(T & value, PCCHAR data, CBYTE radix = 0x10)
+	STATIC PCCHAR StringReadValue(T & value, PCCHAR data)
 	{
 		CHAR valStr[2 * T_SIZE + 1];
 
