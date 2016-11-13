@@ -129,10 +129,17 @@ namespace IttyBitty
 
 		// ACCESSORS
 
+		VIRTUAL RISTORAGE GetStorage() const = 0;
+
 		VIRTUAL CSIZE RowSize() const = 0;
 
 		VIRTUAL DWORD GetAddrOffset() const = 0;
 		VIRTUAL PCCHAR GetTableName() const = 0;
+
+
+		// MUTATORS
+
+		VIRTUAL VOID SetStorage(RISTORAGE) = 0;
 
 
 		// MUTATORS
@@ -165,10 +172,10 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		DbTableDef(CSIZE = 0, PCCHAR = NULL, RCDWORD = 0);
+		DbTableDef(RISTORAGE = IttyBitty::NULL_STORAGE(), CSIZE = 0, PCCHAR = NULL, RCDWORD = 0);
 
-		EXPLICIT DbTableDef(PCBYTE);
-		EXPLICIT DbTableDef(PCCHAR);
+		EXPLICIT DbTableDef(PCBYTE, RISTORAGE = IttyBitty::NULL_STORAGE());
+		EXPLICIT DbTableDef(PCCHAR, RISTORAGE = IttyBitty::NULL_STORAGE());
 
 
 		// STATIC FUNCTIONS
@@ -192,6 +199,15 @@ namespace IttyBitty
 
 	public:
 
+		// ACCESSORS
+
+		VIRTUAL RISTORAGE GetStorage() const;
+
+
+		// MUTATORS
+
+		VIRTUAL VOID SetStorage(RISTORAGE);
+
 
 		// [IDbTableDef] IMPLEMENTATION
 
@@ -205,6 +221,9 @@ namespace IttyBitty
 
 
 		// [IStorable] IMPLEMENTATION
+
+		VIRTUAL CSTORAGERESULT Load();
+		VIRTUAL CSTORAGERESULT Save();
 
 		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
 		VIRTUAL CSTORAGERESULT SaveAsString() const;
@@ -237,6 +256,8 @@ namespace IttyBitty
 
 
 		// INSTANCE VARIABLES
+
+		RISTORAGE _Storage = IttyBitty::NULL_STORAGE();
 
 		SIZE _RowSize = 0;
 		PCCHAR _TableName = NULL;
@@ -275,8 +296,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		TypedDbTableDef(PCCHAR tableName = NULL, RCDWORD addrOffset = 0)
-			: DbTableDef(ROW_SIZE(), tableName, addrOffset) { }
+		TypedDbTableDef(RISTORAGE storage = IttyBitty::NULL_STORAGE(), PCCHAR tableName = NULL, RCDWORD addrOffset = 0)
+			: DbTableDef(storage, ROW_SIZE(), tableName, addrOffset) { }
 
 
 	public:

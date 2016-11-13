@@ -237,6 +237,9 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
+		VIRTUAL CSTORAGERESULT Load() = 0;
+		VIRTUAL CSTORAGERESULT Save() = 0;
+
 		VIRTUAL CSTORAGERESULT SaveAsBinary() const = 0;
 		VIRTUAL CSTORAGERESULT SaveAsString() const = 0;
 

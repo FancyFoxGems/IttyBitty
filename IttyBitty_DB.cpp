@@ -33,7 +33,7 @@ PDATABASE Database::Load(RISTORAGE storage, RDBRESULT result)
 {
 	PDATABASE database = new Database(storage);
 
-	result = database->Load();
+	result = (CDBRESULT)database->Load();
 
 	return database;
 }
@@ -171,30 +171,12 @@ CDBRESULT Database::Create()
 	if (_TableCount > 0)
 		return DbResult::ERROR_OPERATION_ALREADY_CREATED;
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT Database::Delete()
 {
 	return DbResult::SUCCESS;
-}
-
-CDBRESULT Database::Load()
-{
-#ifdef _DEBUG
-	return (CDBRESULT)this->LoadFromString();
-#else
-	return (CDBRESULT)this->LoadFromBinary();
-#endif
-}
-
-CDBRESULT Database::Save()
-{
-#ifdef _DEBUG
-	return (CDBRESULT)this->SaveAsString();
-#else
-	return (CDBRESULT)this->SaveAsBinary();
-#endif
 }
 
 
@@ -221,7 +203,7 @@ CDBRESULT Database::TruncateAllTables()
 			return result;
 	}
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT Database::DropAllTables()
@@ -232,7 +214,7 @@ CDBRESULT Database::DropAllTables()
 
 	this->Dispose(TRUE);
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CBYTE Database::TableCount() const
@@ -364,7 +346,7 @@ CDBRESULT Database::CreateTable(CSIZE, PCCHAR tableName, CBYTE newTableIdx)
 {
 	// TODO
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT Database::DropTable(CBYTE tableIdx)
@@ -376,7 +358,7 @@ CDBRESULT Database::DropTable(CBYTE tableIdx)
 
 	// TODO
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT Database::DropTable(PCCHAR tableName)
@@ -388,7 +370,7 @@ CDBRESULT Database::DropTable(PCCHAR tableName)
 
 	// TODO
 
-	return this->Save();
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT Database::GrowTable(CBYTE tableIdx, RCFLOAT growthFactor)
@@ -431,44 +413,44 @@ CDBRESULT Database::CompressTable(PCCHAR tableName, RCFLOAT compressionFactor)
 	return table->Compress(*this, compressionFactor);
 }
 
-CDBRESULT Database::SelectAllFrom(CBYTE tableIdx, PBYTE & recordSet, RSIZE recordCount)
+CDBRESULT Database::SelectAllFrom(CBYTE tableIdx, PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->SelectAll(recordSet, recordCount);
+	return table->SelectAll(recordSet, recordCount, rowSize);
 }
 
-CDBRESULT Database::SelectAllFrom(PCCHAR tableName, PBYTE & recordSet, RSIZE recordCount)
+CDBRESULT Database::SelectAllFrom(PCCHAR tableName, PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->SelectAll(recordSet, recordCount);
+	return table->SelectAll(recordSet, recordCount, rowSize);
 }
 
-CDBRESULT Database::FindFrom(CBYTE tableIdx, CSIZE rowIdx, PBYTE record, PSIZE recordSize)
+CDBRESULT Database::FindFrom(CBYTE tableIdx, CSIZE rowIdx, PBYTE & record, PSIZE rowSize)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Find(rowIdx, record, recordSize);
+	return table->Find(rowIdx, record, rowSize);
 }
 
-CDBRESULT Database::FindFrom(PCCHAR tableName, CSIZE rowIdx, PBYTE record, PSIZE recordSize)
+CDBRESULT Database::FindFrom(PCCHAR tableName, CSIZE rowIdx, PBYTE & record, PSIZE rowSize)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Find(rowIdx, record, recordSize);
+	return table->Find(rowIdx, record, rowSize);
 }
 
 CDBRESULT Database::InsertInto(CBYTE tableIdx, PCBYTE rowData, CSIZE insertIdx)
@@ -492,24 +474,24 @@ CDBRESULT Database::InsertInto(PCCHAR tableName, PCBYTE rowData, CSIZE insertIdx
 }
 
 
-CDBRESULT Database::UpdateTo(CBYTE tableIdx, CSIZE rowIdx, PCBYTE rowData)
+CDBRESULT Database::UpdateTo(CBYTE tableIdx, PCBYTE rowData, CSIZE rowIdx)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Update(rowIdx, rowData);
+	return table->Update(rowData, rowIdx);
 }
 
-CDBRESULT Database::UpdateTo(PCCHAR tableName, CSIZE rowIdx, PCBYTE rowData)
+CDBRESULT Database::UpdateTo(PCCHAR tableName, PCBYTE rowData, CSIZE rowIdx)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Update(rowIdx, rowData);
+	return table->Update(rowData, rowIdx);
 }
 
 CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx)
@@ -554,6 +536,24 @@ CDBRESULT Database::TruncateTable(PCCHAR tableName)
 
 
 // [IStorable] IMPLEMENTATION
+
+CSTORAGERESULT Database::Load()
+{
+#ifdef _DEBUG
+	return this->LoadFromString();
+#else
+	return this->LoadFromBinary();
+#endif
+}
+
+CSTORAGERESULT Database::Save()
+{
+#ifdef _DEBUG
+	return this->SaveAsString();
+#else
+	return this->SaveAsBinary();
+#endif
+}
 
 CSTORAGERESULT Database::SaveAsBinary() const
 {
@@ -699,7 +699,7 @@ VOID Database::FromBinary(PCBYTE data)
 
 	for (SIZE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr);
+		_Tables[i] = new DbTable(bufferPtr, _Storage);
 
 		bufferPtr += _Tables[i]->BinarySize();
 	}
@@ -720,7 +720,7 @@ VOID Database::FromString(PCCHAR data)
 
 	for (BYTE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr);
+		_Tables[i] = new DbTable(bufferPtr, _Storage);
 
 		bufferPtr += _Tables[i]->StringSize() - 1;
 	}

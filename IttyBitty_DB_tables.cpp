@@ -29,17 +29,17 @@ PBYTE IttyBitty::__db_table_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTable::DbTable(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset, RCDWORD capacity) : _Capacity(capacity)
+DbTable::DbTable(RISTORAGE storage, CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset, RCDWORD capacity) : _Capacity(capacity)
 {
-	_TableDef = new DbTableDef(rowSize, tableName, addrOffset);
+	_TableDef = new DbTableDef(storage, rowSize, tableName, addrOffset);
 }
 
-DbTable::DbTable(PCBYTE data)
+DbTable::DbTable(PCBYTE data, RISTORAGE storage) : DbTable(storage)
 {
 	this->FromBinary(data);
 }
 
-DbTable::DbTable(PCCHAR data)
+DbTable::DbTable(PCCHAR data, RISTORAGE storage) : DbTable(storage)
 {
 	this->FromString(data);
 }
@@ -70,6 +70,11 @@ VOID DbTable::Dispose()
 
 // ACCESSORS
 
+RISTORAGE DbTable::GetStorage() const
+{
+	return _TableDef->GetStorage();
+}
+
 RCIDBTABLEDEF DbTable::TableDef() const
 {
 	if (!_TableDef)
@@ -84,6 +89,14 @@ RIDBTABLEDEF DbTable::TableDef()
 		return DbTableDef::NULL_OBJECT();
 
 	return *_TableDef;
+}
+
+
+// MUTATORS
+
+VOID DbTable::SetStorage(RISTORAGE storage)
+{
+	return _TableDef->SetStorage(storage);
 }
 
 
@@ -109,21 +122,54 @@ CSIZE DbTable::RowsAvailable() const
 	return (CSIZE)(this->Capacity() - this->Size()) / this->RowSize();
 }
 
-CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount)
+CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
 {
-	// TODO
+	CDWORD size = this->Size();
 
-	return DbResult::SUCCESS;
+	recordSet = new byte[size];
+	recordCount = _RowCount;
+
+	RISTORAGE storage = this->GetStorage();
+
+	DBRESULT result = (CDBRESULT)storage.Open();
+	if ((BYTE)result)
+		return result;
+
+	result = (CDBRESULT)storage.Seek(this->GetAddrOffset());
+	if ((BYTE)result)
+		return result;
+
+	result = (CDBRESULT)storage.Read(recordSet, size);
+	if ((BYTE)result)
+		return result;
+
+	return (CDBRESULT)storage.Close();
 }
 
-CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE resultRow, PSIZE resultSize)
+CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 {
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	// TODO
+	*rowSize = this->RowSize();
 
-	return DbResult::SUCCESS;
+	resultRow = new byte[*rowSize];
+
+	RISTORAGE storage = this->GetStorage();
+
+	DBRESULT result = (CDBRESULT)storage.Open();
+	if ((BYTE)result)
+		return result;
+
+	result = (CDBRESULT)storage.Seek(this->GetAddrOffset() + rowIdx * this->RowSize());
+	if ((BYTE)result)
+		return result;
+
+	result = (CDBRESULT)storage.Read(resultRow, *rowSize);
+	if ((BYTE)result)
+		return result;
+
+	return (CDBRESULT)storage.Close();
 }
 
 CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
@@ -133,7 +179,7 @@ CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Update(CSIZE rowIdx, PCBYTE rowData)
+CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIdx)
 {
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
@@ -149,6 +195,9 @@ CDBRESULT DbTable::Delete(CSIZE rowIdx)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
 	// TODO
+
+	--_RowCount;
+	this->SaveAsBinary();
 
 	return DbResult::SUCCESS;
 }
@@ -193,6 +242,24 @@ VOID DbTable::SetTableName(PCCHAR tableName)
 
 
 // [IStorable] IMPLEMENTATION
+
+CSTORAGERESULT DbTable::Load()
+{
+#ifdef _DEBUG
+	return this->LoadFromString();
+#else
+	return this->LoadFromBinary();
+#endif
+}
+
+CSTORAGERESULT DbTable::Save()
+{
+#ifdef _DEBUG
+	return this->SaveAsString();
+#else
+	return this->SaveAsBinary();
+#endif
+}
 
 CSTORAGERESULT DbTable::SaveAsBinary() const
 {
@@ -319,7 +386,7 @@ VOID DbTable::FromBinary(PCBYTE data)
 
 	this->Dispose();
 
-	_TableDef = new DbTableDef(bufferPtr);
+	_TableDef = new DbTableDef(bufferPtr, this->GetStorage());
 }
 
 VOID DbTable::FromString(PCCHAR data)
@@ -333,7 +400,7 @@ VOID DbTable::FromString(PCCHAR data)
 
 	this->Dispose();
 
-	_TableDef = new DbTableDef(bufferPtr);
+	_TableDef = new DbTableDef(bufferPtr, this->GetStorage());
 }
 
 VOID DbTable::FreeBuffer() const
@@ -420,20 +487,80 @@ CDWORD DbTable::RowsStringSize() const
 
 CSTORAGERESULT DbTable::SaveRowAsBinary(CSIZE rowIdx) const
 {
+	// TODO
+
 	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT DbTable::SaveRowAsString(CSIZE rowIdx) const
 {
+	// TODO
+
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIdx)
+CSTORAGERESULT DbTable::LoadAllRowsFromBinary(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
+{
+	CDWORD size = this->RowsBinarySize();
+
+	recordSet = new byte[size];
+
+	recordCount = _RowCount;
+
+	if (rowSize)
+		*rowSize = this->RowBinarySize();
+
+	RISTORAGE storage = this->GetStorage();
+
+	STORAGERESULT result = storage.Open();
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Seek(this->GetAddrOffset());
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Read(recordSet, size);
+	if ((BYTE)result)
+		return result;
+
+	return storage.Close();
+}
+
+CSTORAGERESULT DbTable::LoadAllRowsFromString(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
 {
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIdx)
+CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
+{
+	if (rowIdx > this->RowCount() - 1)
+		return StorageResult::ERROR_ARGUMENT_OUT_OF_RANGE;
+
+	SIZE _rowSize = this->RowBinarySize();
+	if (rowSize)
+		*rowSize = _rowSize;
+
+	resultRow = new byte[_rowSize];
+
+	RISTORAGE storage = this->GetStorage();
+
+	STORAGERESULT result = storage.Open();
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Seek(this->GetAddrOffset() + rowIdx * this->RowSize());
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Read(resultRow, *rowSize);
+	if ((BYTE)result)
+		return result;
+
+	return storage.Close();
+}
+
+CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 {
 	return StorageResult::SUCCESS;
 }
@@ -458,14 +585,14 @@ PCCHAR DbTable::RowToString(PCBYTE data) const
 	return reinterpret_cast<PCCHAR>(data);
 }
 
-PBYTE DbTable::RowFromBinary(PCBYTE data)
+PBYTE & DbTable::RowFromBinary(PCBYTE data)
 {
 	return UNCONST(data);
 }
 
-PBYTE DbTable::RowFromString(PCCHAR data)
+PBYTE & DbTable::RowFromString(PCCHAR data)
 {
-	return reinterpret_cast<PBYTE>(UNCONST(data));
+	return reinterpret_cast<PBYTE &>(UNCONST(data));
 }
 
 

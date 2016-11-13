@@ -30,14 +30,14 @@ PBYTE IttyBitty::__db_table_def_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTableDef::DbTableDef(CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset)
-	: _RowSize(rowSize), _TableName(tableName), _AddrOffset(addrOffset) { }
+DbTableDef::DbTableDef(RISTORAGE storage, CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset)
+	: _Storage(storage), _RowSize(rowSize), _TableName(tableName), _AddrOffset(addrOffset) { }
 
-DbTableDef::DbTableDef(PCBYTE data)
+DbTableDef::DbTableDef(PCBYTE data, RISTORAGE storage) : DbTableDef(storage)
 {
 	this->FromBinary(data);
 }
-DbTableDef::DbTableDef(PCCHAR data)
+DbTableDef::DbTableDef(PCCHAR data, RISTORAGE storage) : DbTableDef(storage)
 {
 	this->FromString(data);
 }
@@ -63,6 +63,22 @@ VOID DbTableDef::Dispose()
 {
 	delete _TableName;
 	_TableName = NULL;
+}
+
+
+// ACCESSORS
+
+RISTORAGE DbTableDef::GetStorage() const
+{
+	return _Storage;
+}
+
+
+// MUTATORS
+
+VOID DbTableDef::SetStorage(RISTORAGE storage)
+{
+	_Storage = storage;
 }
 
 
@@ -95,6 +111,24 @@ VOID DbTableDef::SetTableName(PCCHAR tableName)
 
 
 // [IStorable] IMPLEMENTATION
+
+CSTORAGERESULT DbTableDef::Load()
+{
+#ifdef _DEBUG
+	return this->LoadFromString();
+#else
+	return this->LoadFromBinary();
+#endif
+}
+
+CSTORAGERESULT DbTableDef::Save()
+{
+#ifdef _DEBUG
+	return this->SaveAsString();
+#else
+	return this->SaveAsBinary();
+#endif
+}
 
 CSTORAGERESULT DbTableDef::SaveAsBinary() const
 {
