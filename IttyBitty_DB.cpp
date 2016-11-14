@@ -176,7 +176,7 @@ CDBRESULT Database::Create()
 
 CDBRESULT Database::Delete()
 {
-	return DbResult::SUCCESS;
+	return (CDBRESULT)_Storage.Erase();
 }
 
 
@@ -494,44 +494,44 @@ CDBRESULT Database::UpdateTo(PCCHAR tableName, PCBYTE rowData, CSIZE rowIdx)
 	return table->Update(rowData, rowIdx);
 }
 
-CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx)
+CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx, CBOOL writeEraseValue)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Delete(rowIdx);
+	return table->Delete(rowIdx, writeEraseValue);
 }
 
-CDBRESULT Database::DeleteFrom(PCCHAR tableName, CSIZE rowIdx)
+CDBRESULT Database::DeleteFrom(PCCHAR tableName, CSIZE rowIdx, CBOOL writeEraseValue)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Delete(rowIdx);
+	return table->Delete(rowIdx, writeEraseValue);
 }
 
-CDBRESULT Database::TruncateTable(CBYTE tableIdx)
+CDBRESULT Database::TruncateTable(CBYTE tableIdx, CBOOL writeEraseValue)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Truncate();
+	return table->Truncate(writeEraseValue);
 }
 
-CDBRESULT Database::TruncateTable(PCCHAR tableName)
+CDBRESULT Database::TruncateTable(PCCHAR tableName, CBOOL writeEraseValue)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Truncate();
+	return table->Truncate(writeEraseValue);
 }
 
 
@@ -755,15 +755,16 @@ SIZE Database::printTo(Print & printer) const
 CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta)
 {
 	PIDBTABLE table = NULL;
-	DWORD oldDataAddrOffset = 0;
 	DBRESULT result = DbResult::SUCCESS;
 
-	for (BYTE i = _TableCount - 1; i >= 0; i--)
+	for (BYTE i = 0; i < _TableCount; i++)
 	{
-		table = _Tables[i];
-		oldDataAddrOffset = table->GetDataAddrOffset();
+		if (dataAddrOffsetDelta < 0)
+			table = _Tables[i];
+		else
+			table = _Tables[_TableCount - i - 1];
 
-		if (oldDataAddrOffset <= startDataAddrOffset)
+		if (table->GetDataAddrOffset() <= startDataAddrOffset)
 			return (CDBRESULT)result;
 
 		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta);

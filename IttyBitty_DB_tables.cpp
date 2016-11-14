@@ -163,7 +163,7 @@ CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIdx)
 	return DbResult::SUCCESS;
 }
 
-CDBRESULT DbTable::Delete(CSIZE rowIdx)
+CDBRESULT DbTable::Delete(CSIZE rowIdx, CBOOL writeEraseValue)
 {
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
@@ -171,19 +171,20 @@ CDBRESULT DbTable::Delete(CSIZE rowIdx)
 	// TODO
 
 	--_RowCount;
-	this->SaveAsBinary();
 
-	return DbResult::SUCCESS;
+	return (CDBRESULT)this->Save();;
 }
 
-CDBRESULT DbTable::Truncate()
+CDBRESULT DbTable::Truncate(CBOOL writeEraseValue)
 {
 	if (this->RowCount() == 0)
 		return DbResult::SUCCESS;
 
 	// TODO
 
-	return DbResult::SUCCESS;
+	_RowCount = 0;
+
+	return (CDBRESULT)this->Save();;
 }
 
 
@@ -551,6 +552,21 @@ CSTORAGERESULT DbTable::LoadRow(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 	return result;
 }
 
+CSTORAGERESULT DbTable::EraseData(RCDWORD size, CBOOL writeEraseValue)
+{
+	RISTORAGE storage = this->GetStorage();
+
+	STORAGERESULT result = storage.Open(TRUE);
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Erase(size, writeEraseValue);
+	if ((BYTE)result)
+		return result;
+
+	return storage.Close();
+}
+
 CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta)
 {
 	RISTORAGE storage = this->GetStorage();
@@ -587,7 +603,9 @@ CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta)
 			return result;
 	}
 
-	return storage.Close();
+	result = storage.Close();
+	if ((BYTE)result)
+		return result;
 
 
 	this->SetDataAddrOffset(_DataAddrOffset + dataAddrOffsetDelta);

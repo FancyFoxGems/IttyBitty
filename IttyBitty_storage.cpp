@@ -12,4 +12,11 @@
 
 #include "IttyBitty_storage.h"
 
+
+#pragma region GLOBAL CONSTANT DEFINITIONS
+
+CBYTE IttyBitty::STORAGE_ERASE_VALUE			= 0xFF;
+
+#pragma endregion
+
 #endif	// #ifndef NO_ITTYBITTY_STORAGE

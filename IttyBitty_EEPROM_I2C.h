@@ -27,6 +27,8 @@ using namespace IttyBitty;
 
 #define SERIAL_EEPROM_I2C_ADDRESS		0x50
 
+#define SERIAL_EEPROM_ERASE_VALUE		0xFF
+
 #pragma endregion
 
 
@@ -53,8 +55,6 @@ namespace IttyBitty
 
 	EXTERN CWORD SERIAL_EEPROM_TIMEOUT_MS;
 	EXTERN CBYTE SERIAL_EEPROM_WAIT_DELAY_MS;
-
-	EXTERN CBYTE SERIAL_EEPROM_ERASE_VALUE;
 
 #pragma endregion
 

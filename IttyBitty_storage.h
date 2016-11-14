@@ -13,15 +13,15 @@
 #include "IttyBitty_datum.h"
 
 
-#pragma region DEFINES
+namespace IttyBitty
+{
+#pragma region GLOBAL CONSTANT DECLARATIONS
 
-
+	EXTERN CBYTE STORAGE_ERASE_VALUE;
 
 #pragma endregion
 
 
-namespace IttyBitty
-{
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	union StorageLocation;
@@ -283,15 +283,17 @@ namespace IttyBitty
 
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD) = 0;
 
-		VIRTUAL CSTORAGERESULT Read(PBYTE, CSIZE) = 0;
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE) = 0;
+		VIRTUAL CSTORAGERESULT Read(PBYTE, RCDWORD) = 0;
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, RCDWORD) = 0;
 
 		VIRTUAL CSTORAGERESULT Flush() = 0;
+
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD = 0, CBOOL = TRUE) = 0;
 
 
 		// USER METHODS
 
-		VIRTUAL CSTORAGERESULT LoadData(PBYTE buffer, CSIZE size, RCDWORD offset = 0)
+		VIRTUAL CSTORAGERESULT LoadData(PBYTE buffer, RCDWORD size, RCDWORD offset = 0)
 		{
 			STORAGERESULT result = this->Open();
 			if ((BYTE)result)
@@ -311,7 +313,7 @@ namespace IttyBitty
 			return this->Close();
 		}
 
-		VIRTUAL CSTORAGERESULT SaveData(PCBYTE data, CSIZE size, RCDWORD offset = 0)
+		VIRTUAL CSTORAGERESULT SaveData(PCBYTE data, RCDWORD size, RCDWORD offset = 0)
 		{
 			STORAGERESULT result = this->Open(TRUE);
 			if ((BYTE)result)
@@ -397,17 +399,22 @@ namespace IttyBitty
 			return StorageResult::SUCCESS;
 		}
 
-		VIRTUAL CSTORAGERESULT Read(PBYTE, CSIZE)
+		VIRTUAL CSTORAGERESULT Read(PBYTE, RCDWORD)
 		{
 			return StorageResult::SUCCESS;
 		}
 
-		VIRTUAL CSTORAGERESULT Write(PCBYTE, CSIZE)
+		VIRTUAL CSTORAGERESULT Write(PCBYTE, RCDWORD)
 		{
 			return StorageResult::SUCCESS;
 		}
 
 		VIRTUAL CSTORAGERESULT Flush()
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD size = 0, CBOOL writeEraseValue = TRUE)
 		{
 			return StorageResult::SUCCESS;
 		}
@@ -485,6 +492,23 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT Flush()
 		{
 			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD size, CBOOL writeEraseValue = TRUE)
+		{
+			STORAGERESULT result = StorageResult::SUCCESS;
+
+			if (writeEraseValue)
+			{
+				for (SIZE i = 0; i < size; i++)
+				{
+					result = this->Write(&IttyBitty::STORAGE_ERASE_VALUE, 1);
+					if ((BYTE)result)
+						return result;
+				}
+			}
+
+			return result;
 		}
 
 

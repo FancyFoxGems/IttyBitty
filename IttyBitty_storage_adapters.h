@@ -87,8 +87,8 @@ namespace IttyBitty
 
 		CSTORAGERESULT Close();
 
-		CSTORAGERESULT Read(PBYTE, CSIZE);
-		CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, RCDWORD);
+		CSTORAGERESULT Write(PCBYTE, RCDWORD);
 
 
 	protected:
@@ -118,8 +118,8 @@ namespace IttyBitty
 
 		CSTORAGERESULT Open(CBOOL = FALSE);
 
-		CSTORAGERESULT Read(PBYTE, CSIZE);
-		CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, RCDWORD);
+		CSTORAGERESULT Write(PCBYTE, RCDWORD);
 	};
 
 #pragma endregion
@@ -142,8 +142,8 @@ namespace IttyBitty
 
 		CDWORD Capacity();
 
-		CSTORAGERESULT Read(PBYTE, CSIZE);
-		CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, RCDWORD);
+		CSTORAGERESULT Write(PCBYTE, RCDWORD);
 
 	};
 
@@ -174,10 +174,12 @@ namespace IttyBitty
 
 		CSTORAGERESULT Seek(RCDWORD);
 
-		CSTORAGERESULT Read(PBYTE, CSIZE);
-		CSTORAGERESULT Write(PCBYTE, CSIZE);
+		CSTORAGERESULT Read(PBYTE, RCDWORD);
+		CSTORAGERESULT Write(PCBYTE, RCDWORD);
 
 		CSTORAGERESULT Flush();
+
+		CSTORAGERESULT Erase(RCDWORD, CBOOL = TRUE);
 
 
 	protected:
@@ -232,7 +234,7 @@ namespace IttyBitty
 			return StorageResult::SUCCESS;
 		}
 
-		CSTORAGERESULT Read(PBYTE buffer, CSIZE size)
+		CSTORAGERESULT Read(PBYTE buffer, RCDWORD size)
 		{
 			if (_ExtEEPROM.Read(buffer, size) == size)
 				return StorageResult::SUCCESS;
@@ -240,12 +242,20 @@ namespace IttyBitty
 			return StorageResult::ERROR_MEDIA_READ_FAILURE;
 		}
 
-		CSTORAGERESULT Write(PCBYTE data, CSIZE size)
+		CSTORAGERESULT Write(PCBYTE data, RCDWORD size)
 		{
 			if (_ExtEEPROM.Write(data, size) == size)
 				return StorageResult::SUCCESS;
 
 			return StorageResult::ERROR_MEDIA_READ_FAILURE;
+		}
+
+		CSTORAGERESULT Erase(RCDWORD size, CBOOL writeEraseValue = TRUE)
+		{
+			if (writeEraseValue)
+				_ExtEEPROM.Erase(size);
+
+			return StorageResult::SUCCESS;
 		}
 
 	protected:

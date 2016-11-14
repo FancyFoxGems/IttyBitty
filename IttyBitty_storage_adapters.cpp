@@ -38,14 +38,14 @@ CSTORAGERESULT MemoryResidentStorageAdapter::Close()
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT MemoryResidentStorageAdapter::Read(PBYTE buffer, CSIZE size)
+CSTORAGERESULT MemoryResidentStorageAdapter::Read(PBYTE buffer, RCDWORD size)
 {
 	memcpy(buffer, (PCBYTE)_Location.WordAddress, size);
 
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT MemoryResidentStorageAdapter::Write(PCBYTE data, CSIZE size)
+CSTORAGERESULT MemoryResidentStorageAdapter::Write(PCBYTE data, RCDWORD size)
 {
 	memcpy((PBYTE)_Location.WordAddress, data, size);
 
@@ -77,7 +77,7 @@ CDWORD FlashRomStorageAdapter::Capacity()
 	return FlashRomTotalSize();
 }
 
-CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE buffer, CSIZE size)
+CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE buffer, RCDWORD size)
 {
 	SIZE bytesRead = 0;
 
@@ -96,7 +96,7 @@ CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE buffer, CSIZE size)
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT FlashRomStorageAdapter::Write(PCBYTE data, CSIZE size)
+CSTORAGERESULT FlashRomStorageAdapter::Write(PCBYTE data, RCDWORD size)
 {
 	return StorageResult::ERROR_MEDIA_WRITE_NOT_ALLOWED;
 }
@@ -120,7 +120,7 @@ CDWORD EepromStorageAdapter::Capacity()
 	return EepromTotalSize();
 }
 
-CSTORAGERESULT EepromStorageAdapter::Read(PBYTE buffer, CSIZE size)
+CSTORAGERESULT EepromStorageAdapter::Read(PBYTE buffer, RCDWORD size)
 {
 	SIZE bytesRead = 0;
 
@@ -130,7 +130,7 @@ CSTORAGERESULT EepromStorageAdapter::Read(PBYTE buffer, CSIZE size)
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT EepromStorageAdapter::Write(PCBYTE data, CSIZE size)
+CSTORAGERESULT EepromStorageAdapter::Write(PCBYTE data, RCDWORD size)
 {
 	SIZE bytesWritten = 0;
 
@@ -189,20 +189,20 @@ CSTORAGERESULT SdStorageAdapter::Seek(RCDWORD address)
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT SdStorageAdapter::Read(PBYTE buffer, CSIZE size)
+CSTORAGERESULT SdStorageAdapter::Read(PBYTE buffer, RCDWORD size)
 {
 	if (_File.readBytes(buffer, size) == size)
 		return StorageResult::ERROR_MEDIA_READ_FAILURE;
 
-	return StorageResult::ERROR_MEDIA_READ_FAILURE;
+	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT SdStorageAdapter::Write(PCBYTE data, CSIZE size)
+CSTORAGERESULT SdStorageAdapter::Write(PCBYTE data, RCDWORD size)
 {
 	if (_File.write(data, size) == size)
 		return StorageResult::ERROR_MEDIA_WRITE_FAILURE;
 
-	return StorageResult::ERROR_MEDIA_WRITE_FAILURE;
+	return StorageResult::SUCCESS;
 }
 
 CSTORAGERESULT SdStorageAdapter::Flush()
@@ -210,6 +210,17 @@ CSTORAGERESULT SdStorageAdapter::Flush()
 	_File.flush();
 
 	return StorageResult::SUCCESS;
+}
+
+CSTORAGERESULT SdStorageAdapter::Erase(RCDWORD size, CBOOL writeEraseValue)
+{
+	if (size == 0)
+	{
+		if (!SD.remove(_Location.FilePath))
+			return StorageResult::ERROR_MEDIA_ERASE_FAILURE;
+	}
+
+	return StorageBase::Erase(size, writeEraseValue);
 }
 
 #pragma endregion
