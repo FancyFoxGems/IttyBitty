@@ -758,13 +758,13 @@ CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffse
 	DWORD oldDataAddrOffset = 0;
 	DBRESULT result = DbResult::SUCCESS;
 
-	for (BYTE i = 0; i < _TableCount; i++)
+	for (BYTE i = _TableCount - 1; i >= 0; i--)
 	{
 		table = _Tables[i];
 		oldDataAddrOffset = table->GetDataAddrOffset();
 
 		if (oldDataAddrOffset <= startDataAddrOffset)
-			continue;
+			return (CDBRESULT)result;
 
 		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta);
 		if ((BYTE)result)
