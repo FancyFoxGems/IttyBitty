@@ -124,52 +124,12 @@ CSIZE DbTable::RowsAvailable() const
 
 CDBRESULT DbTable::SelectAll(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
 {
-	CDWORD size = this->Size();
-
-	recordSet = new byte[size];
-	recordCount = _RowCount;
-
-	RISTORAGE storage = this->GetStorage();
-
-	DBRESULT result = (CDBRESULT)storage.Open();
-	if ((BYTE)result)
-		return result;
-
-	result = (CDBRESULT)storage.Seek(this->GetAddrOffset());
-	if ((BYTE)result)
-		return result;
-
-	result = (CDBRESULT)storage.Read(recordSet, size);
-	if ((BYTE)result)
-		return result;
-
-	return (CDBRESULT)storage.Close();
+	return (CDBRESULT)this->LoadAllRows(recordSet, recordCount, rowSize);
 }
 
 CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 {
-	if (rowIdx > this->RowCount() - 1)
-		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
-
-	*rowSize = this->RowSize();
-
-	resultRow = new byte[*rowSize];
-
-	RISTORAGE storage = this->GetStorage();
-
-	DBRESULT result = (CDBRESULT)storage.Open();
-	if ((BYTE)result)
-		return result;
-
-	result = (CDBRESULT)storage.Seek(this->GetAddrOffset() + rowIdx * this->RowSize());
-	if ((BYTE)result)
-		return result;
-
-	result = (CDBRESULT)storage.Read(resultRow, *rowSize);
-	if ((BYTE)result)
-		return result;
-
-	return (CDBRESULT)storage.Close();
+	return (CDBRESULT)this->LoadRow(rowIdx, resultRow, rowSize);
 }
 
 CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
@@ -485,30 +445,70 @@ CDWORD DbTable::RowsStringSize() const
 	return this->RowCount() * (this->RowStringSize() - 1);
 }
 
-CSTORAGERESULT DbTable::SaveRowAsBinary(CSIZE rowIdx) const
+CSIZE DbTable::RowBinarySize() const
 {
-	// TODO
-
-	return StorageResult::SUCCESS;
+	return this->RowSize();
 }
 
-CSTORAGERESULT DbTable::SaveRowAsString(CSIZE rowIdx) const
+CSIZE DbTable::RowStringSize() const
 {
-	// TODO
-
-	return StorageResult::SUCCESS;
+	return 2 * this->RowSize() + 1;
 }
 
-CSTORAGERESULT DbTable::LoadAllRowsFromBinary(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
+CSTORAGERESULT DbTable::SaveRow(PCBYTE rowData, CSIZE rowIdx) const
 {
-	CDWORD size = this->RowsBinarySize();
+#ifdef _DEBUG
+	SIZE rowSize = this->RowStringSize();
+#else
+	SIZE rowSize = this->RowBinarySize();
+#endif
 
-	recordSet = new byte[size];
+	RISTORAGE storage = this->GetStorage();
+
+	STORAGERESULT result = storage.Open();
+	if ((BYTE)result)
+		return result;
+
+	result = storage.Seek(this->GetAddrOffset() + rowIdx * rowSize);
+	if ((BYTE)result)
+		return result;
+
+#ifdef _DEBUG
+	PCBYTE data = reinterpret_cast<PCBYTE>(this->RowToString(rowData, rowSize));
+	delete[] rowData;
+#else
+	PCBYTE data = rowData;
+#endif
+
+	result = storage.Write(data, rowSize);
+	if ((BYTE)result)
+		return result;
+
+	return storage.Close();
+}
+
+CSTORAGERESULT DbTable::LoadAllRows(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
+{
+#ifdef _DEBUG
+
+	DWORD recordSetSize = this->RowsStringSize();
+	SIZE _rowSize = this->RowStringSize();
+
+	PCHAR rowsBuffer = new char[recordSetSize];
+
+#else
+
+	DWORD recordSetSize = this->RowsBinarySize();
+	SIZE _rowSize = this->RowBinarySize();
+
+	PBYTE rowsBuffer = new byte[recordSetSize];
+
+#endif
 
 	recordCount = _RowCount;
 
 	if (rowSize)
-		*rowSize = this->RowBinarySize();
+		*rowSize = this->RowSize();
 
 	RISTORAGE storage = this->GetStorage();
 
@@ -520,28 +520,30 @@ CSTORAGERESULT DbTable::LoadAllRowsFromBinary(PBYTE & recordSet, RSIZE recordCou
 	if ((BYTE)result)
 		return result;
 
-	result = storage.Read(recordSet, size);
+	result = storage.Read(recordSet, recordSetSize);
 	if ((BYTE)result)
 		return result;
+
+#ifdef _DEBUG
+	recordSet = this->RowsFromString(rowsBuffer, recordSetSize, _rowSize);
+	delete[] rowsBuffer;
+#endif
 
 	return storage.Close();
 }
 
-CSTORAGERESULT DbTable::LoadAllRowsFromString(PBYTE & recordSet, RSIZE recordCount, PSIZE rowSize)
+CSTORAGERESULT DbTable::LoadRow(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 {
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
-{
-	if (rowIdx > this->RowCount() - 1)
-		return StorageResult::ERROR_ARGUMENT_OUT_OF_RANGE;
-
+#ifdef _DEBUG
+	SIZE _rowSize = this->RowStringSize();
+	PCHAR rowBuffer = new char[_rowSize];
+#else
 	SIZE _rowSize = this->RowBinarySize();
-	if (rowSize)
-		*rowSize = _rowSize;
+	PBYTE rowBuffer = new byte[_rowSize];
+#endif
 
-	resultRow = new byte[_rowSize];
+	if (rowSize)
+		*rowSize = this->RowSize();
 
 	RISTORAGE storage = this->GetStorage();
 
@@ -549,50 +551,62 @@ CSTORAGERESULT DbTable::LoadRowFromBinary(CSIZE rowIdx, PBYTE & resultRow, PSIZE
 	if ((BYTE)result)
 		return result;
 
-	result = storage.Seek(this->GetAddrOffset() + rowIdx * this->RowSize());
+	result = storage.Seek(this->GetAddrOffset() + rowIdx * _rowSize);
 	if ((BYTE)result)
 		return result;
 
-	result = storage.Read(resultRow, *rowSize);
+	result = storage.Read(resultRow, _rowSize);
 	if ((BYTE)result)
 		return result;
+
+#ifdef _DEBUG
+	resultRow = this->RowFromString(rowBuffer, _rowSize);
+	delete[] rowBuffer;
+#endif
 
 	return storage.Close();
 }
 
-CSTORAGERESULT DbTable::LoadRowFromString(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
+PCCHAR DbTable::RowToString(PCBYTE data, CSIZE rowSize) const
 {
-	return StorageResult::SUCCESS;
+	PCHAR rowData = new char[rowSize];
+	rowData[rowSize - 1] = '\0';
+
+	PCHAR bufferPtr = rowData;
+
+	for (SIZE i = 0; i < rowSize; i++)
+		bufferPtr = StringInsertValue<BYTE>(data[i], bufferPtr);
+
+	return reinterpret_cast<PCCHAR>(rowData);
 }
 
-CSIZE DbTable::RowBinarySize() const
+PBYTE DbTable::RowsFromString(PCCHAR buffer, RCDWORD rowsSize, CSIZE rowSize)
 {
-	return _TableDef->RowSize();
+	PBYTE rowsBuffer = new byte[rowsSize];
+	rowsBuffer[rowsSize - 1] = '\0';
+
+	PCCHAR bufferPtr = buffer;
+
+	for (SIZE rowIdx = 0; rowIdx < _RowCount; rowIdx++)
+	{
+		for (SIZE i = 0; i < rowSize; i++)
+			bufferPtr = StringReadValue<BYTE>(rowsBuffer[rowIdx * rowSize + i], bufferPtr);
+	}
+
+	return reinterpret_cast<PBYTE &>(rowsBuffer);
 }
 
-CSIZE DbTable::RowStringSize() const
+PBYTE DbTable::RowFromString(PCCHAR buffer, CSIZE rowSize)
 {
-	return 2 * _TableDef->RowSize() + 1;
-}
+	PBYTE rowBuffer = new byte[rowSize];
+	rowBuffer[rowSize - 1] = '\0';
 
-PCBYTE DbTable::RowToBinary(PCBYTE data) const
-{
-	return data;
-}
+	PCCHAR bufferPtr = buffer;
 
-PCCHAR DbTable::RowToString(PCBYTE data) const
-{
-	return reinterpret_cast<PCCHAR>(data);
-}
+	for (SIZE i = 0; i < rowSize; i++)
+		bufferPtr = StringReadValue<BYTE>(rowBuffer[i], bufferPtr);
 
-PBYTE & DbTable::RowFromBinary(PCBYTE data)
-{
-	return UNCONST(data);
-}
-
-PBYTE & DbTable::RowFromString(PCCHAR data)
-{
-	return reinterpret_cast<PBYTE &>(UNCONST(data));
+	return reinterpret_cast<PBYTE &>(rowBuffer);
 }
 
 
