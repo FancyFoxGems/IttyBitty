@@ -12,6 +12,4 @@
 
 #include "IttyBitty_storage.h"
 
-#pragma endregion
-
 #endif	// #ifndef NO_ITTYBITTY_STORAGE

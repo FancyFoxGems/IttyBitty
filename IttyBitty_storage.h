@@ -237,8 +237,8 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CSTORAGERESULT Load() = 0;
 		VIRTUAL CSTORAGERESULT Save() = 0;
+		VIRTUAL CSTORAGERESULT Load() = 0;
 
 		VIRTUAL CSTORAGERESULT SaveAsBinary() const = 0;
 		VIRTUAL CSTORAGERESULT SaveAsString() const = 0;
@@ -288,6 +288,48 @@ namespace IttyBitty
 
 		VIRTUAL CSTORAGERESULT Flush() = 0;
 
+
+		// USER METHODS
+
+		VIRTUAL CSTORAGERESULT LoadData(PBYTE buffer, CSIZE size, RCDWORD offset = 0)
+		{
+			STORAGERESULT result = this->Open();
+			if ((BYTE)result)
+				return result;
+
+			if (offset)
+			{
+				result = this->Seek(offset);
+				if ((BYTE)result)
+					return result;
+			}
+
+			result = this->Read(buffer, size);
+			if ((BYTE)result)
+				return result;
+
+			return this->Close();
+		}
+
+		VIRTUAL CSTORAGERESULT SaveData(PCBYTE data, CSIZE size, RCDWORD offset = 0)
+		{
+			STORAGERESULT result = this->Open(TRUE);
+			if ((BYTE)result)
+				return result;
+
+			if (offset)
+			{
+				result = this->Seek(offset);
+				if ((BYTE)result)
+					return result;
+			}
+
+			result = this->Write(data, size);
+			if ((BYTE)result)
+				return result;
+
+			return this->Close();
+		}
 
 
 	protected:

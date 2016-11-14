@@ -30,7 +30,7 @@ PBYTE IttyBitty::__db_table_def_buffer = NULL;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-DbTableDef::DbTableDef(RISTORAGE storage, CSIZE rowSize, PCCHAR tableName, RCDWORD addrOffset)
+DbTableDef::DbTableDef(RISTORAGE storage, CSIZE rowSize, PCCHAR tableName, CSIZE addrOffset)
 	: _Storage(storage), _RowSize(rowSize), _TableName(tableName), _AddrOffset(addrOffset) { }
 
 DbTableDef::DbTableDef(PCBYTE data, RISTORAGE storage) : DbTableDef(storage)
@@ -89,7 +89,7 @@ CSIZE DbTableDef::RowSize() const
 	return _RowSize;
 }
 
-DWORD DbTableDef::GetAddrOffset() const
+CSIZE DbTableDef::GetAddrOffset() const
 {
 	return _AddrOffset;
 }
@@ -99,7 +99,7 @@ PCCHAR DbTableDef::GetTableName() const
 	return _TableName;
 }
 
-VOID DbTableDef::SetAddrOffset(RCDWORD addrOffset)
+VOID DbTableDef::SetAddrOffset(CSIZE addrOffset)
 {
 	_AddrOffset = addrOffset;
 }
@@ -112,15 +112,6 @@ VOID DbTableDef::SetTableName(PCCHAR tableName)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT DbTableDef::Load()
-{
-#ifdef _DEBUG
-	return this->LoadFromString();
-#else
-	return this->LoadFromBinary();
-#endif
-}
-
 CSTORAGERESULT DbTableDef::Save()
 {
 #ifdef _DEBUG
@@ -130,24 +121,53 @@ CSTORAGERESULT DbTableDef::Save()
 #endif
 }
 
+CSTORAGERESULT DbTableDef::Load()
+{
+#ifdef _DEBUG
+	return this->LoadFromString();
+#else
+	return this->LoadFromBinary();
+#endif
+}
+
 CSTORAGERESULT DbTableDef::SaveAsBinary() const
 {
-	return StorageResult::SUCCESS;
+	return this->GetStorage().SaveData(this->ToBinary(),
+		this->BinarySize(), this->GetAddrOffset());
 }
 
 CSTORAGERESULT DbTableDef::SaveAsString() const
 {
-	return StorageResult::SUCCESS;
+	return this->GetStorage().SaveData(reinterpret_cast<PCBYTE>(this->ToString()),
+		this->StringSize(), this->GetAddrOffset());
 }
 
 CSTORAGERESULT DbTableDef::LoadFromBinary()
 {
-	return StorageResult::SUCCESS;
+	SIZE size = this->BinarySize();
+	PBYTE buffer = new byte[size];
+
+	STORAGERESULT result = this->GetStorage().LoadData(buffer, size, this->GetAddrOffset());
+	if ((BYTE)result)
+		return result;
+
+	this->FromBinary(buffer);
+
+	return result;
 }
 
 CSTORAGERESULT DbTableDef::LoadFromString()
 {
-	return StorageResult::SUCCESS;
+	SIZE size = this->StringSize();
+	PBYTE buffer = new byte[size];
+
+	STORAGERESULT result = this->GetStorage().LoadData(buffer, size, this->GetAddrOffset());
+	if ((BYTE)result)
+		return result;
+
+	this->FromString(reinterpret_cast<PCCHAR>(buffer));
+
+	return result;
 }
 
 
@@ -155,7 +175,7 @@ CSTORAGERESULT DbTableDef::LoadFromString()
 
 CSIZE DbTableDef::BinarySize() const
 {
-	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TableNameLength() + SIZEOF(CDWORD);
+	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TableNameLength() + SIZEOF(CSIZE);
 }
 
 CSIZE DbTableDef::StringSize() const
@@ -190,9 +210,9 @@ PCBYTE DbTableDef::ToBinary() const
 		bufferPtr += tableNameLength;
 	}
 
-	CDWORD addrOffset = this->GetAddrOffset();
-	memcpy(bufferPtr, &addrOffset, SIZEOF(CDWORD));
-	bufferPtr += SIZEOF(CDWORD);
+	CSIZE addrOffset = this->GetAddrOffset();
+	memcpy(bufferPtr, &addrOffset, SIZEOF(CSIZE));
+	bufferPtr += SIZEOF(CSIZE);
 
 	return __db_table_def_buffer;
 }
@@ -220,7 +240,7 @@ PCCHAR DbTableDef::ToString() const
 		bufferPtr += tableNameLength;
 	}
 
-	bufferPtr = StringInsertValue<CDWORD>(this->GetAddrOffset(), bufferPtr);
+	bufferPtr = StringInsertValue<CSIZE>(this->GetAddrOffset(), bufferPtr);
 
 	return reinterpret_cast<PCCHAR>(__db_table_def_buffer);
 }

@@ -147,8 +147,8 @@ namespace IttyBitty
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL CSTORAGERESULT Load();
 		VIRTUAL CSTORAGERESULT Save();
+		VIRTUAL CSTORAGERESULT Load();
 
 		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
 		VIRTUAL CSTORAGERESULT SaveAsString() const;
@@ -190,7 +190,7 @@ namespace IttyBitty
 
 		// [IDbTableSet] HELPER METHODS
 
-		VIRTUAL CDBRESULT MoveTables(CSIZE, RCLONG);
+		VIRTUAL CDBRESULT MoveTables(RCDWORD, RCLONG);
 
 		VIRTUAL CDWORD TablesSize() const;
 		VIRTUAL CDWORD TablesCapacity() const;

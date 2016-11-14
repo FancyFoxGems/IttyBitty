@@ -70,6 +70,10 @@ namespace IttyBitty
 		VIRTUAL RCIDBTABLEDEF TableDef() const = 0;
 		VIRTUAL RIDBTABLEDEF TableDef() = 0;
 
+		VIRTUAL DWORD GetDataAddrOffset() const = 0;
+
+		VIRTUAL VOID SetDataAddrOffset(RCDWORD) = 0;
+
 
 		// INTERFACE METHODS
 
@@ -135,6 +139,8 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT LoadAllRows(PBYTE &, RSIZE, PSIZE) = 0;
 		VIRTUAL CSTORAGERESULT LoadRow(CSIZE, PBYTE &, PSIZE) = 0;
 
+		VIRTUAL CSTORAGERESULT MoveData(RCLONG) = 0;
+
 		VIRTUAL PCCHAR RowToString(PCBYTE, CSIZE) const = 0;
 		VIRTUAL PBYTE RowsFromString(PCCHAR, RCDWORD, CSIZE) = 0;
 		VIRTUAL PBYTE RowFromString(PCCHAR, CSIZE) = 0;
@@ -154,7 +160,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		DbTable(RISTORAGE = IttyBitty::NULL_STORAGE(), CSIZE = 0, PCCHAR = NULL, RCDWORD = 0, RCDWORD = 0);
+		DbTable(RISTORAGE = IttyBitty::NULL_STORAGE(), CSIZE = 0, PCCHAR = NULL, RCDWORD = 0, CSIZE = 0, RCDWORD = 0);
 
 		EXPLICIT DbTable(PCBYTE, RISTORAGE = IttyBitty::NULL_STORAGE());
 		EXPLICIT DbTable(PCCHAR, RISTORAGE = IttyBitty::NULL_STORAGE());
@@ -188,10 +194,14 @@ namespace IttyBitty
 		VIRTUAL RCIDBTABLEDEF TableDef() const;
 		VIRTUAL RIDBTABLEDEF TableDef();
 
+		VIRTUAL DWORD GetDataAddrOffset() const;
+
 
 		// MUTATORS
 
 		VIRTUAL VOID SetStorage(RISTORAGE);
+
+		VIRTUAL VOID SetDataAddrOffset(RCDWORD);
 
 
 		// [IDbTable] IMPLEMENTATION
@@ -216,17 +226,17 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE RowSize() const;
 
-		VIRTUAL DWORD GetAddrOffset() const;
+		VIRTUAL CSIZE GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 
-		VIRTUAL VOID SetAddrOffset(RCDWORD);
+		VIRTUAL VOID SetAddrOffset(CSIZE);
 		VIRTUAL VOID SetTableName(PCCHAR);
 
 
 		// [IStorable] IMPLEMENTATION
 
-		VIRTUAL CSTORAGERESULT Load();
 		VIRTUAL CSTORAGERESULT Save();
+		VIRTUAL CSTORAGERESULT Load();
 
 		VIRTUAL CSTORAGERESULT SaveAsBinary() const;
 		VIRTUAL CSTORAGERESULT SaveAsString() const;
@@ -263,6 +273,8 @@ namespace IttyBitty
 		DWORD _Capacity = 0;
 		SIZE _RowCount = 0;
 
+		DWORD _DataAddrOffset = 0;
+
 		PIDBTABLEDEF _TableDef = NULL;
 
 
@@ -280,6 +292,8 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT SaveRow(PCBYTE, CSIZE) const;
 		VIRTUAL CSTORAGERESULT LoadAllRows(PBYTE &, RSIZE, PSIZE);
 		VIRTUAL CSTORAGERESULT LoadRow(CSIZE, PBYTE &, PSIZE);
+
+		VIRTUAL CSTORAGERESULT MoveData(RCLONG);
 
 		VIRTUAL PCCHAR RowToString(PCBYTE, CSIZE) const;
 		VIRTUAL PBYTE RowsFromString(PCCHAR, RCDWORD, CSIZE);
@@ -528,7 +542,7 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VIRTUAL CDBRESULT MoveTables(CSIZE, RCLONG) = 0;
+		VIRTUAL CDBRESULT MoveTables(RCDWORD, RCLONG) = 0;
 
 		VIRTUAL CDWORD TablesSize() const = 0;
 		VIRTUAL CDWORD TablesCapacity() const = 0;

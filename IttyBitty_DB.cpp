@@ -537,15 +537,6 @@ CDBRESULT Database::TruncateTable(PCCHAR tableName)
 
 // [IStorable] IMPLEMENTATION
 
-CSTORAGERESULT Database::Load()
-{
-#ifdef _DEBUG
-	return this->LoadFromString();
-#else
-	return this->LoadFromBinary();
-#endif
-}
-
 CSTORAGERESULT Database::Save()
 {
 #ifdef _DEBUG
@@ -555,50 +546,51 @@ CSTORAGERESULT Database::Save()
 #endif
 }
 
+CSTORAGERESULT Database::Load()
+{
+#ifdef _DEBUG
+	return this->LoadFromString();
+#else
+	return this->LoadFromBinary();
+#endif
+}
+
 CSTORAGERESULT Database::SaveAsBinary() const
 {
-	STORAGERESULT result = StorageResult::SUCCESS;
-
-	// TODO
-
-	for (BYTE i = 0; i < _TableCount; i ++)
-	{
-		result = _Tables[i]->SaveAsBinary();
-		if ((BYTE)result)
-			break;;
-	}
-
-	return StorageResult::SUCCESS;
+	return this->GetStorage().SaveData(this->ToBinary(), this->BinarySize());
 }
 
 CSTORAGERESULT Database::SaveAsString() const
 {
-	STORAGERESULT result = StorageResult::SUCCESS;
-
-	// TODO
-
-	for (BYTE i = 0; i < _TableCount; i ++)
-	{
-		result = _Tables[i]->SaveAsString();
-		if ((BYTE)result)
-			break;;
-	}
-
-	return StorageResult::SUCCESS;
+	return this->GetStorage().SaveData(reinterpret_cast<PCBYTE>(this->ToString()), this->StringSize());
 }
 
 CSTORAGERESULT Database::LoadFromBinary()
 {
-	// TODO
+	SIZE size = this->BinarySize();
+	PBYTE buffer = new byte[size];
 
-	return StorageResult::SUCCESS;
+	STORAGERESULT result = this->GetStorage().LoadData(buffer, size);
+	if ((BYTE)result)
+		return result;
+
+	this->FromBinary(buffer);
+
+	return result;
 }
 
 CSTORAGERESULT Database::LoadFromString()
 {
-	// TODO
+	SIZE size = this->StringSize();
+	PBYTE buffer = new byte[size];
 
-	return StorageResult::SUCCESS;
+	STORAGERESULT result = this->GetStorage().LoadData(buffer, size);
+	if ((BYTE)result)
+		return result;
+
+	this->FromString(reinterpret_cast<PCCHAR>(buffer));
+
+	return result;
 }
 
 
@@ -611,7 +603,7 @@ CSIZE Database::BinarySize() const
 
 CSIZE Database::StringSize() const
 {
-	return SIZEOF(CSIZE) + SIZEOF(CBYTE) + this->TablesStringSize() + 1;
+	return 2 * SIZEOF(CSIZE) + 2 * SIZEOF(CBYTE) + this->TablesStringSize() + 1;
 }
 
 PCBYTE Database::ToBinary() const
@@ -699,7 +691,7 @@ VOID Database::FromBinary(PCBYTE data)
 
 	for (SIZE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr, _Storage);
+		_Tables[i] = new DbTable(bufferPtr, this->GetStorage());
 
 		bufferPtr += _Tables[i]->BinarySize();
 	}
@@ -720,7 +712,7 @@ VOID Database::FromString(PCCHAR data)
 
 	for (BYTE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr, _Storage);
+		_Tables[i] = new DbTable(bufferPtr, this->GetStorage());
 
 		bufferPtr += _Tables[i]->StringSize() - 1;
 	}
@@ -760,11 +752,26 @@ SIZE Database::printTo(Print & printer) const
 
 // [IDbTableSet] HELPER METHODS
 
-CDBRESULT Database::MoveTables(CSIZE startAddrOffset, RCLONG addrOffsetDelta)
+CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta)
 {
-	// TODO
+	PIDBTABLE table = NULL;
+	DWORD oldDataAddrOffset = 0;
+	DBRESULT result = DbResult::SUCCESS;
 
-	return DbResult::SUCCESS;
+	for (BYTE i = 0; i < _TableCount; i++)
+	{
+		table = _Tables[i];
+		oldDataAddrOffset = table->GetDataAddrOffset();
+
+		if (oldDataAddrOffset <= startDataAddrOffset)
+			continue;
+
+		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta);
+		if ((BYTE)result)
+			return result;
+	}
+
+	return (CDBRESULT)result;
 }
 
 CDWORD Database::TablesCapacity() const
