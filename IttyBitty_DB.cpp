@@ -342,7 +342,7 @@ CSIZE Database::RowsAvailableFor(PCCHAR tableName) const
 	return table->RowsAvailable();
 }
 
-CDBRESULT Database::CreateTable(CSIZE, PCCHAR tableName, CBYTE newTableIdx)
+CDBRESULT Database::CreateTable(CSIZE rowSize, PCCHAR tableName, CSIZE dataAllocationRows, CBYTE newTableIdx)
 {
 	// TODO
 
@@ -752,7 +752,7 @@ SIZE Database::printTo(Print & printer) const
 
 // [IDbTableSet] HELPER METHODS
 
-CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta)
+CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta, CBOOL writeEraseValue)
 {
 	PIDBTABLE table = NULL;
 	DBRESULT result = DbResult::SUCCESS;
@@ -767,7 +767,8 @@ CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffse
 		if (table->GetDataAddrOffset() <= startDataAddrOffset)
 			return (CDBRESULT)result;
 
-		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta);
+		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta,
+			dataAddrOffsetDelta > 0 ? DB_ERASE_NEW_ALLOCATION : FALSE, writeEraseValue);
 		if ((BYTE)result)
 			return result;
 	}
