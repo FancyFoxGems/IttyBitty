@@ -148,9 +148,13 @@ CDBRESULT DbTable::Find(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 
 CDBRESULT DbTable::Insert(PCBYTE rowData, CSIZE rowIdx)
 {
-	// TODO
+	STORAGERESULT result = this->SaveRow(rowData, rowIdx);
+	if ((BYTE)result)
+		return (CDBRESULT)result;
 
-	return DbResult::SUCCESS;
+	_RowCount = 0;
+
+	return (CDBRESULT)this->Save();
 }
 
 CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIdx)
@@ -158,9 +162,7 @@ CDBRESULT DbTable::Update(PCBYTE rowData, CSIZE rowIdx)
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	// TODO
-
-	return DbResult::SUCCESS;
+	return (CDBRESULT)this->SaveRow(rowData, rowIdx);
 }
 
 CDBRESULT DbTable::Delete(CSIZE rowIdx, CBOOL writeEraseValue)
@@ -168,7 +170,15 @@ CDBRESULT DbTable::Delete(CSIZE rowIdx, CBOOL writeEraseValue)
 	if (rowIdx > this->RowCount() - 1)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	// TODO
+#ifdef _DEBUG
+	DWORD rowSize = this->RowStringSize();
+#else
+	DWORD rowSize = this->RowBinarySize();
+#endif
+
+	STORAGERESULT result = this->EraseData(rowSize, rowIdx, writeEraseValue);
+	if ((BYTE)result)
+		return (CDBRESULT)result;
 
 	--_RowCount;
 
@@ -180,7 +190,15 @@ CDBRESULT DbTable::Truncate(CBOOL writeEraseValue)
 	if (this->RowCount() == 0)
 		return DbResult::SUCCESS;
 
-	// TODO
+#ifdef _DEBUG
+	DWORD rowsSize = this->RowsStringSize();
+#else
+	DWORD rowsSize = this->RowsBinarySize();
+#endif
+
+	STORAGERESULT result = this->EraseData(rowsSize, 0, writeEraseValue);
+	if ((BYTE)result)
+		return (CDBRESULT)result;
 
 	_RowCount = 0;
 
@@ -502,7 +520,6 @@ CSTORAGERESULT DbTable::LoadAllRows(PBYTE & recordSet, RSIZE recordCount, PSIZE 
 #ifdef _DEBUG
 	SIZE _rowSize = this->RowStringSize();
 	DWORD rowsSize = this->RowsStringSize();
-
 #else
 	SIZE _rowSize = this->RowBinarySize();
 	DWORD rowsSize = this->RowsBinarySize();
@@ -552,13 +569,26 @@ CSTORAGERESULT DbTable::LoadRow(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 	return result;
 }
 
-CSTORAGERESULT DbTable::EraseData(RCDWORD size, CBOOL writeEraseValue)
+CSTORAGERESULT DbTable::EraseData(RCDWORD size, CBOOL writeEraseValue, CSIZE rowIdx)
 {
 	RISTORAGE storage = this->GetStorage();
 
 	STORAGERESULT result = storage.Open(TRUE);
 	if ((BYTE)result)
 		return result;
+
+	if (rowIdx > 0)
+	{
+	#ifdef _DEBUG
+		SIZE rowSize = this->RowStringSize();
+	#else
+		SIZE rowSize = this->RowBinarySize();
+	#endif
+
+		result = storage.Seek(_DataAddrOffset + rowIdx * rowSize);
+		if ((BYTE)result)
+			return result;
+	}
 
 	result = storage.Erase(size, writeEraseValue);
 	if ((BYTE)result)
@@ -576,17 +606,21 @@ CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta)
 		return result;
 
 #ifdef _DEBUG
-	DWORD oldDataAddr = _DataAddrOffset + this->RowsStringSize() - 1;
+	DWORD rowsSize = this->RowsStringSize();
 #else
-	DWORD oldDataAddr = _DataAddrOffset + this->RowsBinarySize() - 1;
+	DWORD rowsSize = this->RowsBinarySize();
 #endif
 
+	DWORD moveAddr = _DataAddrOffset;
+	DWORD endAddr = _DataAddrOffset + rowsSize;
 	BYTE datum = 0;
-	DWORD newDataAddr = 0;
 
-	while (oldDataAddr >= _DataAddrOffset)
+	while (moveAddr < endAddr)
 	{
-		result = storage.Seek(oldDataAddr);
+		if (dataAddrOffsetDelta > 0)
+			result = storage.Seek(moveAddr);
+		else
+			result = storage.Seek(endAddr + _DataAddrOffset - moveAddr + 1);
 		if ((BYTE)result)
 			return result;
 
@@ -594,7 +628,7 @@ CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta)
 		if ((BYTE)result)
 			return result;
 
-		result = storage.Seek(oldDataAddr-- + dataAddrOffsetDelta);
+		result = storage.Seek(moveAddr++ + dataAddrOffsetDelta);
 		if ((BYTE)result)
 			return result;
 
@@ -607,12 +641,9 @@ CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta)
 	if ((BYTE)result)
 		return result;
 
-
 	this->SetDataAddrOffset(_DataAddrOffset + dataAddrOffsetDelta);
 
-	result = this->Save();
-	if ((BYTE)result)
-		return result;
+	return this->Save();
 }
 
 PCCHAR DbTable::RowToString(PCBYTE data, CSIZE rowSize) const
