@@ -101,19 +101,19 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	#define _EEEPTR_T_CLAUSE_DEF <CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
+	#define _EEEPTR_T_CLAUSE_DEF	<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
 	#define _EEEPTR_T_CLAUSE		<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,	\
 		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	#define _EEEPTR_T_ARGS		<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>
+	#define _EEEPTR_T_ARGS			<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>
 
 	template _EEEPTR_T_CLAUSE
 	struct _EEEPtr;
 	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEPTR_T_CLAUSE), CSL(_EEEPTR_T_ARGS), EEEPtr, eeeptr, EEEPTR);
 
 
-	#define _EEEREF_T_CLAUSE_DEF _EEEPTR_T_CLAUSE_DEF
+	#define _EEEREF_T_CLAUSE_DEF	_EEEPTR_T_CLAUSE_DEF
 	#define _EEEREF_T_CLAUSE		_EEEPTR_T_CLAUSE
-	#define _EEEREF_T_ARGS		_EEEPTR_T_ARGS
+	#define _EEEREF_T_ARGS			_EEEPTR_T_ARGS
 
 	template _EEEREF_T_CLAUSE
 	struct _EEERef;
@@ -140,13 +140,13 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIAS
 
-		typedef TAddr & RTADDR;
-		typedef const TAddr & RCTADDR;
-
 		typedef _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
 		typedef const TEEEPtr CTEEEPTR, & RCTEEEPTR;
 
 		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF;
+
+		typedef TAddr TADDR;
+		typedef const TAddr & RCTADDR;
 
 
 	public:
@@ -214,7 +214,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		TAddr Address = 0;
+		TADDR Address = 0;
 	};
 
 #pragma endregion
@@ -242,10 +242,11 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIAS
 
-		typedef const TAddr & RCTADDR;
-
 		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF, & RTEEEREF;
 		typedef const TEEERef CTEEEREF, & RCTEEEREF;
+
+		typedef TAddr TADDR;
+		typedef const TAddr CTADDR, & RCTADDR;
 
 
 	public:
@@ -364,7 +365,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		TAddr Address = 0;
+		TADDR Address = 0;
 
 
 	protected:
@@ -450,7 +451,7 @@ namespace IttyBitty
 			return (BYTE)WIRE_READ();
 		}
 
-		CSIZE Read(PBYTE data, CSIZE size)
+		CTADDR Read(PBYTE data, RCTADDR size)
 		{
 			BYTE errCode = this->SendAddressWords();
 			if (errCode)
@@ -462,7 +463,7 @@ namespace IttyBitty
 
 			Wire.requestFrom((INT)BuildDeviceAddressWord(), (INT)size, FALSE);
 
-			SIZE bytesRead = 0;
+			TADDR bytesRead = 0;
 
 			while (bytesRead < size)
 			{
@@ -493,9 +494,9 @@ namespace IttyBitty
 			return Wire.endTransmission();
 		}
 
-		CSIZE Write(PCBYTE data, CSIZE size)
+		CTADDR Write(PCBYTE data, RCTADDR size)
 		{
-			SIZE bytesWritten = 0;
+			TADDR bytesWritten = 0;
 
 			while (bytesWritten < size)
 			{
@@ -526,9 +527,9 @@ namespace IttyBitty
 			return *this;
 		}
 
-		CSIZE Update(PCBYTE data, CSIZE size)
+		CTADDR Update(PCBYTE data, RCTADDR size)
 		{
-			SIZE bytesWritten = 0;
+			TADDR bytesWritten = 0;
 
 			while (bytesWritten < size)
 			{
@@ -540,12 +541,12 @@ namespace IttyBitty
 			return bytesWritten;
 		}
 
-		CBYTE Erase(CSIZE size)
+		CTADDR Erase(RCTADDR size)
 		{
 			PBYTE nullBuffer = new byte[size];
 			memset(nullBuffer, SERIAL_EEPROM_ERASE_VALUE, size);
 
-			CBYTE bytesErased = this->Write(nullBuffer, size);
+			TADDR bytesErased = this->Write(MAKE_CONST(nullBuffer), size);
 
 			delete[] nullBuffer;
 
@@ -633,7 +634,7 @@ namespace IttyBitty
 			return CapacityKb() * KILObit / BITS_PER_BYTE;
 		}
 
-		STATIC CONSTEXPR CTADDR (*Capacity)() = &Size;
+		STATIC CTADDR (*Capacity)() ALIAS(Size);
 
 
 		// STATIC CONSTEXPR FUNCTION ALIASES
@@ -735,19 +736,32 @@ namespace IttyBitty
 
 		CBYTE Read(RCTADDR addr) const
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Read();
 		}
 
-		CSIZE Read(PBYTE buffer, CSIZE size) const
+		CTADDR Read(PBYTE buffer, RCTADDR size) const
 		{
 			return (*_Iterator).Read(buffer, size);
 		}
 
-		CSIZE Read(PBYTE buffer, CSIZE size, RCTADDR addr) const
+		CTADDR Read(PBYTE buffer, RCTADDR size, RCTADDR addr) const
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Read(buffer, size);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Read(T & datum) const
+		{
+			return this->Read(reinterpret_cast<PBYTE>(&datum), T_SIZE);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Read(T & datum, RCTADDR addr) const
+		{
+			this->Seek(addr);
+			return this->Read(datum);
 		}
 
 		CBYTE Write(CBYTE value)
@@ -757,30 +771,43 @@ namespace IttyBitty
 
 		CBYTE Write(CBYTE value, RCTADDR addr)
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Write(value);
 		}
 
-		CSIZE Write(PCBYTE data, CSIZE size)
+		CTADDR Write(PCBYTE data, RCTADDR size)
 		{
 			return (*_Iterator).Write(data, size);
 		}
 
-		CSIZE Write(PCBYTE data, CSIZE size, RCTADDR addr)
+		CTADDR Write(PCBYTE data, RCTADDR size, RCTADDR addr)
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Write(data, size);
 		}
 
 		CSIZE Write(PCCHAR data)
 		{
-			return (*_Iterator).Write(reinterpret_cast<PCBYTE>(data), strlen(data));
+			return (CSIZE)(*_Iterator).Write(reinterpret_cast<PCBYTE>(data), (CTADDR)strlen(data));
 		}
 
 		CSIZE Write(PCCHAR data, RCTADDR addr)
 		{
-			this->seek(addr);
-			return this->Write(data, data);
+			this->Seek(addr);
+			return (CSIZE)this->Write(data, (CTADDR)strlen(data));
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Write(CONST T & datum)
+		{
+			return this->Write(reinterpret_cast<PCBYTE>(&datum), T_SIZE);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Write(CONST T & datum, RCTADDR addr)
+		{
+			this->Seek(addr);
+			return this->Write(datum);
 		}
 
 		CBYTE Update(CBYTE value)
@@ -790,81 +817,67 @@ namespace IttyBitty
 
 		CBYTE Update(CBYTE value, RCTADDR addr)
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Update(value);
 		}
 
-		CSIZE Update(PCBYTE data, CSIZE size)
+		CTADDR Update(PCBYTE data, RCTADDR size)
 		{
 			return (*_Iterator).Update(data, size);
 		}
 
-		CSIZE Update(PCBYTE data, CSIZE size, RCTADDR addr)
+		CTADDR Update(PCBYTE data, RCTADDR size, RCTADDR addr)
 		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Update(data, size);
 		}
 
 		CSIZE Update(PCCHAR data)
 		{
-			return (*_Iterator).Update(reinterpret_cast<PCBYTE>(data), strlen(data));
+			return (CSIZE)(*_Iterator).Update(reinterpret_cast<PCBYTE>(data), (CTADDR)strlen(data));
 		}
 
 		CSIZE Update(PCCHAR data, RCTADDR addr)
 		{
-			this->seek(addr);
-			return this->Update(data, data);
-		}
-
-		CBYTE Erase(CSIZE size)
-		{
-			return (*_Iterator).Clear(size);
-		}
-
-		CBYTE Erase(CSIZE size, RCTADDR addr)
-		{
-			this->seek(addr);
-			return this->Clear(size);
+			this->Seek(addr);
+			return (CSIZE)this->Update(data, (CTADDR)strlen(data));
 		}
 
 		template DEFAULT_T_CLAUSE
-		CSIZE Load(T & datum) const
+		CTADDR Update(CONST T & datum)
 		{
-			PCBYTE data = reinterpret_cast<PBYTE>(&datum);
-
-			SIZE i = 0;
-
-			while (i < T_SIZE)
-				data[i++] = *_Iterator++;
-
-			return i;
+			return this->Update(reinterpret_cast<PCBYTE>(&datum), T_SIZE);
 		}
 
 		template DEFAULT_T_CLAUSE
-		CSIZE Load(RCTADDR addr, T & datum) const
+		CTADDR Update(CONST T & datum, RCTADDR addr)
 		{
-			this->seek(addr);
-			return this->Load(datum);
-		}
-
-		template DEFAULT_T_CLAUSE
-		CSIZE Save(CONST T & datum)
-		{
-			PCBYTE data = reinterpret_cast<PCBYTE>(&datum);
-
-			SIZE i = 0;
-
-			while (i < T_SIZE)
-				(*_Iterator++).Update(data[i++]);
-
-			return i;
-		}
-
-		template DEFAULT_T_CLAUSE
-		CSIZE Save(RCTADDR addr, CONST T & datum)
-		{
-			this->seek(addr);
+			this->Seek(addr);
 			return this->Save(datum);
+		}
+
+		CTADDR Erase(RCTADDR size)
+		{
+			return (*_Iterator).Erase(size);
+		}
+
+		CTADDR Erase(CSIZE size, RCTADDR addr)
+		{
+			this->Seek(addr);
+			return this->Erase(size);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Erase()
+		{
+			return this->Erase(T_SIZE);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CTADDR Erase(RCTADDR addr)
+		{
+			this->Seek(addr);
+			return this->Erase(T_SIZE);
 		}
 	};
 

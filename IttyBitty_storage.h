@@ -84,6 +84,7 @@ namespace IttyBitty
 
 		ERROR_MEDIA_ERASE						= ERROR_MEDIA | ERROR_OPERATION_DELETE,
 		ERROR_MEDIA_ERASE_FAILURE				= ERROR_MEDIA_ERASE,
+		ERROR_MEDIA_ERASE_NOT_ALLOWED			= ERROR_MEDIA_ERASE,
 
 		ERROR_MEDIA_READ						= ERROR_MEDIA | ERROR_OPERATION_READ,
 		ERROR_MEDIA_READ_FAILURE				= ERROR_MEDIA_READ,
@@ -281,56 +282,52 @@ namespace IttyBitty
 		VIRTUAL CSTORAGERESULT Open(CBOOL = FALSE) = 0;
 		VIRTUAL CSTORAGERESULT Close() = 0;
 
+		VIRTUAL CSTORAGERESULT Flush() = 0;
+
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD) = 0;
 
 		VIRTUAL CSTORAGERESULT Read(PBYTE, RCDWORD) = 0;
+
+		template DEFAULT_T_CLAUSE
+		CSTORAGERESULT Read(T & datum)
+		{
+			return this->Read(reinterpret_cast<PBYTE>(&datum), T_SIZE);
+		}
+
 		VIRTUAL CSTORAGERESULT Write(PCBYTE, RCDWORD) = 0;
+		VIRTUAL CSTORAGERESULT Write(PCCHAR) = 0;
 
-		VIRTUAL CSTORAGERESULT Flush() = 0;
+		template DEFAULT_T_CLAUSE
+		CSTORAGERESULT Write(CONST T & datum)
+		{
+			return this->Write(reinterpret_cast<PCBYTE>(&datum), T_SIZE);
+		}
 
-		VIRTUAL CSTORAGERESULT Erase(RCDWORD = 0, CBOOL = TRUE) = 0;
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD = 0) = 0;
+
+		template DEFAULT_T_CLAUSE
+		CSTORAGERESULT Erase()
+		{
+			return this->Erase(T_SIZE);
+		}
 
 
 		// USER METHODS
 
-		VIRTUAL CSTORAGERESULT LoadData(PBYTE buffer, RCDWORD size, RCDWORD offset = 0)
+		VIRTUAL CSTORAGERESULT Load(PBYTE, RCDWORD, RCDWORD = 0) = 0;
+
+		template DEFAULT_T_CLAUSE
+		CSTORAGERESULT Load(T & datum)
 		{
-			STORAGERESULT result = this->Open();
-			if ((BYTE)result)
-				return result;
-
-			if (offset)
-			{
-				result = this->Seek(offset);
-				if ((BYTE)result)
-					return result;
-			}
-
-			result = this->Read(buffer, size);
-			if ((BYTE)result)
-				return result;
-
-			return this->Close();
+			return this->Load(reinterpret_cast<PBYTE>(&datum), T_SIZE);
 		}
 
-		VIRTUAL CSTORAGERESULT SaveData(PCBYTE data, RCDWORD size, RCDWORD offset = 0)
+		VIRTUAL CSTORAGERESULT Save(PCBYTE, RCDWORD, RCDWORD = 0) = 0;
+
+		template DEFAULT_T_CLAUSE
+		CSTORAGERESULT Save(CONST T & datum)
 		{
-			STORAGERESULT result = this->Open(TRUE);
-			if ((BYTE)result)
-				return result;
-
-			if (offset)
-			{
-				result = this->Seek(offset);
-				if ((BYTE)result)
-					return result;
-			}
-
-			result = this->Write(data, size);
-			if ((BYTE)result)
-				return result;
-
-			return this->Close();
+			return this->Save(reinterpret_cast<PCBYTE>(&datum), T_SIZE);
 		}
 
 
@@ -394,6 +391,11 @@ namespace IttyBitty
 			return StorageResult::SUCCESS;
 		}
 
+		VIRTUAL CSTORAGERESULT Flush()
+		{
+			return StorageResult::SUCCESS;
+		}
+
 		VIRTUAL CSTORAGERESULT Seek(RCDWORD)
 		{
 			return StorageResult::SUCCESS;
@@ -409,12 +411,22 @@ namespace IttyBitty
 			return StorageResult::SUCCESS;
 		}
 
-		VIRTUAL CSTORAGERESULT Flush()
+		VIRTUAL CSTORAGERESULT Write(PCCHAR)
 		{
 			return StorageResult::SUCCESS;
 		}
 
-		VIRTUAL CSTORAGERESULT Erase(RCDWORD size = 0, CBOOL writeEraseValue = TRUE)
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD size = 0)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Load(PBYTE, RCDWORD, RCDWORD = 0)
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Save(PCBYTE, RCDWORD, RCDWORD = 0)
 		{
 			return StorageResult::SUCCESS;
 		}
@@ -472,12 +484,17 @@ namespace IttyBitty
 			return TRUE;
 		}
 
-		VIRTUAL CSTORAGERESULT Open(CBOOL rwFlag)
+		VIRTUAL CSTORAGERESULT Open(CBOOL rwFlag = FALSE)
 		{
 			return StorageResult::SUCCESS;
 		}
 
 		VIRTUAL CSTORAGERESULT Close()
+		{
+			return StorageResult::SUCCESS;
+		}
+
+		VIRTUAL CSTORAGERESULT Flush()
 		{
 			return StorageResult::SUCCESS;
 		}
@@ -489,26 +506,66 @@ namespace IttyBitty
 			return StorageResult::SUCCESS;
 		}
 
-		VIRTUAL CSTORAGERESULT Flush()
+		VIRTUAL CSTORAGERESULT Write(PCBYTE data, RCDWORD size) = 0;
+
+		VIRTUAL CSTORAGERESULT Write(PCCHAR data)
 		{
-			return StorageResult::SUCCESS;
+			return this->Write(reinterpret_cast<PCBYTE>(data), (CDWORD)strlen(data));
 		}
 
-		VIRTUAL CSTORAGERESULT Erase(RCDWORD size, CBOOL writeEraseValue = TRUE)
+		VIRTUAL CSTORAGERESULT Erase(RCDWORD size)
 		{
-			STORAGERESULT result = StorageResult::SUCCESS;
+			PBYTE nullBuffer = new byte[size];
+			memset(nullBuffer, STORAGE_ERASE_VALUE, size);
 
-			if (writeEraseValue)
-			{
-				for (SIZE i = 0; i < size; i++)
-				{
-					result = this->Write(&IttyBitty::STORAGE_ERASE_VALUE, 1);
-					if ((BYTE)result)
-						return result;
-				}
-			}
+			STORAGERESULT result  = this->Write(MAKE_CONST(nullBuffer), size);
+
+			delete[] nullBuffer;
 
 			return result;
+		}
+
+
+		// USER METHODS
+
+		VIRTUAL CSTORAGERESULT Load(PBYTE buffer, RCDWORD size, RCDWORD offset = 0)
+		{
+			STORAGERESULT result = this->Open();
+			if ((BYTE)result)
+				return result;
+
+			if (offset)
+			{
+				result = this->Seek(offset);
+				if ((BYTE)result)
+					return result;
+			}
+
+			result = this->Read(buffer, size);
+			if ((BYTE)result)
+				return result;
+
+			return this->Close();
+		}
+
+		VIRTUAL CSTORAGERESULT Save(PCBYTE data, RCDWORD size, RCDWORD offset = 0)
+		{
+			STORAGERESULT result = this->Open(TRUE);
+			if ((BYTE)result)
+				return result;
+
+			if (offset)
+			{
+				result = this->Seek(offset);
+				if ((BYTE)result)
+					return result;
+			}
+
+			result = this->Write(data, size);
+			if ((BYTE)result)
+				return result;
+
+			return this->Close();
 		}
 
 

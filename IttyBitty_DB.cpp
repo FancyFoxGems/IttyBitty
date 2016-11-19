@@ -94,8 +94,6 @@ VOID Database::Dispose(CBOOL forceDispose)
 
 	delete[] _Tables;
 	_Tables = NULL;
-
-	_TableCount = 0;
 }
 
 
@@ -344,7 +342,33 @@ CSIZE Database::RowsAvailableFor(PCCHAR tableName) const
 
 CDBRESULT Database::CreateTable(CSIZE rowSize, PCCHAR tableName, CSIZE dataAllocationRows, CBYTE newTableIdx)
 {
-	// TODO
+	PIDBTABLE table = NULL;
+	WORD nextTableHeaderAddr = 0;
+	DWORD nextTableDataAddr = 0;
+
+	if (_TableCount > 0)
+	{
+		table = _Tables[_TableCount - 1];
+
+		nextTableHeaderAddr = table->GetAddrOffset() + 1;
+		nextTableDataAddr = table->GetDataAddrOffset() + 1;
+	}
+
+	table = new DbTable(_Storage, rowSize, tableName, nextTableHeaderAddr, nextTableDataAddr, dataAllocationRows * rowSize);
+
+	DBRESULT result = table->Create(*this);
+	if ((BYTE)result)
+		return result;
+
+	PPIDBTABLE newTables = new PIDBTABLE[++_TableCount];
+
+	for (BYTE i = 0; i < _TableCount - 1; i++)
+		newTables[i] = _Tables[i];
+
+	if (_Tables)
+		delete[] _Tables;
+
+	_Tables = newTables;
 
 	return (CDBRESULT)this->Save();
 }
@@ -356,7 +380,23 @@ CDBRESULT Database::DropTable(CBYTE tableIdx)
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	// TODO
+	table->Drop(*this);
+
+	this->Dispose();
+
+	PPIDBTABLE newTables = new PIDBTABLE[--_TableCount];
+	BYTE currIdx = 0;
+
+	for (BYTE i = 0; i < _TableCount; i++)
+	{
+		if (currIdx != tableIdx)
+			newTables[currIdx++] = _Tables[i];
+	}
+
+	if (_Tables)
+		delete[] _Tables;
+
+	_Tables = newTables;
 
 	return (CDBRESULT)this->Save();
 }
@@ -368,7 +408,7 @@ CDBRESULT Database::DropTable(PCCHAR tableName)
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	// TODO
+	table->Drop(*this);
 
 	return (CDBRESULT)this->Save();
 }
@@ -494,44 +534,44 @@ CDBRESULT Database::UpdateTo(PCCHAR tableName, PCBYTE rowData, CSIZE rowIdx)
 	return table->Update(rowData, rowIdx);
 }
 
-CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx, CBOOL writeEraseValue)
+CDBRESULT Database::DeleteFrom(CBYTE tableIdx, CSIZE rowIdx)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Delete(rowIdx, writeEraseValue);
+	return table->Delete(rowIdx);
 }
 
-CDBRESULT Database::DeleteFrom(PCCHAR tableName, CSIZE rowIdx, CBOOL writeEraseValue)
+CDBRESULT Database::DeleteFrom(PCCHAR tableName, CSIZE rowIdx)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Delete(rowIdx, writeEraseValue);
+	return table->Delete(rowIdx);
 }
 
-CDBRESULT Database::TruncateTable(CBYTE tableIdx, CBOOL writeEraseValue)
+CDBRESULT Database::TruncateTable(CBYTE tableIdx)
 {
 	PIDBTABLE table = this->operator[](tableIdx);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Truncate(writeEraseValue);
+	return table->Truncate();
 }
 
-CDBRESULT Database::TruncateTable(PCCHAR tableName, CBOOL writeEraseValue)
+CDBRESULT Database::TruncateTable(PCCHAR tableName)
 {
 	PIDBTABLE table = this->operator[](tableName);
 
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Truncate(writeEraseValue);
+	return table->Truncate();
 }
 
 
@@ -557,12 +597,12 @@ CSTORAGERESULT Database::Load()
 
 CSTORAGERESULT Database::SaveAsBinary() const
 {
-	return this->GetStorage().SaveData(this->ToBinary(), this->BinarySize());
+	return this->GetStorage().Save(this->ToBinary(), this->BinarySize());
 }
 
 CSTORAGERESULT Database::SaveAsString() const
 {
-	return this->GetStorage().SaveData(reinterpret_cast<PCBYTE>(this->ToString()), this->StringSize());
+	return this->GetStorage().Save(reinterpret_cast<PCBYTE>(this->ToString()), this->StringSize());
 }
 
 CSTORAGERESULT Database::LoadFromBinary()
@@ -570,7 +610,7 @@ CSTORAGERESULT Database::LoadFromBinary()
 	SIZE size = this->BinarySize();
 	PBYTE buffer = new byte[size];
 
-	STORAGERESULT result = this->GetStorage().LoadData(buffer, size);
+	STORAGERESULT result = this->GetStorage().Load(buffer, size);
 	if ((BYTE)result)
 		return result;
 
@@ -584,7 +624,7 @@ CSTORAGERESULT Database::LoadFromString()
 	SIZE size = this->StringSize();
 	PBYTE buffer = new byte[size];
 
-	STORAGERESULT result = this->GetStorage().LoadData(buffer, size);
+	STORAGERESULT result = this->GetStorage().Load(buffer, size);
 	if ((BYTE)result)
 		return result;
 
@@ -752,7 +792,7 @@ SIZE Database::printTo(Print & printer) const
 
 // [IDbTableSet] HELPER METHODS
 
-CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta, CBOOL writeEraseValue)
+CDBRESULT Database::MoveTableData(RCDWORD startDataAddrOffset, RCLONG dataAddrOffsetDelta, CBOOL eraseNewOrExcessAllocation)
 {
 	PIDBTABLE table = NULL;
 	DBRESULT result = DbResult::SUCCESS;
@@ -767,8 +807,32 @@ CDBRESULT Database::MoveTables(RCDWORD startDataAddrOffset, RCLONG dataAddrOffse
 		if (table->GetDataAddrOffset() <= startDataAddrOffset)
 			return (CDBRESULT)result;
 
-		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta,
-			dataAddrOffsetDelta > 0 ? DB_ERASE_NEW_ALLOCATION : FALSE, writeEraseValue);
+		result = (CDBRESULT)table->MoveData(dataAddrOffsetDelta, 0,
+			dataAddrOffsetDelta > 0 ? DB_ERASE_NEW_ALLOCATION : DB_ERASE_EXCESS_ALLOCATION);
+		if ((BYTE)result)
+			return result;
+	}
+
+	return (CDBRESULT)result;
+}
+
+CDBRESULT Database::MoveTableDefinition(CWORD startAddrOffset, CSHORT addrOffsetDelta, CBOOL eraseNewOrExcessAllocation)
+{
+	PIDBTABLE table = NULL;
+	DBRESULT result = DbResult::SUCCESS;
+
+	for (BYTE i = 0; i < _TableCount; i++)
+	{
+		if (addrOffsetDelta < 0)
+			table = _Tables[i];
+		else
+			table = _Tables[_TableCount - i - 1];
+
+		if (table->GetAddrOffset() <= startAddrOffset)
+			return (CDBRESULT)result;
+
+		result = (CDBRESULT)table->MoveDefinition(addrOffsetDelta,
+			addrOffsetDelta > 0 ? DB_ERASE_NEW_ALLOCATION : DB_ERASE_EXCESS_ALLOCATION);
 		if ((BYTE)result)
 			return result;
 	}

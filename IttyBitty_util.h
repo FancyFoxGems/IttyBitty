@@ -24,6 +24,7 @@
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
 #define ALWAYS_INLINE				__attribute__((always_inline))
+#define ALIAS(reference)			__attribute__ ((weakref(STR(reference))))
 #define PACKED						__attribute__ ((packed))
 #define PACKED_UNION				UNION PACKED
 #define PACKED_STRUCT				STRUCT PACKED
@@ -186,10 +187,12 @@ using std::extent;
 
 #define CODE_FILE_NAME()				_builtin_FILE()
 #define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
+#define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
 #define CODE_LINE_NUMBER()				_builtin_LINE()
 
 #define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
 #define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
+#define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
 #define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
 
 #define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)

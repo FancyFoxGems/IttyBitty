@@ -120,6 +120,8 @@ namespace IttyBitty
 
 		CSTORAGERESULT Read(PBYTE, RCDWORD);
 		CSTORAGERESULT Write(PCBYTE, RCDWORD);
+
+		CSTORAGERESULT Erase(RCDWORD);
 	};
 
 #pragma endregion
@@ -172,14 +174,14 @@ namespace IttyBitty
 		CSTORAGERESULT Open(CBOOL = FALSE);
 		CSTORAGERESULT Close();
 
+		CSTORAGERESULT Flush();
+
 		CSTORAGERESULT Seek(RCDWORD);
 
 		CSTORAGERESULT Read(PBYTE, RCDWORD);
 		CSTORAGERESULT Write(PCBYTE, RCDWORD);
 
-		CSTORAGERESULT Flush();
-
-		CSTORAGERESULT Erase(RCDWORD, CBOOL = TRUE);
+		CSTORAGERESULT Erase(RCDWORD);
 
 
 	protected:
@@ -250,12 +252,12 @@ namespace IttyBitty
 			return StorageResult::ERROR_MEDIA_READ_FAILURE;
 		}
 
-		CSTORAGERESULT Erase(RCDWORD size, CBOOL writeEraseValue = TRUE)
+		CSTORAGERESULT Erase(RCDWORD size)
 		{
-			if (writeEraseValue)
-				_ExtEEPROM.Erase(size);
+			if (_ExtEEPROM.Erase(size) == size)
+				return StorageResult::SUCCESS;
 
-			return StorageResult::SUCCESS;
+			return StorageBase::Erase(size);
 		}
 
 	protected:

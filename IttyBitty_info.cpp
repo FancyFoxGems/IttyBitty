@@ -200,9 +200,9 @@ namespace IttyBitty
 
 	// TOTAL RAM FUNCTION ALIASES
 
-	CWORD (*MemorySize)() = TotalRamSize;
-	CWORD (*MemoryUsed)() = &TotalRamUsed;
-	CWORD (*MemoryFree)() = &TotalRamFree;
+	CWORD (&MemorySize)() = TotalRamSize;
+	CWORD (&MemoryUsed)() = TotalRamUsed;
+	CWORD (&MemoryFree)() = TotalRamFree;
 
 #pragma endregion
 
@@ -252,9 +252,9 @@ namespace IttyBitty
 
 	// FLASH ROM FUNCTION ALIASES
 
-	CDWORD (*ProgMemTotalSize)() = &FlashRomTotalSize;
-	CDWORD (*ProgMemUsed)() = &FlashDetectRomUsed;
-	CDWORD (*ProgMemFree)() = &FlashRomFree;
+	CDWORD (&ProgMemTotalSize)() = FlashRomTotalSize;
+	CDWORD (&ProgMemUsed)() = FlashDetectRomUsed;
+	CDWORD (&ProgMemFree)() = FlashRomFree;
 
 #pragma endregion
 
@@ -293,7 +293,7 @@ namespace IttyBitty
 		#endif
 	}
 
-	CDWORD (*BootloaderSize)() = &BootloaderAllocatedSize;
+	CDWORD (&BootloaderSize)() = BootloaderAllocatedSize;
 
 
 	// SKETCH SPACE FUNCTIONS & ALIASES
@@ -321,7 +321,7 @@ namespace IttyBitty
 		return SketchSpaceTotalSize() - SketchSpaceUsed();
 	}
 
-	CDWORD (*SketchSize)() = &SketchSpaceUsed;
+	CDWORD (&SketchSize)() = SketchSpaceUsed;
 
 #pragma endregion
 }

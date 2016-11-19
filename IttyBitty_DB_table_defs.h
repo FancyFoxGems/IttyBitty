@@ -100,6 +100,7 @@ namespace IttyBitty
 
 		ERROR_MEDIA_ERASE						= ERROR_MEDIA | ERROR_OPERATION_DELETE,
 		ERROR_MEDIA_ERASE_FAILURE				= ERROR_MEDIA_ERASE,
+		ERROR_MEDIA_ERASE_NOT_ALLOWED			= ERROR_MEDIA_ERASE,
 
 		ERROR_MEDIA_READ						= ERROR_MEDIA | ERROR_OPERATION_READ,
 		ERROR_MEDIA_READ_FAILURE				= ERROR_MEDIA_READ,
@@ -108,6 +109,7 @@ namespace IttyBitty
 
 		ERROR_MEDIA_WRITE						= ERROR_MEDIA | ERROR_OPERATION_WRITE,
 		ERROR_MEDIA_WRITE_FAILURE				= ERROR_MEDIA_WRITE,
+		ERROR_MEDIA_WRITE_NOT_ALLOWED			= ERROR_MEDIA_WRITE,
 		ERROR_MEDIA_WRITE_INTERRUPTED			= ERROR_MEDIA_WRITE | ERROR_OPERATION_INTERRUPTED,
 	};
 
@@ -133,7 +135,7 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE RowSize() const = 0;
 
-		VIRTUAL CSIZE GetAddrOffset() const = 0;
+		VIRTUAL CWORD GetAddrOffset() const = 0;
 		VIRTUAL PCCHAR GetTableName() const = 0;
 
 
@@ -144,7 +146,7 @@ namespace IttyBitty
 
 		// MUTATORS
 
-		VIRTUAL VOID SetAddrOffset(CSIZE) = 0;
+		VIRTUAL VOID SetAddrOffset(CWORD) = 0;
 		VIRTUAL VOID SetTableName(PCCHAR) = 0;
 
 
@@ -172,7 +174,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		DbTableDef(RISTORAGE = IttyBitty::NULL_STORAGE(), CSIZE = 0, PCCHAR = NULL, CSIZE = 0);
+		DbTableDef(RISTORAGE = IttyBitty::NULL_STORAGE(), CSIZE = 0, PCCHAR = NULL, CWORD = 0);
 
 		EXPLICIT DbTableDef(PCBYTE, RISTORAGE = IttyBitty::NULL_STORAGE());
 		EXPLICIT DbTableDef(PCCHAR, RISTORAGE = IttyBitty::NULL_STORAGE());
@@ -213,10 +215,10 @@ namespace IttyBitty
 
 		VIRTUAL CSIZE RowSize() const;
 
-		VIRTUAL CSIZE GetAddrOffset() const;
+		VIRTUAL CWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 
-		VIRTUAL VOID SetAddrOffset(CSIZE);
+		VIRTUAL VOID SetAddrOffset(CWORD);
 		VIRTUAL VOID SetTableName(PCCHAR);
 
 
@@ -262,7 +264,7 @@ namespace IttyBitty
 		SIZE _RowSize = 0;
 		PCCHAR _TableName = NULL;
 
-		DWORD _AddrOffset = 0;
+		WORD _AddrOffset = 0;
 
 
 		// [IDbTableDef] IHELPER METHODS

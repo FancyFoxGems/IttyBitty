@@ -101,6 +101,11 @@ CSTORAGERESULT FlashRomStorageAdapter::Write(PCBYTE data, RCDWORD size)
 	return StorageResult::ERROR_MEDIA_WRITE_NOT_ALLOWED;
 }
 
+CSTORAGERESULT FlashRomStorageAdapter::Erase(RCDWORD size)
+{
+	return StorageResult::ERROR_MEDIA_ERASE_NOT_ALLOWED;
+}
+
 #pragma endregion
 
 
@@ -181,6 +186,13 @@ CSTORAGERESULT SdStorageAdapter::Close()
 	return StorageResult::SUCCESS;
 }
 
+CSTORAGERESULT SdStorageAdapter::Flush()
+{
+	_File.flush();
+
+	return StorageResult::SUCCESS;
+}
+
 CSTORAGERESULT SdStorageAdapter::Seek(RCDWORD address)
 {
 	if (!_File.seek(address))
@@ -205,14 +217,7 @@ CSTORAGERESULT SdStorageAdapter::Write(PCBYTE data, RCDWORD size)
 	return StorageResult::SUCCESS;
 }
 
-CSTORAGERESULT SdStorageAdapter::Flush()
-{
-	_File.flush();
-
-	return StorageResult::SUCCESS;
-}
-
-CSTORAGERESULT SdStorageAdapter::Erase(RCDWORD size, CBOOL writeEraseValue)
+CSTORAGERESULT SdStorageAdapter::Erase(RCDWORD size)
 {
 	if (size == 0)
 	{
@@ -220,7 +225,7 @@ CSTORAGERESULT SdStorageAdapter::Erase(RCDWORD size, CBOOL writeEraseValue)
 			return StorageResult::ERROR_MEDIA_ERASE_FAILURE;
 	}
 
-	return StorageBase::Erase(size, writeEraseValue);
+	return StorageBase::Erase(size);
 }
 
 #pragma endregion

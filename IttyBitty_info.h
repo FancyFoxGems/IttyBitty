@@ -176,9 +176,9 @@ namespace IttyBitty
 	CWORD TotalRamFree();
 
 
-	EXTERN CWORD (*MemorySize)();
-	EXTERN CWORD (*MemoryUsed)();
-	EXTERN CWORD (*MemoryFree)();
+	EXTERN CWORD (&MemorySize)();
+	EXTERN CWORD (&MemoryUsed)();
+	EXTERN CWORD (&MemoryFree)();
 
 #pragma endregion
 
@@ -232,9 +232,9 @@ namespace IttyBitty
 	CDWORD FlashRomUsed();
 	CDWORD FlashRomFree();
 
-	EXTERN CDWORD (*ProgMemTotalSize)();
-	EXTERN CDWORD (*ProgMemUsed)();
-	EXTERN CDWORD (*ProgMemFree)();
+	EXTERN CDWORD (&ProgMemTotalSize)();
+	EXTERN CDWORD (&ProgMemUsed)();
+	EXTERN CDWORD (&ProgMemFree)();
 
 #pragma endregion
 
@@ -243,14 +243,14 @@ namespace IttyBitty
 
 	CDWORD BootloaderAllocatedSize();
 
-	EXTERN CDWORD (*BootloaderSize)();
+	EXTERN CDWORD (&BootloaderSize)();
 
 
 	CDWORD SketchSpaceTotalSize();
 	CDWORD SketchSpaceUsed();
 	CDWORD SketchSpaceFree();
 
-	EXTERN CDWORD (*SketchSize)();
+	EXTERN CDWORD (&SketchSize)();
 
 #pragma endregion
 }

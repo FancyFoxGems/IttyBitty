@@ -38,7 +38,7 @@
 
 /* BIT-PACKED SPECIAL-FUNCTION REGISTER DECLARATIONS */
 
-// TODO: ...
+// TODO: Not yet implemented.
 
 
 

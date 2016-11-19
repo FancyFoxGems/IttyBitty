@@ -191,12 +191,12 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL BIT operator[](PIN_NUMBER p) const
+		VIRTUAL INLINE BIT operator[](PIN_NUMBER p) const ALWAYS_INLINE
 		{
-			return this->CheckPin(p);
+			return this->CheckPinSet(p);
 		}
 
-		VIRTUAL BITREF operator[](PIN_NUMBER p)
+		VIRTUAL INLINE BITREF operator[](PIN_NUMBER p) ALWAYS_INLINE
 		{
 			return this->PinState(p);
 		}
@@ -222,24 +222,24 @@ namespace IttyBitty
 			this->SetPinMode(p, (PinModeBasic)arduinoMode);
 		}
 
-		VIRTUAL CBIT ReadPin(PIN_NUMBER p) const
-		{
-			return _Registers->InputReg[p];
-		}
-
-		VIRTUAL CBIT CheckPin(PIN_NUMBER p) const
-		{
-			return _Registers->InputReg[p];
-		}
-
 		VIRTUAL CBIT CheckPinSet(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
 		}
 
-		VIRTUAL CBIT CheckPinUnset(PIN_NUMBER p) const
+		VIRTUAL INLINE CBIT ReadPin(PIN_NUMBER p) const ALWAYS_INLINE
 		{
-			return NOT _Registers->InputReg[p];
+			return this->CheckPinSet(p);
+		}
+
+		VIRTUAL INLINE CBIT CheckPin(PIN_NUMBER p) const ALWAYS_INLINE
+		{
+			return this->CheckPinSet(p);
+		}
+
+		VIRTUAL INLINE CBIT CheckPinUnset(PIN_NUMBER p) const ALWAYS_INLINE
+		{
+			return NOT this->CheckPinSet(p);
 		}
 
 		VIRTUAL BITREF PinState(PIN_NUMBER p)
@@ -252,19 +252,19 @@ namespace IttyBitty
 			_Registers->OutputReg[p] = state;
 		}
 
-		VIRTUAL VOID SetPin(PIN_NUMBER p)
+		VIRTUAL INLINE VOID SetPin(PIN_NUMBER p) ALWAYS_INLINE
 		{
-			_Registers->OutputReg[p] = 1;
+			this->WritePin(p, HIGH);
 		}
 
-		VIRTUAL VOID ClearPin(PIN_NUMBER p)
+		VIRTUAL INLINE VOID ClearPin(PIN_NUMBER p) ALWAYS_INLINE
 		{
-			_Registers->OutputReg[p] = 0;
+			this->WritePin(p, LOW);
 		}
 
 		VIRTUAL VOID TogglePin(PIN_NUMBER p)
 		{
-			_Registers->InputReg[p] = !this->ReadPin(p);
+			_Registers->InputReg[p] = !_Registers->InputReg[p];
 		}
 
 		VIRTUAL VOID ResetPin(PIN_NUMBER p)
@@ -315,20 +315,13 @@ namespace IttyBitty
 			PortPtr->SetPinMode(PinNum, (CPINMODEBASIC)arduinoMode);
 		}
 
-		STATIC CBIT Read()
-		{
-			return PortPtr->ReadPin(PinNum);
-		}
-
-		STATIC CBIT Check()
-		{
-			return PortPtr->CheckPin(PinNum);
-		}
-
 		STATIC CBIT CheckSet()
 		{
 			return PortPtr->CheckPinSet(PinNum);
 		}
+
+		STATIC CBIT Read() ALIAS(CheckSet);
+		STATIC CBIT Check() ALIAS(CheckSet);
 
 		STATIC CBIT CheckUnset()
 		{
