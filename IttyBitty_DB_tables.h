@@ -102,11 +102,18 @@ namespace IttyBitty
 		}
 
 		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
+		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
 
 		template DEFAULT_T_CLAUSE
 		CDBRESULT Insert(CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
 		{
 			return this->Insert(reinterpret_cast<PCBYTE>(rowData), insertIdx);
+		}
+
+		template DEFAULT_T_CLAUSE
+		CDBRESULT Insert(RIDBTABLESET tableSet, CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		{
+			return this->Insert(tableSet, reinterpret_cast<PCBYTE>(rowData), insertIdx);
 		}
 
 		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE) = 0;
@@ -223,6 +230,7 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT Find(CSIZE, PBYTE &, PSIZE = NULL);
 
 		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_OF(SIZE));
+		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE));
 		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE);
 
 		VIRTUAL CDBRESULT Delete(CSIZE);
@@ -283,6 +291,11 @@ namespace IttyBitty
 		DWORD _DataAddrOffset = 0;
 
 		PIDBTABLEDEF _TableDef = NULL;
+
+
+		// HELPER METHODS
+
+		VIRTUAL CDBRESULT InsertRow(PIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE));
 
 
 		// [IDbTable] HELPER METHODS

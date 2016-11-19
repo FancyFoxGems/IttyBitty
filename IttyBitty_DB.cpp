@@ -500,7 +500,7 @@ CDBRESULT Database::InsertInto(CBYTE tableIdx, PCBYTE rowData, CSIZE insertIdx)
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Insert(rowData, insertIdx);
+	return table->Insert(*this, rowData, insertIdx);
 }
 
 CDBRESULT Database::InsertInto(PCCHAR tableName, PCBYTE rowData, CSIZE insertIdx)
@@ -510,7 +510,7 @@ CDBRESULT Database::InsertInto(PCCHAR tableName, PCBYTE rowData, CSIZE insertIdx
 	if (!table)
 		return DbResult::ERROR_ARGUMENT_OUT_OF_RANGE;
 
-	return table->Insert(rowData, insertIdx);
+	return table->Insert(*this, rowData, insertIdx);
 }
 
 
