@@ -26,6 +26,34 @@
 #define DEFAULT_T_ARGS		<T>
 
 
+/* TYPE TRAIT MACROS */
+
+#define IS_ABSTRACT(type)					__is_abstract(type)
+#define IS_BASE_OF(base_type, type)			__is_base_of (base_type, type)
+#define IS_CLASS(type)						__is_class(type)
+#define IS_EMPTY(type)						__is_empty(type)
+#define IS_ENUM(type)						__is_enum(type)
+#define IS_LITERAL_TYPE(type)				__is_literal_type(type)
+#define IS_POD(type)						__is_pod(type)
+#define IS_POLYMORPHIC(type)				__is_polymorphic(type)
+#define IS_STANDARD_LAYOUT(type)			__is_standard_layout(type)
+#define IS_TRIVIAL(type)					__is_trivial(type)
+#define IS_UNION(type)						__is_union(type)
+
+#define ENUM_UNDERLYING_TYPE(type)			__underlying_type(type)
+
+#define HAS_NOTHROW_ASSIGNMENT(type)		__has_nothrow_assign(type)
+#define HAS_NOTHROW_COPY(type)				__has_nothrow_copy(type)
+#define HAS_NOTHROW_CONSTRUCTOR(type)		__has_nothrow_constructor(type)
+#define HAS_TRIVIAL_ASSIGNMENT(type)		__has_trivial_assign(type)
+#define HAS_TRIVIAL_COPY(type)				__has_trivial_copy(type)
+#define HAS_TRIVIAL_CONSTRUCTOR(type)		__has_trivial_constructor(type)
+#define HAS_TRIVIAL_DESTRUCTOR(type)		__has_trivial_destructor(type)
+#define HAS_VIRTUAL_DESTRUCTOR(type)		__has_virtual_destructor(type)
+
+#define TYPE_ARG_IS_SAME(T1, T2)			__is_same (T1, T2)
+
+
 namespace std
 {
 	/* [identity]: METAFUNCTION BASE WHICH ENCAPSULATES ITS OWN TEMPLATED TYPE */
