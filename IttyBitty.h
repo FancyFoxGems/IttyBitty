@@ -1,7 +1,7 @@
 /************************************************************************************************
 * Name:		Itty Bitty (Arduino Library)
 * Created:	3/20/2016
-* Author:		Tom Biuso <tjbtech@yahoo.com>
+* Author:	Tom Biuso <tjbtech@yahoo.com>
 *
 * Target Architecture:	Atmel AVR, especially ATmega series 8-bit MCUs
 * Supported Platforms:	Arduino, AVR LibC, (AVR GCC)

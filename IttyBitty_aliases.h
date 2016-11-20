@@ -354,6 +354,12 @@ typedef decltype(nullptr) nullptr_t;
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(nullptr_t, NULLPTR);
 
 
+#ifdef ARDUINO
+#include "WString.h"
+typedef const __FlashStringHelper * FLASH_STRING, * FSTRING, * PROGMEM_STRING, * PROG_STRING;
+#endif
+
+
 /* DATA TYPE ALIAS MACROS FOR SIGNAGE */
 
 #define SIGNED(T) SIGNED_##T
