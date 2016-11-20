@@ -186,19 +186,21 @@ using std::extent;
 #define IGNORE_WARNING(w)				PRAGMA_MACRO(GCC diagnostic ignored #w)
 
 #define CODE_FILE_NAME()				_builtin_FILE()
+#define CODE_LINE_NUMBER()				_builtin_LINE()
 #define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
 #define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
-#define CODE_LINE_NUMBER()				_builtin_LINE()
 
 #define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
+#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
 #define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
 #define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
-#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
 
 #define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)
 #define PRINT_VAR(var)					PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
 
-#define PRINT_COMPILE_CONST(var)		char(overflow<TYPEOF(var), var>())
+#define PRINT_COMPILE_CONST(var)											\
+	std::overflow<TYPEOF(var), var> _PRINT_COMPILE_CONST_##var;				\
+	TYPEOF(var) __PRINT_COMPILE_CONST_##var = _PRINT_COMPILE_CONST_##var()
 
 
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
@@ -242,9 +244,6 @@ INLINE PVOID operator new[](SIZE size, PVOID ptr)
 
 
 /* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */
-
-template<typename T, T N>
-struct overflow { char operator()() { return N + 256; } };
 
 template<typename T, typename R = VOID, typename ... args>
 INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)

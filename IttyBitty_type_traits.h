@@ -56,6 +56,19 @@
 
 namespace std
 {
+	/* [overflow]: METAFUNCTION WHICH CAUSES A DATA OVERFLOW AT COMPILE-TIME  (Used to print constants at compile-time) */
+
+	template<typename T, T N>
+	STRUCT overflow
+	{
+		operator T() { return N + ((T)T(0) - 0b1) + 1; }
+
+		operator char() { return 127 + 1; }
+
+		char operator ()() { return N + ((T)T(0) - 0b1) + 1; }
+	};
+
+
 	/* [identity]: METAFUNCTION BASE WHICH ENCAPSULATES ITS OWN TEMPLATED TYPE */
 
 	template<typename T = VOID>
