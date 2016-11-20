@@ -3,7 +3,8 @@
 *
 *
 *	LIBRARY - BASE BUNDLE: FULL LIBRARY FUNCTIONALITY MINUS HEAVY DATA STRUCTURES
-*	Memory Usage: < 6.85 KB Program Memory (Flash ROM) / < 660 B SRAM
+*
+*		Memory Usage:	~6.31 KB Program Memory (Flash ROM) / 657 B SRAM
 *
 * INCLUDES:
 *

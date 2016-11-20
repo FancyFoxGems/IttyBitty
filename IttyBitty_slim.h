@@ -3,8 +3,9 @@
 *
 *
 *	LIBRARY - SLIM BUNDLE: BASIC UTILITY, BIT MANIPULATION, & PIN MACROS/FUNCTIONS ONLY
-*		Memory Usage:	< 2.75 KB Program Memory (Flash ROM) / < 400 B SRAM
-*	NOTE: Uses very little program space or volatile memory! --^
+*
+*		Memory Usage:	~1.93 KB Program Memory (Flash ROM) / 225 B SRAM
+*		NOTE: Uses very little program space or system memory! --^
 *
 * INCLUDES:
 *
