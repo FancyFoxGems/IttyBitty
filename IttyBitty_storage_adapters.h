@@ -14,7 +14,7 @@
 
 #include "IttyBitty_info.h"
 
-#ifdef ARDUINO
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM_I2C)
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
