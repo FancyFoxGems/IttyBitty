@@ -97,6 +97,7 @@
 /* MASK GENERATOR MACROS */
 
 #define BIT_MASK(bit_offset)		_BV(bit_offset)
+#define B(bit_offset)				_BV(bit_offset)
 #define BMASK(bit_offset)			BIT_MASK(bit_offset)
 #define NOT_BIT(bit_offset)			INV BIT_MASK(bit_offset)
 
