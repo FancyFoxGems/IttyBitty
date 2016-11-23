@@ -35,6 +35,7 @@
 #define SIZEOF(var)					sizeof(var)
 
 #define countof(var)				(SIZEOF(var) / SIZEOF(0[var]))
+#define COUNTOF(var)				countof(var)
 #define COUNT(var)					countof(var)
 
 

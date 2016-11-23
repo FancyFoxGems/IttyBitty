@@ -66,7 +66,7 @@ namespace IttyBitty
 
 	enum DataSize : BYTE
 	{
-		WHO_KNOWS	= 0x0,
+		WHO_KNOWS	= 0x00,
 		ONE_BYTE	= 0x10,
 		TWO_BYTES	= 0x20,
 		THREE_BYTES	= 0x40,
@@ -109,7 +109,12 @@ namespace IttyBitty
 
 	STATIC CDATASIZE DataTypeToDataSize(CDATATYPE dataType)
 	{
-		return static_cast<CDATASIZE>(MASK((CBYTE)dataType, DATA_SIZE_MASK));
+		return static_cast<CDATASIZE>(HIGH_NYBBLE((CBYTE)dataType));
+	}
+
+	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE dataType)
+	{
+		return static_cast<CDATATYPEFORMAT>(LOW_NYBBLE((CBYTE)dataType));
 	}
 
 #pragma endregion

@@ -18,8 +18,6 @@ using namespace IttyBitty;
 CWORD IttyBitty::SERIAL_DEFAULT_TIMEOUT_MS = 1000;
 #endif
 
-CBYTE IttyBitty::DATA_SIZE_MASK = 0xF0;
-
 PBYTE IttyBitty::__datum_buffer = NULL;
 
 #pragma endregion
