@@ -80,7 +80,7 @@ VOID Database::Dispose(CBOOL forceDispose)
 	if (!_Tables)
 		return;
 
-	if (_Dispose || forceDispose)
+	if (_Dispose OR forceDispose)
 	{
 		for (BYTE i = 0; i < _TableCount; i++)
 		{

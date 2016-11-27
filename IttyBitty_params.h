@@ -615,7 +615,7 @@ namespace IttyBitty
 
 		SIZE length = static_cast<SIZE>(*data);
 
-		if (length == 0 || length > 4)
+		if (length == 0 OR length > 4)
 			datum = new VarLengthParam();
 		else
 			datum = new Param();
@@ -632,7 +632,7 @@ namespace IttyBitty
 
 		StringReadValue<SIZE>(length, data);
 
-		if (length == 0 || length > 4)
+		if (length == 0 OR length > 4)
 			datum = new VarLengthParam();
 		else
 			datum = new Param();

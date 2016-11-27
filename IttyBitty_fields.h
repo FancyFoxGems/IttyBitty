@@ -676,7 +676,7 @@ namespace IttyBitty
 
 		SIZE length = static_cast<SIZE>(*data);
 
-		if (length == 0 || length > 4)
+		if (length == 0 OR length > 4)
 			datum = new VarLengthField();
 		else
 			datum = new Field();
@@ -693,7 +693,7 @@ namespace IttyBitty
 
 		StringReadValue<SIZE>(length, data);
 
-		if (length == 0 || length > 4)
+		if (length == 0 OR length > 4)
 			datum = new VarLengthField();
 		else
 			datum = new Field();

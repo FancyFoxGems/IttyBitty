@@ -471,9 +471,9 @@ namespace IttyBitty
 
 				++this->Address;
 
-				if (this->Address % PageSize() == 0 && bytesRead < size)
+				if (this->Address % PageSize() == 0 AND bytesRead < size)
 				{
-					if (Wire.endTransmission() || this->SendAddressWords())
+					if (Wire.endTransmission() OR this->SendAddressWords())
 						return bytesRead;
 
 					Wire.requestFrom((INT)BuildDeviceAddressWord(), (INT)(size - bytesRead), FALSE);
@@ -500,9 +500,9 @@ namespace IttyBitty
 
 			while (bytesWritten < size)
 			{
-				if (bytesWritten % PageWriteBytes == 0 || this->Address % PageSize() == 0)
+				if (bytesWritten % PageWriteBytes == 0 OR this->Address % PageSize() == 0)
 				{
-					if (bytesWritten > 0 && Wire.endTransmission())
+					if (bytesWritten > 0 AND Wire.endTransmission())
 						return bytesWritten;
 
 					if (this->SendAddressWords(bytesWritten == 0))
@@ -579,8 +579,8 @@ namespace IttyBitty
 		STATIC CONSTEXPR CBYTE PageAddressBits()
 		{
 			return (CapacityKb() == 0x0010) ? 3 :
-				(CapacityKb() == 0x0008 || CapacityKb() == 0x0800) ? 2 :
-					(CapacityKb() == 0x0004 || CapacityKb() == 0x0400) ? 1 : 0;
+				(CapacityKb() == 0x0008 OR CapacityKb() == 0x0800) ? 2 :
+					(CapacityKb() == 0x0004 OR CapacityKb() == 0x0400) ? 1 : 0;
 		}
 
 		STATIC CONSTEXPR CBYTE DeviceNumberBits()

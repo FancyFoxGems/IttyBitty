@@ -118,7 +118,7 @@ ByteField::ByteField(RCBYTEFIELD other)
 
 ByteField::~ByteField()
 {
-	if (_DisposeByte && _pByte)
+	if (_DisposeByte AND _pByte)
 	{
 		//delete _pByte;
 		_pByte = NULL;

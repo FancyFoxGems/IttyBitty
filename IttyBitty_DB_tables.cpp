@@ -658,7 +658,7 @@ CSTORAGERESULT DbTable::MoveData(RCLONG dataAddrOffsetDelta, RCDWORD startDataAd
 		++relativeAddrIter;
 	}
 
-	if (eraseNewOrExcessAllocation && dataAddrOffsetDelta > 0)
+	if (eraseNewOrExcessAllocation AND dataAddrOffsetDelta > 0)
 	{
 		endAddr = (RCLONGLONG)_DataAddrOffset + (RCLONGLONG)startDataAddr;
 		targetAddr = endAddr - dataAddrOffsetDelta + 1;
@@ -739,7 +739,7 @@ CSTORAGERESULT DbTable::MoveDefinition(CSHORT addrOffsetDelta, CBOOL eraseNewOrE
 		++relativeAddrIter;
 	}
 
-	if (eraseNewOrExcessAllocation && addrOffsetDelta > 0)
+	if (eraseNewOrExcessAllocation AND addrOffsetDelta > 0)
 	{
 		endAddr = headerAddrOffset;
 		targetAddr = endAddr - addrOffsetDelta + 1;
