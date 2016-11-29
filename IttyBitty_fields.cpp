@@ -4,7 +4,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(NO_ITTYBITTY_DB) && !defined(NO_ITTYBITTY_FIELDS)
+#if defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_VALUES) || defined(NO_ITTYBITTY_DATUM) || \
+		defined(NO_ITTYBITTY_DB) && defined(NO_ITTYBITTY_SETTINGS)
 	#define NO_ITTYBITTY_FIELDS
 #endif
 

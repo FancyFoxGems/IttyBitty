@@ -45,6 +45,9 @@
     <Filter Include="Database">
       <UniqueIdentifier>{0d299d15-6c23-4f0a-b817-6fa42bc4004c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Display">
+      <UniqueIdentifier>{0d299d15-6c23-4f0a-b817-6fa42bc4004d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Info">
       <UniqueIdentifier>{e616ff74-90ee-44b3-92d6-d70e7a3436d2}</UniqueIdentifier>
     </Filter>
@@ -158,6 +161,24 @@
     <ClInclude Include="..\IttyBitty_DB_tables.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_chars.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_extensions.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_extensions_decl.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_extensions_big.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_extensions_big_decl.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_I2C.h">
+      <Filter>Display</Filter>
+    </ClInclude>
     <ClInclude Include="..\avr_cpunames.h">
       <Filter>Info</Filter>
     </ClInclude>
@@ -173,7 +194,7 @@
     <ClInclude Include="..\IttyBitty_GPIO_portpins.h">
       <Filter>IO</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_led.h">
+    <ClInclude Include="..\IttyBitty_LED.h">
       <Filter>IO</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_signals.h">
@@ -313,6 +334,9 @@
     <ClCompile Include="..\IttyBitty_timers.cpp">
       <Filter>Control</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_datum.cpp">
       <Filter>Data</Filter>
     </ClCompile>
@@ -334,10 +358,25 @@
     <ClCompile Include="..\IttyBitty_DB_tables.cpp">
       <Filter>Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_chars.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_extensions.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_extensions_big.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_extensions_big_font.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_I2C.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_GPIO.cpp">
       <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_led.cpp">
+    <ClCompile Include="..\IttyBitty_LED.cpp">
       <Filter>IO</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_signals.cpp">

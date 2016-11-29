@@ -7,10 +7,6 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) && !defined(ITTYBITTY_EEPROM_I2C_H)
-	#define _ITTYBITTY_EEPROM_I2C_H
-#endif
-
 #ifndef _ITTYBITTY_EEPROM_I2C_H
 #define _ITTYBITTY_EEPROM_I2C_H
 

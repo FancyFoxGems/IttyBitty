@@ -16,19 +16,19 @@
 *
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
-* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
-*
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
 *	NOTE: ^-- Base bundle excludes data structures for larger blocks
 *
+* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
+*
+* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
+*
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
 * [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
-*
-* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
 *
 * [IttyBitty_values.h]: UNIVERSAL TYPE (TAGGED) UNIONS
 *
@@ -41,28 +41,15 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ************************************************************************************************/
 
-#ifndef ITTYBITTY_BASE
-	#define ITTYBITTY_BASE
-#endif
+#define ITTYBITTY_BASE
 
-#ifndef NO_ITTYBITTY_FULL_BYTES
+#ifndef NO_ITTYBITTY)BYTES
 	#define NO_ITTYBITTY_FULL_BYTES
 #endif
 
-#ifndef NO_ITTYBITTY_INTERRUPTS
-	#define NO_ITTYBITTY_INTERRUPTS
-#endif
-
-#ifndef NO_ITTYBITTY_STORAGE
-	#define NO_ITTYBITTY_STORAGE
-#endif
-
-#ifndef NO_ITTYBITTY_EEPROM_I2C
-	#define NO_ITTYBITTY_EEPROM_I2C
-#endif
-
-#ifndef NO_ITTYBITTY_DB
-	#define NO_ITTYBITTY_DB
-#endif
+#define NO_ITTYBITTY_STORAGE
+#define NO_ITTYBITTY_EEPROM_I2C
+#define NO_ITTYBITTY_DB
+#define NO_ITTYBITTY_LCD_I2C
 
 #include "IttyBitty.h"

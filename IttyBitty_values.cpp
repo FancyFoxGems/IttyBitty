@@ -4,11 +4,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(NO_ITTYBITTY_FIELDS) && !defined(NO_ITTYBITTY_CONSTVALUES)
-	#define NO_ITTYBITTY_CONSTVALUES
+#ifdef ITTYBITTY_SLIM
+	#define NO_ITTYBITTY_VALUES
 #endif
 
-#ifndef NO_ITTYBITTY_CONSTVALUES
+#ifndef NO_ITTYBITTY_VALUES
 
 
 #include "IttyBitty_values.h"

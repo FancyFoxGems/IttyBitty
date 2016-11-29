@@ -4,11 +4,12 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(NO_ITTYBITTY_PARAMS) && !defined(NO_ITTYBITTY_MESSAGES)
+#if defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_PARAMS)
 	#define NO_ITTYBITTY_MESSAGES
 #endif
 
 #ifndef NO_ITTYBITTY_MESSAGES
+
 
 #include "IttyBitty_messages.h"
 

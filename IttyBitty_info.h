@@ -26,7 +26,6 @@
 
 #include <avr/boot.h>
 #include <avr/eeprom.h>
-#include <avr/pgmspace.h>
 #include <avr/wdt.h>
 
 

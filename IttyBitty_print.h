@@ -6,19 +6,13 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) && !defined(NO_ITTYBITTY_PRINT)
-	#define NO_ITTYBITTY_PRINT
-	#define _ITTYBITTY_PRINT_H
-#endif
-
-
 #ifndef _ITTYBITTY_PRINT_H
 #define _ITTYBITTY_PRINT_H
 
 
-#include "HardwareSerial.h"
-
 #include "IttyBitty_util.h"
+
+#include "HardwareSerial.h"
 
 
 #pragma region DEFINES

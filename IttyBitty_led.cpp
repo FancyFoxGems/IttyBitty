@@ -4,7 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_LED)
+#ifdef ITTYBITTY_SLIM
 	#define NO_ITTYBITTY_LED
 #endif
 

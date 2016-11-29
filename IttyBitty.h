@@ -39,6 +39,8 @@
 *
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
+* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
+*
 * [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
 *
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
@@ -51,8 +53,6 @@
 *
 * [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
 *
-* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
-*
 * [IttyBitty_values.h]: UNIVERSAL TYPE (TAGGED) UNIONS
 *
 * [IttyBitty_fields.h]: UNIVERSAL DATA STRUCTURES FOR STORING SETTINGS & MESSAGE FIELDS
@@ -60,32 +60,42 @@
 * [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC
 *
 * [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA
-*
-* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT
+* [IttyBitty_storage_adapters.h]: LONG-TERM DATA STORAGE IMPLEMENTATIONS
 *
 * [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT
 *	(i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series)
+*
+* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT
+* [IttyBitty_DB_tables.h]: TABLE DATA STRUCTURES FOR STRUCTURED DATA STORAGE SUPPORT
+* [IttyBitty_DB_table_defs.h]: HEADERS/TABLE DEFINITIONS FOR STRUCTURED DATA STORAGE SUPPORT
+*
+* [IttyBitty_LCD_I2C.h]: SUPPORT FOR DRIVING HD44780-COMPATIBLE LCD DISPLAYS VIA I2C EXPANDERS
+* [IttyBitty_LCD_chars.h]: VALUE-ADDED SYMBOLS & ICONS FOR HD44780-COMPATIBLE LCD DISPLAYS
+* [IttyBitty_LCD_extensions.h]: EXTENDED FUNCTIONALITY FOR I2C-DRIVEN HD44780-COMPATIBLE
+* 	LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS
+* [IttyBitty_LCD_extensions_big.h]: ADDED SUPPORT FOR LARGE (TWO-ROW, MULTI-COLUMN)
+*	CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ************************************************************************************************/
 
-#ifndef _ITTYBITTY_
-#define _ITTYBITTY_ "FTW"
+#ifndef __AVR__
+	#define _ITTYBITTY_H	"OH NO! ; ("	// NOTE: AVR architecture compatibility only!
+#endif
 
-#ifdef __AVR__	// NOTE: AVR architecture compatibility only!
-
-
-//#include "IttyBitty_aliases.h"		// Included by [IttyBitty_type_traits.h]
-//#include "IttyBitty_type_traits.h"	// Included by [IttyBitty_util.h]
-//#include "IttyBitty_util.h"			// Included by [IttyBitty_bits.h]
+#ifndef _ITTYBITTY_H
+#define _ITTYBITTY_H		"FTW"
 
 
-/* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
-
-#if defined(ARDUINO) && !defined(NO_ITTYBITTY_INFO)
-	#include "IttyBitty_info.h"
+// Disable modules depending on the Arduino framework
+#ifndef ARDUINO
+	 #define NO_ITTYBITTY_INFO
+	 #define NO_ITTYBITTY_STORAGE_ADAPTERS
+	 #define NO_ITTYBITTY_EEPROM_I2C
+	 #define NO_ITTYBITTY_LCD_I2C
+	 #define NO_ITTYBITTY_PRINT
 #endif
 
 
@@ -95,6 +105,26 @@
 	#include "IttyBitty_bytes.h"
 #else
 	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
+#endif
+
+
+//#include "IttyBitty_util.h"					// Included by [IttyBitty_bits.h]
+//#include "IttyBitty_type_traits.h"			// Included by [IttyBitty_util.h]
+//#include "IttyBitty_aliases.h"				// Included by [IttyBitty_type_traits.h]
+
+
+/* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS */
+
+#ifndef NO_ITTYBITTY_PRINT
+	#include "IttyBitty_print.h"
+#endif
+
+
+/* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE */
+
+#ifndef NO_ITTYBITTY_INFO
+	#include "IttyBitty_info.h"
+	//#include "avr_cpunames.h"				// Included by [IttyBitty_info.h]
 #endif
 
 
@@ -119,53 +149,169 @@
 #endif
 
 
-/* [IttyBitty_LED.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING */
+/* [IttyBitty_timers.h]:  */
 
-#ifndef NO_ITTYBITTY_LED
-	#include "IttyBitty_LED.h"
+#ifndef NO_ITTYBITTY_TIMERS
+	#include "IttyBitty_timers.h"
 #endif
 
 
-/* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS */
+/* [IttyBitty_LED.h]: DATA TYPE FOR DEAD-EASY ON-BOARD & EXTERNAL LED BLINKING */
 
-#ifndef NO_ITTYBITTY_PRINT
-	#include "IttyBitty_print.h"
+#ifdef NO_ITTYBITTY_GPIO
+	#define NO_ITTYBITTY_LED
+#endif
+
+#ifndef NO_ITTYBITTY_LED
+
+	#include "IttyBitty_LED.h"
+	//#include "IttyBitty_gpio.h"				// Included by [IttyBitty_LED.h]
+
+#else
+
+	#ifndef NO_ITTYBITTY_GPIO
+		#include "IttyBitty_gpio.h"
+	#endif
+
+#endif
+
+
+// For Params & Fields; used by Messages, DB, & Settings modules
+
+#ifdef NO_ITTYBITTY_VALUES
+	#define NO_ITTYBITTY_DATUM
+#endif
+
+#ifdef NO_ITTYBITTY_DATUM
+	#define NO_ITTYBITTY_PARAMS
+	#define NO_ITTYBITTY_FIELDS
 #endif
 
 
 /* [IttyBitty_messages.h]: BASE SERIAL PROTOCOL DATA STRUCTURES & PARSING LOGIC */
 
+#ifdef NO_ITTYBITTY_PARAMS
+	#define NO_ITTYBITTY_MESSAGES
+#endif
+
 #ifndef NO_ITTYBITTY_MESSAGES
+
 	#include "IttyBitty_messages.h"
+
+	//#include "IttyBitty_params.h"			// Included by [IttyBitty_messages.h]
+	//#include "IttyBitty_datum.h"			// Included by [IttyBitty_params.h]
+	//#include "IttyBitty_values.h"			// Included by [IttyBitty_datum.h]
+
+#else
+
+	#define NO_ITTYBITTY_PARAMS
+
+	#ifndef NO_ITTYBITTY_DATUM
+
+		#include "IttyBitty_datum.h"
+
+	#else
+
+		#ifndef NO_ITTYBITTY_VALUES
+			#include "IttyBitty_values.h"
+		#endif
+
+	#endif
+
 #endif
 
 
 /* [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA */
 
-#if !defined(ARDUINO) || NO_ITTYBITTY_STORAGE_ADAPTERS
-	#include "IttyBitty_storage_adapters.h"
-	#define NO_ITTYBITTY_STORAGE
-#endif
-
 #ifndef NO_ITTYBITTY_STORAGE
-	#include "IttyBitty_storage.h"
+
+	/* [IttyBitty_storage_adapters.h]: LONG-TERM DATA STORAGE IMPLEMENTATIONS */
+	#ifndef NO_ITTYBITTY_STORAGE_ADAPTERS
+		#include "IttyBitty_storage_adapters.h"
+	#else
+		#include "IttyBitty_storage.h"
+	#endif
+
 #endif
 
 
 /* [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT (i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series) */
 
-#if !defined(ARDUINO) || defined(NO_ITTYBITTY_EEPROM_I2C)
+#ifdef NO_ITTYBITTY_EEPROM
+	#define NO_ITTYBITTY_EEPROM_I2C
+#endif
+
+#ifndef NO_ITTYBITTY_EEPROM_I2C
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
 
 /* [IttyBitty_DB.h]: STRUCTURED DATA STORAGE SUPPORT */
 
+#ifdef NO_ITTYBITTY_STORAGE
+	#define NO_ITTYBITTY_DB_TABLE_DEFS
+#endif
+
+#ifdef NO_ITTYBITTY_DB_TABLE_DEFS
+	#define NO_ITTYBITTY_DB_TABLES
+#endif
+
+#ifdef NO_ITTYBITTY_DB_TABLES
+	#define NO_ITTYBITTY_DB
+#endif
+
 #ifndef NO_ITTYBITTY_DB
+
 	#include "IttyBitty_DB.h"
+
+	//#include "IttyBitty_DB_tables.h"			// Included by [IttyBitty_DB.h]
+	//#include "IttyBitty_DB_table_defs.h"		// Included by [IttyBitty_DB_tables.h]
+	//#include "IttyBitty_fields.h"			// Included by [IttyBitty_DB_table_defs.h]
+
+#else
+
+	#ifndef NO_ITTYBITTY_FIELDS
+		#include "IttyBitty_fields.h"
+	#endif
+
 #endif
 
 
-#endif	// __AVR__
+
+/* [IttyBitty_LCD_I2C.h]: SUPPORT FOR DRIVING HD44780-COMPATIBLE LCD DISPLAYS VIA I2C EXPANDERS */
+
+#ifdef NO_ITTYBITTY_LCD
+	#define NO_ITTYBITTY_LCD_I2C
+#endif
+
+#ifdef NO_ITTYBITTY_LCD_BIG
+	#define NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+#endif
+
+#ifndef NO_ITTYBITTY_LCD_I2C
+
+	#include "IttyBitty_LCD_I2C.h"
+
+	/* [IttyBitty_LCD_chars.h]: VALUE-ADDED SYMBOLS & ICONS FOR HD44780-COMPATIBLE LCD DISPLAYS */
+
+	#ifndef NO_ITTYBITTY_LCD_CHARS
+		#include "IttyBitty_LCD_chars.h"
+	#endif
+
+	/* [IttyBitty_LCD_extensions.h]: EXTENDED FUNCTIONALITY FOR I2C-DRIVEN HD44780-COMPATIBLE
+		LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS */
+
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
+		#include "IttyBitty_LCD_extensions.h"
+	#endif
+
+	/* [IttyBitty_LCD_extensions_big.h]: ADDED SUPPORT FOR LARGE (TWO-ROW, MULTI-COLUMN)
+		CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS */
+
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+		#include "IttyBitty_LCD_extensions_big.h"
+	#endif
+
+#endif
 
 #endif

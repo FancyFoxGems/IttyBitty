@@ -6,7 +6,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#if defined(NO_ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_INFO)
+#ifdef NO_ITTYBITTY_SLIM
 	#define NO_ITTYBITTY_INFO
 #endif
 
@@ -14,18 +14,6 @@
 
 
 #include "IttyBitty_info.h"
-
-#ifdef ARDUINO
-	#include "Arduino.h"
-#endif
-
-#ifndef _AVR_CPU_NAME_
-	#include "avr_cpunames.h"
-#endif
-
-#include <avr/boot.h>
-#include <avr/eeprom.h>
-#include <avr/pgmspace.h>
 
 
 namespace IttyBitty

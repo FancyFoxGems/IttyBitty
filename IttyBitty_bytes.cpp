@@ -5,19 +5,10 @@
 ***********************************************************************************************/
 
 #ifdef ITTYBITTY_SLIM
-
-	#ifndef ITTYBITTY_BASE
-		#define ITTYBITTY_BASE
-	#endif
-
-	#ifndef NO_ITTYBITTY_BYTES
-		#define NO_ITTYBITTY_BYTES
-	#endif
-
-#elif defined(ITTYBITTY_BASE) && !defined(NO_ITTYBITTY_FULL_BYTES)
-
+	#define ITTYBITTY_BASE
+	#define NO_ITTYBITTY_BYTES
+#elif defined(ITTYBITTY_BASE)
 	#define NO_ITTYBITTY_FULL_BYTES
-
 #endif
 
 #ifndef NO_ITTYBITTY_BYTES

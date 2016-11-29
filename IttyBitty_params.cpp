@@ -4,7 +4,8 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(NO_ITTYBITTY_MESSAGES) && defined(NO_ITTYBITTY_STORAGE) && !defined(NO_ITTYBITTY_PARAMS)
+#if defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_VALUES) || \
+		defined(NO_ITTYBITTY_DATUM) || defined(NO_ITTYBITTY_MESSAGES)
 	#define NO_ITTYBITTY_PARAMS
 #endif
 

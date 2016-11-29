@@ -116,6 +116,7 @@ using std::extent;
 
 /* DATA TYPE SIZES */
 
+#define BITS_PER_NYBBLE		4
 #define BITS_PER_BYTE		8
 
 #define kilo				1000

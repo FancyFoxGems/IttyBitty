@@ -6,7 +6,8 @@
 } SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_SLIM) && !defined(NO_ITTYBITTY_DB)
+#if defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_STORAGE) || \
+		defined(NO_ITTYBITTY_TABLE_DEFS) || defined(NO_ITTYBITTY_TABLES)
 	#define NO_ITTYBITTY_DB
 #endif
 

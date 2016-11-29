@@ -9,12 +9,6 @@
 #ifndef _ITTYBITTY_REGISTERS_H
 #define _ITTYBITTY_REGISTERS_H
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
 
 /* [register] DECLARATION ALIAS */
 

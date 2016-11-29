@@ -4,27 +4,15 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_EEPROM)
-	#define NO_ITTYBITTY_EEPROM_I2C
+#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || \
+		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_BIG)
+	#define NO_ITTYBITTY_LCD_BIG
 #endif
 
-#ifndef NO_ITTYBITTY_EEPROM_I2C
+#ifndef NO_ITTYBITTY_LCD_BIG
 
 
-#include "IttyBitty_EEPROM_I2C.h"
-
-using namespace IttyBitty;
+#include "IttyBitty_LCD_extensions_big.h"
 
 
-#pragma region GLOBAL CONSTANT & VARIABLE DEFINITIONS
-
-CWORD IttyBitty::SERIAL_EEPROM_TIMEOUT_MS		= 500;
-CBYTE IttyBitty::SERIAL_EEPROM_WAIT_DELAY_MS	= 1;
-
-
-EEPROMI2C<> ExtEEPROM;
-
-#pragma endregion
-
-
-#endif // #ifndef NO_ITTYBITTY_EEPROM_I2C
+#endif	// #ifndef NO_ITTYBITTY_LCD_BIG

@@ -26,41 +26,23 @@
 * [IttyBitty_GPIO.h]: MACROS & FUNCTIONS FOR PIN ACCESS & MANIPULATION
 *	NOTE: ^-- In Slim bundle, excludes structures for port/pin access
 *
+* [IttyBitty_interrupts.h]:
+*	NOTE: ^-- In Slim bundle, excludes structures for interrupt management
+*
+* [IttyBitty_timers.h]:
+*	NOTE: ^-- In Slim bundle, excludes structures for timer management
+*
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT.
 ************************************************************************************************/
 
-#ifndef ITTYBITTY_SLIM
-	#define ITTYBITTY_SLIM
-#endif
+#define ITTYBITTY_SLIM
 
-#ifndef NO_ITTYBITTY_INFO
-	#define NO_ITTYBITTY_INFO
-#endif
-
-#ifndef NO_ITTYBITTY_BYTES
-	#define NO_ITTYBITTY_BYTES
-#endif
-
-#ifndef NO_ITTYBITTY_INTERRUPTS
-	#define NO_ITTYBITTY_INTERRUPTS
-#endif
-
-#ifndef NO_ITTYBITTY_TIMERS
-	#define NO_ITTYBITTY_TIMERS
-#endif
-
-#ifndef NO_ITTYBITTY_LED
-	#define NO_ITTYBITTY_LED
-#endif
-
-#ifndef NO_ITTYBITTY_PRINT
-	#define NO_ITTYBITTY_PRINT
-#endif
-
-#ifndef NO_ITTYBITTY_MESSAGES
-	#define NO_ITTYBITTY_MESSAGES
-#endif
+#define NO_ITTYBITTY_BYTES
+#define NO_ITTYBITTY_PRINT
+#define NO_ITTYBITTY_INFO
+#define NO_ITTYBITTY_LED
+#define NO_ITTYBITTY_VALUES
 
 #include "IttyBitty_base.h"

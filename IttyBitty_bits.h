@@ -101,7 +101,7 @@
 #define BMASK(bit_offset)			BIT_MASK(bit_offset)
 #define NOT_BIT(bit_offset)			INV BIT_MASK(bit_offset)
 
-#define NYBBLE_MASK(nybble_offset)	(0x0F << ((nybble_offset) * BITS_PER_BYTE / 2))
+#define NYBBLE_MASK(nybble_offset)	(0x0F << ((nybble_offset) * BITS_PER_NYBBLE))
 #define NOT_NYBBLE(nybble_offset)	INV NYBBLE_MASK(nybble_offset)
 
 #define BYTE_MASK(byte_offset)		(0xFF << ((byte_offset) * BITS_PER_BYTE))

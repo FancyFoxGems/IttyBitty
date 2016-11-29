@@ -88,7 +88,13 @@
     <ClInclude Include="..\IttyBitty_GPIO_portpins.h" />
     <ClInclude Include="..\IttyBitty_info.h" />
     <ClInclude Include="..\IttyBitty_interrupts.h" />
-    <ClInclude Include="..\IttyBitty_led.h" />
+    <ClInclude Include="..\IttyBitty_LCD_chars.h" />
+    <ClInclude Include="..\IttyBitty_LCD_extensions.h" />
+    <ClInclude Include="..\IttyBitty_LCD_extensions_decl.h" />
+    <ClInclude Include="..\IttyBitty_LCD_extensions_big.h" />
+    <ClInclude Include="..\IttyBitty_LCD_extensions_big_decl.h" />
+    <ClInclude Include="..\IttyBitty_LCD_I2C.h" />
+    <ClInclude Include="..\IttyBitty_LED.h" />
     <ClInclude Include="..\IttyBitty_messages.h" />
     <ClInclude Include="..\IttyBitty_params.h" />
     <ClInclude Include="..\IttyBitty_print.h" />
@@ -113,6 +119,7 @@
 	-->
     <ClCompile Include="..\Wire.cpp" />
     <ClCompile Include="..\utility\twi.c" />
+    <ClCompile Include="..\IttyBitty.cpp" />
     <ClCompile Include="..\IttyBitty_bits.cpp" />
     <ClCompile Include="..\IttyBitty_bytes.cpp" />
     <ClCompile Include="..\IttyBitty_datum.cpp" />
@@ -124,7 +131,12 @@
     <ClCompile Include="..\IttyBitty_GPIO.cpp" />
     <ClCompile Include="..\IttyBitty_info.cpp" />
     <ClCompile Include="..\IttyBitty_interrupts.cpp" />
-    <ClCompile Include="..\IttyBitty_led.cpp" />
+    <ClCompile Include="..\IttyBitty_LCD_chars.cpp" />
+    <ClCompile Include="..\IttyBitty_LCD_extensions.cpp" />
+    <ClCompile Include="..\IttyBitty_LCD_extensions_big.cpp" />
+    <ClCompile Include="..\IttyBitty_LCD_extensions_big_font.cpp" />
+    <ClCompile Include="..\IttyBitty_LCD_I2C.cpp" />
+    <ClCompile Include="..\IttyBitty_LED.cpp" />
     <ClCompile Include="..\IttyBitty_messages.cpp" />
     <ClCompile Include="..\IttyBitty_params.cpp" />
     <ClCompile Include="..\IttyBitty_print.cpp" />

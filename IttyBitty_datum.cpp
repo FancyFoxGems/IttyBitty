@@ -4,6 +4,10 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
+#if defined(ITTYBITTY_SLIM) || defined(NO_ITTYBITTY_VALUES)
+	#define NO_ITTYBITTY_DATUM
+#endif
+
 #ifndef NO_ITTYBITTY_DATUM
 
 

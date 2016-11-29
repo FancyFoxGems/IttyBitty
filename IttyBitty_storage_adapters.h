@@ -14,7 +14,7 @@
 
 #include "IttyBitty_info.h"
 
-#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM_I2C)
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM) && !defined(NO_ITTYBITTY_EEPROM_I2C)
 	#include "IttyBitty_EEPROM_I2C.h"
 #endif
 
@@ -27,8 +27,6 @@
 	#endif
 
 #endif
-
-#include <avr/pgmspace.h>
 
 
 #pragma region DEFINES

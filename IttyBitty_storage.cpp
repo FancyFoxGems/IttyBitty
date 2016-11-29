@@ -4,7 +4,7 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if defined(ITTYBITTY_BASE) && !defined(NO_ITTYBITTY_STORAGE)
+#ifdef ITTYBITTY_BASE
 	#define NO_ITTYBITTY_STORAGE
 #endif
 
