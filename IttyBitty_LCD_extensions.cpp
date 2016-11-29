@@ -13,8 +13,6 @@
 
 #include "IttyBitty_LCD_I2C.h"
 
-using namespace IttyBitty;
-
 
 namespace IttyBitty
 {

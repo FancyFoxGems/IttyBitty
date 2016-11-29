@@ -551,12 +551,12 @@ public:
 
 		if ((CBYTE)LcdSliderOptionsToLcdSliderEnds(options))
 		{
-			this->LoadCustomChar(0x5, LCD_CHAR_SLIDER_END_LEFT);
+			this->LoadCustomChar_P(0x5, LCD_CHAR_SLIDER_END_LEFT);
 
 			this->MoveCursor(startCol, row);
 			this->write(0x5);
 
-			this->LoadCustomChar(0x4, LCD_CHAR_SLIDER_END_RIGHT);
+			this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_RIGHT);
 
 			this->MoveCursor(startCol + widthChars - 1, row);
 			this->write(0x4);
