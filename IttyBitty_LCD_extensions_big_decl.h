@@ -94,12 +94,12 @@ public:
 
 	VOID LoadBigFont()
 	{
-		BYTE customChar[LCD_CHAR_HEIGHT];
+		BYTE customChar[CHAR_HEIGHT()];
 
-		for (BYTE i = 0; i < LCD_CHAR_HEIGHT; i++)
+		for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 		{
-			for (BYTE j = 0; j < LCD_CHAR_HEIGHT; j++)
-				customChar[j] = pgm_read_byte_near(LCD_BIG_FONT_SHAPES + (i * LCD_CHAR_HEIGHT) + j);
+			for (BYTE j = 0; j < CHAR_HEIGHT(); j++)
+				customChar[j] = pgm_read_byte_near(LCD_BIG_FONT_SHAPES + (i * CHAR_HEIGHT()) + j);
 
 			this->LoadCustomChar(i, customChar);
 		}

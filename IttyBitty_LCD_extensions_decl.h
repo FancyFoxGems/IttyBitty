@@ -18,11 +18,11 @@ protected:
 
 	PBYTE CreateScrollBarChar(BYTE cellPercentage, CLCDSCROLLBARINDICATOR indicator)
 	{
-		PBYTE scrollBarChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE scrollBarChar = new byte[CHAR_HEIGHT()];
 
-		BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * LCD_CHAR_HEIGHT / 100;
+		BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * CHAR_HEIGHT() / 100;
 
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 		{
 			if (pixY == scrollerRow)
 				scrollBarChar[pixY] = LCD_SCROLLER_PIXEL_ROW;
@@ -35,13 +35,13 @@ protected:
 
 	PBYTE CreateSpaceChar(CLCDSPACETYLE spaceStyle)
 	{
-		PBYTE spaceChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE spaceChar = new byte[CHAR_HEIGHT()];
 
 		switch (spaceStyle)
 		{
 		case LcdSpaceStyle::DASH_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				if (pixY == LCD_CELL_MIDDLE_PIXEL_ROW)
 					spaceChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
@@ -54,7 +54,7 @@ protected:
 
 		case LcdSpaceStyle::PLUS_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
@@ -82,12 +82,12 @@ protected:
 
 		case LcdSpaceStyle::SQUARE_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
 				case 2:
-				case LCD_CHAR_HEIGHT - 2:
+				case CHAR_HEIGHT() - 2:
 
 					spaceChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 					break;
@@ -110,7 +110,7 @@ protected:
 
 		case LcdSpaceStyle::DIAMOND_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				spaceChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
 
 			break;
@@ -118,7 +118,7 @@ protected:
 
 		case LcdSpaceStyle::CIRCLE_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				spaceChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_CIRCLE + pixY);
 
 			break;
@@ -126,12 +126,12 @@ protected:
 
 		case LcdSpaceStyle::LINES_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
 				case 0:
-				case LCD_CHAR_HEIGHT - 1:
+				case CHAR_HEIGHT() - 1:
 
 					spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
 					break;
@@ -148,7 +148,7 @@ protected:
 
 		case LcdSpaceStyle::DOTS_SPACE:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				if (pixY == LCD_CELL_MIDDLE_PIXEL_ROW)
 					spaceChar[pixY] = LCD_CELL_DOTS_PIXEL_ROW;
@@ -161,7 +161,7 @@ protected:
 
 		default:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				spaceChar[pixY] = LCD_CELL_BLANK_PIXEL_ROW;
 
 			break;
@@ -172,13 +172,13 @@ protected:
 
 	PBYTE CreateGraphFullCellChar(CLCDGRAPHCELL cellStyle, PBYTE spaceChar)
 	{
-		PBYTE fullCellChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE fullCellChar = new byte[CHAR_HEIGHT()];
 
 		switch (cellStyle)
 		{
 		case LcdGraphCell::BLOCK_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 
 			break;
@@ -186,7 +186,7 @@ protected:
 
 		case LcdGraphCell::LINE_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
 			fullCellChar[LCD_CELL_MIDDLE_PIXEL_ROW - 1] |= LCD_CELL_LINE_PIXEL_ROW;
@@ -197,7 +197,7 @@ protected:
 
 		case LcdGraphCell::PLUS_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
 			fullCellChar[3] |= LCD_CELL_CENTER_PIXEL_ROW;
@@ -209,7 +209,7 @@ protected:
 
 		case LcdGraphCell::SQUARE_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				fullCellChar[pixY] = spaceChar[pixY];
 
@@ -222,10 +222,10 @@ protected:
 
 		case LcdGraphCell::DISC_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
-			for (BYTE pixY = 2; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+			for (BYTE pixY = 2; pixY < CHAR_HEIGHT() - 1; pixY++)
 				fullCellChar[pixY] |= pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
@@ -233,10 +233,10 @@ protected:
 
 		case LcdGraphCell::DIAMOND_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = spaceChar[pixY];
 
-			for (BYTE pixY = 2; pixY < LCD_CHAR_HEIGHT - 1; pixY++)
+			for (BYTE pixY = 2; pixY < CHAR_HEIGHT() - 1; pixY++)
 				fullCellChar[pixY] |= pgm_read_byte_near(LCD_CHAR_SHAPE_DIAMOND + pixY);
 
 			fullCellChar[3] |= LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
@@ -247,7 +247,7 @@ protected:
 
 		case LcdGraphCell::STRIPES_CELL:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = LCD_CELL_DOTS_PIXEL_ROW;
 
 			break;
@@ -255,7 +255,7 @@ protected:
 
 		default:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				fullCellChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 		}
 
@@ -265,12 +265,12 @@ protected:
 
 	PBYTE CreateGraphPartialCellChar(BYTE cellPercentage, PBYTE fullCellChar, PBYTE spaceChar)
 	{
-		PBYTE partialCellChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE partialCellChar = new byte[CHAR_HEIGHT()];
 
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 		{
 			partialCellChar[pixY] = spaceChar[pixY] BOR MASK(fullCellChar[pixY],
-				LCD_CELL_LINE_PIXEL_ROW - (B((100 - cellPercentage) * LCD_CHAR_WIDTH / 100) - 1));
+				LCD_CELL_LINE_PIXEL_ROW - (B((100 - cellPercentage) * CHAR_WIDTH() / 100) - 1));
 		}
 
 		return partialCellChar;
@@ -278,9 +278,9 @@ protected:
 
 	PBYTE CreateGraphSemiFillCellChar(BYTE cellPercentage, PBYTE fullCellChar)
 	{
-		PBYTE semiCellChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE semiCellChar = new byte[CHAR_HEIGHT()];
 
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 		{
 			if (cellPercentage <= 33)
 				semiCellChar[pixY] = MASK(fullCellChar[pixY], LCD_CELL_SEMI_MASKS[0][pixY % 3]);
@@ -295,13 +295,13 @@ protected:
 
 	PBYTE CreateSliderMarker(CLCDSLIDERMARKER markerStyle)
 	{
-		PBYTE markerChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE markerChar = new byte[CHAR_HEIGHT()];
 
 		switch (markerStyle)
 		{
 		case LcdSliderMarker::CARET_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
@@ -328,7 +328,7 @@ protected:
 
 		case LcdSliderMarker::LINE_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = LCD_CELL_CENTER_PIXEL_ROW;
 
 			break;
@@ -336,7 +336,7 @@ protected:
 
 		case LcdSliderMarker::PLUS_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
@@ -364,7 +364,7 @@ protected:
 
 		case LcdSliderMarker::SQUARE_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			{
 				switch (pixY)
 				{
@@ -387,7 +387,7 @@ protected:
 
 		case LcdSliderMarker::DIAMOND_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
@@ -395,7 +395,7 @@ protected:
 
 		case LcdSliderMarker::DISC_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_ROUND + pixY);
 
 			break;
@@ -403,7 +403,7 @@ protected:
 
 		case LcdSliderMarker::TRIANGLE_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = pgm_read_byte_near(LCD_CHAR_SHAPE_TRIANGLE + pixY);
 
 			break;
@@ -411,7 +411,7 @@ protected:
 
 		case LcdSliderMarker::STRIPES_MARKER:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = LCD_CELL_DOTS_SPARSE_PIXEL_ROW;
 
 			break;
@@ -419,7 +419,7 @@ protected:
 
 		default:
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				markerChar[pixY] = LCD_CELL_LINE_PIXEL_ROW;
 		}
 
@@ -435,9 +435,9 @@ public:
 
 	PBYTE CreateInvertedChar(PBYTE lcdChar)
 	{
-		PBYTE newLcdChar = new byte[LCD_CHAR_HEIGHT];
+		PBYTE newLcdChar = new byte[CHAR_HEIGHT()];
 
-		for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 			newLcdChar[pixY] = LCD_CELL_LINE_PIXEL_ROW - lcdChar[pixY];
 
 		return newLcdChar;
@@ -445,9 +445,9 @@ public:
 
 	PBYTE CreateInvertedChar_P(PCCHAR lcdChar)
 	{
-		PCHAR lcdCharData = new char[LCD_CHAR_HEIGHT];
+		PCHAR lcdCharData = new char[CHAR_HEIGHT()];
 
-		for (BYTE i = 0; i < LCD_CHAR_HEIGHT; i++)
+		for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 			lcdCharData[i] = pgm_read_byte_near(lcdChar++);
 
 		return this->CreateInvertedChar((PBYTE)lcdCharData);
@@ -582,16 +582,21 @@ public:
 				this->MoveCursor(col + startCol, row);
 				this->write(0x7);
 
+				cellOffset = 0;
+
 				continue;
 			}
 
 			if(!cellOffset)
 			{
-				cellOffset = ((CHAR)((percentage % (100 / widthChars)) * widthChars) - 50) * (CHAR)LCD_CHAR_WIDTH / 100;
+				if (percentage % (100 / widthChars) == 0)
+					cellOffset = 2;
+				else
+					cellOffset = ((CHAR)((percentage % (100 / widthChars)) * widthChars) - 50) * (CHAR)CHAR_WIDTH() / 100;
 			}
 			else if (cellOffset < 0)
 			{
-				cellOffset += (CHAR)LCD_CHAR_WIDTH / 100;
+				cellOffset += (CHAR)CHAR_WIDTH() / 100;
 			}
 			else
 			{
@@ -603,7 +608,7 @@ public:
 
 			if (!cellOffset)
 			{
-				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 					markerChar[pixY] |= spaceChar[pixY];
 
 				this->LoadCustomChar(0x6, markerChar);
@@ -614,20 +619,20 @@ public:
 				continue;
 			}
 
-			partialMarkerChar = new byte[LCD_CHAR_HEIGHT];
+			partialMarkerChar = new byte[CHAR_HEIGHT()];
 
 			if (cellOffset < 0)
 			{
-				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
-					partialMarkerChar[pixY] = MASK(markerChar[pixY] SHL (255 - (CBYTE)cellOffset + 1), LCD_SLIDER_MARKER_COLS_MASK);
+				for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
+					partialMarkerChar[pixY] = MASK(markerChar[pixY] SHL (255 - (CBYTE)cellOffset + 1), LCD_CELL_LINE_PIXEL_ROW);
 			}
 			else
 			{
-				for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+				for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 					partialMarkerChar[pixY] = markerChar[pixY] SHR cellOffset;
 			}
 
-			for (BYTE pixY = 0; pixY < LCD_CHAR_HEIGHT; pixY++)
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 				partialMarkerChar[pixY] |= spaceChar[pixY];
 
 			this->LoadCustomChar(0x6, partialMarkerChar);
