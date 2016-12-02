@@ -62,46 +62,53 @@
 // HD77480 LCD CONTROLLER POWER-ON/INIT, STROBE, and COMMAND WAIT TIMES
 
 
-#define LCD_WAIT_STROBE_EN_PULSE_uS		1		// > 450 ns
-#define LCD_WAIT_STROBE_EN_SETTLE_uS	40		// > 37 us
+#define LCD_WAIT_STROBE_EN_PULSE_uS		1		// > 450 ns: minimum pulse sustain time
+#define LCD_WAIT_STROBE_EN_SETTLE_uS	40		// > 37 us: minumum (write) command time
 
-#define LCD_WAIT_POWER_ON_MS			50		// > 15 ms @ LCD Vcc = 4.5 V; > 40 ms @ LCD Vcc = 2.7 V
-#define LCD_WAIT_INIT_MS				100		// Who knows...just wait a bit for ready-state.
+#define LCD_WAIT_POWER_ON_MS			100		// > 15 ms @ LCD Vcc = 4.5 V; > 40 ms @ LCD Vcc = 2.7 V
 
-#define LCD_WAIT_CMD_HOME_uS			1500	// > (1.52 ms - 37 us) = > 1.48 ms
+#define LCD_WAIT_INIT_1_uS				5000	// > 4.1 ms: minimum time for delay after first init command
+#define LCD_WAIT_INIT_2_uS				150		// > 100 us: minimum time for delay after second init command
 
-#define LCD_WAIT_BUSY_DELAY_uS			100		// Delay period when Busy Flag is set
+#define LCD_WAIT_CMD_HOME_uS			1483	// > (1,520 us - 37 us) = > 1,483 us: minimum execution time of "cursor home" command
+
+#define LCD_WAIT_BUSY_DELAY_uS			10		// Delay period when Busy Flag is set (before checking again)
+
+
+// LCD BACKLIGHT MASK FLAGS
+
+#define LCD_BACKLIGHT_OFF				0x0
+#define LCD_BACKLIGHT_ON				0x8
 
 
 // LCD CONTROLLER & I2C INTERFACE BIT-FLAGS
 
 #define LCD_HD77480_RS		0x0		// Register select pin, relative to I2C I/O expander connections
-#define LCD_HD77480_RW		0x1		// Read/write pin, relative to I2C I/O expander connections
+#define LCD_HD77480_RW		0x1		// Read/write pin, relative to I2C I/O expander connections; read enabled when HIGH
 #define LCD_HD77480_En		0x2		// Enable pin, relative to I2C I/O expander connections
+
+#define LCD_HD77480_BF		0x6		// Busy Flag bit
 
 
 // COMMAND BYTES
 
-#define LCD_INIT_DISPLAY_BYTE			0x00
+#define LCD_CMD_INIT					0x30	// LCD_CMD_FUNCTION_SET | LCD_FUNCTION_INTERFACE_8_BIT
 
-#define LCD_CMD_DISPLAY_CLEAR			0x01
+#define LCD_CMD_CLEAR_DISPLAY			0x01
 #define LCD_CMD_CURSOR_HOME				0x02
 #define LCD_CMD_ENTRY_MODE_SET			0x04
 #define LCD_CMD_DISPLAY_CONTROL			0x08
-#define LCD_CMD_SHIFT_CURSOR			0x10
+#define LCD_CMD_CURSOR_DISPLAY_SHIFT	0x10
 #define LCD_CMD_FUNCTION_SET			0x20
 #define LCD_CMD_SET_CGRAM_ADDR			0x40
 #define LCD_CMD_SET_DDRAM_ADDR			0x80
 
 
-// MODE/OPTION FLAGS
+//  DISPLAY FUNCTION MODE FLAG VALUES
 
-#define LCD_DOTS_5x8					0x00
-#define LCD_DOTS_5x10					0x04
-#define LCD_ROWS_SINGLE					0x00
-#define LCD_ROWS_MULTI					0x08
-#define LCD_INTERFACE_DATA_4_BIT		0x00
-#define LCD_INTERFACE_DATA_8_BIT		0x10
+#define LCD_FUNCTION_DOTS_5x10			0x2
+#define LCD_FUNCTION_ROWS_MULTI			0x3
+#define LCD_FUNCTION_INTERFACE_8_BIT	0x4
 
 
 // DISPLAY CONTROL BITS
@@ -109,22 +116,18 @@
 #define LCD_CONTROL_CURSOR_BLINK		0x0
 #define LCD_CONTROL_CURSOR				0x1
 #define LCD_CONTROL_DISPLAY				0x2
-#define LCD_CONTROL_BACKLIGHT			0x3
 
 
-// ENTRY MODE FLAGS
+// ENTRY MODE BITS
 
-#define LCD_ENTRY_CURSOR_SCROLL			0x0
+#define LCD_ENTRY_AUTO_SCROLL			0x0
 #define LCD_ENTRY_LEFT_TO_RIGHT			0x1
 
 
-// CURSOR/CONTENTS SHIFT TYPE/VALUE FLAGS
+// CURSOR/DISPLAY SHIFT
 
-#define LCD_SHIFT_CURSOR				0x0
-#define LCD_SHIFT_DISPLAY				0x8
-
-#define LCD_SHIFT_LEFT					0x0
-#define LCD_SHIFT_RIGHT					0x4
+#define LCD_SHIFT_INCREMENT				0x2
+#define LCD_SHIFT_DISPLAY				0x3
 
 
 // GROVE RGB LCD SUPPORT
@@ -132,30 +135,30 @@
 #define LCD_RGB_DISPLAY_ADDRESS			0x3E
 #define LCD_RGB_BACKLIGHT_ADDRESS		0xE2
 
-#define LCD_RGB_HD77480_RS				0x6
+#define LCD_RGB_SEND_DATA				0x40
+#define LCD_RGB_SEND_COMMAND			0x80
 
 #define LCD_RGB_REG_MODE_1				0x0
 #define LCD_RGB_REG_MODE_2				0x1
-#define LCD_RGB_REG_BLINK_LED_RATIO		0x6
-#define LCD_RGB_REG_BLINK_LED_PERIOD	0x7
-#define LCD_RGB_REG_OUTPUT				0x8
-
-#define LCD_RGB_REG_RED					0x4
-#define LCD_RGB_REG_GREEN				0x3
 #define LCD_RGB_REG_BLUE				0x2
+#define LCD_RGB_REG_GREEN				0x3
+#define LCD_RGB_REG_RED					0x4
+#define LCD_RGB_REG_LED_BLINK_RATIO		0x6
+#define LCD_RGB_REG_LED_BLINK_PERIOD	0x7
+#define LCD_RGB_REG_OUTPUT				0x8
 
 #define LCD_RGB_PWM_AND_GRPPWM			0xFF
 
-#define LCD_BLINK_PERIOD_OFF			0x00
-#define LCD_BLINK_PERIOD_QUARTER_S		0x05
-#define LCD_BLINK_PERIOD_HALF_S			0x0B
-#define LCD_BLINK_PERIOD_ONE_S			0x17
-#define LCD_BLINK_PERIOD_TWO_S			0x2F
+#define LCD_RGB_LED_BLINK_PERIOD_OFF				0x00
+#define LCD_RGB_LED_BLINK_PERIOD_QUARTER_S			0x05
+#define LCD_RGB_LED_BLINK_PERIOD_HALF_S				0x0B
+#define LCD_RGB_LED_BLINK_PERIOD_ONE_S				0x17
+#define LCD_RGB_LED_BLINK_PERIOD_TWO_S				0x2F
 
-#define LCD_BLINK_RATIO_OFF				0xFF
-#define LCD_BLINK_RATIO_QUARTER			0x3F
-#define LCD_BLINK_RATIO_HALF			0x7F
-#define LCD_BLINK_RATIO_THREE_QUARTERS	0xBF
+#define LCD_RGB_LED_BLINK_RATIO_OFF					0xFF
+#define LCD_RGB_LED_BLINK_RATIO_QUARTER				0x3F
+#define LCD_RGB_LED_BLINK_RATIO_HALF				0x7F
+#define LCD_RGB_LED_BLINK_RATIO_THREE_QUARTERS		0xBF
 
 #pragma endregion
 
@@ -164,10 +167,10 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	#define LCDI2C_T_CLAUSE_DEF	<CBYTE Cols, CBYTE Rows, CBYTE I2CAddr, CBYTE CharSize>
+	#define LCDI2C_T_CLAUSE_DEF	<CBYTE Cols, CBYTE Rows, CBYTE I2CAddr, BOOL Use5x10Chars>
 	#define LCDI2C_T_CLAUSE		<CBYTE Cols = LCD_DEFAULT_COLS, CBYTE Rows = LCD_DEFAULT_ROWS, \
-		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, CBYTE CharSize = LCD_DOTS_5x8>
-	#define LCDI2C_T_ARGS		<Cols, Rows, I2CAddr, CharSize>
+		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, BOOL Use5x10Chars = FALSE>
+	#define LCDI2C_T_ARGS		<Cols, Rows, I2CAddr, Use5x10Chars>
 
 	template LCDI2C_T_CLAUSE
 	class LCD_I2C;
@@ -185,80 +188,107 @@ namespace IttyBitty
 
 		// PROTECTED STATIC CONSTANT ARRAY FUNCTION
 
-		STATIC PCBYTE LCD_ROW_OFFSETS()
+		STATIC PCBYTE ROW_OFFSETS()
 		{
-			STATIC CBYTE ROW_OFFSETS[4] = { 0x00, 0x40, 0x14, 0x54 };
-			return ROW_OFFSETS;
+			STATIC CBYTE LCD_ROW_OFFSETS[4] = { 0x00, 0x40, 0x14, 0x54 };
+			return LCD_ROW_OFFSETS;
 		}
 
 
 		// INSTANCE VARIABLES
 
+		BOOL _WrapLines = FALSE;
+
 		BOOL _Use8BitMode = FALSE;
 		BOOL _IsGroveRgbLcd = FALSE;
 
-		BOOL _WrapLines = TRUE;
+		BYTE _BacklightVal = LCD_BACKLIGHT_OFF;
 
-		BOOL _BacklightOn = FALSE;
+		BYTE _DisplayFunction = 0x0;
+		BYTE _DisplayControl = 0x0;
+		BYTE _EntryMode = 0x0;
 
 		BYTE _CursorRow = 0;
 		BYTE _CursorCol = 0;
 
-		BYTE _DisplayFunction = 0;
-		BYTE _DisplayControl = 0;
-		BYTE _EntryMode = 0;
-
 
 		// HELPER FUNCTIONS
 
-		VOID WireWrite(BYTE data)
+		VOID WireWrite(CBYTE data)
 		{
 			Wire.beginTransmission(I2CAddr);
 
-			if (_BacklightOn)
-				SET_BIT(data, LCD_CONTROL_BACKLIGHT);
-
-			WIRE_WRITE((INT)data);
+			WIRE_WRITE((INT)(data | (!_Use8BitMode ? _BacklightVal : 0x0)));
 
 			Wire.endTransmission();
 		}
 
-		VOID StrobeEnable(BYTE data)
+		VOID StrobeEnable(CBYTE data)
 		{
-			WireWrite(SET_BIT(data, LCD_HD77480_En));
-			delayMicroseconds(1);
+			WireWrite(WITH_BIT(data, LCD_HD77480_En));
+			delayMicroseconds(LCD_WAIT_STROBE_EN_PULSE_uS);
 
-			WireWrite(CLEAR_BIT(data, LCD_HD77480_En));
-			delayMicroseconds(50);
+			WireWrite(WITHOUT_BIT(data, LCD_HD77480_En));
+			delayMicroseconds(LCD_WAIT_STROBE_EN_SETTLE_uS);
 		}
 
-		CBOOL ReadBusyFlag()
+		CBYTE ReadData(BYTE addr = 0)
 		{
-			Wire.requestFrom(I2CAddr, (BYTE)1);
+			if (_Use8BitMode)
+			{
+				// ???
+				if (addr)
+					SET_BIT(addr, LCD_HD77480_RW);
+			}
+			else if (addr)
+			{
+				SET_BIT(addr, LCD_HD77480_RW);
+			}
 
-			return FALSE;
+			Wire.requestFrom(I2CAddr, addr);
+
+			return (CBYTE)WIRE_READ();
 		}
 
-		VOID WriteCommand(BYTE data)
+		CBOOL IsBusy()
+		{
+			return CHECK_BIT(ReadData(), LCD_HD77480_BF);
+		}
+
+		VOID WriteCommand(CBYTE data)
 		{
 			this->WireWrite(data);
-			this->StrobeEnable(data);
+
+			if (!_Use8BitMode)
+				this->StrobeEnable(data);
 		}
 
-		VOID SendCommand(BYTE cmdByte, CBOOL writeData = FALSE)
+		VOID SendCommand(CBYTE cmdOrData, CBOOL writeData = FALSE)
 		{
-			if (writeData)
-				SET_BIT(cmdByte, _IsGroveRgbLcd ? LCD_RGB_HD77480_RS : LCD_HD77480_RS);
+			while (this->IsBusy())
+				delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
 
 			if (_Use8BitMode)
 			{
-				this->WireWrite(cmdByte);
+				if (writeData)
+					this->WireWrite(LCD_RGB_SEND_DATA);
+				else
+					this->WireWrite(LCD_RGB_SEND_COMMAND);
+
+				this->WriteCommand(cmdOrData);
 			}
 			else
 			{
-				this->WriteCommand(HIGH_NYBBLE(cmdByte));
-				this->WriteCommand((LOW_NYBBLE(cmdByte) SHL BITS_PER_NYBBLE));
+				this->WriteCommand(HIGH_NYBBLE(cmdOrData) |
+					(writeData ? B(LCD_HD77480_RS) : 0x0));
+				this->WriteCommand((LOW_NYBBLE(cmdOrData) SHL BITS_PER_NYBBLE) |
+					(writeData ? B(LCD_HD77480_RS) : 0x0));
 			}
+		}
+
+		VOID SetBacklight()
+		{
+			this->WireWrite(0);
 		}
 
 		VOID SetDisplayFunction()
@@ -276,9 +306,19 @@ namespace IttyBitty
 			this->SendCommand(LCD_CMD_ENTRY_MODE_SET | _EntryMode);
 		}
 
-		VOID SetBacklight()
+		VOID ShiftCursorOrDisplay(CBYTE shiftOptions)
 		{
-			this->WireWrite(0);
+			this->SendCommand(LCD_CMD_CURSOR_DISPLAY_SHIFT | shiftOptions);
+		}
+
+		VOID SetCgramAddr(CBYTE cgramAddr)
+		{
+			this->SendCommand(LCD_CMD_SET_CGRAM_ADDR | cgramAddr);
+		}
+
+		VOID SetDdramAddr(CBYTE ddramAddr)
+		{
+			this->SendCommand(LCD_CMD_SET_DDRAM_ADDR | ddramAddr);
 		}
 
 
@@ -299,6 +339,16 @@ namespace IttyBitty
 
 		// STATIC CONSTEXPR FUNCTIONS
 
+		STATIC CONSTEXPR CBYTE COLS()
+		{
+			return Cols;
+		}
+
+		STATIC CONSTEXPR CBYTE ROWS()
+		{
+			return Rows;
+		}
+
 		STATIC CONSTEXPR CBYTE CHAR_WIDTH()
 		{
 			return LCD_CHAR_WIDTH;
@@ -306,67 +356,89 @@ namespace IttyBitty
 
 		STATIC CONSTEXPR CBYTE CHAR_HEIGHT()
 		{
-			return CharSize == LCD_DOTS_5x10 ? LCD_CHAR_HEIGHT_5x10 : LCD_CHAR_HEIGHT_5x8;
+			return Use5x10Chars ? LCD_CHAR_HEIGHT_5x10 : LCD_CHAR_HEIGHT_5x8;
 		}
 
 
-		// CONSTRUCTOR & INITIALIZATION FUNCTION
+		// CONSTRUCTOR & INITIALIZATION/RESET FUNCTION
 
-		LCD_I2C(CBOOL wrapLines = FALSE, CBOOL isGroveRgbLcd = FALSE, CBOOL use8BitMode = FALSE)
-			: _WrapLines(wrapLines), _IsGroveRgbLcd(isGroveRgbLcd)
+		LCD_I2C(CBOOL wrapLines = FALSE, CBOOL use8BitMode = FALSE, CBOOL isGroveRgbLcd = FALSE)
+			: _WrapLines(wrapLines), _Use8BitMode(use8BitMode), _IsGroveRgbLcd(isGroveRgbLcd)
 		{
 			if (_IsGroveRgbLcd)
 				_Use8BitMode = TRUE;
 
 			Wire.begin();
+
+			this->Reset();
 		}
 
-		VOID Init()
+		VOID Reset()
 		{
-			_DisplayFunction = LCD_INTERFACE_DATA_4_BIT |
-				(Rows > 1 ? LCD_ROWS_MULTI : LCD_ROWS_SINGLE) | CharSize;
-
 			delay(LCD_WAIT_POWER_ON_MS);
 
-			WireWrite(LCD_INIT_DISPLAY_BYTE);
-			delay(LCD_WAIT_INIT_MS);
+			this->BacklightOff();
 
-			//put the LCD into 4 bit mode
-			// this is according to the hitachi HD44780 datasheet
-			// figure 24, pg 46
+			this->WriteCommand(LCD_CMD_INIT);
+			delayMicroseconds(LCD_WAIT_INIT_1_uS);
 
-			  // we start in 8bit mode, try to Set 4 bit mode
-			this->WriteCommand(0x03 << 4);
-			delayMicroseconds(4500); // wait min 4.1ms
+			this->WriteCommand(LCD_CMD_INIT);
+			delayMicroseconds(LCD_WAIT_INIT_2_uS);
 
-			// second try
-			this->WriteCommand(0x03 << 4);
-			delayMicroseconds(4500); // wait min 4.1ms
+			_DisplayFunction = (Rows > 1 ? B(LCD_FUNCTION_ROWS_MULTI) : 0x0) |
+				(Use5x10Chars ? B(LCD_FUNCTION_DOTS_5x10) : 0x0);
 
-			// third go!
-			this->WriteCommand(0x03 << 4);
-			delayMicroseconds(150);
+			if (_Use8BitMode)
+				SET_BIT(_DisplayFunction, LCD_FUNCTION_INTERFACE_8_BIT);
 
-			// finally, Set to 4-bit interface
-			this->WriteCommand(0x02 << 4);
+			this->SetDisplayFunction();
 
-
-			this->SendCommand(LCD_CMD_FUNCTION_SET | _DisplayFunction);
-
-			SET_BIT(_DisplayControl, LCD_CONTROL_DISPLAY);
-			SET_BIT(_DisplayControl, LCD_CONTROL_BACKLIGHT);
-			_BacklightOn = TRUE;
+			_DisplayControl = B(LCD_CONTROL_DISPLAY);
 			this->SetDisplayControl();
 
-			SET_BIT(_EntryMode, LCD_ENTRY_LEFT_TO_RIGHT);
-			CLEAR_BIT(_EntryMode, LCD_ENTRY_CURSOR_SCROLL);
+			_EntryMode = B(LCD_ENTRY_LEFT_TO_RIGHT);
 			this->SetEntryMode();
 
 			if (_IsGroveRgbLcd)
 				this->InitRgbLcd();
 
-			this->Home();
 			this->Clear();
+			this->Home();
+
+			this->BacklightOn();
+		}
+
+
+		// ACCESSORS & MUTATORS
+
+		CBOOL IsBacklightOn()
+		{
+			return _BacklightVal == LCD_BACKLIGHT_ON;
+		}
+
+		CBOOL IsLineWrapEnabled()
+		{
+			return _WrapLines;
+		}
+
+		VOID SetLineWrap(CBOOL wrapLines = TRUE)
+		{
+			_WrapLines = wrapLines;
+		}
+
+
+		// BACKLIGHT CONTROL FUNCTIONS
+
+		VOID BacklightOn()
+		{
+			_BacklightVal = LCD_BACKLIGHT_ON;
+			this->SetBacklight();
+		}
+
+		VOID BacklightOff()
+		{
+			_BacklightVal = LCD_BACKLIGHT_OFF;
+			this->SetBacklight();
 		}
 
 
@@ -408,52 +480,18 @@ namespace IttyBitty
 			this->SetDisplayControl();
 		}
 
-		VOID BacklightOn()
-		{
-			_BacklightOn = TRUE;
-
-			SET_BIT(_DisplayControl, LCD_CONTROL_BACKLIGHT);
-			this->SetBacklight();
-		}
-
-		VOID BacklightOff()
-		{
-			_BacklightOn = FALSE;
-
-			CLEAR_BIT(_DisplayControl, LCD_CONTROL_BACKLIGHT);
-			this->SetBacklight();
-		}
-
-
-		// ACCESSORS & MUTATORS
-
-		CBOOL IsBacklightOn()
-		{
-			return _BacklightOn;
-		}
-
-		CBOOL IsLineWrapEnabled()
-		{
-			return _WrapLines;
-		}
-
-		VOID SetLineWrap(CBOOL wrapLines = TRUE)
-		{
-			_WrapLines = wrapLines;
-		}
-
 
 		// ENTRY MODE FUNCTIONS
 
-		VOID CursorScrollOn()
+		VOID AutoScrollOn()
 		{
-			SET_BIT(_EntryMode, LCD_ENTRY_CURSOR_SCROLL);
+			SET_BIT(_EntryMode, LCD_ENTRY_AUTO_SCROLL);
 			this->SetEntryMode();
 		}
 
-		VOID CursorScrollOff()
+		VOID AutoScrollOff()
 		{
-			CLEAR_BIT(_EntryMode, LCD_ENTRY_CURSOR_SCROLL);
+			CLEAR_BIT(_EntryMode, LCD_ENTRY_AUTO_SCROLL);
 			this->SetEntryMode();
 		}
 
@@ -470,11 +508,54 @@ namespace IttyBitty
 		}
 
 
+		// CURSOR/DISPLAY SHIFT FUNCTIONS
+
+		VOID CursorPrev()
+		{
+			if (_CursorCol == 0)
+				_CursorCol = Cols - 1;
+			else
+				--_CursorCol;
+
+			this->ShiftCursorOrDisplay();
+		}
+
+		VOID CursorNext()
+		{
+			if (_CursorCol == Cols - 1)
+				_CursorCol = 0;
+			else
+				++_CursorCol;
+
+			this->ShiftCursorOrDisplay(B(LCD_SHIFT_INCREMENT));
+		}
+
+		VOID ScrollLeft()
+		{
+			if (_CursorCol == 0)
+				_CursorCol = Cols - 1;
+			else
+				--_CursorCol;
+
+			this->ShiftCursorOrDisplay(B(LCD_SHIFT_DISPLAY));
+		}
+
+		VOID ScrollRight()
+		{
+			if (_CursorCol == Cols - 1)
+				_CursorCol = 0;
+			else
+				++_CursorCol;
+
+			this->ShiftCursorOrDisplay(B(LCD_SHIFT_DISPLAY) | B(LCD_SHIFT_INCREMENT));
+		}
+
+
 		// BASIC LCD CONTROL FUNCTIONS
 
 		VOID Clear()
 		{
-			this->SendCommand(LCD_CMD_DISPLAY_CLEAR);
+			this->SendCommand(LCD_CMD_CLEAR_DISPLAY);
 		}
 
 		VOID Home()
@@ -487,7 +568,7 @@ namespace IttyBitty
 			delayMicroseconds(LCD_WAIT_CMD_HOME_uS);
 		}
 
-		VOID MoveCursor(CBYTE col, CBYTE row)
+		VOID MoveCursor(BYTE col, BYTE row)
 		{
 			if (col >= Cols)
 			{
@@ -505,27 +586,7 @@ namespace IttyBitty
 			_CursorCol = col;
 			_CursorRow = row;
 
-			this->SendCommand(LCD_CMD_SET_DDRAM_ADDR BOR (col + LCD_ROW_OFFSETS()[row]));
-		}
-
-		VOID ScrollLeft()
-		{
-			if (_CursorCol == 0)
-				_CursorCol = Cols - 1;
-			else
-				--_CursorCol;
-
-			this->SendCommand(LCD_SHIFT_CURSOR | LCD_SHIFT_DISPLAY | LCD_SHIFT_LEFT);
-		}
-
-		VOID ScrollRight()
-		{
-			if (_CursorCol == Cols - 1)
-				_CursorCol = 0;
-			else
-				++_CursorCol;
-
-			this->SendCommand(LCD_SHIFT_CURSOR | LCD_SHIFT_DISPLAY | LCD_SHIFT_RIGHT);
+			this->SetDdramAddr(col + (ROW_OFFSETS())[row]);
 		}
 
 
@@ -533,23 +594,19 @@ namespace IttyBitty
 
 		VOID LoadCustomChar(BYTE charIndex, PCBYTE charData)
 		{
-			charIndex = MASK(charIndex, 0x7);
-			this->SendCommand(LCD_CMD_SET_CGRAM_ADDR BOR (charIndex << 3));
+			charIndex = MASK(charIndex, (Use5x10Chars ? 0xf : 0x7));
+			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
 
-			CBYTE charHeight = CHAR_HEIGHT();
-
-			for (BYTE i = 0; i < charHeight; i++)
+			for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 				this->write(charData[i]);
 		}
 
 		VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 		{
-			charIndex = MASK(charIndex, 0x7);
-			this->SendCommand(LCD_CMD_SET_CGRAM_ADDR BOR (charIndex << 3));
+			charIndex = MASK(charIndex, (Use5x10Chars ? 0xf : 0x7));
+			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
 
-			CBYTE charHeight = CHAR_HEIGHT();
-
-			for (BYTE i = 0; i < charHeight; i++)
+			for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 				this->write(pgm_read_byte_near(charDataAddr++));
 		}
 
@@ -613,7 +670,7 @@ namespace IttyBitty
 		{
 			this->SetRgbReg(LCD_RGB_REG_MODE_1, 0x0);
 			this->SetRgbReg(LCD_RGB_REG_OUTPUT, LCD_RGB_PWM_AND_GRPPWM);
-			this->SetRgbReg(LCD_RGB_REG_MODE_1, 0x0);
+			this->SetRgbReg(LCD_RGB_REG_MODE_2, 0x0);
 
 			this->SetRgbBacklightColorWhite();
 		}
@@ -633,19 +690,19 @@ namespace IttyBitty
 				(BYTE)((WORD)brightness * (WORD)MAX_OF(BYTE) / 100));
 		}
 
-		VOID RgbBlinkOn(CBYTE period = LCD_BLINK_PERIOD_OFF, CBYTE ratio = LCD_BLINK_RATIO_HALF)
+		VOID RgbBlinkOn(CBYTE period = LCD_RGB_LED_BLINK_PERIOD_OFF, CBYTE ratio = LCD_RGB_LED_BLINK_RATIO_HALF)
 		{
 			// Period (s) = (period + 1) / 24
-			this->SetRgbReg(LCD_RGB_REG_BLINK_LED_PERIOD, period);
+			this->SetRgbReg(LCD_RGB_REG_LED_BLINK_PERIOD, period);
 
 			// Ratio (%) = (ratio + 1) / 256
-			this->SetRgbReg(LCD_RGB_REG_BLINK_LED_RATIO, ratio);
+			this->SetRgbReg(LCD_RGB_REG_LED_BLINK_RATIO, ratio);
 		}
 
 		VOID RgbLedBlinkOff()
 		{
-			this->SetRgbReg(LCD_RGB_REG_BLINK_LED_PERIOD, LCD_BLINK_PERIOD_OFF);
-			this->SetRgbReg(LCD_RGB_REG_BLINK_LED_RATIO, LCD_BLINK_RATIO_OFF);
+			this->SetRgbReg(LCD_RGB_REG_LED_BLINK_PERIOD, LCD_RGB_LED_BLINK_PERIOD_OFF);
+			this->SetRgbReg(LCD_RGB_REG_LED_BLINK_RATIO, LCD_RGB_LED_BLINK_RATIO_OFF);
 		}
 
 

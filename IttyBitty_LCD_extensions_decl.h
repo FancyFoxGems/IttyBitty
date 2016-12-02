@@ -269,7 +269,7 @@ protected:
 
 		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 		{
-			partialCellChar[pixY] = spaceChar[pixY] BOR MASK(fullCellChar[pixY],
+			partialCellChar[pixY] = spaceChar[pixY] | MASK(fullCellChar[pixY],
 				LCD_CELL_LINE_PIXEL_ROW - (B((100 - cellPercentage) * CHAR_WIDTH() / 100) - 1));
 		}
 
