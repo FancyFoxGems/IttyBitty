@@ -82,10 +82,10 @@
 #define LCD_RW		0x1		// Read/Write (RW) pin; LOW: WRITE / HIGH: READ
 #define LCD_En		0x2		// Enable (E) pin; strobed to clock in instructions and data; LOW: PULSE END / HIGH: PULSE START
 #define LCD_LED		0x3		// Backlight anode (LED+) pin; backlight on when HIGH
-#define LCD_D4		0x4		// Busy Flag bit (D4 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
-#define LCD_D5		0x5		// Busy Flag bit (D5 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
-#define LCD_D6		0x6		// Busy Flag bit (D6 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
-#define LCD_D7		0x7		// Busy Flag bit (D7 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
+#define LCD_D4		0x4		// Pin 4 bit (D4 pin)
+#define LCD_D5		0x5		// Pin 5 bit (D5 pin)
+#define LCD_D6		0x6		// Pin 6 bit (D6 pin)
+#define LCD_D7		0x7		// Pin 7 bit (D7 pin)
 #define LCD_BF		0x7		// Busy Flag bit (D7 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
 
 //#define LCD_
@@ -249,33 +249,28 @@ namespace IttyBitty
 			delayMicroseconds(LCD_WAIT_STROBE_EN_PULSE_uS);
 		}
 
-		CBYTE ReadI2C(CBYTE length = 1)
+		CBYTE ReadI2C()
 		{
-			Wire.requestFrom(I2CAddr, length);
+			Wire.requestFrom(I2CAddr, 1);
 
 			return (CBYTE)WIRE_READ();
 		}
 
-		CBYTE ClockInRead(CBYTE data, CBYTE length = 1)
+		CBYTE ClockInRead(CBYTE data)
 		{
 			this->WriteI2C(data);
 			this->PulseEnRising(data);
 
-			BYTE result = this->ReadI2C(length);
+			BYTE result = this->ReadI2C();
 
 			if (!_Use8BitInterface)
 			{
-				PrintLine(result);
 				result = HIGH_NYBBLE(result);
 
 				this->PulseEnFalling(data);
 				this->PulseEnRising(data);
 
-				BYTE result2 = this->ReadI2C(length);
-				result |= HIGH_NYBBLE(result2) SHR BITS_PER_NYBBLE;
-				PrintLine(result2);
-
-				//result |= HIGH_NYBBLE(this->ReadI2C(length)) SHR BITS_PER_NYBBLE;
+				result |= HIGH_NYBBLE(this->ReadI2C()) SHR BITS_PER_NYBBLE;
 			}
 
 			this->PulseEnFalling(data);
@@ -288,17 +283,17 @@ namespace IttyBitty
 			return this->ClockInRead(WITH_BIT(data, LCD_RW));
 		}
 
-		CBYTE Receive(CBYTE addr = MAX_BYTE, CBOOL readData = FALSE)
+		CBYTE Receive(CBOOL readData = FALSE)
 		{
 			if (_Use8BitInterface)
 			{
 				// ???
-				if (addr)
+				if (readData)
 					this->WriteI2C(LCD_8_BIT_SEND_DATA);
 				else
 					this->WriteI2C(LCD_8_BIT_SEND_COMMAND);
 
-				return this->SendReadCommand(addr);
+				return this->SendReadCommand(LCD_CMD_READ);
 			}
 			else
 			{
@@ -342,8 +337,8 @@ namespace IttyBitty
 		{
 			if (!_IsInitializing)
 			{
-				//while (this->IsBusy())
-					//delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
+				while (this->IsBusy())
+					delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
 			}
 
 			if (_Use8BitInterface)
@@ -384,9 +379,20 @@ namespace IttyBitty
 			this->Send(LCD_CMD_ENTRY_MODE_SET | _EntryMode);
 		}
 
-		VOID ShiftCursorOrDisplay(CBYTE shiftOptions)
+		VOID ShiftCursorOrDisplay(CBYTE shiftOptions = 0x0)
 		{
 			this->Send(LCD_CMD_CURSOR_DISPLAY_SHIFT | shiftOptions);
+		}
+
+		VOID SetDdramAddr(CBYTE ddramAddr)
+		{
+			this->Send(LCD_CMD_SET_DDRAM_ADDR | ddramAddr);
+		}
+
+		VOID SetDdramAddrByColAndRow(CBYTE col, CBYTE row)
+		{
+			this->SetDdramAddr(col + ((ROW_ADDR_OFFSETS())[row] |
+				(_Use8BitInterface ? LCD_8_BIT_ADDR_OFFSET : 0x0)));
 		}
 
 		VOID SetCgramAddr(CBYTE cgramAddr)
@@ -401,26 +407,17 @@ namespace IttyBitty
 			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
 		}
 
-		VOID SetDdramAddr(CBYTE ddramAddr)
+		CBYTE GetDdramData()
 		{
-			this->Send(LCD_CMD_SET_DDRAM_ADDR | ddramAddr);
+			return this->Receive(TRUE);
 		}
 
-		VOID SetDdramAddrByColAndRow(CBYTE col, CBYTE row)
+		CBYTE GetCgramData(PBYTE resultCharData)
 		{
-			this->SetDdramAddr(col + ((ROW_ADDR_OFFSETS())[row] |
-				(_Use8BitInterface ? LCD_8_BIT_ADDR_OFFSET : 0x0)));
-		}
+			for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
+				resultCharData[i] = this->Receive(TRUE);
 
-		PCBYTE GetCgramData(CBYTE cgramAddr)
-		{
-			this->SetCgramAddr(cgramAddr);
-			return MASK(this->Receive(), LCD_ADDRESS_COUNTER_MASK);
-		}
-
-		CBYTE GetDdramData(CBYTE ddramAddr)
-		{
-			return MASK(this->Receive(), LCD_ADDRESS_COUNTER_MASK);
+			return CHAR_HEIGHT();
 		}
 
 
@@ -534,23 +531,6 @@ namespace IttyBitty
 
 			this->Home();
 
-			delay(5);
-			this->MoveCursor(5, 2);
-			this->write('A');
-			delay(5);
-			PrintLine(this->Receive());
-			PrintLine();
-			delay(5);
-			//this->MoveCursor(8, 1);
-			//delay(5);
-			//this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_LEFT);
-			//delay(5);
-			//this->write(0x4);
-			//delay(5);
-			//PrintLine(this->Receive());
-			//PrintLine();
-			delay(100000);
-
 		#ifndef NO_ITTYBITTY_LCD_RGB
 			if (_IsGroveRgbLcd)
 				this->InitRgbLcd();
@@ -588,19 +568,64 @@ namespace IttyBitty
 
 		// READ METHODS
 
+		CBYTE GetLastCharacterWritten()
+		{
+			this->CursorPrev();
+
+			BYTE resultChar = this->GetDdramData();
+
+			this->CursorNext();
+
+			return resultChar;
+		}
+
 		CBYTE GetDisplayedCharacter(BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			return this->Read(0, TRUE);
+			if (col != MAX_BYTE || row != MAX_BYTE)
+			{
+				BYTE currCol = _CursorCol;
+				BYTE currRow = _CursorRow;
+
+				this->MoveCursor(col, row);
+
+				BYTE resultChar = this->GetDdramData();
+
+				this->MoveCursor(currCol, currRow);
+
+				return resultChar;
+			}
+			else
+			{
+				return this->GetDdramData();
+			}
 		}
 
-		CBYTE GetDisplayedString(PBYTE & resultStr, BYTE length, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		CBYTE GetDisplayedString(PBYTE resultStr, BYTE length, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			return this->Read(0, TRUE);
+			BYTE currCol = _CursorCol;
+			BYTE currRow = _CursorRow;
+
+			this->MoveCursor(col, row);
+
+			for (BYTE i = 0; i < length; i ++)
+			{
+				resultStr[i] = this->GetDdramData();
+
+				this->CursorNext();
+			}
+
+			this->MoveCursor(currCol, currRow);
+
+			resultStr[length - 1] = '\0';
+
+			return length;
 		}
 
-		CBYTE GetCustomChar(PBYTE & resultCharData, BYTE charIndex)
+		CBYTE GetCustomChar(PBYTE resultCharData, BYTE charIndex)
 		{
-			return this->Read(0, TRUE);
+			this->SetCgramAddrByCharIndex(charIndex);
+
+			return this->GetCgramData(resultCharData);
 		}
 
 
@@ -751,6 +776,8 @@ namespace IttyBitty
 			_CursorRow = 0;
 
 			this->Send(LCD_CMD_CURSOR_HOME);
+
+			delayMicroseconds(LCD_WAIT_CMD_HOME_uS);
 		}
 
 		VOID MoveCursor(BYTE col, BYTE row)
