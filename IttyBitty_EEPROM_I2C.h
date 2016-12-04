@@ -399,7 +399,7 @@ namespace IttyBitty
 				delay(SERIAL_EEPROM_WAIT_DELAY_MS);
 			}
 
-			return MAX_OF(BYTE);
+			return MAX_BYTE;
 		}
 
 		CBYTE SendDeviceAddressWord(CBOOL waitForReady = TRUE) const

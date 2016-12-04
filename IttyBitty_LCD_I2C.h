@@ -63,7 +63,8 @@
 // LCD CONTROLLER POWER-ON/INIT, STROBE, and COMMAND WAIT TIMES
 
 #define LCD_WAIT_STROBE_EN_PULSE_uS		1		// > 450 ns: minimum pulse sustain time
-#define LCD_WAIT_STROBE_EN_SETTLE_uS	50		// ... + LCD_WAIT_STROBE_EN_PULSE_uS > 37 us: minumum (write) command time
+
+#define LCD_WAIT_CMD_EXECUTE_uS			50		// ... + LCD_WAIT_STROBE_EN_PULSE_uS > 37 us: minumum (write) command time
 
 #define LCD_WAIT_POWER_ON_MS			200		// > 15 ms @ LCD Vcc = 4.5 V; > 40 ms @ LCD Vcc = 2.7 V
 
@@ -94,7 +95,8 @@
 
 #define LCD_CMD_INIT					0x30	// LCD_CMD_FUNCTION_SET | B(LCD_FUNCTION_INTERFACE_8_BIT)
 #define LCD_CMD_INIT_4_BIT				0x20	// LCD_CMD_FUNCTION_SET
-#define LCD_CMD_BF_ADDRESS_COUNTER		0xF0	// B(LCD_D4) | ... | B(LCD_D7) | B(LCD_RW)
+
+#define LCD_CMD_READ					0xF0	// B(LCD_D4) | ... | B(LCD_D7) | B(LCD_RW)
 
 #define LCD_CMD_CLEAR_DISPLAY			0x01
 #define LCD_CMD_CURSOR_HOME				0x02
@@ -108,15 +110,18 @@
 
 // ADDRESS INDEX & DATA BYTE MASKS
 
+#define LCD_8_BIT_SEND_DATA				0x40
+#define LCD_8_BIT_SEND_COMMAND			0x80
+
 #define LCD_8_BIT_ADDR_OFFSET			0x80
+
+#define LCD_ADDRESS_COUNTER_MASK		0x7F
 
 #define LCD_CUSTOM_CHAR_IDX_MASK_5x8	0x7
 #define LCD_CUSTOM_CHAR_IDX_MASK_5x10	0x3
 
-#define LCD_ADDRESS_COUNTER_MASK		0x7F
 
-
-//  FUNCTION BIT-FLAGS
+//  FUNCTION (SET) BIT-FLAGS
 
 #define LCD_FUNCTION_DOTS_5x10			0x2
 #define LCD_FUNCTION_ROWS_MULTI			0x3
@@ -136,7 +141,7 @@
 #define LCD_ENTRY_LEFT_TO_RIGHT			0x1
 
 
-// CURSOR/DISPLAY SHIFT BIT-FLAGS
+// SHIFT CURSOR/DISPLAY BIT-FLAGS
 
 #define LCD_SHIFT_INCREMENT				0x2
 #define LCD_SHIFT_DISPLAY				0x3
@@ -148,9 +153,6 @@
 
 	#define LCD_RGB_DISPLAY_ADDRESS			0x3E
 	#define LCD_RGB_BACKLIGHT_ADDRESS		0xE2
-
-	#define LCD_RGB_SEND_DATA				0x40
-	#define LCD_RGB_SEND_COMMAND			0x80
 
 	#define LCD_RGB_REG_MODE_1				0x0
 	#define LCD_RGB_REG_MODE_2				0x1
@@ -221,19 +223,19 @@ namespace IttyBitty
 		BOOL _IsGroveRgbLcd = FALSE;
 	#endif
 
+		BOOL _IsInitializing = TRUE;
+
 		BOOL _BacklightOn = FALSE;
 
 		BYTE _DisplayFunction = 0x0;
 		BYTE _DisplayControl = 0x0;
 		BYTE _EntryMode = 0x0;
 
-		BOOL _Initialized = FALSE;
-
 		BYTE _CursorRow = 0;
 		BYTE _CursorCol = 0;
 
 
-		// HELPER FUNCTIONS
+		// HELPER METHODS
 
 		VOID PulseEnRising(CBYTE data)
 		{
@@ -256,10 +258,25 @@ namespace IttyBitty
 
 		CBYTE ClockInRead(CBYTE data, CBYTE length = 1)
 		{
+			this->WriteI2C(data);
 			this->PulseEnRising(data);
 
 			BYTE result = this->ReadI2C(length);
-			PrintLine(result);
+
+			if (!_Use8BitInterface)
+			{
+				PrintLine(result);
+				result = HIGH_NYBBLE(result);
+
+				this->PulseEnFalling(data);
+				this->PulseEnRising(data);
+
+				BYTE result2 = this->ReadI2C(length);
+				result |= HIGH_NYBBLE(result2) SHR BITS_PER_NYBBLE;
+				PrintLine(result2);
+
+				//result |= HIGH_NYBBLE(this->ReadI2C(length)) SHR BITS_PER_NYBBLE;
+			}
 
 			this->PulseEnFalling(data);
 
@@ -271,32 +288,23 @@ namespace IttyBitty
 			return this->ClockInRead(WITH_BIT(data, LCD_RW));
 		}
 
-		CBYTE Receive(CBYTE addr = 0x0, CBOOL readData = FALSE)
+		CBYTE Receive(CBYTE addr = MAX_BYTE, CBOOL readData = FALSE)
 		{
-			//if (_Use8BitInterface)
-			//{
-			//	// ???
-			//	if (addr)
-			//		this->WriteI2C(LCD_RGB_SEND_DATA);
-			//	else
-			//		this->WriteI2C(LCD_RGB_SEND_COMMAND);
+			if (_Use8BitInterface)
+			{
+				// ???
+				if (addr)
+					this->WriteI2C(LCD_8_BIT_SEND_DATA);
+				else
+					this->WriteI2C(LCD_8_BIT_SEND_COMMAND);
 
-			//	return this->SendReadCommand(addr);
-			//}
-			//else
-			//{
-				this->WriteI2C(LCD_CMD_BF_ADDRESS_COUNTER);
-				//BYTE result = HIGH_NYBBLE(this->SendReadCommand(
-					//HIGH_NYBBLE(readData) | (addr ? B(LCD_RS) : 0x0)));
-				//result = HIGH_NYBBLE(this->SendReadCommand(
-				//	(LOW_NYBBLE(readData) SHL BITS_PER_NYBBLE) | (addr ? B(LCD_RS) : 0x0))) SHR BITS_PER_NYBBLE;
-				BYTE result = this->SendReadCommand(LCD_CMD_BF_ADDRESS_COUNTER);
-				result = this->SendReadCommand(LCD_CMD_BF_ADDRESS_COUNTER);
-				this->WriteI2C(WITH_BIT(LCD_CMD_BF_ADDRESS_COUNTER, LCD_En));
-			PrintLine(result);
-			PrintLine();
+				return this->SendReadCommand(addr);
+			}
+			else
+			{
+				BYTE result = this->SendReadCommand(LCD_CMD_READ | (readData ? B(LCD_RS) : 0x0));
 				return result;
-			//}
+			}
 		}
 
 		CBOOL IsBusy()
@@ -318,23 +326,21 @@ namespace IttyBitty
 
 		VOID ClockInWrite(CBYTE data)
 		{
-			this->WriteI2C(WITH_BIT(data, LCD_En));
-			delayMicroseconds(LCD_WAIT_STROBE_EN_PULSE_uS);
+			this->PulseEnFalling(data);
+			this->WriteI2C(data);
+			this->PulseEnRising(data);
 
-			this->WriteI2C(WITHOUT_BIT(data, LCD_En));
-			delayMicroseconds(LCD_WAIT_STROBE_EN_SETTLE_uS);
+			delayMicroseconds(LCD_WAIT_CMD_EXECUTE_uS);
 		}
 
 		VOID SendWriteCommand(CBYTE data)
 		{
-			this->PulseEnFalling(data);
-			this->WriteI2C(data);
-			this->PulseEnRising(data);
+			this->ClockInWrite(data);
 		}
 
 		VOID Send(BYTE cmdOrData, CBOOL sendData = FALSE)
 		{
-			if (_Initialized)
+			if (!_IsInitializing)
 			{
 				//while (this->IsBusy())
 					//delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
@@ -343,9 +349,9 @@ namespace IttyBitty
 			if (_Use8BitInterface)
 			{
 				if (sendData)
-					this->WriteI2C(LCD_RGB_SEND_DATA);
+					this->WriteI2C(LCD_8_BIT_SEND_DATA);
 				else
-					this->WriteI2C(LCD_RGB_SEND_COMMAND);
+					this->WriteI2C(LCD_8_BIT_SEND_COMMAND);
 
 				this->SendWriteCommand(cmdOrData);
 			}
@@ -388,17 +394,31 @@ namespace IttyBitty
 			this->Send(LCD_CMD_SET_CGRAM_ADDR | cgramAddr);
 		}
 
+		VOID SetCgramAddrByCharIndex(BYTE charIndex)
+		{
+			charIndex = MASK(charIndex, (Use5x10Chars ?
+				LCD_CUSTOM_CHAR_IDX_MASK_5x10 : LCD_CUSTOM_CHAR_IDX_MASK_5x8));
+			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
+		}
+
 		VOID SetDdramAddr(CBYTE ddramAddr)
 		{
 			this->Send(LCD_CMD_SET_DDRAM_ADDR | ddramAddr);
 		}
 
+		VOID SetDdramAddrByColAndRow(CBYTE col, CBYTE row)
+		{
+			this->SetDdramAddr(col + ((ROW_ADDR_OFFSETS())[row] |
+				(_Use8BitInterface ? LCD_8_BIT_ADDR_OFFSET : 0x0)));
+		}
+
 		PCBYTE GetCgramData(CBYTE cgramAddr)
 		{
+			this->SetCgramAddr(cgramAddr);
 			return MASK(this->Receive(), LCD_ADDRESS_COUNTER_MASK);
 		}
 
-		PCBYTE GetDdramData(CBYTE ddramAddr)
+		CBYTE GetDdramData(CBYTE ddramAddr)
 		{
 			return MASK(this->Receive(), LCD_ADDRESS_COUNTER_MASK);
 		}
@@ -406,7 +426,7 @@ namespace IttyBitty
 
 	#ifndef NO_ITTYBITTY_LCD_RGB
 
-		// GROVE RGB LCD HELPER FUNCTIONS
+		// GROVE RGB LCD HELPER METHODS
 
 		VOID SetRgbReg(CBYTE regAddr, CBYTE data)
 		{
@@ -469,7 +489,7 @@ namespace IttyBitty
 
 		VOID Reset()
 		{
-			_Initialized = FALSE;
+			_IsInitializing = TRUE;
 
 			delay(LCD_WAIT_POWER_ON_MS);
 
@@ -510,17 +530,26 @@ namespace IttyBitty
 
 			this->DisplayOn();
 
-			_Initialized = TRUE;
+			_IsInitializing = FALSE;
 
 			this->Home();
 
 			delay(5);
 			this->MoveCursor(5, 2);
-			delay(5);
 			this->write('A');
 			delay(5);
 			PrintLine(this->Receive());
-			delay(10000);
+			PrintLine();
+			delay(5);
+			//this->MoveCursor(8, 1);
+			//delay(5);
+			//this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_LEFT);
+			//delay(5);
+			//this->write(0x4);
+			//delay(5);
+			//PrintLine(this->Receive());
+			//PrintLine();
+			delay(100000);
 
 		#ifndef NO_ITTYBITTY_LCD_RGB
 			if (_IsGroveRgbLcd)
@@ -530,11 +559,6 @@ namespace IttyBitty
 
 
 		// ACCESSORS & MUTATORS
-
-		CBOOL IsBacklightOn()
-		{
-			return _BacklightOn;
-		}
 
 		CBOOL IsLineWrapEnabled()
 		{
@@ -546,8 +570,41 @@ namespace IttyBitty
 			_WrapLines = wrapLines;
 		}
 
+		CBOOL IsBacklightOn()
+		{
+			return _BacklightOn;
+		}
 
-		// BACKLIGHT CONTROL FUNCTIONS
+		CBYTE CursorCol()
+		{
+			return _CursorCol;
+		}
+
+		CBYTE CursorRow()
+		{
+			return _CursorRow;
+		}
+
+
+		// READ METHODS
+
+		CBYTE GetDisplayedCharacter(BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return this->Read(0, TRUE);
+		}
+
+		CBYTE GetDisplayedString(PBYTE & resultStr, BYTE length, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return this->Read(0, TRUE);
+		}
+
+		CBYTE GetCustomChar(PBYTE & resultCharData, BYTE charIndex)
+		{
+			return this->Read(0, TRUE);
+		}
+
+
+		// BACKLIGHT CONTROL METHODS
 
 		VOID BacklightOn()
 		{
@@ -562,7 +619,7 @@ namespace IttyBitty
 		}
 
 
-		// DISPLAY CONTROL FUNCTIONS
+		// DISPLAY CONTROL METHODS
 
 		VOID DisplayOn()
 		{
@@ -601,7 +658,7 @@ namespace IttyBitty
 		}
 
 
-		// ENTRY MODE FUNCTIONS
+		// ENTRY MODE METHODS
 
 		VOID AutoScrollOn()
 		{
@@ -628,50 +685,60 @@ namespace IttyBitty
 		}
 
 
-		// CURSOR/DISPLAY SHIFT FUNCTIONS
+		// SHIFT CURSOR/DISPLAY METHODS
 
 		VOID CursorPrev()
 		{
-			if (_CursorCol == 0)
+			if (--_CursorCol == MAX_BYTE)
+			{
 				_CursorCol = Cols - 1;
-			else
-				--_CursorCol;
 
-			this->ShiftCursorOrDisplay();
+				if (_WrapLines && --_CursorRow == MAX_BYTE)
+						_CursorRow = Rows - 1;
+
+				this->MoveCursor(_CursorCol, _CursorRow);
+			}
+			else
+			{
+				this->ShiftCursorOrDisplay();
+			}
 		}
 
 		VOID CursorNext()
 		{
-			if (_CursorCol == Cols - 1)
+			if (++_CursorCol >= Cols)
+			{
 				_CursorCol = 0;
-			else
-				++_CursorCol;
 
-			this->ShiftCursorOrDisplay(B(LCD_SHIFT_INCREMENT));
+				if (_WrapLines && ++_CursorRow >= Rows)
+						_CursorRow = 0;
+
+				this->MoveCursor(_CursorCol, _CursorRow);
+			}
+			else
+			{
+				this->ShiftCursorOrDisplay(B(LCD_SHIFT_INCREMENT));
+			}
 		}
 
 		VOID ScrollLeft()
 		{
-			if (_CursorCol == 0)
+			if (--_CursorCol == MAX_BYTE)
 				_CursorCol = Cols - 1;
-			else
-				--_CursorCol;
 
 			this->ShiftCursorOrDisplay(B(LCD_SHIFT_DISPLAY));
 		}
 
 		VOID ScrollRight()
 		{
-			if (_CursorCol == Cols - 1)
+			if (++_CursorCol >= Cols)
 				_CursorCol = 0;
-			else
-				++_CursorCol;
 
 			this->ShiftCursorOrDisplay(B(LCD_SHIFT_DISPLAY) | B(LCD_SHIFT_INCREMENT));
 		}
 
 
-		// BASIC LCD CONTROL FUNCTIONS
+		// BASIC LCD CONTROL METHODS
 
 		VOID Clear()
 		{
@@ -692,7 +759,7 @@ namespace IttyBitty
 			{
 				if (_WrapLines)
 				{
-					col = col % Cols;
+					col = (col + 1) % Cols - 1;
 					row += col / Cols;
 				}
 				else
@@ -707,18 +774,15 @@ namespace IttyBitty
 			_CursorCol = col;
 			_CursorRow = row;
 
-			this->SetDdramAddr(col + ((ROW_ADDR_OFFSETS())[row] |
-				(_Use8BitInterface ? LCD_8_BIT_ADDR_OFFSET : 0x0)));
+			this->SetDdramAddrByColAndRow(col, row);
 		}
 
 
-		// CUSTOM CHARACTER FUNCTIONS
+		// CUSTOM CHARACTER METHODS
 
 		VOID LoadCustomChar(BYTE charIndex, PCBYTE charData)
 		{
-			charIndex = MASK(charIndex, (Use5x10Chars ?
-				LCD_CUSTOM_CHAR_IDX_MASK_5x10 : LCD_CUSTOM_CHAR_IDX_MASK_5x8));
-			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
+			this->SetCgramAddrByCharIndex(charIndex);
 
 			for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 				this->write(charData[i]);
@@ -726,16 +790,14 @@ namespace IttyBitty
 
 		VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 		{
-			charIndex = MASK(charIndex, (Use5x10Chars ?
-				LCD_CUSTOM_CHAR_IDX_MASK_5x10 : LCD_CUSTOM_CHAR_IDX_MASK_5x8));
-			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
+			this->SetCgramAddrByCharIndex(charIndex);
 
 			for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 				this->write(pgm_read_byte_near(charDataAddr++));
 		}
 
 
-		// CHARACTER/STRING PRINTING FUNCTIONS
+		// CHARACTER/STRING PRINTING METHODS
 
 		VIRTUAL SIZE write(BYTE value)
 		{
@@ -744,12 +806,12 @@ namespace IttyBitty
 			return 1;
 		}
 
-		CBYTE PrintStr(PCCHAR str, BYTE col = MAX_OF(BYTE), BYTE row = MAX_OF(BYTE))
+		CBYTE PrintStr(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			if (col == MAX_OF(BYTE))
+			if (col == MAX_BYTE)
 				col = _CursorCol;
 
-			if (row == MAX_OF(BYTE))
+			if (row == MAX_BYTE)
 				row = _CursorRow;
 
 			BYTE charsPrinted = 0;
@@ -763,12 +825,12 @@ namespace IttyBitty
 			return charsPrinted;
 		}
 
-		CBYTE PrintStr_P(FLASH_STRING flashStr, BYTE col = MAX_OF(BYTE), BYTE row = MAX_OF(BYTE))
+		CBYTE PrintStr_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			if (col == MAX_OF(BYTE))
+			if (col == MAX_BYTE)
 				col = _CursorCol;
 
-			if (row == MAX_OF(BYTE))
+			if (row == MAX_BYTE)
 				row = _CursorRow;
 
 			BYTE charsPrinted = 0;
@@ -788,17 +850,9 @@ namespace IttyBitty
 		}
 
 
-		// READ FUNCTIONS
-
-		CBYTE CurrentDisplayAddress()
-		{
-			return MASK(this->Receive(), LCD_ADDRESS_COUNTER_MASK);
-		}
-
-
 	#ifndef NO_ITTYBITTY_LCD_RGB
 
-		// GROVE RGB LCD SUPPORT FUNCTIONS
+		// GROVE RGB LCD SUPPORT METHODS
 
 		VOID InitRgbLcd()
 		{
@@ -816,12 +870,12 @@ namespace IttyBitty
 			this->SetRgbReg(LCD_RGB_REG_BLUE, b);
 		}
 
-		VOID SetRgbBacklightColorWhite(CBYTE brightness = MAX_OF(BYTE))
+		VOID SetRgbBacklightColorWhite(CBYTE brightness = MAX_BYTE)
 		{
 			this->SetRgbBacklightColor(
-				(BYTE)((WORD)brightness * (WORD)MAX_OF(BYTE) / 100),
-				(BYTE)((WORD)brightness * (WORD)MAX_OF(BYTE) / 100),
-				(BYTE)((WORD)brightness * (WORD)MAX_OF(BYTE) / 100));
+				(BYTE)((WORD)brightness * (WORD)MAX_BYTE / 100),
+				(BYTE)((WORD)brightness * (WORD)MAX_BYTE / 100),
+				(BYTE)((WORD)brightness * (WORD)MAX_BYTE / 100));
 		}
 
 		VOID RgbBlinkOn(CBYTE period = LCD_RGB_LED_BLINK_PERIOD_OFF, CBYTE ratio = LCD_RGB_LED_BLINK_RATIO_HALF)

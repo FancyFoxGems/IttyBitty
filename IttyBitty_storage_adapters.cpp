@@ -84,7 +84,7 @@ CSTORAGERESULT FlashRomStorageAdapter::Read(PBYTE buffer, RCDWORD size)
 	while (bytesRead < size)
 	{
 	#ifdef pgm_read_byte_far
-		if (_Location.DWordAddress <= MAX_OF(WORD))
+		if (_Location.DWordAddress <= MAX_WORD)
 			buffer[bytesRead++] = pgm_read_byte_near(_Location.WordAddress++);
 		else
 			buffer[bytesRead++] = pgm_read_byte_far(_Location.DWordAddress++);

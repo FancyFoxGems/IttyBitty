@@ -210,10 +210,15 @@ using std::extent;
 #define ever				(;;)
 #define forever				for ever
 
-#define T_SIZE				SIZEOF(T)
-
 #define MAX_VALUE_OF(T)		((T)T(0) - 0b1)
 #define MAX_OF(T)			MAX_VALUE_OF(T)
+
+#define MAX_BYTE			MAX_OF(BYTE)
+#define MAX_WORD			MAX_OF(WORD)
+#define MAX_DWORD			MAX_OF(DWORD)
+
+#define T_SIZE				SIZEOF(T)
+#define T_MAX				MAX_OF(T)
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)	(constructor_expr)
 #define _CONSTRUCT(constructor_expr)					FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)

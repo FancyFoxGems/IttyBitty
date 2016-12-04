@@ -461,11 +461,11 @@ namespace IttyBitty
 		VIRTUAL CSIZE RowsAvailableFor(PCCHAR) const = 0;
 
 		VIRTUAL CDBRESULT CreateTable(CSIZE, PCCHAR = NULL,
-			CSIZE = DB_DEFAULT_INITIAL_ROWS_ALLOCATION, CBYTE = MAX_OF(BYTE)) = 0;
+			CSIZE = DB_DEFAULT_INITIAL_ROWS_ALLOCATION, CBYTE = MAX_BYTE) = 0;
 
 		template DEFAULT_T_CLAUSE
 		CDBRESULT CreateTable(PCCHAR tableName = NULL,
-			CSIZE dataAllocationRows = DB_DEFAULT_INITIAL_ROWS_ALLOCATION, CBYTE newTableIdx = MAX_OF(BYTE))
+			CSIZE dataAllocationRows = DB_DEFAULT_INITIAL_ROWS_ALLOCATION, CBYTE newTableIdx = MAX_BYTE)
 		{
 			return this->CreateTable(T_SIZE, tableName, dataAllocationRows, newTableIdx);
 		}
