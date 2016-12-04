@@ -402,8 +402,8 @@ namespace IttyBitty
 
 		VOID SetCgramAddrByCharIndex(BYTE charIndex)
 		{
-			charIndex = MASK(charIndex, (Use5x10Chars ?
-				LCD_CUSTOM_CHAR_IDX_MASK_5x10 : LCD_CUSTOM_CHAR_IDX_MASK_5x8));
+			CHOOSE_BITS(charIndex, Use5x10Chars ?
+				LCD_CUSTOM_CHAR_IDX_MASK_5x10 : LCD_CUSTOM_CHAR_IDX_MASK_5x8);
 			this->SetCgramAddr(Use5x10Chars ? charIndex * CHAR_HEIGHT() : charIndex SHL 0x3);
 		}
 
@@ -581,7 +581,7 @@ namespace IttyBitty
 
 		CBYTE GetDisplayedCharacter(BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			if (col != MAX_BYTE || row != MAX_BYTE)
+			if (col != MAX_BYTE OR row != MAX_BYTE)
 			{
 				BYTE currCol = _CursorCol;
 				BYTE currRow = _CursorRow;
@@ -718,7 +718,7 @@ namespace IttyBitty
 			{
 				_CursorCol = Cols - 1;
 
-				if (_WrapLines && --_CursorRow == MAX_BYTE)
+				if (_WrapLines AND --_CursorRow == MAX_BYTE)
 						_CursorRow = Rows - 1;
 
 				this->MoveCursor(_CursorCol, _CursorRow);
@@ -735,7 +735,7 @@ namespace IttyBitty
 			{
 				_CursorCol = 0;
 
-				if (_WrapLines && ++_CursorRow >= Rows)
+				if (_WrapLines AND ++_CursorRow >= Rows)
 						_CursorRow = 0;
 
 				this->MoveCursor(_CursorCol, _CursorRow);

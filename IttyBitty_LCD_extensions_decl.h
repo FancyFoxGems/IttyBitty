@@ -20,7 +20,8 @@ protected:
 	{
 		PBYTE scrollBarChar = new byte[CHAR_HEIGHT()];
 
-		BYTE scrollerRow = cellPercentage == 100 ? LCD_CELL_LAST_PIXEL_ROW : cellPercentage * CHAR_HEIGHT() / 100;
+		BYTE scrollerRow = cellPercentage == 100 ?
+			LCD_CELL_LAST_PIXEL_ROW : cellPercentage * CHAR_HEIGHT() / 100;
 
 		for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 		{
@@ -551,34 +552,41 @@ public:
 
 		if ((CBYTE)LcdSliderOptionsToLcdSliderEnds(options))
 		{
-			this->LoadCustomChar_P(0x5, LCD_CHAR_SLIDER_END_LEFT);
+			//this->LoadCustomChar_P(0x5, LCD_CHAR_SLIDER_END_LEFT);
 
-			this->MoveCursor(startCol, row);
-			this->write(0x5);
+			//this->MoveCursor(startCol, row);
+			//this->write(0x5);
 
-			this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_RIGHT);
+			//this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_RIGHT);
 
-			this->MoveCursor(startCol + widthChars - 1, row);
-			this->write(0x4);
+			//this->MoveCursor(startCol + widthChars - 1, row);
+			//this->write(0x4);
 
 			++startCol;
 			widthChars -= 2;
 		}
 
 		PBYTE spaceChar = this->CreateSpaceChar(spaceStyle);
-		this->LoadCustomChar(0x7, spaceChar);
+		//this->LoadCustomChar(0x7, spaceChar);
 
 		PBYTE markerChar = this->CreateSliderMarker(markerStyle);
 
 		PBYTE partialMarkerChar = NULL;
 		CHAR cellOffset = 0;
 
+		PrintLine();
+		PrintVal(percentage);
+		PrintString("% - ");
 		for (BYTE col = 0; col < widthChars; col++)
 		{
-			if (percentage < 100 / widthChars AND col > 0
-				OR percentage >= 100 / widthChars AND percentage < col * 100 / widthChars
+			PrintVal(col);
+			PrintString(": ");
+			if (col > 0 AND percentage <= (col - 1) * 100 / widthChars
 				OR percentage >= (col + 1) * 100 / widthChars)
+				//OR percentage >= 100 / widthChars AND percentage < col * 100 / widthChars)
 			{
+				PrintString("SPACE  ");
+				continue;
 				this->MoveCursor(col + startCol, row);
 				this->write(0x7);
 
@@ -600,11 +608,21 @@ public:
 			}
 			else
 			{
+				PrintString("SPACE  ");
+				continue;
 				this->MoveCursor(col + startCol, row);
 				this->write(0x7);
 
 				continue;
 			}
+			if (cellOffset == -2)
+				PrintString("-2");
+			else if (cellOffset == -1)
+				PrintString("-1");
+			else
+				PrintVal((CHAR)(cellOffset + 48));
+			PrintString(" OFFSET  ");
+			continue;
 
 			if (!cellOffset)
 			{
@@ -624,7 +642,10 @@ public:
 			if (cellOffset < 0)
 			{
 				for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
-					partialMarkerChar[pixY] = MASK(markerChar[pixY] SHL (255 - (CBYTE)cellOffset + 1), LCD_CELL_LINE_PIXEL_ROW);
+				{
+					partialMarkerChar[pixY] = MASK(markerChar[pixY] SHL
+						(255 - (CBYTE)cellOffset + 1), LCD_CELL_LINE_PIXEL_ROW);
+				}
 			}
 			else
 			{

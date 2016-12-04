@@ -16,12 +16,12 @@ private:
 
 	STATIC CONSTEXPR CCHAR ToUpperCase(CCHAR c)
 	{
-		return  (c >= 'a' && c <= 'z') ? c & 0x5f : c;
+		return  (c >= 'a' AND c <= 'z') ? CHECK_BITS(c, 0x5f) : c;
 	}
 
 	STATIC CONSTEXPR CBOOL BigFontHasChar(CCHAR c)
 	{
-		return (c >= ' ' && c <= 'Z') || (c >= 'a' && c <= 'z');
+		return (c >= ' ' AND c <= 'Z') OR (c >= 'a' AND c <= 'z');
 	}
 
 

@@ -86,11 +86,12 @@
 
 /* BITWISE OPERATOR ALIASES */
 
+#define INVERSE						~
+#define INV							INVERSE
+
 #define B(bit_offset)				_BV(bit_offset)
 #define NB(bit_offset)				INV B(bit_offset)
 
-#define INVERSE						~
-#define INV							INVERSE
 #define BAND(val1, val2)			((val1) & (val2))
 #define BOR(val1, val2)				((val1) | (val2))
 #define BXOR(val1, val2)			((val1) ^ (val2))
@@ -163,6 +164,10 @@
 #define BITSSET(ref, mask)						((ref) |= (mask))
 #define SET_BITS(ref, mask)						BITSSET(ref, mask)
 
+#define BITSCHOOSE(ref, mask)					((ref) &= (mask))
+#define CHOOSE_BITS(ref, mask)					BITSCHOOSE(ref, mask)
+#define MASK_BITS(ref, mask)					BITSCHOOSE(ref, mask)
+
 #define BITSRST(ref, mask)						((ref) &= ~(mask))
 #define RESET_BITS(ref, mask)					BITSRST(ref, mask)
 #define UNSET_BITS(ref, mask)					BITSRST(ref, mask)
@@ -209,13 +214,17 @@
 #define BITSSETP(ref_mask_pair)					BITSSET(ref_mask_pair)
 #define SET_BITS_PAIR(ref_mask_pair)			BITSSET(ref_mask_pair)
 
+#define BITSCHOOSEP(ref_mask_pair)				BITSCHOOSE(ref_mask_pair)
+#define CHOOSE_BITS_PAIR(ref_mask_pair)			BITSCHOOSE(ref_mask_pair)
+#define MASK_BITS_PAIR(ref_mask_pair)			BITSCHOOSE(ref_mask_pair)
+
 #define BITSRSTP(ref_mask_pair)					BITSRST(ref_mask_pair)
 #define RESET_BITS_PAIR(ref_mask_pair)			BITSRST(ref_mask_pair)
 #define UNSET_BITS_PAIR(ref_mask_pair)			BITSRST(ref_mask_pair)
 #define CLEAR_BITS_PAIR(ref_mask_pair)			BITSRST(ref_mask_pair)
 
-#define BITSSETINVP(ref, mask)					BITSSETINV(ref, mask)
-#define SET_INVERSE_BITS_PAIR(ref, mask)		BITSSETINV(ref, mask)
+#define BITSSETINVP(ref_mask_pair)				BITSSETINV(ref_mask_pair)
+#define SET_INVERSE_BITS_PAIR(ref_mask_pair)	BITSSETINV(ref_mask_pair)
 
 #define BITSFLPP(ref_mask_pair)					BITSFLP(ref_mask_pair)
 #define FLIP_BITS_PAIR(ref_mask_pair)			BITSFLP(ref_mask_pair)
@@ -268,6 +277,10 @@
 #define BSET(ref, bit_offset)						BITSSET(ref, B(bit_offset))
 #define SET_BIT(ref, bit_offset)					BSET(ref, bit_offset)
 
+#define BCHOOSE(ref, bit_offset)					BITSCHOOSE(ref, B(bit_offset))
+#define CHOOSE_BIT(ref, bit_offset)					BCHOOSE(ref, bit_offset)
+#define MASK_BIT(ref, bit_offset)					BCHOOSE(ref, bit_offset)
+
 #define BRST(ref, bit_offset)						BITSRST(ref, B(bit_offset))
 #define RESET_BIT(ref, bit_offset)					BRST(ref, bit_offset)
 #define UNSET_BIT(ref, bit_offset)					BRST(ref, bit_offset)
@@ -282,7 +295,7 @@
 #define NOW_FLIP_BIT(ref, bit_offset)				BFLP(ref, bit_offset)
 #define FLIP_BIT_GOOD(ref, bit_offset)				BFLP(ref, bit_offset)		// [heh...]
 
-#define BSETTO(ref, bit_offset, value)				ref = BWITHOUT(ref, bit_offset) | (value) SHL bit_offset
+#define BSETTO(ref, bit_offset, value)				((ref) = BWITHOUT(ref, bit_offset) | (value) SHL (bit_offset))
 #define SET_BIT_TO(ref, bit_offset, value)			BSETTO(ref, bit_offset, from_ref)
 
 #define BSETFROM(ref, bit_offset, from_ref)			BITSSETFROM(ref, B(bit_offset), from_ref)
@@ -315,6 +328,10 @@
 
 #define BSETP(ref_bit_offset_pair)					BSET(ref_bit_offset_pair)
 #define SET_BIT_PAIR(ref_bit_offset_pair)			BSET(ref_bit_offset_pair)
+
+#define BCHOOSEP(ref_bit_offset_pair)				BCHOOSE(ref_bit_offset_pair)
+#define CHOOSE_BIT_PAIR(ref_bit_offset_pair)		BCHOOSE(ref_bit_offset_pair)
+#define MASK_BIT_PAIR(ref_bit_offset_pair)			BCHOOSE(ref_bit_offset_pair)
 
 #define BRSTP(ref_bit_offset_pair)					BRST(ref_bit_offset_pair)
 #define UNSET_BIT_PAIR(ref_bit_offset_pair)			BRST(ref_bit_offset_pair)

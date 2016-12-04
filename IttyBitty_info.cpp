@@ -38,7 +38,7 @@ namespace IttyBitty
 	CRESETSOURCE GetResetSource()
 	{
 		if (_MCUSR > ResetSource::POWER_ON)
-			_MCUSR &= ~0x1;
+			CLEAR_BIT(_MCUSR, PORF);
 
 		return (CRESETSOURCE)_MCUSR;
 	}
