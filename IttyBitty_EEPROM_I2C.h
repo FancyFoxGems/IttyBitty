@@ -635,7 +635,7 @@ namespace IttyBitty
 
 		// STATIC CONSTEXPR FUNCTION ALIASES
 
-		STATIC CONSTEXPR CSIZE (*PageSize)() = &TEEERef::PageSize();
+		STATIC CONSTEXPR CSIZE (&PageSize)() = TEEERef::PageSize;
 
 
 		// INSTANCE VARIABLES

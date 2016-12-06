@@ -479,7 +479,7 @@ public:
 		BYTE currRow = percentage == 100 ? Rows - 1 : percentage * Rows / 100;
 
 		PBYTE scrollBarChar = this->CreateScrollBarChar(percentage == 100 ? 100 :
-				(percentage % (100 / Rows)) * Rows,
+				((10 * percentage) % (1000 / Rows)) * Rows / 10,
 			LcdScrollBarOptionsToLcdScrollBarIndicator(options));
 		this->LoadCustomChar(0x7, scrollBarChar);
 
@@ -496,7 +496,7 @@ public:
 		}
 	}
 
-	VOID DrawGraph(BYTE row, BYTE startCol, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
+	VOID DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 	{
 		CLCDGRAPHCELL cellStyle = LcdGraphOptionsToLcdGraphCell(options);
 		CLCDSPACETYLE spaceStyle = LcdGraphOptionsToLcdSpaceStyle(options);
@@ -507,19 +507,19 @@ public:
 		PBYTE fullCellChar = this->CreateGraphFullCellChar(cellStyle, spaceChar);
 		this->LoadCustomChar(0x6, fullCellChar);
 
-		if (percentage % (100 / widthChars) > 0)
+		if (((10 * percentage) % (1000 / widthChars)) / 10 > 0)
 		{
 			PBYTE partialCellChar = NULL;
 
 			if (LcdGraphOptionsToLcdGraphPartialStyle(options) == LcdGraphPartialStyle::SEMI_FILL_PARTIAL)
 			{
 				partialCellChar = this->CreateGraphSemiFillCellChar(
-					(percentage % (100 / widthChars)) * widthChars, fullCellChar);
+					((10 * percentage) % (1000 / widthChars)) * widthChars / 10, fullCellChar);
 			}
 			else
 			{
 				partialCellChar = this->CreateGraphPartialCellChar(
-					(percentage % (100 / widthChars)) * widthChars, fullCellChar, spaceChar);
+					((10 * percentage) % (1000 / widthChars)) * widthChars / 10, fullCellChar, spaceChar);
 			}
 
 			this->LoadCustomChar(0x5, partialCellChar);
@@ -536,103 +536,153 @@ public:
 		{
 			this->MoveCursor(col + startCol, row);
 
-			if (percentage <= col * 100 / widthChars)
+			if (10 * percentage <= col * 1000 / widthChars)
 				this->write(0x7);
-			else if (percentage >= (col + 1) * 100 / widthChars)
+			else if (10 * percentage >= (col + 1) * 1000 / widthChars)
 				this->write(0x6);
 			else
 				this->write(0x5);
 		}
 	}
 
-	VOID DrawSlider(BYTE row, BYTE startCol, BYTE widthChars, BYTE percentage, CLCDSLIDEROPTIONS options)
+	VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
+		CLCDSLIDEROPTIONS options, BOOL redraw = FALSE)
 	{
 		CLCDSLIDERMARKER markerStyle = LcdSliderOptionsToLcdSliderMarker(options);
 		CLCDSPACETYLE spaceStyle = LcdSliderOptionsToLcdSpaceStyle(options);
 
 		if ((CBYTE)LcdSliderOptionsToLcdSliderEnds(options))
 		{
-			//this->LoadCustomChar_P(0x5, LCD_CHAR_SLIDER_END_LEFT);
+			this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_LEFT);
 
-			//this->MoveCursor(startCol, row);
-			//this->write(0x5);
+			this->MoveCursor(startCol, row);
+			this->write(0x4);
 
-			//this->LoadCustomChar_P(0x4, LCD_CHAR_SLIDER_END_RIGHT);
+			this->LoadCustomChar_P(0x3, LCD_CHAR_SLIDER_END_RIGHT);
 
-			//this->MoveCursor(startCol + widthChars - 1, row);
-			//this->write(0x4);
+			this->MoveCursor(startCol + widthChars - 1, row);
+			this->write(0x3);
 
 			++startCol;
 			widthChars -= 2;
 		}
 
 		PBYTE spaceChar = this->CreateSpaceChar(spaceStyle);
-		//this->LoadCustomChar(0x7, spaceChar);
+		this->LoadCustomChar(0x7, spaceChar);
 
 		PBYTE markerChar = this->CreateSliderMarker(markerStyle);
 
 		PBYTE partialMarkerChar = NULL;
-		CHAR cellOffset = 0;
+		CHAR cellOffset = MAX_CHAR;
+		BYTE sliderCharIdx = 0x7;
 
-		PrintLine();
-		PrintVal(percentage);
-		PrintString("% - ");
+	#ifdef DEBUG_ITTYBITTY_LCD
+		this->MoveCursor(0, 0);
+		this->print(percentage);
+		this->write('%');
+	#endif
+
 		for (BYTE col = 0; col < widthChars; col++)
 		{
-			PrintVal(col);
-			PrintString(": ");
-			if (col > 0 AND percentage <= (col - 1) * 100 / widthChars
-				OR percentage >= (col + 1) * 100 / widthChars)
-				//OR percentage >= 100 / widthChars AND percentage < col * 100 / widthChars)
+			if (cellOffset < 0
+				OR col > 0 AND 10 * percentage <= (col - 1) * 1000 / widthChars
+				OR (percentage < 100 OR col < widthChars - 1)
+					AND 10 * percentage >= (col + 1) * 1000 / widthChars)
 			{
-				PrintString("SPACE  ");
-				continue;
+			#ifdef DEBUG_ITTYBITTY_LCD
+				this->MoveCursor(col + startCol, 1);
+				this->write(' ');
+			#endif
+
 				this->MoveCursor(col + startCol, row);
 				this->write(0x7);
 
-				cellOffset = 0;
+				if (col == widthChars - 1)
+					this->write(0x7);
+
+				cellOffset = MAX_CHAR;
 
 				continue;
 			}
 
-			if(!cellOffset)
+			if(cellOffset == MAX_CHAR)
 			{
-				if (percentage % (100 / widthChars) == 0)
+				if (percentage == 100)
+				{
 					cellOffset = 2;
+				}
+				else if ((10 * percentage) % (1000 / widthChars) / 10 == 0)
+				{
+
+					cellOffset = -2;
+				}
 				else
-					cellOffset = ((CHAR)((percentage % (100 / widthChars)) * widthChars) - 50) * (CHAR)CHAR_WIDTH() / 100;
+				{
+					cellOffset = ((CHAR)(((10 * percentage) % (1000 / widthChars)) *
+						widthChars / 10) - 50) * (CHAR)CHAR_WIDTH() / 100;
+				}
 			}
-			else if (cellOffset < 0)
+			else if (cellOffset > 0)
 			{
-				cellOffset += (CHAR)CHAR_WIDTH() / 100;
+				cellOffset = -1 * ((CHAR)CHAR_WIDTH() - cellOffset);
 			}
 			else
 			{
-				PrintString("SPACE  ");
-				continue;
+			#ifdef DEBUG_ITTYBITTY_LCD
+				this->MoveCursor(col + startCol, 1);
+				this->write(' ');
+			#endif
+
 				this->MoveCursor(col + startCol, row);
 				this->write(0x7);
 
 				continue;
 			}
-			if (cellOffset == -2)
-				PrintString("-2");
+
+		#ifdef DEBUG_ITTYBITTY_LCD
+			if (cellOffset >= 0)
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->write((CHAR)(cellOffset + 48));
+			}
+			else if (cellOffset == -4)
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->write(0x5C);
+			}
+			else if (cellOffset == -3)
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->print("|");
+			}
+			else if (cellOffset == -2)
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->print("/");
+			}
 			else if (cellOffset == -1)
-				PrintString("-1");
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->print("-");
+			}
 			else
-				PrintVal((CHAR)(cellOffset + 48));
-			PrintString(" OFFSET  ");
-			continue;
+			{
+				this->MoveCursor(col + startCol, 1);
+				this->write((CHAR)(cellOffset + 48));
+			}
+		#endif
+
+			--sliderCharIdx;
 
 			if (!cellOffset)
 			{
 				for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
 					markerChar[pixY] |= spaceChar[pixY];
 
-				this->LoadCustomChar(0x6, markerChar);
+				this->LoadCustomChar(sliderCharIdx, markerChar);
 
 				this->MoveCursor(col + startCol, row);
-				this->write(0x6);
+				this->write(sliderCharIdx);
 
 				continue;
 			}
@@ -653,13 +703,42 @@ public:
 					partialMarkerChar[pixY] = markerChar[pixY] SHR cellOffset;
 			}
 
+		#ifdef DEBUG_ITTYBITTY_LCD
 			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
+			{
+				this->MoveCursor(pixY * 2 + 2, 2);
+				this->print("  ");
+				this->MoveCursor(pixY * 2 + 2, 2);
+				this->print(partialMarkerChar[pixY]);
+			}
+		#endif
+
+			for (BYTE pixY = 0; pixY < CHAR_HEIGHT(); pixY++)
+			{
 				partialMarkerChar[pixY] |= spaceChar[pixY];
 
-			this->LoadCustomChar(0x6, partialMarkerChar);
+			#ifdef DEBUG_ITTYBITTY_LCD
+				this->MoveCursor(pixY * 2 + 2, 3);
+				this->print("  ");
+				this->MoveCursor(pixY * 2 + 2, 3);
+				this->print(partialMarkerChar[pixY]);
+			#endif
+			}
 
-			this->MoveCursor(col + startCol, row);
-			this->write(0x6);
+			if (partialMarkerChar[0] == LCD_CELL_BLANK_PIXEL_ROW)
+			{
+				this->MoveCursor(col + startCol, row);
+				this->write(0x7);
+			}
+			else
+			{
+				this->LoadCustomChar(sliderCharIdx, partialMarkerChar);
+
+				this->MoveCursor(col + startCol, row);
+				this->write(sliderCharIdx);
+
+				this->MoveCursor(col + startCol + 1, row);
+			}
 
 			delete partialMarkerChar;
 		}

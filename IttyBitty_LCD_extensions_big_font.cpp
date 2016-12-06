@@ -1,14 +1,14 @@
 /**********************************************************************************************
-* This file is part of the Itty Bitty Arduino library.                                        *
-* Credit for this font, however, goes to the BigCrystal Arduino library                       *
-*	...which has been released to the Public Domain                                           *
-*	SEE https://github.com/gregington/BigCrystal                                              *
-* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.            *
+* This file is part of the Itty Bitty Arduino library.										*
+* Credit for this font, however, goes to the BigCrystal Arduino library					   *
+*	...which has been released to the Public Domain										   *
+*	SEE https://github.com/gregington/BigCrystal											  *
+* Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.			*
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
 #if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || \
-		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_BIG)
+		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_LCD_BIG)
 	#define NO_ITTYBITTY_EXTENSIONS_BIG
 #endif
 
@@ -22,160 +22,168 @@ namespace IttyBitty
 {
 #pragma region LCD BIG FONT FLASH DATA TABLES
 
-	PROGMEM CBYTE LCD_BIG_FONT_SHAPES[] =
+	PROGMEM CBYTE LCD_BIG_FONT_SHAPES[64] =
 	{
-		// LT[8]
-		0b00111, 0b01111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111,
-		// UB[8]
-		0b11111, 0b11111, 0b11111, 0b00000, 0b00000, 0b00000, 0b00000, 0b00000,
-		// RT[8]
-		0b11100, 0b11110, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111,
-		// LL[8]
-		0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b01111, 0b00111,
-		// LB[8]
-		0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b11111, 0b11111, 0b11111,
-		// LR[8]
-		0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11110, 0b11100,
-		// UMB[8]
-		0b11111, 0b11111, 0b11111, 0b00000, 0b00000, 0b00000, 0b11111, 0b11111,
-		// LMB[8]
-		0b11111, 0b00000, 0b00000, 0b00000, 0b00000, 0b11111, 0b11111, 0b11111
+		// BFLT[8]
+		0b00000111, 0b00001111, 0b00011111, 0b00011111,
+		0b00011111, 0b00011111, 0b00011111, 0b00011111,
+		// BFUB[8]
+		0b00011111, 0b00011111, 0b00011111, 0b00000000,
+		0b00000000, 0b00000000, 0b00000000, 0b00000000,
+		// BFRT[8]
+		0b00011100, 0b00011110, 0b00011111, 0b00011111,
+		0b00011111, 0b00011111, 0b00011111, 0b00011111,
+		// BFLL[8]
+		0b00011111, 0b00011111, 0b00011111, 0b00011111,
+		0b00011111, 0b00011111, 0b00001111, 0b00000111,
+		// BFLB[8]
+		0b00000000, 0b00000000, 0b00000000, 0b00000000,
+		0b00000000, 0b00011111, 0b00011111, 0b00011111,
+		// BFLR[8]
+		0b00011111, 0b00011111, 0b00011111, 0b00011111,
+		0b00011111, 0b00011111, 0b00011110, 0b00011100,
+		// BFUM[8]
+		0b00011111, 0b00011111, 0b00011111, 0b00000000,
+		0b00000000, 0b00000000, 0b00011111, 0b00011111,
+		// BFLM[8]
+		0b00011111, 0b00011111, 0b00000000, 0b00000000,
+		0b00000000, 0b00011111, 0b00011111, 0b00011111
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_CHARACTERS[] =
+	PROGMEM CBYTE LCD_BIG_FONT_CHAR_MAP[] =
 	{
-		(BF_WIDTH1_TABLE << 5) | 0,         // 0x20 (space)
-		(BF_WIDTH1_TABLE << 5) | 1,         // 0x21 !
-		(BF_WIDTH3_SYMBOLS_TABLE << 5) | 0, // 0x22 "
-		BF_NOT_SUPPORTED,                   // 0x23 #
-		BF_NOT_SUPPORTED,                   // 0x24 $
-		BF_NOT_SUPPORTED,                   // 0x25 %
-		BF_NOT_SUPPORTED,                   // 0x26 &
-		(BF_WIDTH1_TABLE << 5) | 2,         // 0x27 '
-		(BF_WIDTH1_TABLE << 5) | 3,         // 0x28 (
-		(BF_WIDTH1_TABLE << 5) | 4,         // 0x29 )
-		BF_NOT_SUPPORTED,                   // 0x2A *
-		(BF_WIDTH3_SYMBOLS_TABLE << 5) | 1, // 0x2B +
-		(BF_WIDTH1_TABLE << 5) | 5,         // 0x2C ,
-		(BF_WIDTH2_TABLE << 5) | 0,         // 0x2D -
-		(BF_WIDTH1_TABLE << 5) | 6,         // 0x2E .
-		BF_NOT_SUPPORTED,                   // 0x2F /
-		(BF_WIDTH3_TABLE << 5) | 0,         // 0x30 0
-		(BF_WIDTH3_TABLE << 5) | 1,         // 0x31 1
-		(BF_WIDTH3_TABLE << 5) | 2,         // 0x32 2
-		(BF_WIDTH3_TABLE << 5) | 3,         // 0x33 3
-		(BF_WIDTH3_TABLE << 5) | 4,         // 0x34 4
-		(BF_WIDTH3_TABLE << 5) | 5,         // 0x35 5
-		(BF_WIDTH3_TABLE << 5) | 6,         // 0x36 6
-		(BF_WIDTH3_TABLE << 5) | 7,         // 0x37 7
-		(BF_WIDTH3_TABLE << 5) | 8,         // 0x38 8
-		(BF_WIDTH3_TABLE << 5) | 9,         // 0x39 9
-		(BF_WIDTH1_TABLE << 5) | 7,         // 0x3A :
-		(BF_WIDTH1_TABLE << 5) | 8,         // 0x3B ;
-		BF_NOT_SUPPORTED,                   // 0x3C <
-		(BF_WIDTH2_TABLE << 5) | 1,         // 0x3D =
-		BF_NOT_SUPPORTED,					// 0x3E <
-		(BF_WIDTH3_SYMBOLS_TABLE << 5) | 2, // 0x3F ?
-		BF_NOT_SUPPORTED,                   // 0x40 @
-		(BF_WIDTH3_TABLE << 5) | 10,        // 0x41 A
-		(BF_WIDTH3_TABLE << 5) | 11,        // 0x42 B
-		(BF_WIDTH3_TABLE << 5) | 12,        // 0x43 C
-		(BF_WIDTH3_TABLE << 5) | 13,        // 0x44 D
-		(BF_WIDTH3_TABLE << 5) | 14,        // 0x45 E
-		(BF_WIDTH3_TABLE << 5) | 15,        // 0x46 F
-		(BF_WIDTH3_TABLE << 5) | 16,        // 0x47 G
-		(BF_WIDTH3_TABLE << 5) | 17,        // 0x48 H
-		(BF_WIDTH3_TABLE << 5) | 18,        // 0x49 I
-		(BF_WIDTH3_TABLE << 5) | 19,        // 0x4A J
-		(BF_WIDTH3_TABLE << 5) | 20,        // 0x4B K
-		(BF_WIDTH3_TABLE << 5) | 21,        // 0x4C L
-		(BF_WIDTH5_TABLE << 5) | 0,         // 0x4D M
-		(BF_WIDTH4_TABLE << 5) | 0,         // 0x4E N
-		(BF_WIDTH3_TABLE << 5) | 0,         // 0x4F O; same as 0, so re-use
-		(BF_WIDTH3_TABLE << 5) | 22,        // 0x50 P
-		(BF_WIDTH4_TABLE << 5) | 1,         // 0x51 Q
-		(BF_WIDTH3_TABLE << 5) | 23,        // 0x52 R
-		(BF_WIDTH3_TABLE << 5) | 24,        // 0x53 S
-		(BF_WIDTH3_TABLE << 5) | 25,        // 0x54 T
-		(BF_WIDTH3_TABLE << 5) | 26,        // 0x55 U
-		(BF_WIDTH4_TABLE << 5) | 2,         // 0x56 V
-		(BF_WIDTH5_TABLE << 5) | 1,         // 0x57 W
-		(BF_WIDTH3_TABLE << 5) | 27,        // 0x58 X
-		(BF_WIDTH3_TABLE << 5) | 28,        // 0x59 Y
-		(BF_WIDTH3_TABLE << 5) | 29         // 0x5A Z
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			0),		// 0x20 (space)
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			1),		// 0x21 !
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3_SYMBOLS,	0),		// 0x22 "
+		LCD_BIG_NO_FONT,										// 0x23 #
+		LCD_BIG_NO_FONT,										// 0x24 $
+		LCD_BIG_NO_FONT,										// 0x25 %
+		LCD_BIG_NO_FONT,										// 0x26 &
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			2),		// 0x27 '
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			3),		// 0x28 (
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			4),		// 0x29 )
+		LCD_BIG_NO_FONT,										// 0x2A *
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3_SYMBOLS,	1),		// 0x2B +
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			5),		// 0x2C ,
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_2,			0),		// 0x2D -
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			6),		// 0x2E .
+		LCD_BIG_NO_FONT,										// 0x2F /
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			0),		// 0x30 0
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			1),		// 0x31 1
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			2),		// 0x32 2
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			3),		// 0x33 3
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			4),		// 0x34 4
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			5),		// 0x35 5
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			6),		// 0x36 6
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			7),		// 0x37 7
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			8),		// 0x38 8
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			9),		// 0x39 9
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			7),		// 0x3A :
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			8),		// 0x3B ;
+		LCD_BIG_NO_FONT,										// 0x3C <
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_2,			1),		// 0x3D =
+		LCD_BIG_NO_FONT,										// 0x3E <
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3_SYMBOLS,	2),		// 0x3F ?
+		LCD_BIG_NO_FONT,										// 0x40 @
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			10),	// 0x41 A
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			11),	// 0x42 B
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			12),	// 0x43 C
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			13),	// 0x44 D
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			14),	// 0x45 E
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			15),	// 0x46 F
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			16),	// 0x47 G
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			17),	// 0x48 H
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			18),	// 0x49 I
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			19),	// 0x4A J
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			20),	// 0x4B K
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			21),	// 0x4C L
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_5,			0),		// 0x4D M
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_4,			0),		// 0x4E N
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			0),		// 0x4F O (re-use of font for number 0)
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			22),	// 0x50 P
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_4,			1),		// 0x51 Q
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			23),	// 0x52 R
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			24),	// 0x53 S
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			25),	// 0x54 T
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			26),	// 0x55 U
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_4,			2),		// 0x56 V
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_5,			1),		// 0x57 W
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			27),	// 0x58 X
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			28),	// 0x59 Y
+		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			29)		// 0x5A Z
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH1[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_1[] =
 	{
-		0x20, 0x20, // 0x20 space
-		0x00, 0x04, // 0x21 !
-		0x05, 0x20, // 0x27 '
-		0x00, 0x03, // 0x28 (
-		0x02, 0x05, // 0x29 )
-		0x20, 0x05, // 0x2C ,
-		0x20, 0x04, // 0x2E .
-		0x6F, 0x6F, // 0x3A :
-		0x01, 0x05  // 0x3B ;
+		BFBL, BFBL,		// BFBL space
+		BFLT, BFLB,		// 0x21 !
+		BFLR, BFBL,		// 0x27 '
+		BFLT, BFLL,		// 0x28 (
+		BFRT, BFLR,		// 0x29 )
+		BFBL, BFLR,		// 0x2C ,
+		BFBL, BFLB,		// 0x2E .
+		0x6F, 0x6F,		// 0x3A :
+		BFUB, BFLR 		// 0x3B ;
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH2[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_2[] =
 	{
-		0x04, 0x04, 0x20, 0x20, // 0x2D -
-		0x04, 0x04, 0x07, 0x07  // 0x3D =
+		BFLB, BFLB, BFBL, BFBL,		// 0x2D -
+		BFLB, BFLB, BFLM, BFLM 		// 0x3D =
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH3[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_3[] =
 	{
-		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, // 0x30 0, 0x4F O
-		0x01, 0x02, 0x20, 0x04, 0xFF, 0x04, // 0x31 1
-		0x06, 0x06, 0x02, 0x03, 0x04, 0x04, // 0x32 2
-		0x06, 0x06, 0x02, 0x04, 0x04, 0x05, // 0x33 3
-		0x03, 0x04, 0x02, 0x20, 0x20, 0x05, // 0x34 4
-		0xFF, 0x06, 0x06, 0x04, 0x04, 0x05, // 0x35 5
-		0x00, 0x06, 0x06, 0x03, 0x04, 0x05, // 0x36 6
-		0x01, 0x01, 0x02, 0x20, 0x00, 0x20, // 0x37 7
-		0x00, 0x06, 0x02, 0x03, 0x04, 0x05, // 0x38 8
-		0x00, 0x06, 0x02, 0x20, 0x20, 0x05, // 0x39 9
-		0x00, 0x06, 0x02, 0xFF, 0x20, 0xFF, // 0x41 A
-		0xFF, 0x06, 0x05, 0xFF, 0x07, 0x02, // 0x42 B
-		0x00, 0x01, 0x01, 0x03, 0x04, 0x04, // 0x43 C
-		0xFF, 0x01, 0x02, 0xFF, 0x04, 0x05, // 0x44 D
-		0xFF, 0x06, 0x06, 0xFF, 0x07, 0x07, // 0x45 E
-		0xFF, 0x06, 0x06, 0xFF, 0x20, 0x20, // 0x46 F
-		0x00, 0x01, 0x01, 0x03, 0x04, 0x02, // 0x47 G
-		0xFF, 0x04, 0xFF, 0xFF, 0x20, 0xFF, // 0x48 H
-		0x01, 0xFF, 0x01, 0x04, 0xFF, 0x04, // 0x49 I
-		0x20, 0x20, 0xFF, 0x04, 0x04, 0x05, // 0x4A J
-		0xFF, 0x04, 0x05, 0xFF, 0x20, 0x02, // 0x4B K
-		0xFF, 0x20, 0x20, 0xFF, 0x04, 0x04, // 0x4C L
-		0x00, 0x06, 0x02, 0x03, 0x20, 0x20, // 0x50 P
-		0x00, 0x06, 0x05, 0x03, 0x20, 0x02, // 0x52 R
-		0x00, 0x06, 0x06, 0x07, 0x07, 0x05, // 0x53 S
-		0x01, 0x02, 0x01, 0x20, 0x05, 0x20, // 0x54 T
-		0x02, 0x20, 0x02, 0x03, 0x04, 0x05, // 0x55 U
-		0x03, 0x04, 0x05, 0x00, 0x20, 0x02, // 0x58 X
-		0x03, 0x04, 0x05, 0x20, 0x05, 0x20, // 0x59 Y
-		0x01, 0x06, 0x05, 0x00, 0x07, 0x04  // 0x5A Z
+		BFLT, BFUB, BFRT, BFLL, BFLB, BFLR,		// 0x30 0, 0x4F O
+		BFUB, BFRT, BFBL, BFLB, 0xFF, BFLB,		// 0x31 1
+		BFUM, BFUM, BFRT, BFLL, BFLB, BFLB,		// 0x32 2
+		BFUM, BFUM, BFRT, BFLB, BFLB, BFLR,		// 0x33 3
+		BFLL, BFLB, BFRT, BFBL, BFBL, BFLR,		// 0x34 4
+		0xFF, BFUM, BFUM, BFLB, BFLB, BFLR,		// 0x35 5
+		BFLT, BFUM, BFUM, BFLL, BFLB, BFLR,		// 0x36 6
+		BFUB, BFUB, BFRT, BFBL, BFLT, BFBL,		// 0x37 7
+		BFLT, BFUM, BFRT, BFLL, BFLB, BFLR,		// 0x38 8
+		BFLT, BFUM, BFRT, BFBL, BFBL, BFLR,		// 0x39 9
+		BFLT, BFUM, BFRT, 0xFF, BFBL, 0xFF,		// 0x41 A
+		0xFF, BFUM, BFLR, 0xFF, BFLM, BFRT,		// 0x42 B
+		BFLT, BFUB, BFUB, BFLL, BFLB, BFLB,		// 0x43 C
+		0xFF, BFUB, BFRT, 0xFF, BFLB, BFLR,		// 0x44 D
+		0xFF, BFUM, BFUM, 0xFF, BFLM, BFLM,		// 0x45 E
+		0xFF, BFUM, BFUM, 0xFF, BFBL, BFBL,		// 0x46 F
+		BFLT, BFUB, BFUB, BFLL, BFLB, BFRT,		// 0x47 G
+		0xFF, BFLB, 0xFF, 0xFF, BFBL, 0xFF,		// 0x48 H
+		BFUB, 0xFF, BFUB, BFLB, 0xFF, BFLB,		// 0x49 I
+		BFBL, BFBL, 0xFF, BFLB, BFLB, BFLR,		// 0x4A J
+		0xFF, BFLB, BFLR, 0xFF, BFBL, BFRT,		// 0x4B K
+		0xFF, BFBL, BFBL, 0xFF, BFLB, BFLB,		// 0x4C L
+		BFLT, BFUM, BFRT, BFLL, BFBL, BFBL,		// 0x50 P
+		BFLT, BFUM, BFLR, BFLL, BFBL, BFRT,		// 0x52 R
+		BFLT, BFUM, BFUM, BFLM, BFLM, BFLR,		// 0x53 S
+		BFUB, BFRT, BFUB, BFBL, BFLR, BFBL,		// 0x54 T
+		BFRT, BFBL, BFRT, BFLL, BFLB, BFLR,		// 0x55 U
+		BFLL, BFLB, BFLR, BFLT, BFBL, BFRT,		// 0x58 X
+		BFLL, BFLB, BFLR, BFBL, BFLR, BFBL,		// 0x59 Y
+		BFUB, BFUM, BFLR, BFLT, BFLM, BFLB		// 0x5A Z
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH3_SYMBOLS[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_3_SYMBOLS[] =
 	{
-		0x05, 0x20, 0x05, 0x20, 0x20, 0x20, // 0x22 "
-		0x04, 0xFF, 0x04, 0x01, 0xFF, 0x01, // 0x2B +
-		0x01, 0x06, 0x02, 0x20, 0x07, 0x20  // 0x3F ?
+		BFLR, BFBL, BFLR, BFBL, BFBL, BFBL,		// 0x22 "
+		BFLB, 0xFF, BFLB, BFUB, 0xFF, BFUB,		// 0x2B +
+		BFUB, BFUM, BFRT, BFBL, BFLM, BFBL		// 0x3F ?
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH4[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_4[] =
 	{
-		0x00, 0x03, 0x20, 0x02, 0x03, 0x20, 0x02, 0x05, // 0x4E N
-		0x00, 0x01, 0x02, 0x20, 0x03, 0x04, 0x03, 0x04, // 0x51 Q
-		0x03, 0x20, 0x20, 0x05, 0x20, 0x03, 0x05, 0x20  // 0x56 V
+		BFLT, BFLL, BFBL, BFRT, BFLL, BFBL, BFRT, BFLR,		// 0x4E N
+		BFLT, BFUB, BFRT, BFBL, BFLL, BFLB, BFLL, BFLB,		// 0x51 Q
+		BFLL, BFBL, BFBL, BFLR, BFBL, BFLL, BFLR, BFBL 		// 0x56 V
 	};
 
-	PROGMEM CBYTE LCD_BIG_FONT_WIDTH5[] =
+	PROGMEM CBYTE LCD_BIG_FONT_DATA_5[] =
 	{
-		0x00, 0x01, 0x03, 0x01, 0x02, 0x03, 0x20, 0x20, 0x20, 0x05, // 0x4D M
-		0x00, 0x20, 0x20, 0x20, 0x02, 0x03, 0x04, 0x00, 0x04, 0x05  // 0x57 W
+		BFLT, BFUB, BFLL, BFUB, BFRT, BFLL, BFBL, BFBL, BFBL, BFLR,		// 0x4D M
+		BFLT, BFBL, BFBL, BFBL, BFRT, BFLL, BFLB, BFLT, BFLB, BFLR		// 0x57 W
 	};
 
 #pragma endregion

@@ -210,12 +210,21 @@ using std::extent;
 #define ever				(;;)
 #define forever				for ever
 
-#define MAX_VALUE_OF(T)		((T)T(0) - 0b1)
+#define MAX_VALUE_OF(T)		((T)(T(0) - 0b1))
 #define MAX_OF(T)			MAX_VALUE_OF(T)
 
 #define MAX_BYTE			MAX_OF(BYTE)
 #define MAX_WORD			MAX_OF(WORD)
 #define MAX_DWORD			MAX_OF(DWORD)
+#define MAX_QWORD			MAX_OF(QWORD)
+
+#define MAX_SIGNED_VALUE_OF(T, UT)		((T)(MAX_VALUE_OF(UT) / 2))
+#define MAX_SIGNED_OF(T, UT)			MAX_SIGNED_VALUE_OF(T, UT)
+
+#define MAX_CHAR			MAX_SIGNED_OF(CHAR, BYTE)
+#define MAX_SHORT			MAX_SIGNED_OF(SHORT, WORD)
+#define MAX_LONG			MAX_SIGNED_OF(LONG, DWORD)
+#define MAX_LONGLONG		MAX_SIGNED_OF(LONGLONG, QWORD)
 
 #define T_SIZE				SIZEOF(T)
 #define T_MAX				MAX_OF(T)

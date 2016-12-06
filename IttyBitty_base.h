@@ -43,7 +43,7 @@
 
 #define ITTYBITTY_BASE
 
-#ifndef NO_ITTYBITTY)BYTES
+#ifndef NO_ITTYBITTY_BYTES
 	#define NO_ITTYBITTY_FULL_BYTES
 #endif
 

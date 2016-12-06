@@ -320,13 +320,13 @@ typedef volatile unsigned long VU32;
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long long, LONGLONG);
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(long long, INT64);
 
-typedef long long qword, int64, I64, verylong, VERYLONG, muchlong, somuchslong;
+typedef long long int64, I64, verylong, VERYLONG, muchlong, somuchslong;
 typedef volatile long long V64;
 
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long long, QWORD);
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(unsigned long long, UINT64);
 
-typedef unsigned long long uint64, U64;
+typedef unsigned long long qword, uint64, U64;
 typedef volatile unsigned long long VU64;
 
 

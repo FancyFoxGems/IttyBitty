@@ -11,7 +11,8 @@
 
 
 #include "IttyBitty_bits.h"
-#include "IttyBitty_print.h"
+
+	#include "IttyBitty_print.h"
 
 #ifndef NO_ITTYBITTY_LCD_CHARS
 	#include "IttyBitty_LCD_chars.h"
@@ -21,7 +22,7 @@
 	#include "IttyBitty_LCD_extensions.h"
 #endif
 
-#ifndef NO_ITTYBITTY_LCD_BIG_EXTENSIONS
+#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
 	#include "IttyBitty_LCD_extensions_big.h"
 #endif
 
@@ -64,7 +65,7 @@
 
 #define LCD_WAIT_STROBE_EN_PULSE_uS		1		// > 450 ns: minimum pulse sustain time
 
-#define LCD_WAIT_CMD_EXECUTE_uS			50		// ... + LCD_WAIT_STROBE_EN_PULSE_uS > 37 us: minumum (write) command time
+#define LCD_WAIT_CMD_EXECUTE_uS			40		// ... + LCD_WAIT_STROBE_EN_PULSE_uS > 37 us: minumum (write) command time
 
 #define LCD_WAIT_POWER_ON_MS			200		// > 15 ms @ LCD Vcc = 4.5 V; > 40 ms @ LCD Vcc = 2.7 V
 
@@ -251,7 +252,7 @@ namespace IttyBitty
 
 		CBYTE ReadI2C()
 		{
-			Wire.requestFrom(I2CAddr, 1);
+			Wire.requestFrom(I2CAddr, (BYTE)1);
 
 			return (CBYTE)WIRE_READ();
 		}
@@ -321,9 +322,9 @@ namespace IttyBitty
 
 		VOID ClockInWrite(CBYTE data)
 		{
-			this->PulseEnFalling(data);
 			this->WriteI2C(data);
 			this->PulseEnRising(data);
+			this->PulseEnFalling(data);
 
 			delayMicroseconds(LCD_WAIT_CMD_EXECUTE_uS);
 		}
@@ -833,7 +834,17 @@ namespace IttyBitty
 			return 1;
 		}
 
-		CBYTE PrintStr(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row)
+		{
+			this->MoveCursor(col, row);
+			return this->write(value);
+		}
+
+		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
+		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
+		#endif
+		)
 		{
 			if (col == MAX_BYTE)
 				col = _CursorCol;
@@ -844,15 +855,16 @@ namespace IttyBitty
 			BYTE charsPrinted = 0;
 
 			while (*str != '\0')
-			{
-				this->MoveCursor(col + charsPrinted++, row);
-				this->write(*str++);
-			}
+				charsPrinted += (this->*writeCallback)((BYTE)*str++, col + charsPrinted, row);
 
 			return charsPrinted;
 		}
 
-		CBYTE PrintStr_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
+		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
+		#endif
+		)
 		{
 			if (col == MAX_BYTE)
 				col = _CursorCol;
@@ -863,12 +875,11 @@ namespace IttyBitty
 			BYTE charsPrinted = 0;
 
 			PCCHAR strAddr = reinterpret_cast<PCCHAR>(flashStr);
-			CHAR c = pgm_read_byte_near(strAddr++);
+			BYTE c = pgm_read_byte_near(strAddr++);
 
 			while (c != '\0')
 			{
-				this->MoveCursor(col + charsPrinted++, row);
-				this->write(c);
+				charsPrinted += (this->*writeCallback)(c, col + charsPrinted, row);
 
 				c = pgm_read_byte_near(strAddr++);
 			}
@@ -927,7 +938,7 @@ namespace IttyBitty
 		#include "IttyBitty_LCD_extensions_decl.h"
 	#endif
 
-	#ifndef NO_ITTYBITTY_LCD_BIG_EXTENSIONS
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
 		#include "IttyBitty_LCD_extensions_big_decl.h"
 	#endif
 	};

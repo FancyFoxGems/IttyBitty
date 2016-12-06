@@ -5,14 +5,14 @@
 ***********************************************************************************************/
 
 #if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || \
-		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_BIG)
-	#define NO_ITTYBITTY_LCD_BIG
+		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_LCD_BIG)
+	#define NO_ITTYBITTY_EXTENSIONS_BIG
 #endif
 
-#ifndef NO_ITTYBITTY_LCD_BIG
+#ifndef NO_ITTYBITTY_EXTENSIONS_BIG
 
 
 #include "IttyBitty_LCD_extensions_big.h"
 
 
-#endif	// #ifndef NO_ITTYBITTY_LCD_BIG
+#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS_BIG
