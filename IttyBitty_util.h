@@ -24,11 +24,25 @@
 /* ATTRIBUTE & TYPE INFO ALIASES */
 
 #define ALWAYS_INLINE				__attribute__((always_inline))
-#define ALIAS(reference)			__attribute__ ((weakref(STR(reference))))
-#define PACKED						__attribute__ ((packed))
+#define ALIAS(reference)			__attribute__((weakref(STR(reference))))
+#define PACKED						__attribute__((packed))
 #define PACKED_UNION				UNION PACKED
 #define PACKED_STRUCT				STRUCT PACKED
 #define BITFIELD_STRUCT				PACKED_STRUCT
+
+#define SECTION(section_name)		__attribute__((section("." EXPAND_STR(section_name))))
+#define EEPROM_VAR					SECTION(eeprom)
+#define INIT_SECTION(init_num)		SECTION(init##init_num)
+#define INIT0						INIT_SECTION(0)
+#define INIT1						INIT_SECTION(1)
+#define INIT2						INIT_SECTION(2)
+#define INIT3						INIT_SECTION(3)
+#define INIT4						INIT_SECTION(4)
+#define INIT5						INIT_SECTION(5)
+#define INIT6						INIT_SECTION(6)
+#define INIT7						INIT_SECTION(7)
+#define INIT8						INIT_SECTION(8)
+#define INIT9						INIT_SECTION(9)
 
 #define TYPEOF(var)					decltype(var)
 
@@ -233,12 +247,12 @@ using std::extent;
 #define _CONSTRUCT(constructor_expr)					FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
 
 #define SOFT_RESET()			\
-	do                          \
-	{                           \
-		wdt_enable(WDTO_15MS);  \
-		for(;;)                 \
-		{                       \
-		}                       \
+	do							\
+	{							\
+		wdt_enable(WDTO_15MS);	\
+		for (;;)				\
+		{						\
+		}						\
 	} while(0)
 
 

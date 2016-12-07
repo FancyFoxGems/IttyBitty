@@ -12,8 +12,6 @@
 
 #include "IttyBitty_bits.h"
 
-	#include "IttyBitty_print.h"
-
 #ifndef NO_ITTYBITTY_LCD_CHARS
 	#include "IttyBitty_LCD_chars.h"
 #endif
