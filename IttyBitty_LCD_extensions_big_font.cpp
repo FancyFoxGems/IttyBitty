@@ -1,8 +1,8 @@
 /**********************************************************************************************
-* This file is part of the Itty Bitty Arduino library.										*
+* This file is part of the Itty Bitty Arduino library.     		*
 * Credit for this font, however, goes to the BigCrystal Arduino library					   *
-*	...which has been released to the Public Domain										   *
-*	SEE https://github.com/gregington/BigCrystal											  *
+*	...which has been released to the Public Domain     		   *
+*	SEE https://github.com/gregington/BigCrystal     			  *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.			*
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
@@ -67,7 +67,7 @@ namespace IttyBitty
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			5),		// 0x2C ,
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_2,			0),		// 0x2D -
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_1,			6),		// 0x2E .
-		LCD_BIG_NO_FONT,										// 0x2F /
+		LCD_BIG_NO_FONT,										//
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			0),		// 0x30 0
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			1),		// 0x31 1
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			2),		// 0x32 2
@@ -113,77 +113,88 @@ namespace IttyBitty
 		LCD_BIG_CHAR_MAP_ENTRY(LCD_BIG_FONT_3,			29)		// 0x5A Z
 	};
 
+	PROGMEM PCBYTE const LCD_BIG_FONT_DATA_TABLES[6] =
+	{
+		LCD_BIG_FONT_DATA_1, LCD_BIG_FONT_DATA_2, LCD_BIG_FONT_DATA_3,
+		LCD_BIG_FONT_DATA_4, LCD_BIG_FONT_DATA_5, LCD_BIG_FONT_DATA_3_SYMBOLS
+	};
+
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_1[] =
 	{
-		BFBL, BFBL,		// BFBL space
-		BFLT, BFLB,		// 0x21 !
-		BFLR, BFBL,		// 0x27 '
-		BFLT, BFLL,		// 0x28 (
-		BFRT, BFLR,		// 0x29 )
-		BFBL, BFLR,		// 0x2C ,
-		BFBL, BFLB,		// 0x2E .
-		0x6F, 0x6F,		// 0x3A :
-		BFUB, BFLR 		// 0x3B ;
+		BFBL, BFBL,		     					// BFBL space
+		BFLT, BFLB,	     						// 0x21 !
+		BFLR, BFBL,	     						// 0x27 '
+		BFLT, BFLL,	     						// 0x28 (
+		BFRT, BFLR,		     					// 0x29 )
+		BFBL, BFLR,		     					// 0x2C ,
+		BFBL, BFLB,	     						// 0x2E .
+		BFUN, BFUN,		     					// 0x3A :
+		BFUB, BFLR 		     					// 0x3B ;
 	};
 
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_2[] =
 	{
-		BFLB, BFLB, BFBL, BFBL,		// 0x2D -
-		BFLB, BFLB, BFLM, BFLM 		// 0x3D =
+		BFLB, BFLB, BFBL, BFBL,     			// 0x2D -
+		BFLB, BFLB, BFLM, BFLM      			// 0x3D =
 	};
 
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_3[] =
 	{
-		BFLT, BFUB, BFRT, BFLL, BFLB, BFLR,		// 0x30 0, 0x4F O
-		BFUB, BFRT, BFBL, BFLB, 0xFF, BFLB,		// 0x31 1
-		BFUM, BFUM, BFRT, BFLL, BFLB, BFLB,		// 0x32 2
-		BFUM, BFUM, BFRT, BFLB, BFLB, BFLR,		// 0x33 3
-		BFLL, BFLB, BFRT, BFBL, BFBL, BFLR,		// 0x34 4
-		0xFF, BFUM, BFUM, BFLB, BFLB, BFLR,		// 0x35 5
-		BFLT, BFUM, BFUM, BFLL, BFLB, BFLR,		// 0x36 6
-		BFUB, BFUB, BFRT, BFBL, BFLT, BFBL,		// 0x37 7
-		BFLT, BFUM, BFRT, BFLL, BFLB, BFLR,		// 0x38 8
-		BFLT, BFUM, BFRT, BFBL, BFBL, BFLR,		// 0x39 9
-		BFLT, BFUM, BFRT, 0xFF, BFBL, 0xFF,		// 0x41 A
-		0xFF, BFUM, BFLR, 0xFF, BFLM, BFRT,		// 0x42 B
-		BFLT, BFUB, BFUB, BFLL, BFLB, BFLB,		// 0x43 C
-		0xFF, BFUB, BFRT, 0xFF, BFLB, BFLR,		// 0x44 D
-		0xFF, BFUM, BFUM, 0xFF, BFLM, BFLM,		// 0x45 E
-		0xFF, BFUM, BFUM, 0xFF, BFBL, BFBL,		// 0x46 F
-		BFLT, BFUB, BFUB, BFLL, BFLB, BFRT,		// 0x47 G
-		0xFF, BFLB, 0xFF, 0xFF, BFBL, 0xFF,		// 0x48 H
-		BFUB, 0xFF, BFUB, BFLB, 0xFF, BFLB,		// 0x49 I
-		BFBL, BFBL, 0xFF, BFLB, BFLB, BFLR,		// 0x4A J
-		0xFF, BFLB, BFLR, 0xFF, BFBL, BFRT,		// 0x4B K
-		0xFF, BFBL, BFBL, 0xFF, BFLB, BFLB,		// 0x4C L
-		BFLT, BFUM, BFRT, BFLL, BFBL, BFBL,		// 0x50 P
-		BFLT, BFUM, BFLR, BFLL, BFBL, BFRT,		// 0x52 R
-		BFLT, BFUM, BFUM, BFLM, BFLM, BFLR,		// 0x53 S
-		BFUB, BFRT, BFUB, BFBL, BFLR, BFBL,		// 0x54 T
-		BFRT, BFBL, BFRT, BFLL, BFLB, BFLR,		// 0x55 U
-		BFLL, BFLB, BFLR, BFLT, BFBL, BFRT,		// 0x58 X
-		BFLL, BFLB, BFLR, BFBL, BFLR, BFBL,		// 0x59 Y
+		BFLT, BFUB, BFRT, BFLL, BFLB, BFLR,     // 0x30 0, 0x4F O
+		BFUB, BFRT, BFBL, BFLB, BFFF, BFLB,     // 0x31 1
+		BFUM, BFUM, BFRT, BFLL, BFLB, BFLB,     // 0x32 2
+		BFUM, BFUM, BFRT, BFLB, BFLB, BFLR,     // 0x33 3
+		BFLL, BFLB, BFRT, BFBL, BFBL, BFLR,     // 0x34 4
+		BFFF, BFUM, BFUM, BFLB, BFLB, BFLR,     // 0x35 5
+		BFLT, BFUM, BFUM, BFLL, BFLB, BFLR,     // 0x36 6
+		BFUB, BFUB, BFRT, BFBL, BFLT, BFBL,     // 0x37 7
+		BFLT, BFUM, BFRT, BFLL, BFLB, BFLR,     // 0x38 8
+		BFLT, BFUM, BFRT, BFBL, BFBL, BFLR,     // 0x39 9
+		BFLT, BFUM, BFRT, BFFF, BFBL, BFFF,     // 0x41 A
+		BFFF, BFUM, BFLR, BFFF, BFLM, BFRT,     // 0x42 B
+		BFLT, BFUB, BFUB, BFLL, BFLB, BFLB,     // 0x43 C
+		BFFF, BFUB, BFRT, BFFF, BFLB, BFLR,     // 0x44 D
+		BFFF, BFUM, BFUM, BFFF, BFLM, BFLM,     // 0x45 E
+		BFFF, BFUM, BFUM, BFFF, BFBL, BFBL,     // 0x46 F
+		BFLT, BFUB, BFUB, BFLL, BFLB, BFRT,     // 0x47 G
+		BFFF, BFLB, BFFF, BFFF, BFBL, BFFF,     // 0x48 H
+		BFUB, BFFF, BFUB, BFLB, BFFF, BFLB,     // 0x49 I
+		BFBL, BFBL, BFFF, BFLB, BFLB, BFLR,     // 0x4A J
+		BFFF, BFLB, BFLR, BFFF, BFBL, BFRT,     // 0x4B K
+		BFFF, BFBL, BFBL, BFFF, BFLB, BFLB,     // 0x4C L
+		BFLT, BFUM, BFRT, BFLL, BFBL, BFBL,     // 0x50 P
+		BFLT, BFUM, BFLR, BFLL, BFBL, BFRT,     // 0x52 R
+		BFLT, BFUM, BFUM, BFLM, BFLM, BFLR,     // 0x53 S
+		BFUB, BFRT, BFUB, BFBL, BFLR, BFBL,     // 0x54 T
+		BFRT, BFBL, BFRT, BFLL, BFLB, BFLR,     // 0x55 U
+		BFLL, BFLB, BFLR, BFLT, BFBL, BFRT,     // 0x58 X
+		BFLL, BFLB, BFLR, BFBL, BFLR, BFBL,     // 0x59 Y
 		BFUB, BFUM, BFLR, BFLT, BFLM, BFLB		// 0x5A Z
 	};
 
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_3_SYMBOLS[] =
 	{
 		BFLR, BFBL, BFLR, BFBL, BFBL, BFBL,		// 0x22 "
-		BFLB, 0xFF, BFLB, BFUB, 0xFF, BFUB,		// 0x2B +
+		BFLB, BFFF, BFLB, BFUB, BFFF, BFUB,     // 0x2B +
 		BFUB, BFUM, BFRT, BFBL, BFLM, BFBL		// 0x3F ?
 	};
 
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_4[] =
 	{
-		BFLT, BFLL, BFBL, BFRT, BFLL, BFBL, BFRT, BFLR,		// 0x4E N
-		BFLT, BFUB, BFRT, BFBL, BFLL, BFLB, BFLL, BFLB,		// 0x51 Q
-		BFLL, BFBL, BFBL, BFLR, BFBL, BFLL, BFLR, BFBL 		// 0x56 V
+		BFLT, BFLL, BFBL, BFRT,					// 0x4E N
+		BFLL, BFBL, BFRT, BFLR,
+		BFLT, BFUB, BFRT, BFBL,					// 0x51 Q
+		BFLL, BFLB, BFLL, BFLB,
+		BFLL, BFBL, BFBL, BFLR,					// 0x56 V
+		BFBL, BFLL, BFLR, BFBL
 	};
 
 	PROGMEM CBYTE LCD_BIG_FONT_DATA_5[] =
 	{
-		BFLT, BFUB, BFLL, BFUB, BFRT, BFLL, BFBL, BFBL, BFBL, BFLR,		// 0x4D M
-		BFLT, BFBL, BFBL, BFBL, BFRT, BFLL, BFLB, BFLT, BFLB, BFLR		// 0x57 W
+		BFLT, BFUB, BFLL, BFUB, BFRT, 			// 0x4D M
+		BFLL, BFBL, BFBL, BFBL, BFLR,
+		BFLT, BFBL, BFBL, BFBL, BFRT, 			// 0x57 W
+		BFLL, BFLB, BFLT, BFLB, BFLR
 	};
 
 #pragma endregion

@@ -16,6 +16,10 @@
 
 #pragma region DEFINES
 
+// UPPER CASE MASK CONSTANT
+
+#define CHAR_UPPER_CASE_MASK	0x5F
+
 // BIG FONT SHAPE CHARACTER INDEXES
 
 #define BFLT	0x00
@@ -28,6 +32,8 @@
 #define BFLM	0x07
 
 #define BFBL	0x20
+#define BFFF	0xFF
+#define BFUN	0x6F
 
 
 // BIG FONT TABLE CODES
@@ -57,6 +63,10 @@
 #define LCD_BIG_CHAR_MAP_ENTRY(table_code, font_index)	\
 	WITH_BITS(LCD_BIG_CHAR_MAP_TABLE_CODE(table_code), LCD_BIG_CHAR_MAP_FONT_INDEX(font_index))
 
+
+#define LCD_BIG_TABLE_CODE_FROM_CHAR_MAP_ENTRY(char_map_entry)			(char_map_entry) SHR LCD_BIG_CHAR_MAP_TABLE_CODE_OFFSET
+#define LCD_BIG_FONT_INDEX_FROM_CHAR_MAP_ENTRY(char_map_entry)			MASK(char_map_entry, LCD_BIG_CHAR_MAP_FONT_INDEX_MASK)
+
 #pragma endregion
 
 
@@ -67,6 +77,8 @@ namespace IttyBitty
 	EXTERN PROGMEM CBYTE LCD_BIG_FONT_SHAPES[64];
 
 	EXTERN PROGMEM CBYTE LCD_BIG_FONT_CHAR_MAP[59];
+
+	EXTERN PROGMEM PCBYTE const LCD_BIG_FONT_DATA_TABLES[6];
 
 	EXTERN PROGMEM CBYTE LCD_BIG_FONT_DATA_1[18];			//	1 cols/char * 2 rows/char * 18 chars
 	EXTERN PROGMEM CBYTE LCD_BIG_FONT_DATA_2[8];			//	2 cols/char * 2 rows/char * 2 chars
