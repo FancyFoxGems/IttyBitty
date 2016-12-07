@@ -233,6 +233,10 @@ namespace IttyBitty
 		BYTE _CursorRow = 0;
 		BYTE _CursorCol = 0;
 
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+		BOOL _BigFontLoaded = FALSE;
+	#endif
+
 
 		// HELPER METHODS
 
@@ -834,6 +838,10 @@ namespace IttyBitty
 
 		CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row)
 		{
+		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+			_BigFontLoaded = FALSE;
+		#endif
+
 			this->MoveCursor(col, row);
 			return this->write(value);
 		}

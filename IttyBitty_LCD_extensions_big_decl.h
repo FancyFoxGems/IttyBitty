@@ -53,14 +53,15 @@ private:
 
 	PCBYTE BigFontTable(CBYTE tableCode)
 	{
-		return LCD_BIG_FONT_DATA_3;
-		//return reinterpret_cast<PCBYTE>(pgm_read_word_near(&LCD_BIG_FONT_DATA_TABLES[tableCode]));
+		return reinterpret_cast<PCBYTE>(pgm_read_word_near(&LCD_BIG_FONT_DATA_TABLES[tableCode - 1]));
 	}
 
 	VOID ClearColumn(CBYTE col, CBYTE row)
 	{
-		this->WriteAt(BFBL, col, row);
-		this->WriteAt(BFBL, col, row + 1);
+		this->MoveCursor(col, row);
+		this->write(BFBL);
+		this->MoveCursor(col, row + 1);
+		this->write(BFBL);
 	}
 
 #pragma endregion
@@ -74,6 +75,8 @@ public:
 	{
 		for (BYTE i = 0; i < CHAR_HEIGHT(); i++)
 			this->LoadCustomChar_P(i, &LCD_BIG_FONT_SHAPES[i * CHAR_HEIGHT()]);
+
+		_BigFontLoaded = TRUE;
 	}
 
 	CBYTE WriteBig(CBYTE c, CBYTE col, CBYTE row)
@@ -87,6 +90,9 @@ public:
 		PCBYTE table = this->BigFontTable(tableCode);
 		if (!table)
 			return 0;
+
+		if (!_BigFontLoaded)
+			this->LoadBigFont();
 
 		CBYTE bigCharWidth = this->BigCharWidthFromTableCode(tableCode);
 		int tableOffset = bigCharWidth * 2 * fontIndex;

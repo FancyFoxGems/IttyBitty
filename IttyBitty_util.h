@@ -253,7 +253,7 @@ using std::extent;
 		for (;;)				\
 		{						\
 		}						\
-	} while(0)
+	} while(0)					\
 
 
 /* PLACEMENT NEW IMPLEMENTATION */
