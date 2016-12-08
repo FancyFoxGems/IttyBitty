@@ -161,6 +161,12 @@
     <ClInclude Include="..\IttyBitty_DB_tables.h">
       <Filter>Database</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_big.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_LCD_big_decl.h">
+      <Filter>Display</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_LCD_chars.h">
       <Filter>Display</Filter>
     </ClInclude>
@@ -168,12 +174,6 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_LCD_extensions_decl.h">
-      <Filter>Display</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_LCD_extensions_big.h">
-      <Filter>Display</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_LCD_extensions_big_decl.h">
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_LCD_I2C.h">
@@ -358,16 +358,16 @@
     <ClCompile Include="..\IttyBitty_DB_tables.cpp">
       <Filter>Database</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_big.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_LCD_big_font.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_LCD_chars.cpp">
       <Filter>Display</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_LCD_extensions.cpp">
-      <Filter>Display</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_LCD_extensions_big.cpp">
-      <Filter>Display</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_LCD_extensions_big_font.cpp">
       <Filter>Display</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_LCD_I2C.cpp">

@@ -7,12 +7,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || \
-		defined(NO_ITTYBITTY_LCD_I2C) || defined(NO_ITTYBITTY_LCD_BIG)
-	#define NO_ITTYBITTY_EXTENSIONS_BIG
+#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || defined(NO_ITTYBITTY_LCD_I2C)
+	#define NO_ITTYBITTY_BIG
 #endif
 
-#ifndef NO_ITTYBITTY_EXTENSIONS_BIG
+#ifndef NO_ITTYBITTY_BIG
 
 
 #include "IttyBitty_LCD_I2C.h"
@@ -200,4 +199,4 @@ namespace IttyBitty
 #pragma endregion
 };
 
-#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS_BIG
+#endif	// #ifndef NO_ITTYBITTY_BIG

@@ -45,6 +45,8 @@
 #pragma endregion
 
 
+#ifndef NO_ITTYBITTY_CHARS
+
 namespace IttyBitty
 {
 #pragma region CUSTOM LCD CHARACTER FLASH CONSTANT DECLARATIONS
@@ -99,5 +101,7 @@ namespace IttyBitty
 
 #pragma endregion
 };
+
+#endif	// #ifndef NO_ITTYBITTY_CHARS
 
 #endif

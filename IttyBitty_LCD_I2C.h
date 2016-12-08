@@ -11,17 +11,14 @@
 
 
 #include "IttyBitty_bits.h"
+#include "IttyBitty_LCD_chars.h"
 
-#ifndef NO_ITTYBITTY_LCD_CHARS
-	#include "IttyBitty_LCD_chars.h"
+#ifndef NO_ITTYBITTY_LCD_BIG
+	#include "IttyBitty_LCD_big.h"
 #endif
 
 #ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 	#include "IttyBitty_LCD_extensions.h"
-#endif
-
-#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
-	#include "IttyBitty_LCD_extensions_big.h"
 #endif
 
 #include "Print.h"
@@ -233,7 +230,7 @@ namespace IttyBitty
 		BYTE _CursorRow = 0;
 		BYTE _CursorCol = 0;
 
-	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+	#ifndef NO_ITTYBITTY_LCD_BIG
 		BOOL _BigFontLoaded = FALSE;
 	#endif
 
@@ -838,7 +835,7 @@ namespace IttyBitty
 
 		CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row)
 		{
-		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+		#ifndef NO_ITTYBITTY_LCD_BIG
 			_BigFontLoaded = FALSE;
 		#endif
 
@@ -865,7 +862,7 @@ namespace IttyBitty
 		}
 
 		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
-		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+		#ifndef NO_ITTYBITTY_LCD_BIG
 			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
 		#endif
 		)
@@ -885,7 +882,7 @@ namespace IttyBitty
 		}
 
 		CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
-		#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
+		#ifndef NO_ITTYBITTY_LCD_BIG
 			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
 		#endif
 		)
@@ -958,12 +955,12 @@ namespace IttyBitty
 	#endif
 
 
-	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
-		#include "IttyBitty_LCD_extensions_decl.h"
+	#ifndef NO_ITTYBITTY_LCD_BIG
+		#include "IttyBitty_LCD_big_decl.h"
 	#endif
 
-	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS_BIG
-		#include "IttyBitty_LCD_extensions_big_decl.h"
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
+		#include "IttyBitty_LCD_extensions_decl.h"
 	#endif
 	};
 

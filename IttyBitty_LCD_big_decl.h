@@ -1,5 +1,5 @@
 /***********************************************************************************************
-* [IttyBitty_LCD_extensions_big_decl.h]: METHOD DECLARATIONS FOR ADDED SUPPORT FOR LARGE
+* [IttyBitty_LCD_big_decl.h]: METHOD DECLARATIONS FOR ADDED SUPPORT FOR LARGE
 *	(TWO-ROW, MULTI-COLUMN) CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS
 *
 * This file is part of the Itty Bitty Arduino library.
@@ -7,11 +7,11 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_LCD_EXTENSIONS_BIG_DECL_H
-#define _ITTYBITTY_LCD_EXTENSIONS_BIG_DECL_H
+#ifndef _ITTYBITTY_LCD_BIG_DECL_H
+#define _ITTYBITTY_LCD_BIG_DECL_H
 
 
-#pragma region LCD BIG EXTENSIONS HELPER FUNCTIONS
+#pragma region LCD LARGE PRINT HELPER FUNCTIONS
 
 private:
 

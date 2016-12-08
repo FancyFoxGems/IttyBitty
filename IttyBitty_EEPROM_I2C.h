@@ -880,11 +880,4 @@ namespace IttyBitty
 #pragma endregion
 }
 
-
-#pragma region ExtEEPROM GLOBAL VARIABLE DECLARATION
-
-EXTERN IttyBitty::EEPROMI2C<> ExtEEPROM;
-
-#pragma endregion
-
 #endif
