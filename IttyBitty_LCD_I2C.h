@@ -843,7 +843,25 @@ namespace IttyBitty
 		#endif
 
 			this->MoveCursor(col, row);
-			return this->write(value);
+			return (CBYTE)this->write(value);
+		}
+
+		VOID ClearCol(CBYTE col = MAX_BYTE)
+		{
+			if (col == MAX_BYTE)
+				col = _CursorCol;
+
+			for (BYTE i = 0; i < Rows; i++)
+				this->WriteAt(LCD_SYMBOL_BLANK, col, i);
+		}
+
+		VOID ClearRow(CBYTE row = MAX_BYTE)
+		{
+			if (row == MAX_BYTE)
+				row = _CursorRow;
+
+			for (BYTE i = 0; i < Cols; i++)
+				this->WriteAt(LCD_SYMBOL_BLANK, i, row);
 		}
 
 		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE

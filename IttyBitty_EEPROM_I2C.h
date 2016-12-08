@@ -630,7 +630,7 @@ namespace IttyBitty
 			return CapacityKb() * KILObit / BITS_PER_BYTE;
 		}
 
-		STATIC CTADDR (*Capacity)() ALIAS(Size);
+		STATIC CTADDR Capacity() ALIAS(Size);
 
 
 		// STATIC CONSTEXPR FUNCTION ALIASES

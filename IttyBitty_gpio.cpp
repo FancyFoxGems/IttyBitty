@@ -46,7 +46,7 @@ BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 namespace IttyBitty
 {
-	VOID InitGPIO()
+	VOID _InitializeGPIO()
 	{
 		_InitializeArduinoPortTables();
 		_InitializeArduinoPinTables();

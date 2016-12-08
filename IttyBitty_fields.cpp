@@ -37,7 +37,6 @@ PCBYTE FieldBase::ToBinary() const
 PCCHAR FieldBase::ToString() const
 {
 	CSIZE size = this->StringSize();
-	CSIZE byteWidth = this->ByteWidth();
 
 	this->FreeBuffer();
 

@@ -112,6 +112,8 @@ namespace IttyBitty
 		return static_cast<CDATASIZE>(HIGH_NYBBLE((CBYTE)dataType));
 	}
 
+	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE) USED;
+
 	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE dataType)
 	{
 		return static_cast<CDATATYPEFORMAT>(LOW_NYBBLE((CBYTE)dataType));

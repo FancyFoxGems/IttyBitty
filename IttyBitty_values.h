@@ -28,7 +28,7 @@ namespace IttyBitty
 
 #pragma region [ConstValue] DEFINITION: IMMUTABLE, VALUE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
 
-	UNION PACKED ConstValue
+	PACKED_UNION ConstValue
 	{
 		// UNION MEMBERS
 
@@ -112,7 +112,7 @@ namespace IttyBitty
 
 #pragma region [Value] DEFINITION: MUTABLE, REFERENCE-BASED UNIVERSAL 4-BYTE DATA TYPE UNION
 
-	UNION PACKED Value
+	PACKED_UNION Value
 	{
 		// UNION MEMBERS
 

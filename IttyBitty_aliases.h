@@ -54,14 +54,17 @@
 	#define FALSE		false
 #endif
 
-#define EXTERN			extern
 #define INLINE			inline
 #define EXPLICIT		explicit
 #define STATIC			static
 #define FINAL			final
 #define VIRTUAL			virtual
 
-#define CONSTEXPR		constexpr	// NOTE: Only supported by Arduino 1.[?]+..?
+#define EXTERN			extern
+#define EXTERN_C		EXTERN "C"
+#define C_DECL			EXTERN_C
+
+#define CONSTEXPR		constexpr	// NOTE: Only supported by Arduino 1.[?]+ (AVR GCC ?.XX)..?
 
 #define CONST			const
 #define CONSTREF		const &

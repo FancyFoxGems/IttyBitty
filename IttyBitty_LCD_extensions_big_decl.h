@@ -56,7 +56,7 @@ private:
 		return reinterpret_cast<PCBYTE>(pgm_read_word_near(&LCD_BIG_FONT_DATA_TABLES[tableCode - 1]));
 	}
 
-	VOID ClearColumn(CBYTE col, CBYTE row)
+	VOID WriteSpaceBig(CBYTE col, CBYTE row)
 	{
 		this->MoveCursor(col, row);
 		this->write(BFBL);
@@ -105,7 +105,7 @@ public:
 		for (BYTE i = 0; i < bigCharWidth; i++)
 			this->write(pgm_read_byte_near(&table[tableOffset + i + bigCharWidth]));
 
-		this->ClearColumn(col + bigCharWidth, row);
+		this->WriteSpaceBig(col + bigCharWidth, row);
 
 		return bigCharWidth + 1;
 	}

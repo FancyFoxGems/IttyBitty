@@ -104,7 +104,7 @@ namespace IttyBitty
 
 #pragma region [StorageLocation] DEFINITION
 
-	UNION PACKED StorageLocation
+	PACKED_UNION StorageLocation
 	{
 		// UNION MEMBERS
 
@@ -434,6 +434,8 @@ namespace IttyBitty
 
 
 	// GLOBAL NULL STORAGE REFERENCE FUNCTION
+
+	STATIC RISTORAGE NULL_STORAGE() USED;
 
 	STATIC RISTORAGE NULL_STORAGE()
 	{

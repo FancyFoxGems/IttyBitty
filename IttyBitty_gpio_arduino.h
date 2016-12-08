@@ -87,10 +87,10 @@ EXTERN BYTE ARDUINO_PIN_TO_MASK[NUM_DIGITAL_PINS];
 
 namespace IttyBitty
 {
-	VOID InitGPIO();
+	VOID _InitializeGPIO() INIT8;	// Initialize Arduino pin mapping tables
 
-	VOID _InitializeArduinoPortTables();
-	VOID _InitializeArduinoPinTables();
+	VOID _InitializeArduinoPortTables() INTERNAL_VISIBILIITY USED;
+	VOID _InitializeArduinoPinTables() INTERNAL_VISIBILIITY USED;
 };
 
 #pragma endregion

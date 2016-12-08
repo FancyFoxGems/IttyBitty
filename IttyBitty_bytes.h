@@ -488,7 +488,7 @@ namespace IttyBitty
 		typedef struct __BitProxy __bitproxy_t, BITPROXY, * PBITPROXY, & RBITPROXY;
 		typedef const struct __BitProxy CBITPROXY, * PCBITPROXY, & RCBITPROXY;
 
-		VOLATILE UNION PACKED
+		VOLATILE PACKED_UNION
 		{
 			PVBYTE _pByte;
 			PBITPACK _pBitPack;
