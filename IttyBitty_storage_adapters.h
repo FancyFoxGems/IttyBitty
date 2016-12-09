@@ -12,28 +12,17 @@
 
 #include "IttyBitty_storage.h"
 
-#include "IttyBitty_info.h"
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM)
 
-#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM) && !defined(NO_ITTYBITTY_EEPROM_I2C)
-	#include "IttyBitty_EEPROM_I2C.h"
-#endif
+	#include "IttyBitty_info.h"
 
-#ifdef ARDUINO
+	#ifndef NO_ITTYBITTY_EEPROM_I2C
+		#include "IttyBitty_EEPROM_I2C.h"
+	#endif
 
 	#include "EEPROM.h"
 
-	#ifndef NO_ITTYBITTY_SD
-		#include "SD.h"
-	#endif
-
 #endif
-
-
-#pragma region DEFINES
-
-
-
-#pragma endregion
 
 
 namespace IttyBitty
@@ -47,15 +36,10 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(FlashRomStorageAdapter, FLASHROMSTORAGEADAPTER);
 
 
-#ifdef ARDUINO
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM)
 
 	class EepromStorageAdapter;
 	TYPEDEF_CLASS_ALIASES(EepromStorageAdapter, EEPROMSTORAGEADAPTER);
-
-	#ifndef NO_ITTYBITTY_SD
-		class SdStorageAdapter;
-		TYPEDEF_CLASS_ALIASES(SdStorageAdapter, SDSTORAGEADAPTER);
-	#endif
 
 	#ifndef NO_ITTYBITTY_EEPROM_I2C
 		template EEPROMI2C_T_CLAUSE
@@ -63,7 +47,7 @@ namespace IttyBitty
 		TEMPLATE_CLASS_USING_ALIASES(CSL(EEPROMI2C_T_CLAUSE), CSL(EEPROMI2C_T_ARGS), ExtEepromStorageAdapter, EXTEEPROMSTORAGEADAPTER);
 	#endif
 
-#endif  // #ifdef ARDUINO
+#endif  // #if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM)
 
 #pragma endregion
 
@@ -125,7 +109,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#ifdef ARDUINO
+#if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM)
 
 #pragma region [EepromStorageAdapter] DEFINITION
 
@@ -148,50 +132,6 @@ namespace IttyBitty
 	};
 
 #pragma endregion
-
-
-#ifndef NO_ITTYBITTY_SD
-
-#pragma region [SdStorageAdapter] DEFINITION
-
-	CLASS SdStorageAdapter : public StorageBase
-	{
-	public:
-
-		// CONSTRUCTORS
-
-		SdStorageAdapter(PCCHAR, CBYTE = 10);
-
-
-		// [IStorage] IMPLEMENTATION
-
-		CDWORD Capacity();
-
-		CBOOL Available();
-
-		CSTORAGERESULT Open(CBOOL = FALSE);
-		CSTORAGERESULT Close();
-
-		CSTORAGERESULT Flush();
-
-		CSTORAGERESULT Seek(RCDWORD);
-
-		CSTORAGERESULT Read(PBYTE, RCDWORD);
-		CSTORAGERESULT Write(PCBYTE, RCDWORD);
-
-		CSTORAGERESULT Erase(RCDWORD);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		File _File;
-	};
-
-#pragma endregion
-
-#endif	//#ifndef NO_ITTYBITTY_SD
 
 
 #ifndef NO_ITTYBITTY_EEPROM_I2C
@@ -269,7 +209,7 @@ namespace IttyBitty
 
 #endif	// #ifndef NO_ITTYBITTY_EEPROM_I2C
 
-#endif  // #ifdef ARDUINO
+#endif  // #if defined(ARDUINO) && !defined(NO_ITTYBITTY_EEPROM)
 };
 
 #endif

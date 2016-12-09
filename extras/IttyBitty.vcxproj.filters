@@ -54,6 +54,9 @@
     <Filter Include="IO">
       <UniqueIdentifier>{10cba6eb-f737-4cce-aca7-8f64dfec2152}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MenUI">
+      <UniqueIdentifier>{22cba6eb-f737-4cce-aca7-8f64dfec2152}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Storage">
       <UniqueIdentifier>{21e31132-df64-4790-851f-ec3b7e68e770}</UniqueIdentifier>
     </Filter>
@@ -203,10 +206,34 @@
     <ClInclude Include="..\IttyBitty_wavetables.h">
       <Filter>IO</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_menui.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_fields.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_nav.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_nav_adapters.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_render.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_render_adapters.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_structure.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_storage.h">
       <Filter>Storage</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_storage_adapters.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_storage_adapter_sd.h">
       <Filter>Storage</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
@@ -385,6 +412,27 @@
     <ClCompile Include="..\IttyBitty_info.cpp">
       <Filter>Info</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_menui.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_fields.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_nav.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_nav_adapters.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_render.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_render_adapters.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_structure.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">
       <Filter>Storage</Filter>
     </ClCompile>
@@ -392,6 +440,9 @@
       <Filter>Storage</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_storage_adapters.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_storage_adapter_sd.cpp">
       <Filter>Storage</Filter>
     </ClCompile>
   </ItemGroup>

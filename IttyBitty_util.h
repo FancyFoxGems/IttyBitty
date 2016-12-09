@@ -345,14 +345,17 @@ using std::extent;
 
 #ifndef F
 	class __FlashStringHelper;
-	#define F(const_c_string)					(reinterpret_cast<const __FlashStringHelper *>(PSTR(const_c_string)))
+	#define F(string_literal)					(reinterpret_cast<const __FlashStringHelper *>(PSTR(string_literal)))
 #endif
 
-#define _CSTR_P(string_addr)					((CSTR_P)(string_addr))
-#define FLASH_STRING(string_addr)				_CSTR_P(string_addr)
+#define FLASH_STRING_ADDRESS(string_addr)		((PCCHAR)(string_addr))
+#define CSTR_P(string_addr)						FLASH_STRING_ADDRESS(string_addr)
+#define FSTR(string_addr)						FLASH_STRING_ADDRESS(string_addr)
 
 #define FLASH_FUNCTION_VARIATION(func)			EXPAND_CONCAT(func, _P)
-#define PASS_FLASH_STRING(func, flash_string)	(FLASH_FUNCTION_VARIATION(func)(F(#flash_string)))
+#define FLASH_FUNC(func)						FLASH_FUNCTION_VARIATION(func)
+#define PASS_FLASH_STRING(func, flash_string)	(FLASH_FUNCTION_VARIATION(func)(F(EXPAND_STR(flash_string))))
+#define CALL_FLASH_FUNC(func, flash_string)		PASS_FLASH_STRING(func, flash_string)
 
 
 /* COMPILER MACROS */

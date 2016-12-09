@@ -51,5 +51,6 @@
 #define NO_ITTYBITTY_EEPROM_I2C
 #define NO_ITTYBITTY_DB
 #define NO_ITTYBITTY_LCD_I2C
+#define NO_ITTYBITTY_MENUI
 
 #include "IttyBitty.h"

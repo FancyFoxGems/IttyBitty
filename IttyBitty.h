@@ -61,6 +61,7 @@
 *
 * [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA
 * [IttyBitty_storage_adapters.h]: LONG-TERM DATA STORAGE IMPLEMENTATIONS
+* [IttyBitty_storage_adapter_sd.h]: SD STORAGE ADAPTER IMPLEMENTATION
 *
 * [IttyBitty_EEPROM_I2C.h]: EXTERNAL EEPROM CHIP SUPPORT
 *	(i.e. Atmel AT24CXXX /  Microchip 24LCXXX Series)
@@ -71,10 +72,18 @@
 *
 * [IttyBitty_LCD_I2C.h]: SUPPORT FOR DRIVING HD44780-COMPATIBLE LCD DISPLAYS VIA I2C EXPANDERS
 * [IttyBitty_LCD_chars.h]: VALUE-ADDED SYMBOLS & ICONS FOR HD44780-COMPATIBLE LCD DISPLAYS
-* [IttyBitty_LCD_extensions.h]: EXTENDED FUNCTIONALITY FOR I2C-DRIVEN HD44780-COMPATIBLE
-* 	LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS
 * [IttyBitty_LCD_big.h]: ADDED SUPPORT FOR LARGE (TWO-ROW, MULTI-COLUMN)
 *	CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS
+* [IttyBitty_LCD_extensions.h]: EXTENDED FUNCTIONALITY FOR I2C-DRIVEN HD44780-COMPATIBLE
+* 	LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS
+*
+* [IttyBitty_menui.h]: MENU-BASED UI SYSTEM W/ INPUT FIELDS AND EXTENSIBLE NAVIGATION/DISPLAY
+* [IttyBitty_menu_structure.h]: STRUCTURES FOR DEFINING MENU HIERARCHY AND BEHAVIOR
+* [IttyBitty_menu_fields.h]: SPECIALIZED MENU ITEM TYPES TO ALLOW FOR DATA ENTRY AND DISPLAY
+* [IttyBitty_menu_nav.h]: NAVIGATION SUB-SYSTEM FOR MENUI COMMAND INPUT INTERFACE
+* [IttyBitty_menu_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS
+* [IttyBitty_menu_render.h]: RENDERING SUB-SYSTEM FOR MENUI DISPLAY INTEFACE
+* [IttyBitty_menu_render_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -91,11 +100,11 @@
 
 // Disable modules depending on the Arduino framework
 #ifndef ARDUINO
-	 #define NO_ITTYBITTY_INFO
-	 #define NO_ITTYBITTY_STORAGE_ADAPTERS
-	 #define NO_ITTYBITTY_EEPROM_I2C
-	 #define NO_ITTYBITTY_LCD_I2C
-	 #define NO_ITTYBITTY_PRINT
+	#define NO_ITTYBITTY_PRINT
+	#define NO_ITTYBITTY_INFO
+	#define NO_ITTYBITTY_STORAGE_ADAPTER_SD
+	#define NO_ITTYBITTY_EEPROM_I2C
+	#define NO_ITTYBITTY_LCD_I2C
 #endif
 
 
@@ -223,10 +232,21 @@
 
 /* [IttyBitty_storage.h]: DATA PERSISTENCE TO NON-VOLATILE MEDIA */
 
+#ifdef NO_ITTYBITTY_STORAGE_ADAPTERS
+	#define NO_ITTYBITTY_STORAGE_ADAPTER_SD
+#endif
+
+#ifdef NO_ITTYBITTY_SD
+	#define NO_ITTYBITTY_STORAGE_ADAPTER_SD
+#endif
+
 #ifndef NO_ITTYBITTY_STORAGE
 
-	/* [IttyBitty_storage_adapters.h]: LONG-TERM DATA STORAGE IMPLEMENTATIONS */
-	#ifndef NO_ITTYBITTY_STORAGE_ADAPTERS
+	/* [IttyBitty_storage_adapter_sd.h]: SD STORAGE ADAPTER IMPLEMENTATION */
+	#ifndef NO_ITTYBITTY_STORAGE_ADAPTER_SD
+		#include "IttyBitty_storage_adapter_sd.h"
+	#elif !defined(NO_ITTYBITTY_STORAGE_ADAPTERS)
+		/* [IttyBitty_storage_adapters.h]: LONG-TERM DATA STORAGE IMPLEMENTATIONS */
 		#include "IttyBitty_storage_adapters.h"
 	#else
 		#include "IttyBitty_storage.h"
@@ -293,23 +313,44 @@
 	#include "IttyBitty_LCD_I2C.h"
 
 	/* [IttyBitty_LCD_chars.h]: VALUE-ADDED SYMBOLS & ICONS FOR HD44780-COMPATIBLE LCD DISPLAYS */
-
 	#ifndef NO_ITTYBITTY_LCD_CHARS
 		#include "IttyBitty_LCD_chars.h"
 	#endif
 
+	/* [IttyBitty_LCD_big.h]: ADDED SUPPORT FOR LARGE (TWO-ROW, MULTI-COLUMN)
+		CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS */
+	#ifndef NO_ITTYBITTY_LCD_BIG
+		#include "IttyBitty_LCD_big.h"
+	#endif
+
 	/* [IttyBitty_LCD_extensions.h]: EXTENDED FUNCTIONALITY FOR I2C-DRIVEN HD44780-COMPATIBLE
 		LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS */
-
 	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 		#include "IttyBitty_LCD_extensions.h"
 	#endif
 
-	/* [IttyBitty_LCD_big.h]: ADDED SUPPORT FOR LARGE (TWO-ROW, MULTI-COLUMN)
-		CHARACTER PRINTING ON I2C-DRIVEN HD44780-COMPATIBLE LCD DISPLAYS */
+#endif
 
-	#ifndef NO_ITTYBITTY_LCD_BIG
-		#include "IttyBitty_LCD_big.h"
+
+/* [IttyBitty_menui.h]: MENU-BASED UI SYSTEM W/ INPUT FIELDS AND EXTENSIBLE NAVIGATION/DISPLAY */
+
+#ifndef NO_ITTYBITTY_MENUI
+
+	#include "IttyBitty_menui.h"
+
+	//#include "IttyBitty_menu_structures.h"	// Included by [IttyBitty_menui.h]
+	//#include "IttyBitty_menu_fields.h"		// Included by [IttyBitty_menu_structures.h]
+	//#include "IttyBitty_nav.h"				// Included by [IttyBitty_menui.h]
+	//#include "IttyBitty_render.h"			// Included by [IttyBitty_menui.h]
+
+	/* [IttyBitty_menu_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS */
+	#ifndef NO_ITTYBITTY_MENU_NAV_ADAPTERS
+		#include "IttyBitty_menu_nav_adapters.h"
+	#endif
+
+	/* [IttyBitty_menu_render_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS */
+	#ifndef NO_ITTYBITTY_MENU_RENDER_ADAPTERS
+		#include "IttyBitty_menu_render_adapters.h"
 	#endif
 
 #endif
