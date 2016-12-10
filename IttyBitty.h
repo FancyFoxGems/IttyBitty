@@ -78,12 +78,12 @@
 * 	LCD DISPLAYS, SUCH AS CHARACTER MANIPULATION, SCROLL BARS, GRAPHS, AND SLIDERS
 *
 * [IttyBitty_menui.h]: MENU-BASED UI SYSTEM W/ INPUT FIELDS AND EXTENSIBLE NAVIGATION/DISPLAY
-* [IttyBitty_menu_structure.h]: STRUCTURES FOR DEFINING MENU HIERARCHY AND BEHAVIOR
+* [IttyBitty_menu_items.h]: STRUCTURES FOR DEFINING MENU HIERARCHY AND BEHAVIOR
 * [IttyBitty_menu_fields.h]: SPECIALIZED MENU ITEM TYPES TO ALLOW FOR DATA ENTRY AND DISPLAY
 * [IttyBitty_menu_nav.h]: NAVIGATION SUB-SYSTEM FOR MENUI COMMAND INPUT INTERFACE
 * [IttyBitty_menu_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS
-* [IttyBitty_menu_render.h]: RENDERING SUB-SYSTEM FOR MENUI DISPLAY INTEFACE
-* [IttyBitty_menu_render_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS
+* [IttyBitty_menu_display.h]: RENDERING SUB-SYSTEM FOR MENUI DISPLAY INTEFACE
+* [IttyBitty_menu_display_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS
 *
 *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -105,6 +105,8 @@
 	#define NO_ITTYBITTY_STORAGE_ADAPTER_SD
 	#define NO_ITTYBITTY_EEPROM_I2C
 	#define NO_ITTYBITTY_LCD_I2C
+	#define NO_ITTYBITTY_MENU_NAV_ADAPTERS
+	#define NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
 #endif
 
 
@@ -338,19 +340,20 @@
 
 	#include "IttyBitty_menui.h"
 
-	//#include "IttyBitty_menu_structures.h"	// Included by [IttyBitty_menui.h]
-	//#include "IttyBitty_menu_fields.h"		// Included by [IttyBitty_menu_structures.h]
-	//#include "IttyBitty_nav.h"				// Included by [IttyBitty_menui.h]
-	//#include "IttyBitty_render.h"			// Included by [IttyBitty_menui.h]
+	//#include "IttyBitty_menu_field_decorators.h"	// Included by [IttyBitty_menui.h]
+	//#include "IttyBitty_menu_fields.h"			// Included by [IttyBitty_menu_field_decorators.h]
+	//#include "IttyBitty_menu_items.h"			// Included by [IttyBitty_menu_fields.h]
+	//#include "IttyBitty_nav.h"					// Included by [IttyBitty_menu_items.h]
+	//#include "IttyBitty_display.h"				// Included by [IttyBitty_menu_items.h]
 
 	/* [IttyBitty_menu_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS */
 	#ifndef NO_ITTYBITTY_MENU_NAV_ADAPTERS
 		#include "IttyBitty_menu_nav_adapters.h"
 	#endif
 
-	/* [IttyBitty_menu_render_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS */
-	#ifndef NO_ITTYBITTY_MENU_RENDER_ADAPTERS
-		#include "IttyBitty_menu_render_adapters.h"
+	/* [IttyBitty_menu_display_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS */
+	#ifndef NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
+		#include "IttyBitty_menu_display_adapters.h"
 	#endif
 
 #endif

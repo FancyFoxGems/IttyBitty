@@ -10,10 +10,7 @@
 #define _ITTYBITTY_MENUI_H
 
 
-#include "IttyBitty_bits.h"
-#include "IttyBitty_menu_structure.h"
-#include "IttyBitty_menu_nav.h"
-#include "IttyBitty_menu_render.h"
+#include "IttyBitty_menu_field_decorators.h"
 
 
 #pragma region DEFINES
@@ -25,11 +22,27 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	class MenUI;
+	TYPEDEF_CLASS_ALIASES(MenUI, MENUI);
+
 #pragma endregion
 
 
-#pragma region [MENUI] DEFINITION
+#pragma region [MenUI] DEFINITION
 
+	CLASS MenUI : public Menu
+	{
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MenUI(CBYTE cols, CBYTE rows, PPCIMENUITEM menuHierarchy = NULL);
+		MenUI(CBYTE cols, CBYTE rows, CBYTE initMenuCapacity = 0);
+
+		template<typename T>
+		CONST T Prompt(RCIUIFIELD field)
+		{
+			return T(0);
+		}
+	};
 
 #pragma endregion
 };

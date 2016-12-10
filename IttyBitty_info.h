@@ -72,7 +72,7 @@ namespace IttyBitty
 {
 #pragma region GLOBAL VARIABLE DECLARATIONS
 
-	EXTERN BYTE _MCUSR __attribute__ ((section (".noinit")));
+	EXTERN BYTE _MCUSR NOINIT_VAR;
 
 #pragma endregion
 

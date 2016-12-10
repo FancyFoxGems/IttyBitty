@@ -209,22 +209,25 @@
     <ClInclude Include="..\IttyBitty_menui.h">
       <Filter>MenUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_display.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_display_adapters.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_menu_fields.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_field_decorators.h">
+      <Filter>MenUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_menu_items.h">
       <Filter>MenUI</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_menu_nav.h">
       <Filter>MenUI</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_menu_nav_adapters.h">
-      <Filter>MenUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_menu_render.h">
-      <Filter>MenUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_menu_render_adapters.h">
-      <Filter>MenUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_menu_structure.h">
       <Filter>MenUI</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_storage.h">
@@ -415,22 +418,25 @@
     <ClCompile Include="..\IttyBitty_menui.cpp">
       <Filter>MenUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_display.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_display_adapters.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
     <ClCompile Include="..\IttyBitty_menu_fields.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_field_decorators.cpp">
+      <Filter>MenUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_menu_items.cpp">
       <Filter>MenUI</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_menu_nav.cpp">
       <Filter>MenUI</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_menu_nav_adapters.cpp">
-      <Filter>MenUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_menu_render.cpp">
-      <Filter>MenUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_menu_render_adapters.cpp">
-      <Filter>MenUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\IttyBitty_menu_structure.cpp">
       <Filter>MenUI</Filter>
     </ClCompile>
     <ClCompile Include="..\IttyBitty_EEPROM_I2C.cpp">

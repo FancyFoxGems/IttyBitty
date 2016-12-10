@@ -5,16 +5,16 @@
 ***********************************************************************************************/
 
 #if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_MENUI)
-	#define NO_ITTYBITTY_MENU_RENDER_ADAPTERS
+	#define NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
 #endif
 
-#ifndef NO_ITTYBITTY_MENU_RENDER_ADAPTERS
+#ifndef NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
 
-#include "IttyBitty_menu_render_adapters.h"
+#include "IttyBitty_menu_display_adapters.h"
 
 
 #pragma region
 
 #pragma endregion
 
-#endif	// #ifndef NO_ITTYBITTY_MENU_RENDER_ADAPTERS
+#endif	// #ifndef NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS

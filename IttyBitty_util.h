@@ -72,6 +72,7 @@
 
 /* VARIABLE ATTRIBUTE ALIASES */
 
+#define NOINIT_VAR					SECTION(noinit)
 #define EEPROM_VAR					SECTION(eeprom)
 #define FLASH_VAR					PROGMEM
 
@@ -222,6 +223,8 @@
 
 #define typeof(var)					decltype(var)
 #define TYPEOF(var)					typeof(var)
+
+#define OFFSETOF(type, member_var)	offsetof(type, member_var)
 
 #define SIZEOF(var)					sizeof(var)
 
@@ -377,8 +380,8 @@ using std::extent;
 #define EXPECTED(expr)					EXPECT(expr, TRUE)
 #define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
 
-#define PRAGMA_MACRO(x)					_Pragma(#x)
-#define IGNORE_WARNING(w)				PRAGMA_MACRO(GCC diagnostic ignored #w)
+#define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
+#define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W" #gcc_warning)
 
 #define CODE_FILE_NAME()				_builtin_FILE()
 #define CODE_LINE_NUMBER()				_builtin_LINE()

@@ -22,11 +22,153 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF	\
+		<CUIACTION Action, typename TVar, CONST TVar & Var, CONST TVar Tolerance>
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE		\
+		<CUIACTION Action, typename TVar, CONST TVar & Var, CONST TVar Tolerance = TVar(1)>
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_ARGS			<Action, TVar, Var, Tolerance>
+
+	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE
+	class DataBoundUiInputListener;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE), \
+		CSL(DATA_BOUND_UI_INPUT_LISTENER_T_ARGS), DataBoundUiInputListener, DATABOUNDUIINPUTLISTENER);
+
+
+	class SerialUiInputListener;
+	TYPEDEF_CLASS_ALIASES(SerialUiInputListener, SERIALUIINPUTLISTENER);
+
+	class SwitchUiInputListener;
+	TYPEDEF_CLASS_ALIASES(SwitchUiInputListener, SWITCHUIINPUTLISTENER);
+
+	class ButtonUiInputListener;
+	TYPEDEF_CLASS_ALIASES(ButtonUiInputListener, BUTTONUIINPUTLISTENER);
+
+	class RotaryUiInputListener;
+	TYPEDEF_CLASS_ALIASES(RotaryUiInputListener, ROTARYUIINPUTLISTENER);
+
+	class PotentiometerUiInputListener;
+	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputListener, POTENTIOMETERUIINPUTLISTENER);
+
 #pragma endregion
 
 
-#pragma region [MENU_NAV_ADAPTERS] DEFINITION
+#pragma region [SerialUiInputListener] DEFINITION
 
+	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
+	CLASS DataBoundUiInputListener : public UiInputListenerBase
+	{
+	public:
+
+		// [IUiListener] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const; // { return FALSE; }
+
+		VIRTUAL VOID Poll() const;
+		//{
+		//	if (_PrevValue + Tolerance <= Var)
+		//	{
+		//		_PrevValue = Var;
+		//		this->DoAction();
+		//	}
+		//}
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		TVar _PrevValue = 0;
+
+
+		// [IUiInputListener] HELPER METHODS
+
+		VOID DoAction();
+		//{
+		//	switch (Action)
+		//	{
+		//	case UiAction::UP:
+		//		_Navigation->Up();
+		//		break;
+
+		//	case UiAction::DOWN:
+		//		_Navigation->Down();
+		//		break;
+
+		//	case UiAction::LEFT:
+		//		_Navigation->Left();
+		//		break;
+
+		//	case UiAction::RIGHT:
+		//		_Navigation->Right();
+		//		break;
+
+		//	case UiAction::ESCAPE:
+		//		_Navigation->Escape();
+		//		break;
+
+		//	case UiAction::SELECT:
+		//		_Navigation->Select();
+		//		break;
+
+		//	case UiAction::SHIFT:
+		//		_Navigation->ToggleShift();
+		//		break;
+
+		//	case UiAction::ALT:
+		//		_Navigation->ToggleAlt();
+		//		break;
+
+		//	default:
+		//	}
+		//}
+	};
+
+#pragma endregion
+
+
+#pragma region [SerialUiInputListener] DEFINITION
+
+	CLASS SerialUiInputListener : public UiInputListenerBase
+	{
+	};
+
+#pragma endregion
+
+
+#pragma region [SwitchUiInputListener] DEFINITION
+
+	CLASS SwitchUiInputListener : public UiInputListenerBase
+	{
+	};
+
+#pragma endregion
+
+
+#pragma region [ButtonUiInputListener] DEFINITION
+
+	CLASS ButtonUiInputListener : public SwitchUiInputListener
+	{
+	};
+
+#pragma endregion
+
+
+#pragma region [RotaryUiInputListener] DEFINITION
+
+	CLASS RotaryUiInputListener : public UiInputListenerBase
+	{
+	};
+
+#pragma endregion
+
+
+#pragma region [PotentiometerUiInputListener] DEFINITION
+
+	CLASS PotentiometerUiInputListener : public UiInputListenerBase
+	{
+	};
+
+#pragma endregion
 
 #pragma endregion
 };

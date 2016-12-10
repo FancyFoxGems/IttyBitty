@@ -29,10 +29,9 @@
 #define BFLB	0x04
 #define BFLR	0x05
 #define BFUM	0x06
-#define BFLM	0x07
+#define BFFF	0x07
 
 #define BFBL	0x20
-#define BFFF	0xFF
 #define BFUN	0x6F
 
 

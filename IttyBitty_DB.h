@@ -32,7 +32,7 @@ namespace IttyBitty
 
 #pragma region [Database] DEFINITION
 
-	CLASS Database final : public IDbTableSet
+	CLASS Database : public IDbTableSet
 	{
 	public:
 
