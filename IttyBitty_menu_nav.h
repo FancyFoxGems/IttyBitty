@@ -145,7 +145,8 @@ namespace IttyBitty
 		VIRTUAL VOID IsShiftOn();
 		VIRTUAL VOID IsAltOn();
 
-		// USER METHODS
+
+		// ACCESSORS/MUTATORS
 
 		VOID ToggleShift();
 		VOID ShiftOn();
@@ -154,6 +155,11 @@ namespace IttyBitty
 		VOID ToggleAlt();
 		VOID AltOn();
 		VOID AltOff();
+
+
+		// USER METHODS
+
+		VOID Poll() const;
 
 
 	protected:

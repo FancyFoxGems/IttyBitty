@@ -34,6 +34,13 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(IUiListElement, IUILISTELEMENT);
 
 
+	class IUiDialog;
+	TYPEDEF_CLASS_ALIASES(IUiDialog, IUIDIALOG);
+
+	class UiDialog;
+	TYPEDEF_CLASS_ALIASES(UiDialog, UIDIALOG);
+
+
 	class IUiField;
 	TYPEDEF_CLASS_ALIASES(IUiField, IUIFIELD);
 
@@ -208,12 +215,56 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Render(RCIUIRENDERER renderer) = 0;
+		VIRTUAL VOID Render(PUIDISPLAYCONTROLLER) = 0;
 
 
 	protected:
 
 		IUiElement() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [IUiListElement] DEFINITION
+
+	INTERFACE IUiListElement : public IUiElement
+	{
+	public:
+
+		// ACCESSORS/MUTATORS
+
+
+		// INTERFACE METHODS
+
+
+	protected:
+
+		IUiListElement() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [IUiDialog] DEFINITION
+
+	INTERFACE IUiDialog : public IUiElement
+	{
+	public:
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBOOL ShowMessage() const = 0;
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL VOID Prompt(PUIDISPLAYCONTROLLER) = 0;
+
+
+	protected:
+
+		IUiDialog() { }
 	};
 
 #pragma endregion
@@ -244,27 +295,38 @@ namespace IttyBitty
 		VIRTUAL CBYTE Top() const;
 		VIRTUAL CBYTE Left() const;
 
-		VIRTUAL VOID Render(RCIUIRENDERER renderer);
+		VIRTUAL VOID Render(PUIDISPLAYCONTROLLER);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
 	};
 
 #pragma endregion
 
 
-#pragma region [IUiListElement] DEFINITION
+#pragma region [UiDialog] DEFINITION
 
-	INTERFACE IUiListElement : public IUiElement
+	CLASS UiDialog : public UiElementBase, public IUiDialog
 	{
 	public:
 
-		// ACCESSORS/MUTATORS
+		// [IUiDialog] IMPLEMENTATION
+
+		VIRTUAL CBOOL ShowMessage() const;
 
 
 		// INTERFACE METHODS
 
+		VIRTUAL VOID Prompt(PUIDISPLAYCONTROLLER);
+
 
 	protected:
 
-		IUiListElement() { }
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -286,7 +348,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CBOOL Prompt() = 0;
+		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER) = 0;
 
 
 	protected:
@@ -310,7 +372,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL ShowLabel() const;
 
-		VIRTUAL CBOOL Prompt();
+		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER);
 
 
 	protected:

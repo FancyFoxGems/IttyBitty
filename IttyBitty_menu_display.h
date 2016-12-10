@@ -85,6 +85,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) = 0;
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) = 0;
 
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE) = 0;
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options) = 0;
@@ -143,6 +145,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
 
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE); // { }
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE); // { }
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options); // { }
@@ -189,6 +193,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
 
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE); // { }
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE); // { }
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options); // { }
@@ -203,6 +209,8 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 
+		BYTE _Cols = 0;
+		BYTE _Rows = 0;
 	};
 
 #pragma endregion
