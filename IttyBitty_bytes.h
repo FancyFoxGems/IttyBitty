@@ -521,7 +521,7 @@ namespace IttyBitty
 			this->SetValue(tVal);
 		}
 
-		EXPLICIT BitField(PVOID memAddr, SIZE byteWidth = T_SIZE)
+		EXPLICIT BitField(PTR memAddr, SIZE byteWidth = T_SIZE)
 			: _DisposalLevel(DisposalLevel::FieldData)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
@@ -575,7 +575,7 @@ namespace IttyBitty
 		BitField(RRBITFIELD<T> other)
 		{
 			this->~BitField<T>();
-			new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
+			new (this) BitField<T>((PTR)other.Bytes(), T_SIZE);
 
 			other._DisposalLevel = DisposalLevel::None;
 		}
@@ -583,7 +583,7 @@ namespace IttyBitty
 		BitField(RCBITFIELD<T> other)
 		{
 			this->~BitField<T>();
-			new (this) BitField<T>((PVOID)other.Bytes(), T_SIZE);
+			new (this) BitField<T>((PTR)other.Bytes(), T_SIZE);
 		}
 
 		VIRTUAL ~BitField()
@@ -827,7 +827,7 @@ namespace IttyBitty
 
 		VIRTUAL PIBITFIELD<T> CloneByReference() const
 		{
-			return new BitField<T>((PVOID)_ByteFieldPtrs, T_SIZE);
+			return new BitField<T>((PTR)_ByteFieldPtrs, T_SIZE);
 		}
 
 
@@ -893,9 +893,9 @@ namespace IttyBitty
 			this->SetValue(wordVal);
 		}
 
-		WordField(RWORD rWord) : BitField<WORD>((PVOID)&rWord, 2) { }
+		WordField(RWORD rWord) : BitField<WORD>((PTR)&rWord, 2) { }
 
-		WordField(PWORD pWord) : BitField<WORD>((PVOID)pWord, 2) { }
+		WordField(PWORD pWord) : BitField<WORD>((PTR)pWord, 2) { }
 
 		WordField(BYTEFIELD byteFields[2]) : BitField<WORD>(byteFields) { }
 
@@ -952,7 +952,7 @@ namespace IttyBitty
 			this->InitWordFields();
 		}
 
-		EXPLICIT ManyBitField(PVOID memAddr, SIZE byteWidth = T_SIZE) : BitField<T>(memAddr, byteWidth)
+		EXPLICIT ManyBitField(PTR memAddr, SIZE byteWidth = T_SIZE) : BitField<T>(memAddr, byteWidth)
 		{
 			this->InitWordFields();
 		}
@@ -1134,9 +1134,9 @@ namespace IttyBitty
 			this->SetValue(wordVal);
 		}
 
-		DWordField(RDWORD rDWord) : ManyBitField<DWORD>((PVOID)&rDWord, 4) { }
+		DWordField(RDWORD rDWord) : ManyBitField<DWORD>((PTR)&rDWord, 4) { }
 
-		DWordField(PDWORD pDWord) : ManyBitField<DWORD>((PVOID)pDWord, 4) { }
+		DWordField(PDWORD pDWord) : ManyBitField<DWORD>((PTR)pDWord, 4) { }
 
 		DWordField(BYTEFIELD byteFields[4]) : ManyBitField<DWORD>(byteFields) { }
 

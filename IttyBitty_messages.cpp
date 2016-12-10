@@ -317,7 +317,7 @@ RIPARAM Message::Param(CBYTE i)
 // [IMessage] IMPLEMENTATION
 
 //VOID Message::Handle(...)
-BOOL Message::Handle(PVOID results, PCVOID state)
+BOOL Message::Handle(PTR results, CPTR state)
 {
 	//va_list args;
 	//va_start(args, 0);

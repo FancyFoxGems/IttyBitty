@@ -130,6 +130,14 @@ namespace IttyBitty
 
 	CLASS SerialUiInputListener : public UiInputListenerBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -139,6 +147,14 @@ namespace IttyBitty
 
 	CLASS SwitchUiInputListener : public UiInputListenerBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -148,6 +164,14 @@ namespace IttyBitty
 
 	CLASS ButtonUiInputListener : public SwitchUiInputListener
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -157,6 +181,14 @@ namespace IttyBitty
 
 	CLASS RotaryUiInputListener : public UiInputListenerBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -166,6 +198,14 @@ namespace IttyBitty
 
 	CLASS PotentiometerUiInputListener : public UiInputListenerBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion

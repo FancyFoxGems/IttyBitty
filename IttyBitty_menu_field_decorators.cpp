@@ -12,6 +12,8 @@
 
 #include "IttyBitty_menu_field_decorators.h"
 
+using namespace IttyBitty;
+
 
 #pragma region
 

@@ -442,12 +442,12 @@ using std::extent;
 
 #if !defined(ARDUINO) || ARDUINO < 20000 // NOTE: Assume Arduino 2.0+ will define placement new??
 
-INLINE PVOID operator new(SIZE size, PVOID ptr)
+INLINE PTR operator new(SIZE size, PTR ptr)
 {
 	return ptr;
 }
 
-INLINE PVOID operator new[](SIZE size, PVOID ptr)
+INLINE PTR operator new[](SIZE size, PTR ptr)
 {
 	return ptr;
 }

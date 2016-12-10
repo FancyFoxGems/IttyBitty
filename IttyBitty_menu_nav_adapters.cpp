@@ -12,6 +12,8 @@
 
 #include "IttyBitty_menu_nav_adapters.h"
 
+using namespace IttyBitty;
+
 
 #pragma region
 

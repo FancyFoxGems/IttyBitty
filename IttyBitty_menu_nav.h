@@ -22,6 +22,10 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	class IUiActions;
+	TYPEDEF_CLASS_ALIASES(IUiActions, IUIACTIONS);
+
+
 	class IUiInputListener;
 	TYPEDEF_CLASS_ALIASES(IUiInputListener, IUIINPUTLISTENER);
 
@@ -50,6 +54,32 @@ namespace IttyBitty
 	};
 
 	TYPEDEF_ENUM_ALIASES(UiAction, UIACTION);
+
+#pragma endregion
+
+
+#pragma region [IUiActions] DEFINITION
+
+	INTERFACE IUiActions
+	{
+	public:
+
+		// INTERFACE METHODS
+
+		VIRTUAL VOID Up() = 0;
+		VIRTUAL VOID Down() = 0;
+		VIRTUAL VOID Left() = 0;
+		VIRTUAL VOID Right() = 0;
+		VIRTUAL VOID Escape() = 0;
+		VIRTUAL VOID Select() = 0;
+		VIRTUAL VOID IsShiftOn() = 0;
+		VIRTUAL VOID IsAltOn() = 0;
+
+
+	protected:
+
+		IUiActions() { }
+	};
 
 #pragma endregion
 
@@ -100,18 +130,22 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiInputListener
+	class UiNavigationController : public IUiInputListener, public IUiActions
 	{
 	public:
 
-		// USER METHODS
+		// [IUiActions] Implementation
 
-		VOID Up();
-		VOID Down();
-		VOID Left();
-		VOID Right();
-		VOID Escape();
-		VOID Select();
+		VIRTUAL VOID Up();
+		VIRTUAL VOID Down();
+		VIRTUAL VOID Left();
+		VIRTUAL VOID Right();
+		VIRTUAL VOID Escape();
+		VIRTUAL VOID Select();
+		VIRTUAL VOID IsShiftOn();
+		VIRTUAL VOID IsAltOn();
+
+		// USER METHODS
 
 		VOID ToggleShift();
 		VOID ShiftOn();

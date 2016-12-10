@@ -43,7 +43,7 @@ namespace IttyBitty
 
 #pragma region [IUiRenderer] DEFINITION
 
-	INTERFACE IUiRenderer : Print
+	INTERFACE IUiRenderer : public Print
 	{
 	public:
 
@@ -54,6 +54,12 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE CursorCol() = 0;
 		VIRTUAL CBYTE CursorRow() = 0;
+
+		VIRTUAL VOID CursorOn() = 0;
+		VIRTUAL VOID CursorOff() = 0;
+
+		VIRTUAL VOID CursorBlinkOn() = 0;
+		VIRTUAL VOID CursorBlinkOff() = 0;
 
 		// INTERFACE METHODS
 
@@ -67,6 +73,8 @@ namespace IttyBitty
 		VIRTUAL VOID ScrollRight() = 0;
 
 		VIRTUAL VOID Home() = 0;
+		VIRTUAL VOID CursorPrev() = 0;
+		VIRTUAL VOID CursorNext() = 0;
 		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE) = 0;
 
 		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData) = 0;
@@ -107,6 +115,12 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorCol(); // { return MAX_BYTE; };
 		VIRTUAL CBYTE CursorRow(); // { return MAX_BYTE; };
 
+		VIRTUAL VOID CursorOn(); // { }
+		VIRTUAL VOID CursorOff(); // { }
+
+		VIRTUAL VOID CursorBlinkOn(); // { }
+		VIRTUAL VOID CursorBlinkOff(); // { }
+
 		VIRTUAL CBOOL Available(); // { return TRUE; }
 
 		VIRTUAL VOID Clear(); // { }
@@ -117,6 +131,8 @@ namespace IttyBitty
 		VIRTUAL VOID ScrollRight(); // { }
 
 		VIRTUAL VOID Home(); // { }
+		VIRTUAL VOID CursorPrev(); // { }
+		VIRTUAL VOID CursorNext(); // { }
 		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE); // { }
 
 		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData); // { }
@@ -183,6 +199,8 @@ namespace IttyBitty
 
 
 	protected:
+
+		// INSTANCE VARIABLES
 
 
 	};

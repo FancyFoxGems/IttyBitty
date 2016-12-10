@@ -118,7 +118,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL) = 0;
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL) = 0;
 
 
 	protected:
@@ -187,7 +187,7 @@ namespace IttyBitty
 
 		// [IMessage] IMPLEMENTATION
 
-		VIRTUAL BOOL Handle(PVOID = NULL, PCVOID = NULL);
+		VIRTUAL BOOL Handle(PTR = NULL, CPTR = NULL);
 
 
 		// [ITransmittable] IMPLEMENTATION

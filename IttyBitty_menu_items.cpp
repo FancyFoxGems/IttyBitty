@@ -10,7 +10,9 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_structure.h"
+#include "IttyBitty_menu_items.h"
+
+using namespace IttyBitty;
 
 
 #pragma region

@@ -12,6 +12,8 @@
 
 #include "IttyBitty_menu_display.h"
 
+using namespace IttyBitty;
+
 
 #pragma region
 

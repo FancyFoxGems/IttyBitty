@@ -12,8 +12,12 @@
 
 #include "IttyBitty_menui.h"
 
+using namespace IttyBitty;
 
-#pragma region
+
+#pragma region GLOBAL CONSTANT & VARIABLE MEMBER DEFINITIONS
+
+UIOPTIONS MenUIOptions = UiOptions();
 
 #pragma endregion
 

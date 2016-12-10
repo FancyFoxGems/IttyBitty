@@ -64,6 +64,14 @@ namespace IttyBitty
 	template UI_FIELD_DECORATOR_T_CLAUSE_DEF
 	CLASS UiFieldDecoratorBase : public TUiField
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -72,8 +80,11 @@ namespace IttyBitty
 #pragma region [NullUiFieldDecorator] DEFINITION
 
 	template UI_FIELD_DECORATOR_T_CLAUSE_DEF
-	CLASS NullUiFieldDecorator : public UiFieldDecoratorBase<TUiField>
+	CLASS NullUiFieldDecorator final : public UiFieldDecoratorBase<TUiField>
 	{
+	public:
+
+
 	};
 
 #pragma endregion
@@ -84,6 +95,14 @@ namespace IttyBitty
 	template UI_FIELD_DECORATOR_T_CLAUSE_DEF
 	CLASS UnitUiFieldDecorator : public UiFieldDecoratorBase<TUiField>
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		PCCHAR _UnitText = NULL;
 	};
 
 #pragma endregion
@@ -96,6 +115,14 @@ namespace IttyBitty
 	template UI_FIELD_DECORATOR_T_CLAUSE_DEF
 	CLASS GraphUiFieldDecorator : public UiFieldDecoratorBase<TUiField>
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -106,6 +133,14 @@ namespace IttyBitty
 	template UI_FIELD_DECORATOR_T_CLAUSE_DEF
 	CLASS SliderUiFieldDecorator : public UiFieldDecoratorBase<TUiField>
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion

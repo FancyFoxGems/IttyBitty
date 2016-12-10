@@ -53,6 +53,14 @@ namespace IttyBitty
 
 	CLASS SerialUiRenderer : public UiRendererBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion
@@ -65,6 +73,13 @@ namespace IttyBitty
 	template LCDI2C_UI_RENDERER_T_CLAUSE_DEF
 	CLASS LcdI2CUiRenderer : public UiRendererBase
 	{
+	public:
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
 
 	};
 
