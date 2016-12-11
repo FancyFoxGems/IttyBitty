@@ -4,16 +4,25 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_MENUI)
-	#define NO_ITTYBITTY_MENU_NAV_ADAPTERS
+#ifdef ITTYBITTY_BASE
+	#define NO_ITTYBITTY_MENUI
 #endif
 
-#ifndef NO_ITTYBITTY_MENU_NAV_ADAPTERS
+#ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_nav_adapters.h"
+#include "IttyBitty_UI_menus.h"
 
 using namespace IttyBitty;
+// VIRTUAL
+//
 
+//([A-Za-z_]*) ([A-Za-z_]*)[(]
+//$1 UiDisplayController::$2(
 
+// = [A-Za-z0-9_]*
+//
 
-#endif	// #ifndef NO_ITTYBITTY_MENU_NAV_ADAPTERS
+// { }
+//\n{\n\n}
+
+#endif	// #ifndef NO_ITTYBITTY_MENUI

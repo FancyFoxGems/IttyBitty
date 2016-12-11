@@ -1,21 +1,18 @@
 /***********************************************************************************************
-* [IttyBitty_menu_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS
+* [IttyBitty_UI_nav_adapters.h]: NAVIGATION ADAPTERS FOR INPUT OF MENUI COMMANDS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_NAV_ADAPTERS_H
-#define _ITTYBITTY_MENU_NAV_ADAPTERS_H
+#ifndef _ITTYBITTY_UI_NAV_ADAPTERS_H
+#define _ITTYBITTY_UI_NAV_ADAPTERS_H
 
 
-#include "IttyBitty_menu_nav.h"
+#include "IttyBitty_UI_nav.h"
 
-
-#pragma region DEFINES
-
-#pragma endregion
+#include "HardwareSerial.h"
 
 
 namespace IttyBitty
@@ -33,9 +30,13 @@ namespace IttyBitty
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE), \
 		CSL(DATA_BOUND_UI_INPUT_LISTENER_T_ARGS), DataBoundUiInputListener, DATABOUNDUIINPUTLISTENER);
 
-
-	class SerialUiInputListener;
 	TYPEDEF_CLASS_ALIASES(SerialUiInputListener, SERIALUIINPUTLISTENER);
+
+	class DigitalPinUiInputListener;
+	TYPEDEF_CLASS_ALIASES(DigitalPinUiInputListener, DIGITALPINUIINPUTLISTENER);
+
+	class AnalogPinUiInputListener;
+	TYPEDEF_CLASS_ALIASES(AnalogPinUiInputListener, ANALOGPINUIINPUTLISTENER);
 
 	class SwitchUiInputListener;
 	TYPEDEF_CLASS_ALIASES(SwitchUiInputListener, SWITCHUIINPUTLISTENER);
@@ -45,6 +46,9 @@ namespace IttyBitty
 
 	class RotaryUiInputListener;
 	TYPEDEF_CLASS_ALIASES(RotaryUiInputListener, ROTARYUIINPUTLISTENER);
+
+	class ClickEncoderUiInputListener;
+	TYPEDEF_CLASS_ALIASES(ClickEncoderUiInputListener, CLICKENCODERUIINPUTLISTENER);
 
 	class PotentiometerUiInputListener;
 	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputListener, POTENTIOMETERUIINPUTLISTENER);

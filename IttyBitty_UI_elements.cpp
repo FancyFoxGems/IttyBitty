@@ -10,19 +10,8 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_items.h"
+#include "IttyBitty_UI_elements.h"
 
 using namespace IttyBitty;
-// VIRTUAL
-//
-
-//([A-Za-z_]*) ([A-Za-z_]*)[(]
-//$1 UiDisplayController::$2(
-
-// = [A-Za-z0-9_]*
-//
-
-// { }
-//\n{\n\n}
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

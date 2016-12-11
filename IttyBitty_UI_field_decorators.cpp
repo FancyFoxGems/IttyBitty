@@ -10,19 +10,13 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_fields.h"
+#include "IttyBitty_UI_field_decorators.h"
 
 using namespace IttyBitty;
-// VIRTUAL
-//
 
-//([A-Za-z_]*) ([A-Za-z_]*)[(]
-//$1 UiDisplayController::$2(
 
-// = [A-Za-z0-9_]*
-//
+#pragma region
 
-// { }
-//\n{\n\n}
+#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

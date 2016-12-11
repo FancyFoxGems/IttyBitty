@@ -1,21 +1,16 @@
 /***********************************************************************************************
-* [IttyBitty_menu_nav.h]: NAVIGATION SUB-SYSTEM FOR MENUI COMMAND INPUT INTERFACE
+* [IttyBitty_UI_nav.h]: NAVIGATION SUB-SYSTEM FOR MENUI COMMAND INPUT INTERFACE
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_NAV_H
-#define _ITTYBITTY_MENU_NAV_H
+#ifndef _ITTYBITTY_UI_NAV_H
+#define _ITTYBITTY_UI_NAV_H
 
 
 #include "IttyBitty_bits.h"
-
-
-#pragma region DEFINES
-
-#pragma endregion
 
 
 namespace IttyBitty
@@ -25,13 +20,11 @@ namespace IttyBitty
 	interface IUiNavigationListener;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
-
 	interface IUiInputListener;
 	TYPEDEF_CLASS_ALIASES(IUiInputListener, IUIINPUTLISTENER);
 
 	class UiInputListenerBase;
 	TYPEDEF_CLASS_ALIASES(UiInputListenerBase, UIINPUTLISTENERBASE);
-
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);

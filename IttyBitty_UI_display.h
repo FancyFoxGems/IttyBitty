@@ -1,13 +1,13 @@
 /***********************************************************************************************
-* [IttyBitty_menu_display.h]: RENDERING SUB-SYSTEM FOR MENUI DISPLAY INTEFACE
+* [IttyBitty_UI_display.h]: RENDERING SUB-SYSTEM FOR MENUI DISPLAY INTEFACE
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_DISPLAY_H
-#define _ITTYBITTY_MENU_DISPLAY_H
+#ifndef _ITTYBITTY_UI_DISPLAY_H
+#define _ITTYBITTY_UI_DISPLAY_H
 
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
@@ -19,11 +19,6 @@
 #include "Print.h"
 
 
-#pragma region DEFINES
-
-#pragma endregion
-
-
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
@@ -33,7 +28,6 @@ namespace IttyBitty
 
 	class UiRendererBase;
 	TYPEDEF_CLASS_ALIASES(UiRendererBase, UIRENDERERBASE);
-
 
 	class UiDisplayController;
 	TYPEDEF_CLASS_ALIASES(UiDisplayController, UIDISPLAYCONTROLLER);

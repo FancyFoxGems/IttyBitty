@@ -10,8 +10,15 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menui.h"
+#include "IttyBitty_UI_options.h"
 
 using namespace IttyBitty;
+
+
+#pragma region GLOBAL CONSTANT & VARIABLE MEMBER DEFINITIONS
+
+UIOPTIONS MenUIOptions = UiOptions();
+
+#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

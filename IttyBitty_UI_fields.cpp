@@ -4,13 +4,13 @@
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
-#if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_MENUI)
-	#define NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
+#ifdef ITTYBITTY_BASE
+	#define NO_ITTYBITTY_MENUI
 #endif
 
-#ifndef NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
+#ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_display_adapters.h"
+#include "IttyBitty_UI_fields.h"
 
 using namespace IttyBitty;
 // VIRTUAL
@@ -25,4 +25,4 @@ using namespace IttyBitty;
 // { }
 //\n{\n\n}
 
-#endif	// #ifndef NO_ITTYBITTY_MENU_DISPLAY_ADAPTERS
+#endif	// #ifndef NO_ITTYBITTY_MENUI

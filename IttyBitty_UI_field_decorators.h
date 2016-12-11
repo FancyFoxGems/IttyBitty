@@ -1,16 +1,16 @@
 /***********************************************************************************************
-* [IttyBitty_menu_field_decorators.h]: STRUCTURES FOR ADDED-VALUE UI FIELD BEHAVIOR
+* [IttyBitty_UI_field_decorators.h]: STRUCTURES FOR ADDED-VALUE UI FIELD BEHAVIOR
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_FIELD_DECORATORS_H
-#define _ITTYBITTY_MENU_FIELD_DECORATORS_H
+#ifndef _ITTYBITTY_UI_FIELD_DECORATORS_H
+#define _ITTYBITTY_UI_FIELD_DECORATORS_H
 
 
-#include "IttyBitty_menu_fields.h"
+#include "IttyBitty_UI_fields.h"
 
 
 #pragma region DEFINES

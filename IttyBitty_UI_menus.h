@@ -1,23 +1,16 @@
 /***********************************************************************************************
-* [IttyBitty_menu_items.h]: STRUCTURES FOR DEFINING MENU HIERARCHY AND BEHAVIOR
+* [IttyBitty_UI_menus.h]: STRUCTURES FOR DEFINING MENU HIERARCHY AND BEHAVIOR
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_ITEMS_H
-#define _ITTYBITTY_MENU_ITEMS_H
+#ifndef _ITTYBITTY_UI_MENUS_H
+#define _ITTYBITTY_UI_MENUS_H
 
 
-#include "IttyBitty_menu_fields.h"
-
-
-#pragma region DEFINES
-
-#define MENUI_DEFAULT_MENU_CAPACITY				5
-
-#pragma endregion
+#include "IttyBitty_UI_fields.h"
 
 
 namespace IttyBitty

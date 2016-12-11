@@ -10,7 +10,7 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_menu_nav.h"
+#include "IttyBitty_UI_nav.h"
 
 using namespace IttyBitty;
 

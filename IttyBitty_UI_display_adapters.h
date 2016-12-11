@@ -1,33 +1,22 @@
 /***********************************************************************************************
-* [IttyBitty_menu_display_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS
+* [IttyBitty_UI_display_adapters.h]: RENDERING ADAPTERS FOR DISPLAY OF MENUI ELEMENTS
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
 * RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS.
 ***********************************************************************************************/
 
-#ifndef _ITTYBITTY_MENU_DISPLAY_ADAPTERS_H
-#define _ITTYBITTY_MENU_DISPLAY_ADAPTERS_H
+#ifndef _ITTYBITTY_UI_DISPLAY_ADAPTERS_H
+#define _ITTYBITTY_UI_DISPLAY_ADAPTERS_H
 
 
-#include "IttyBitty_menu_display.h"
-
-#ifndef NO_ITTYBITTY_PRINT
-	#include "IttyBitty_print.h"
-#else
-
-	#include "HardwareSerial.h"
-
-#endif
+#include "IttyBitty_UI_display.h"
 
 #ifndef NO_ITTYBITTY_LCD
 	#include "IttyBitty_LCD_I2C.h"
 #endif
 
-
-#pragma region DEFINES
-
-#pragma endregion
+#include "HardwareSerial.h"
 
 
 namespace IttyBitty
