@@ -77,11 +77,6 @@
 #define MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS	TRUE
 
 
-// MenUI CONSTANTS
-
-#define MENUI_DEFAULT_MENU_CAPACITY				5
-
-
 // GENERAL CONSTANTS
 
 #define MENUI_IDLE_TICK_MS						100
@@ -266,8 +261,6 @@ namespace IttyBitty
 
 			return T(T_MAX);
 		}
-
-
 
 
 	protected:

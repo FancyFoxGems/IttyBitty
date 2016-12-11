@@ -17,6 +17,11 @@
 
 #pragma region DEFINES
 
+#define MENUI_DEFAULT_LIST_CAPACITY					5
+
+#define MENUI_DEFAULT_NUMERIC_FIELD_STEP			1
+#define MENUI_DEFAULT_NUMERIC_FIELD_STEP_LARGE		10
+
 #pragma endregion
 
 
@@ -24,24 +29,34 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IUiElement;
+	interface IUiElement;
 	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
 
 	class UiElementBase;
 	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
 
-	class IUiListElement;
-	TYPEDEF_CLASS_ALIASES(IUiListElement, IUILISTELEMENT);
+	#define UI_LIST_ELEMENT_T_CLAUSE_DEF	<class TElement>
+	#define UI_LIST_ELEMENT_T_CLAUSE		<class TElement>
+	#define UI_LIST_ELEMENT_T_ARGS			<TElement>
 
 
-	class IUiDialog;
+	template UI_LIST_ELEMENT_T_CLAUSE
+	interface IUiListElement;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
+		CSL(UI_LIST_ELEMENT_T_ARGS), IUiListElement, IUILISTELEMENT);
+
+	interface IUiChoice;
+	TYPEDEF_CLASS_ALIASES(IUiChoice, IUICHOICE);
+
+
+	interface IUiDialog;
 	TYPEDEF_CLASS_ALIASES(IUiDialog, IUIDIALOG);
 
 	class UiDialog;
 	TYPEDEF_CLASS_ALIASES(UiDialog, UIDIALOG);
 
 
-	class IUiField;
+	interface IUiField;
 	TYPEDEF_CLASS_ALIASES(IUiField, IUIFIELD);
 
 	class UiFieldBase;
@@ -228,6 +243,7 @@ namespace IttyBitty
 
 #pragma region [IUiListElement] DEFINITION
 
+	template UI_LIST_ELEMENT_T_CLAUSE_DEF
 	INTERFACE IUiListElement : public IUiElement
 	{
 	public:
@@ -532,7 +548,7 @@ namespace IttyBitty
 
 #pragma region [FloatUiField] DEFINITION
 
-	CLASS FloatUiField : public NumericUiField<WORD>
+	CLASS FloatUiField : public NumericUiField<DWORD>
 	{
 	public:
 
@@ -552,7 +568,7 @@ namespace IttyBitty
 
 #pragma region [ListUiField] DEFINITION
 
-	CLASS ListUiField : public UiFieldBase, public IUiListElement
+	CLASS ListUiField : public UiFieldBase, public IUiListElement<IUiChoice>
 	{
 	public:
 

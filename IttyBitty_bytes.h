@@ -68,30 +68,30 @@ namespace IttyBitty
 	#define IBITFIELD_T_CLAUSE		<typename T = BYTE>
 
 	template IBITFIELD_T_CLAUSE
-	class IBitField;
+	interface IBitField;
 	TEMPLATE_CLASS_USING_ALIASES(IBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, IBitField, IBITFIELD);
 
 #endif	// #ifndef NO_ITTYBITTY_FULL_BYTES
 
 
-	class IByteField;
+	interface IByteField;
 	TYPEDEF_CLASS_ALIASES(IByteField, IBYTEFIELD);
 
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
 
-	class IWordField;
+	interface IWordField;
 	TYPEDEF_CLASS_ALIASES(IWordField, IWORDFIELD);
 
 
 	#define IMANYBITFIELD_T_CLAUSE	<typename T = DWORD>
 
 	template IMANYBITFIELD_T_CLAUSE
-	class IManyBitField;
+	interface IManyBitField;
 	TEMPLATE_CLASS_USING_ALIASES(IMANYBITFIELD_T_CLAUSE, DEFAULT_T_ARGS, IManyBitField, IMANYBITFIELD);
 
 
-	class IDWordField;
+	interface IDWordField;
 	TYPEDEF_CLASS_ALIASES(IDWordField, IDWORDFIELD);
 
 

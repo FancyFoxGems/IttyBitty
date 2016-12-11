@@ -15,6 +15,8 @@
 
 #pragma region DEFINES
 
+#define MENUI_DEFAULT_MENU_CAPACITY				5
+
 #pragma endregion
 
 
@@ -22,7 +24,7 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IMenuItem;
+	interface IMenuItem;
 	TYPEDEF_CLASS_ALIASES(IMenuItem, IMENUITEM);
 
 	class MenuItemBase;
@@ -143,21 +145,23 @@ namespace IttyBitty
 
 #pragma region [Menu] DEFINITION
 
-	CLASS Menu : public MenuItemBase
+	CLASS Menu : public MenuItemBase, public IUiListElement<IMenuItem>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Menu(PPCIMENUITEM menuHierarchy = NULL);
-		Menu(CBYTE initMenuCapacity = 0);
+		Menu(PPCIMENUITEM menuHierarchy = NULL, BYTE numChildren = 0);
+		Menu(CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		BYTE _Capacity = 0;
+		BYTE _NumChildren = 0;
+		PPIMENUITEM _Children = NULL;
 	};
 
 #pragma endregion
@@ -165,7 +169,7 @@ namespace IttyBitty
 
 #pragma region [ListMenu] DEFINITION
 
-	CLASS ListMenu : public Menu, public IUiListElement
+	CLASS ListMenu : public Menu, public IUiListElement<IUiChoice>
 	{
 	public:
 

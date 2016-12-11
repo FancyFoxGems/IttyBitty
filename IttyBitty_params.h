@@ -17,7 +17,7 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IParam;
+	interface IParam;
 	TYPEDEF_CLASS_ALIASES(IParam, IPARAM);
 
 	class ParamBase;

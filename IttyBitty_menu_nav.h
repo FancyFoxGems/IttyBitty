@@ -22,11 +22,11 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IUiActions;
+	interface IUiActions;
 	TYPEDEF_CLASS_ALIASES(IUiActions, IUIACTIONS);
 
 
-	class IUiInputListener;
+	interface IUiInputListener;
 	TYPEDEF_CLASS_ALIASES(IUiInputListener, IUIINPUTLISTENER);
 
 	class UiInputListenerBase;

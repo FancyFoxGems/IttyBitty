@@ -27,10 +27,10 @@ namespace IttyBitty
 	union StorageLocation;
 	TYPEDEF_UNION_ALIASES(StorageLocation, STORAGELOCATION);
 
-	class IStorable;
+	interface IStorable;
 	TYPEDEF_CLASS_ALIASES(IStorable, ISTORABLE);
 
-	class IStorage;
+	interface IStorage;
 	TYPEDEF_CLASS_ALIASES(IStorage, ISTORAGE);
 
 	class NullStorage;
@@ -227,7 +227,7 @@ namespace IttyBitty
 
 #pragma region [IStorable] DEFINITION
 
-	CLASS IStorable : public ISerializable
+	INTERFACE IStorable : public ISerializable
 	{
 	public:
 
@@ -258,7 +258,7 @@ namespace IttyBitty
 
 #pragma region [IStorage] DEFINITION
 
-	CLASS IStorage
+	INTERFACE IStorage
 	{
 	public:
 

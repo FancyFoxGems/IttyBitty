@@ -78,6 +78,7 @@
 #define UNION			union
 #define STRUCT			struct
 #define CLASS			class
+#define interface		class
 #define INTERFACE		class
 
 #define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)

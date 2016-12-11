@@ -28,7 +28,7 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IUiRenderer;
+	interface IUiRenderer;
 	TYPEDEF_CLASS_ALIASES(IUiRenderer, IUIRENDERER);
 
 	class UiRendererBase;

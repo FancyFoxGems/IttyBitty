@@ -36,7 +36,7 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IDbTable;
+	interface IDbTable;
 	TYPEDEF_CLASS_ALIASES(IDbTable, IDBTABLE);
 
 	TYPEDEF_CLASS_ALIASES(DbTable, DBTABLE);
@@ -47,7 +47,7 @@ namespace IttyBitty
 	class FieldedDbTable;
 	TYPEDEF_CLASS_ALIASES(FieldedDbTable, FIELDEDDBTABLE);
 
-	class IDbTableSet;
+	interface IDbTableSet;
 	TYPEDEF_CLASS_ALIASES(IDbTableSet, IDBTABLESET);
 
 
@@ -58,7 +58,7 @@ namespace IttyBitty
 
 #pragma region [IDbTable] DEFINITION
 
-	CLASS IDbTable : public IDbTableDef
+	INTERFACE IDbTable : public IDbTableDef
 	{
 	public:
 
@@ -396,7 +396,7 @@ namespace IttyBitty
 
 	protected:
 
-		friend class IDbTableSet;
+		friend interface IDbTableSet;
 	};
 
 #pragma endregion
@@ -404,7 +404,7 @@ namespace IttyBitty
 
 #pragma region [IDbTableSet] DEFINITION
 
-	CLASS IDbTableSet : protected IDbTableDefSet
+	INTERFACE IDbTableSet : protected IDbTableDefSet
 	{
 	public:
 

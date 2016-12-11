@@ -37,17 +37,17 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class ISerializable;
+	interface ISerializable;
 	TYPEDEF_CLASS_ALIASES(ISerializable, ISERIALIZABLE);
 
 #ifdef ARDUINO
 
-	class ITransmittable;
+	interface ITransmittable;
 	TYPEDEF_CLASS_ALIASES(ITransmittable, ITRANSMITTABLE);
 
 #endif
 
-	class IDatum;
+	interface IDatum;
 	TYPEDEF_CLASS_ALIASES(IDatum, IDATUM);
 
 

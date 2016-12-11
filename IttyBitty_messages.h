@@ -35,7 +35,7 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IMessage;
+	interface IMessage;
 	TYPEDEF_CLASS_ALIASES(IMessage, IMESSAGE);
 
 	class Message;

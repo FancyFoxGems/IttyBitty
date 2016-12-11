@@ -17,7 +17,7 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class IField;
+	interface IField;
 	TYPEDEF_CLASS_ALIASES(IField, IFIELD);
 
 	class FieldBase;
