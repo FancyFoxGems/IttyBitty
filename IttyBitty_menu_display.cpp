@@ -19,122 +19,44 @@ using namespace IttyBitty;
 
 // [IUiRenderer] IMPLEMENTATION
 
-CBYTE UiRendererBase::Cols() const
-{
-}
+VOID UiRendererBase::CursorOff() { }
 
-CBYTE UiRendererBase::Rows() const
-{
-}
+VOID UiRendererBase::CursorBlinkOn() { }
 
-CBOOL UiRendererBase::IsLineWrapEnabled() { return FALSE; }
-
-VOID UiRendererBase::SetLineWrap(CBOOL wrapLines)
-{
-}
-
-VOID UiRendererBase::CursorOff()
-{
-}
-
-VOID UiRendererBase::CursorBlinkOn()
-{
-}
-
-VOID UiRendererBase::CursorBlinkOff()
-{
-}
-
-CBYTE UiRendererBase::CursorCol() { return MAX_BYTE; }
-
-CBYTE UiRendererBase::CursorRow() { return MAX_BYTE; }
-
-VOID UiRendererBase::CursorOn()
-{
-}
+VOID UiRendererBase::CursorBlinkOff() { }
 
 CBOOL UiRendererBase::Available() { return TRUE; }
 
-VOID UiRendererBase::Clear()
-{
-}
+VOID UiRendererBase::Flush() { }
 
-VOID UiRendererBase::ClearCol(CBYTE)
-{
-}
+VOID UiRendererBase::Clear() { }
 
-VOID UiRendererBase::ClearRow(CBYTE)
-{
-}
+VOID UiRendererBase::ClearCol(CBYTE) { }
 
-VOID UiRendererBase::ScrollLeft()
-{
-}
+VOID UiRendererBase::ClearRow(CBYTE) { }
 
-VOID UiRendererBase::ScrollRight()
-{
-}
+VOID UiRendererBase::ScrollLeft() { }
 
-VOID UiRendererBase::Home()
-{
-}
+VOID UiRendererBase::ScrollRight() { }
 
-VOID UiRendererBase::CursorPrev()
-{
-}
+VOID UiRendererBase::Home() { }
 
-VOID UiRendererBase::CursorNext()
-{
-}
+VOID UiRendererBase::CursorPrev() { }
 
-VOID UiRendererBase::MoveCursor(CBYTE, CBYTE)
-{
-}
+VOID UiRendererBase::CursorNext() { }
 
-VOID UiRendererBase::LoadCustomChar(BYTE charIndex, PCBYTE charData)
-{
-}
+VOID UiRendererBase::MoveCursor(CBYTE, CBYTE) { }
 
-VOID UiRendererBase::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
-{
-}
+VOID UiRendererBase::LoadCustomChar(BYTE charIndex, PCBYTE charData) { }
+
+VOID UiRendererBase::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
 
 CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
+	this->write(value);
+
+	return 1;
 }
-
-CBYTE UiRendererBase::PrintString(PCCHAR str, BYTE col, BYTE row)
-{
-}
-
-CBYTE UiRendererBase::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
-{
-}
-
-CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
-{
-}
-
-CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
-{
-}
-
-#ifndef NO_ITTYBITTY_EXTENSIONS
-
-VOID UiRendererBase::DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
-{
-}
-
-VOID UiRendererBase::DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
-{
-}
-
-VOID UiRendererBase::DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
-	BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw)
-{
-}
-
-#endif
 
 #pragma endregion
 
@@ -175,11 +97,11 @@ VOID UiDisplayController::Clear()
 {
 }
 
-VOID UiDisplayController::ClearCol(CBYTE)
+VOID UiDisplayController::ClearCol(CBYTE col)
 {
 }
 
-VOID UiDisplayController::ClearRow(CBYTE)
+VOID UiDisplayController::ClearRow(CBYTE row)
 {
 }
 
@@ -203,7 +125,7 @@ VOID UiDisplayController::CursorNext()
 {
 }
 
-VOID UiDisplayController::MoveCursor(CBYTE, CBYTE)
+VOID UiDisplayController::MoveCursor(CBYTE col, CBYTE row)
 {
 }
 

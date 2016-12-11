@@ -59,7 +59,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiListener] IMPLEMENTATION
+		// [IUiListener] OVERRIDES
 
 		CBOOL IsAsynchronous() const { return FALSE; }
 
@@ -133,12 +133,61 @@ namespace IttyBitty
 	{
 	public:
 
+		// [IUiListener] OVERRIDES
+
+		CBOOL IsAsynchronous() const;
+
+		VOID Poll();
+
 
 	protected:
 
 		// INSTANCE VARIABLES
 
+		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
+	};
 
+#pragma endregion
+
+
+#pragma region [DigitalPinUiInputListener] DEFINITION
+
+	CLASS DigitalPinUiInputListener : public UiInputListenerBase
+	{
+	public:
+
+		// [IUiListener] OVERRIDES
+
+		CBOOL IsAsynchronous() const;
+
+		VOID Poll();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		BOOL _IsAsynchronous = FALSE;
+		BYTE _PinNum = 0;
+	};
+
+#pragma endregion
+
+
+#pragma region [AnalogPinUiInputListener] DEFINITION
+
+	CLASS AnalogPinUiInputListener : public DigitalPinUiInputListener
+	{
+	public:
+
+		// [IUiListener] OVERRIDES
+
+		VOID Poll();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
 	};
 
 #pragma endregion
@@ -146,7 +195,7 @@ namespace IttyBitty
 
 #pragma region [SwitchUiInputListener] DEFINITION
 
-	CLASS SwitchUiInputListener : public UiInputListenerBase
+	CLASS SwitchUiInputListener : public DigitalPinUiInputListener
 	{
 	public:
 
@@ -154,8 +203,6 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
-
-
 	};
 
 #pragma endregion
@@ -180,9 +227,34 @@ namespace IttyBitty
 
 #pragma region [RotaryUiInputListener] DEFINITION
 
-	CLASS RotaryUiInputListener : public UiInputListenerBase
+	CLASS RotaryUiInputListener : public DigitalPinUiInputListener
 	{
 	public:
+
+		// [IUiListener] OVERRIDES
+
+		VOID Poll();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
+	};
+
+#pragma endregion
+
+
+#pragma region [ClickEncoderUiInputListener] DEFINITION
+
+	CLASS ClickEncoderUiInputListener : public RotaryUiInputListener
+	{
+	public:
+
+		// [IUiListener] OVERRIDES
+
+		VOID Poll();
 
 
 	protected:
@@ -197,9 +269,13 @@ namespace IttyBitty
 
 #pragma region [PotentiometerUiInputListener] DEFINITION
 
-	CLASS PotentiometerUiInputListener : public UiInputListenerBase
+	CLASS PotentiometerUiInputListener : public AnalogPinUiInputListener
 	{
 	public:
+
+		// [IUiListener] OVERRIDES
+
+		VOID Poll();
 
 
 	protected:

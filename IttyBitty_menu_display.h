@@ -68,6 +68,7 @@ namespace IttyBitty
 		// INTERFACE METHODS
 
 		VIRTUAL CBOOL Available() = 0;
+		VIRTUAL VOID Flush() = 0;
 
 		VIRTUAL VOID Clear() = 0;
 		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE) = 0;
@@ -130,6 +131,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow();
 
 		VIRTUAL CBOOL Available();
+		VIRTUAL VOID Flush();
 
 		VIRTUAL VOID Clear();
 		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);

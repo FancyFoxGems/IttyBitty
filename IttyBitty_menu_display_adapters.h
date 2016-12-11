@@ -12,11 +12,17 @@
 
 #include "IttyBitty_menu_display.h"
 
+#ifndef NO_ITTYBITTY_PRINT
+	#include "IttyBitty_print.h"
+#else
+
+	#include "HardwareSerial.h"
+
+#endif
+
 #ifndef NO_ITTYBITTY_LCD
 	#include "IttyBitty_LCD_I2C.h"
 #endif
-
-#include "HardwareSerial.h"
 
 
 #pragma region DEFINES
@@ -55,12 +61,43 @@ namespace IttyBitty
 	{
 	public:
 
+		// [Print] OVERRIDES
+
+		SIZE write(BYTE);
+
+
+		// [IUiRenderer] IMPLEMENTATION
+
+		CBYTE Cols() const;
+		CBYTE Rows() const;
+
+		CBOOL IsLineWrapEnabled();
+		VOID SetLineWrap(CBOOL = TRUE);
+
+		CBYTE CursorCol();
+		CBYTE CursorRow();
+
+		CBOOL Available();
+		VOID Flush();
+
+		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+
+	#ifndef NO_ITTYBITTY_EXTENSIONS
+		VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
+	#endif
+
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
 	};
 
 #pragma endregion
@@ -74,6 +111,12 @@ namespace IttyBitty
 	CLASS LcdI2CUiRenderer : public UiRendererBase
 	{
 	public:
+
+		// [Print] OVERRIDES
+
+		SIZE write(BYTE);
+
+		// [IUiRenderer] IMPLEMENTATION
 
 
 	protected:
