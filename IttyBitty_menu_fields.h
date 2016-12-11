@@ -39,14 +39,17 @@ namespace IttyBitty
 	#define UI_LIST_ELEMENT_T_CLAUSE		<class TElement>
 	#define UI_LIST_ELEMENT_T_ARGS			<TElement>
 
-
 	template UI_LIST_ELEMENT_T_CLAUSE
 	interface IUiListElement;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
 		CSL(UI_LIST_ELEMENT_T_ARGS), IUiListElement, IUILISTELEMENT);
 
+
 	interface IUiChoice;
 	TYPEDEF_CLASS_ALIASES(IUiChoice, IUICHOICE);
+
+	class UiFieldChoice;
+	TYPEDEF_CLASS_ALIASES(UiFieldChoice, UIFIELDCHOICE);
 
 
 	interface IUiDialog;
@@ -262,6 +265,26 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [IUiChoice] DEFINITION
+
+	INTERFACE IUiChoice : public IUiElement
+	{
+	public:
+
+		// ACCESSORS/MUTATORS
+
+
+		// INTERFACE METHODS
+
+
+	protected:
+
+		IUiChoice() { }
+	};
+
+#pragma endregion
+
+
 #pragma region [IUiDialog] DEFINITION
 
 	INTERFACE IUiDialog : public IUiElement
@@ -281,6 +304,33 @@ namespace IttyBitty
 	protected:
 
 		IUiDialog() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [IUiField] DEFINITION
+
+	INTERFACE IUiField : public IUiElement
+	{
+	public:
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL RCVALUE Value() const = 0;
+		VIRTUAL RVALUE Value() = 0;
+
+		VIRTUAL CBOOL ShowLabel() const = 0;
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER) = 0;
+
+
+	protected:
+
+		IUiField() { }
 	};
 
 #pragma endregion
@@ -322,6 +372,23 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [UiFieldChoice] DEFINITION
+
+	CLASS UiFieldChoice : public UiElementBase, public IUiChoice
+	{
+	public:
+
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+	};
+
+#pragma endregion
+
+
 #pragma region [UiDialog] DEFINITION
 
 	CLASS UiDialog : public UiElementBase, public IUiDialog
@@ -343,33 +410,6 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 
-	};
-
-#pragma endregion
-
-
-#pragma region [IUiField] DEFINITION
-
-	INTERFACE IUiField : public IUiElement
-	{
-	public:
-
-		// ACCESSORS/MUTATORS
-
-		VIRTUAL RCVALUE Value() const = 0;
-		VIRTUAL RVALUE Value() = 0;
-
-		VIRTUAL CBOOL ShowLabel() const = 0;
-
-
-		// INTERFACE METHODS
-
-		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER) = 0;
-
-
-	protected:
-
-		IUiField() { }
 	};
 
 #pragma endregion

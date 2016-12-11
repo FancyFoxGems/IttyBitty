@@ -39,6 +39,9 @@ namespace IttyBitty
 	class MenuField;
 	TYPEDEF_CLASS_ALIASES(MenuField, MENUFIELD);
 
+	class MenuChoice;
+	TYPEDEF_CLASS_ALIASES(MenuChoice, MENUCHOICE);
+
 
 	class Menu;
 	TYPEDEF_CLASS_ALIASES(Menu, MENU);
@@ -143,6 +146,20 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [MenuChoice] DEFINITION
+
+	CLASS MenuChoice : public MenuItemBase, public IUiChoice
+	{
+	public:
+
+		// [IMenuItem] IMPLEMENTATION
+
+		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL);
+	};
+
+#pragma endregion
+
+
 #pragma region [Menu] DEFINITION
 
 	CLASS Menu : public MenuItemBase, public IUiListElement<IMenuItem>
@@ -169,7 +186,7 @@ namespace IttyBitty
 
 #pragma region [ListMenu] DEFINITION
 
-	CLASS ListMenu : public Menu, public IUiListElement<IUiChoice>
+	CLASS ListMenu : public Menu, public IUiListElement<MenuChoice>
 	{
 	public:
 
