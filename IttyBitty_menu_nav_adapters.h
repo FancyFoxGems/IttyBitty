@@ -61,16 +61,16 @@ namespace IttyBitty
 
 		// [IUiListener] IMPLEMENTATION
 
-		VIRTUAL CBOOL IsAsynchronous() const; // { return FALSE; }
+		CBOOL IsAsynchronous() const { return FALSE; }
 
-		VIRTUAL VOID Poll() const;
-		//{
-		//	if (_PrevValue + Tolerance <= Var)
-		//	{
-		//		_PrevValue = Var;
-		//		this->DoAction();
-		//	}
-		//}
+		VOID Poll()
+		{
+			if (_PrevValue + Tolerance <= Var)
+			{
+				_PrevValue = Var;
+				this->DoAction();
+			}
+		}
 
 
 	protected:
@@ -80,47 +80,48 @@ namespace IttyBitty
 		TVar _PrevValue = 0;
 
 
-		// [IUiInputListener] HELPER METHODS
+		// HELPER METHODS
 
-		VOID DoAction();
-		//{
-		//	switch (Action)
-		//	{
-		//	case UiAction::UP:
-		//		_Navigation->Up();
-		//		break;
+		VOID DoAction()
+		{
+			switch (Action)
+			{
+			case UiAction::UP:
+				_Navigation->Up();
+				break;
 
-		//	case UiAction::DOWN:
-		//		_Navigation->Down();
-		//		break;
+			case UiAction::DOWN:
+				_Navigation->Down();
+				break;
 
-		//	case UiAction::LEFT:
-		//		_Navigation->Left();
-		//		break;
+			case UiAction::LEFT:
+				_Navigation->Left();
+				break;
 
-		//	case UiAction::RIGHT:
-		//		_Navigation->Right();
-		//		break;
+			case UiAction::RIGHT:
+				_Navigation->Right();
+				break;
 
-		//	case UiAction::ESCAPE:
-		//		_Navigation->Escape();
-		//		break;
+			case UiAction::RETURN:
+				_Navigation->Return();
+				break;
 
-		//	case UiAction::SELECT:
-		//		_Navigation->Select();
-		//		break;
+			case UiAction::SELECT:
+				_Navigation->Select();
+				break;
 
-		//	case UiAction::SHIFT:
-		//		_Navigation->ToggleShift();
-		//		break;
+			case UiAction::SHIFT:
+				_Navigation->ToggleShift();
+				break;
 
-		//	case UiAction::ALT:
-		//		_Navigation->ToggleAlt();
-		//		break;
+			case UiAction::ALT:
+				_Navigation->ToggleAlt();
+				break;
 
-		//	default:
-		//	}
-		//}
+			default:
+				break;
+			}
+		}
 	};
 
 #pragma endregion

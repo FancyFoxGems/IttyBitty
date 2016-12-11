@@ -140,7 +140,7 @@ namespace IttyBitty
 
 		// [IMenuItem] IMPLEMENTATION
 
-		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL);
+		BOOL Action(PTR = NULL, CPTR = NULL);
 	};
 
 #pragma endregion
@@ -148,7 +148,7 @@ namespace IttyBitty
 
 #pragma region [MenuChoice] DEFINITION
 
-	CLASS MenuChoice : public MenuItemBase, public IUiChoice
+	CLASS MenuChoice : public UiFieldChoice, public IMenuItem //public MenuItemBase, public IUiChoice
 	{
 	public:
 

@@ -49,17 +49,21 @@ namespace IttyBitty
 
 		// ACCESSORS & MUTATORS
 
-		VIRTUAL CBOOL IsLineWrapEnabled() = 0;
-		VIRTUAL VOID SetLineWrap(CBOOL wrapLines = TRUE) = 0;
+		VIRTUAL CBYTE Cols() const = 0;
+		VIRTUAL CBYTE Rows() const = 0;
 
-		VIRTUAL CBYTE CursorCol() = 0;
-		VIRTUAL CBYTE CursorRow() = 0;
+		VIRTUAL CBOOL IsLineWrapEnabled() = 0;
+		VIRTUAL VOID SetLineWrap(CBOOL = TRUE) = 0;
 
 		VIRTUAL VOID CursorOn() = 0;
 		VIRTUAL VOID CursorOff() = 0;
 
 		VIRTUAL VOID CursorBlinkOn() = 0;
 		VIRTUAL VOID CursorBlinkOff() = 0;
+
+		VIRTUAL CBYTE CursorCol() = 0;
+		VIRTUAL CBYTE CursorRow() = 0;
+
 
 		// INTERFACE METHODS
 
@@ -77,22 +81,21 @@ namespace IttyBitty
 		VIRTUAL VOID CursorNext() = 0;
 		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE) = 0;
 
-		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData) = 0;
-		VIRTUAL VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) = 0;
+		VIRTUAL VOID LoadCustomChar(BYTE, PCBYTE) = 0;
+		VIRTUAL VOID LoadCustomChar_P(BYTE, PCBYTE) = 0;
 
-		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row) = 0;
+		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE) = 0;
 
-		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) = 0;
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE) = 0;
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE) = 0;
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE) = 0;
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options) = 0;
-		VIRTUAL VOID DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options) = 0;
-		VIRTUAL VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
-			CLCDSLIDEROPTIONS options, BOOL redraw = FALSE) = 0;
+		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) = 0;
+		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) = 0;
+		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
 
 	protected:
@@ -111,48 +114,50 @@ namespace IttyBitty
 
 		// [IUiRenderer] IMPLEMENTATION
 
-		VIRTUAL CBOOL IsLineWrapEnabled(); // { return FALSE; };
-		VIRTUAL VOID SetLineWrap(CBOOL wrapLines = TRUE); // { };
+		VIRTUAL CBYTE Cols() const;
+		VIRTUAL CBYTE Rows() const;
 
-		VIRTUAL CBYTE CursorCol(); // { return MAX_BYTE; };
-		VIRTUAL CBYTE CursorRow(); // { return MAX_BYTE; };
+		VIRTUAL CBOOL IsLineWrapEnabled();
+		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
 
-		VIRTUAL VOID CursorOn(); // { }
-		VIRTUAL VOID CursorOff(); // { }
+		VIRTUAL VOID CursorOn();
+		VIRTUAL VOID CursorOff();
 
-		VIRTUAL VOID CursorBlinkOn(); // { }
-		VIRTUAL VOID CursorBlinkOff(); // { }
+		VIRTUAL VOID CursorBlinkOn();
+		VIRTUAL VOID CursorBlinkOff();
 
-		VIRTUAL CBOOL Available(); // { return TRUE; }
+		VIRTUAL CBYTE CursorCol();
+		VIRTUAL CBYTE CursorRow();
 
-		VIRTUAL VOID Clear(); // { }
-		VIRTUAL VOID ClearCol(); // { }
-		VIRTUAL VOID ClearRow(); // { }
+		VIRTUAL CBOOL Available();
 
-		VIRTUAL VOID ScrollLeft(); // { }
-		VIRTUAL VOID ScrollRight(); // { }
+		VIRTUAL VOID Clear();
+		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);
+		VIRTUAL VOID ClearRow(CBYTE = MAX_BYTE);
 
-		VIRTUAL VOID Home(); // { }
-		VIRTUAL VOID CursorPrev(); // { }
-		VIRTUAL VOID CursorNext(); // { }
-		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE); // { }
+		VIRTUAL VOID ScrollLeft();
+		VIRTUAL VOID ScrollRight();
 
-		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData); // { }
-		VIRTUAL VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr); // { }
+		VIRTUAL VOID Home();
+		VIRTUAL VOID CursorPrev();
+		VIRTUAL VOID CursorNext();
+		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row); // { }
+		VIRTUAL VOID LoadCustomChar(BYTE, PCBYTE);
+		VIRTUAL VOID LoadCustomChar_P(BYTE, PCBYTE);
 
-		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
+		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE); // { }
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options); // { }
-		VIRTUAL VOID DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options); // { }
-		VIRTUAL VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
-			CLCDSLIDEROPTIONS options, BOOL redraw = FALSE); // { }
+		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
 	};
 
@@ -167,40 +172,50 @@ namespace IttyBitty
 
 		// [IUiRenderer] IMPLEMENTATION
 
-		VIRTUAL CBOOL IsLineWrapEnabled(); // { return FALSE; };
-		VIRTUAL VOID SetLineWrap(CBOOL wrapLines = TRUE); // { };
+		VIRTUAL CBYTE Cols() const;
+		VIRTUAL CBYTE Rows() const;
 
-		VIRTUAL CBYTE CursorCol(); // { return MAX_BYTE; };
-		VIRTUAL CBYTE CursorRow(); // { return MAX_BYTE; };
+		VIRTUAL CBOOL IsLineWrapEnabled();
+		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
 
-		VIRTUAL CBOOL Available(); // { return TRUE; }
+		VIRTUAL VOID CursorOn();
+		VIRTUAL VOID CursorOff();
 
-		VIRTUAL VOID Clear(); // { }
-		VIRTUAL VOID ClearCol(); // { }
-		VIRTUAL VOID ClearRow(); // { }
+		VIRTUAL VOID CursorBlinkOn();
+		VIRTUAL VOID CursorBlinkOff();
 
-		VIRTUAL VOID ScrollLeft(); // { }
-		VIRTUAL VOID ScrollRight(); // { }
+		VIRTUAL CBYTE CursorCol();
+		VIRTUAL CBYTE CursorRow();
 
-		VIRTUAL VOID Home(); // { }
-		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE); // { }
+		VIRTUAL CBOOL Available();
 
-		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData); // { }
-		VIRTUAL VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr); // { }
+		VIRTUAL VOID Clear();
+		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);
+		VIRTUAL VOID ClearRow(CBYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row); // { }
+		VIRTUAL VOID ScrollLeft();
+		VIRTUAL VOID ScrollRight();
 
-		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
+		VIRTUAL VOID Home();
+		VIRTUAL VOID CursorPrev();
+		VIRTUAL VOID CursorNext();
+		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE); // { }
+		VIRTUAL VOID LoadCustomChar(BYTE, PCBYTE);
+		VIRTUAL VOID LoadCustomChar_P(BYTE, PCBYTE);
+
+		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
+
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options); // { }
-		VIRTUAL VOID DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options); // { }
-		VIRTUAL VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
-			CLCDSLIDEROPTIONS options, BOOL redraw = FALSE); // { }
+		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
 
 

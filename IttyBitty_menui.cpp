@@ -20,5 +20,16 @@ using namespace IttyBitty;
 UIOPTIONS MenUIOptions = UiOptions();
 
 #pragma endregion
+// VIRTUAL
+//
+
+//([A-Za-z_]*) ([A-Za-z_]*)[(]
+//$1 UiDisplayController::$2(
+
+// = [A-Za-z0-9_]*
+//
+
+// { }
+//\n{\n\n}
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

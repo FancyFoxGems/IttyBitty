@@ -15,7 +15,90 @@
 using namespace IttyBitty;
 
 
-#pragma region
+#pragma region [UiInputListenerBase] IMPLEMENTATION
+
+// CONSTRUCTOR
+
+UiInputListenerBase::UiInputListenerBase(PIUINAVIGATIONLISTENER navigation) : _Navigation(navigation) { }
+
+
+// [IUiListener] IMPLEMENTATION
+
+CBOOL UiInputListenerBase::IsAsynchronous() const { return TRUE; }
+
+VOID UiInputListenerBase::Poll() { }
+
+#pragma endregion
+
+
+#pragma region [UiNavigationController] IMPLEMENTATION
+
+// ACCESSORS/MUTATORS
+
+VOID UiNavigationController::ToggleShift()
+{
+}
+
+VOID UiNavigationController::ShiftOn()
+{
+}
+
+VOID UiNavigationController::ShiftOff()
+{
+}
+
+VOID UiNavigationController::ToggleAlt()
+{
+}
+
+VOID UiNavigationController::AltOn()
+{
+}
+
+VOID UiNavigationController::AltOff()
+{
+}
+
+
+// [IUiListener] IMPLEMENTATION
+
+VOID UiNavigationController::Poll()
+{
+}
+
+
+// [IUiNavigationListener] IMPLEMENTATION
+
+VOID UiNavigationController::IsShiftOn() const
+{
+}
+
+VOID UiNavigationController::IsAltOn() const
+{
+}
+
+VOID UiNavigationController::Up()
+{
+}
+VOID UiNavigationController::Down()
+{
+}
+
+VOID UiNavigationController::Left()
+{
+}
+
+VOID UiNavigationController::Right()
+{
+}
+
+VOID UiNavigationController::Return()
+{
+}
+
+VOID UiNavigationController::Select()
+{
+}
 
 #pragma endregion
 

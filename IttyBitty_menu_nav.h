@@ -22,8 +22,8 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	interface IUiActions;
-	TYPEDEF_CLASS_ALIASES(IUiActions, IUIACTIONS);
+	interface IUiNavigationListener;
+	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
 
 	interface IUiInputListener;
@@ -47,7 +47,7 @@ namespace IttyBitty
 		DOWN	= 0x02,
 		LEFT	= 0x04,
 		RIGHT	= 0x08,
-		ESCAPE	= 0x10,
+		RETURN	= 0x10,
 		SELECT	= 0x20,
 		SHIFT	= 0x40,
 		ALT		= 0x80
@@ -58,11 +58,24 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [IUiActions] DEFINITION
+#pragma region [IUiNavigationListener] DEFINITION
 
-	INTERFACE IUiActions
+	INTERFACE IUiNavigationListener
 	{
 	public:
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL VOID IsShiftOn() const = 0;
+		VIRTUAL VOID ToggleShift() = 0;
+		VIRTUAL VOID ShiftOn() = 0;
+		VIRTUAL VOID ShiftOff() = 0;
+
+		VIRTUAL VOID IsAltOn() const = 0;
+		VIRTUAL VOID ToggleAlt() = 0;
+		VIRTUAL VOID AltOn() = 0;
+		VIRTUAL VOID AltOff() = 0;
+
 
 		// INTERFACE METHODS
 
@@ -70,15 +83,13 @@ namespace IttyBitty
 		VIRTUAL VOID Down() = 0;
 		VIRTUAL VOID Left() = 0;
 		VIRTUAL VOID Right() = 0;
-		VIRTUAL VOID Escape() = 0;
+		VIRTUAL VOID Return() = 0;
 		VIRTUAL VOID Select() = 0;
-		VIRTUAL VOID IsShiftOn() = 0;
-		VIRTUAL VOID IsAltOn() = 0;
 
 
 	protected:
 
-		IUiActions() { }
+		IUiNavigationListener() { }
 	};
 
 #pragma endregion
@@ -94,7 +105,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL IsAsynchronous() const = 0;
 
-		VIRTUAL VOID Poll() const = 0;
+		VIRTUAL VOID Poll() = 0;
 
 
 	protected:
@@ -111,18 +122,23 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		UiInputListenerBase(PIUINAVIGATIONLISTENER);
+
+
 		// [IUiListener] IMPLEMENTATION
 
-		VIRTUAL CBOOL IsAsynchronous() const; // { return TRUE; }
+		VIRTUAL CBOOL IsAsynchronous() const;
 
-		VIRTUAL VOID Poll() const; // { }
+		VIRTUAL VOID Poll();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		PCUINAVIGATIONCONTROLLER _Navigation = NULL;
+		PIUINAVIGATIONLISTENER _Navigation = NULL;
 	};
 
 #pragma endregion
@@ -130,36 +146,35 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiInputListener, public IUiActions
+	class UiNavigationController : public IUiInputListener, public IUiNavigationListener
 	{
 	public:
 
-		// [IUiActions] Implementation
+		// [IUiListener] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const;
+
+		VIRTUAL VOID Poll();
+
+
+		// [IUiNavigationListener] IMPLEMENTATION
+
+		VIRTUAL VOID IsShiftOn() const;
+		VIRTUAL VOID ToggleShift();
+		VIRTUAL VOID ShiftOn();
+		VIRTUAL VOID ShiftOff();
+
+		VIRTUAL VOID IsAltOn() const;
+		VIRTUAL VOID ToggleAlt();
+		VIRTUAL VOID AltOn();
+		VIRTUAL VOID AltOff();
 
 		VIRTUAL VOID Up();
 		VIRTUAL VOID Down();
 		VIRTUAL VOID Left();
 		VIRTUAL VOID Right();
-		VIRTUAL VOID Escape();
+		VIRTUAL VOID Return();
 		VIRTUAL VOID Select();
-		VIRTUAL VOID IsShiftOn();
-		VIRTUAL VOID IsAltOn();
-
-
-		// ACCESSORS/MUTATORS
-
-		VOID ToggleShift();
-		VOID ShiftOn();
-		VOID ShiftOff();
-
-		VOID ToggleAlt();
-		VOID AltOn();
-		VOID AltOff();
-
-
-		// USER METHODS
-
-		VOID Poll() const;
 
 
 	protected:

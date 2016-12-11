@@ -545,8 +545,8 @@ public:
 		}
 	}
 
-	VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
-		CLCDSLIDEROPTIONS options, BOOL redraw = FALSE)
+	VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
+		BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw = FALSE)
 	{
 		CLCDSLIDERMARKER markerStyle = LcdSliderOptionsToLcdSliderMarker(options);
 		CLCDSPACETYLE spaceStyle = LcdSliderOptionsToLcdSpaceStyle(options);

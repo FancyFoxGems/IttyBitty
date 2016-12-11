@@ -218,7 +218,7 @@ namespace IttyBitty
 
 #pragma region [IUiElement] DEFINITION
 
-	INTERFACE IUiElement : public IUiActions
+	INTERFACE IUiElement : public IUiNavigationListener
 	{
 	public:
 
@@ -230,10 +230,9 @@ namespace IttyBitty
 		VIRTUAL CBYTE Left() const = 0;
 
 
-
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Render(PUIDISPLAYCONTROLLER) = 0;
+		VIRTUAL VOID Render(PIUIRENDERER) = 0;
 
 
 	protected:
@@ -298,7 +297,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Prompt(PUIDISPLAYCONTROLLER) = 0;
+		VIRTUAL VOID Prompt(PIUIRENDERER) = 0;
 
 
 	protected:
@@ -325,7 +324,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER) = 0;
+		VIRTUAL CBOOL Prompt(PIUIRENDERER) = 0;
 
 
 	protected:
@@ -342,26 +341,26 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiActions] Implementation
+		// [IUiNavigationListener] IMPLEMENTATION
 
+		VIRTUAL VOID IsShiftOn();
+		VIRTUAL VOID IsAltOn();
 		VIRTUAL VOID Up();
 		VIRTUAL VOID Down();
 		VIRTUAL VOID Left();
 		VIRTUAL VOID Right();
-		VIRTUAL VOID Escape();
+		VIRTUAL VOID Return();
 		VIRTUAL VOID Select();
-		VIRTUAL VOID IsShiftOn();
-		VIRTUAL VOID IsAltOn();
 
 
-		// [IUiElement] Implementation
+		// [IUiElement] IMPLEMENTATION
 
 		VIRTUAL CBYTE Height() const;
 		VIRTUAL CBYTE Width() const;
 		VIRTUAL CBYTE Top() const;
 		VIRTUAL CBYTE Left() const;
 
-		VIRTUAL VOID Render(PUIDISPLAYCONTROLLER);
+		VIRTUAL VOID Render(PIUIRENDERER);
 
 
 	protected:
@@ -379,6 +378,9 @@ namespace IttyBitty
 	public:
 
 
+		// [IUiElement] OVERRIDES
+
+		VIRTUAL VOID Render(PIUIRENDERER);
 
 	protected:
 
@@ -402,7 +404,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Prompt(PUIDISPLAYCONTROLLER);
+		VIRTUAL VOID Prompt(PIUIRENDERER);
 
 
 	protected:
@@ -428,7 +430,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL ShowLabel() const;
 
-		VIRTUAL CBOOL Prompt(PUIDISPLAYCONTROLLER);
+		VIRTUAL CBOOL Prompt(PIUIRENDERER);
 
 
 	protected:

@@ -183,57 +183,6 @@ namespace IttyBitty
 			CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY, CBOOL useGlobalOptions = TRUE);
 
 
-		// [IUiRenderer] IMPLEMENTATION
-
-		VIRTUAL CBOOL IsLineWrapEnabled(); // { return FALSE; };
-		VIRTUAL VOID SetLineWrap(CBOOL wrapLines = TRUE); // { };
-
-		VIRTUAL CBYTE CursorCol(); // { return MAX_BYTE; };
-		VIRTUAL CBYTE CursorRow(); // { return MAX_BYTE; };
-
-		VIRTUAL CBOOL Available(); // { return TRUE; }
-
-		VIRTUAL VOID Clear(); // { }
-		VIRTUAL VOID ClearCol(); // { }
-		VIRTUAL VOID ClearRow(); // { }
-
-		VIRTUAL VOID ScrollLeft(); // { }
-		VIRTUAL VOID ScrollRight(); // { }
-
-		VIRTUAL VOID Home(); // { }
-		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE); // { }
-
-		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData); // { }
-		VIRTUAL VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr); // { }
-
-		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row); // { }
-
-		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE); // { }
-
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR str, BYTE row = MAX_BYTE); // { }
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING flashStr, BYTE row = MAX_BYTE); // { }
-
-	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options); // { }
-		VIRTUAL VOID DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options); // { }
-		VIRTUAL VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage,
-			CLCDSLIDEROPTIONS options, BOOL redraw = FALSE); // { }
-	#endif
-
-
-		// [IUiActions] OVERRIDES
-
-		VOID Up();
-		VOID Down();
-		VOID Left();
-		VOID Right();
-		VOID Escape();
-		VOID Select();
-		VOID IsShiftOn();
-		VOID IsAltOn();
-
-
 		// ACCESSORS/MUTATORS
 
 		PUIDISPLAYCONTROLLER Display();
@@ -247,9 +196,11 @@ namespace IttyBitty
 		VOID Update();
 
 		VOID ShowText(PCCHAR str, CWORD timeoutMS = MENUI_DEFAULT_TEXT_TIMEOUT_MS,
-			CBOOL allowEscape = MENUI_DEFAULT_TEXT_ALLOW_ESCAPE, CBOOL anyActionReturns = MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS);
+			CBOOL allowEscape = MENUI_DEFAULT_TEXT_ALLOW_ESCAPE,
+			CBOOL anyActionReturns = MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS);
 		VOID ShowText_P(FLASH_STRING flashStr, CWORD timeoutMS = MENUI_DEFAULT_TEXT_TIMEOUT_MS,
-			CBOOL allowEscape = MENUI_DEFAULT_TEXT_ALLOW_ESCAPE, CBOOL anyActionReturns = MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS);
+			CBOOL allowEscape = MENUI_DEFAULT_TEXT_ALLOW_ESCAPE,
+			CBOOL anyActionReturns = MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS);
 
 		VOID Prompt(RUIDIALOG dialog);
 
@@ -261,6 +212,75 @@ namespace IttyBitty
 
 			return T(T_MAX);
 		}
+
+
+		// [IUiRenderer] IMPLEMENTATION
+
+		VIRTUAL CBYTE Cols() const;
+		VIRTUAL CBYTE Rows() const;
+
+		VIRTUAL CBOOL IsLineWrapEnabled();
+		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
+
+		VIRTUAL VOID CursorOn();
+		VIRTUAL VOID CursorOff();
+
+		VIRTUAL VOID CursorBlinkOn();
+		VIRTUAL VOID CursorBlinkOff();
+
+		VIRTUAL CBYTE CursorCol();
+		VIRTUAL CBYTE CursorRow();
+
+		VIRTUAL CBOOL Available();
+
+		VIRTUAL VOID Clear();
+		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);
+		VIRTUAL VOID ClearRow(CBYTE = MAX_BYTE);
+
+		VIRTUAL VOID ScrollLeft();
+		VIRTUAL VOID ScrollRight();
+
+		VIRTUAL VOID Home();
+		VIRTUAL VOID CursorPrev();
+		VIRTUAL VOID CursorNext();
+		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
+
+		VIRTUAL VOID LoadCustomChar(BYTE, PCBYTE);
+		VIRTUAL VOID LoadCustomChar_P(BYTE, PCBYTE);
+
+		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
+
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+
+	#ifndef NO_ITTYBITTY_EXTENSIONS
+		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
+	#endif
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID IsShiftOn() const = 0;
+		VOID ToggleShift() = 0;
+		VOID ShiftOn() = 0;
+		VOID ShiftOff() = 0;
+
+		VOID IsAltOn() const = 0;
+		VOID ToggleAlt() = 0;
+		VOID AltOn() = 0;
+		VOID AltOff() = 0;
+
+		VOID Up();
+		VOID Down();
+		VOID Left();
+		VOID Right();
+		VOID Return();
+		VOID Select();
 
 
 	protected:

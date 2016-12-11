@@ -15,8 +15,5 @@
 using namespace IttyBitty;
 
 
-#pragma region
-
-#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_MENU_NAV_ADAPTERS
