@@ -131,12 +131,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID IsShiftOn() const = 0;
+		CBOOL IsShiftOn() const = 0;
 		VOID ToggleShift() = 0;
 		VOID ShiftOn() = 0;
 		VOID ShiftOff() = 0;
 
-		VOID IsAltOn() const = 0;
+		CBOOL IsAltOn() const = 0;
 		VOID ToggleAlt() = 0;
 		VOID AltOn() = 0;
 		VOID AltOff() = 0;

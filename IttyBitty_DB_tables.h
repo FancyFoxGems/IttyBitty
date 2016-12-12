@@ -410,7 +410,7 @@ namespace IttyBitty
 
 		// DESTRUCTOR
 
-		~IDbTableSet() { }
+		VIRTUAL ~IDbTableSet() { }
 
 
 		// OPERATORS

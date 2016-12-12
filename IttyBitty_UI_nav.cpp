@@ -33,30 +33,70 @@ VOID UiInputListenerBase::Poll() { }
 
 #pragma region [UiNavigationController] IMPLEMENTATION
 
-// ACCESSORS/MUTATORS
+UiNavigationController::UiNavigationController(CBYTE listenerCount, PPIUIINPUTLISTENER listeners)
+	: _ListenerCount(listenerCount), _Listeners(listeners) { }
 
-VOID UiNavigationController::ToggleShift()
+UiNavigationController::UiNavigationController(RIUIINPUTLISTENER listener) : _ListenerCount(1)
 {
+	_Listeners = new PIUIINPUTLISTENER[1];
+	_Listeners[0] = &listener;
 }
 
-VOID UiNavigationController::ShiftOn()
+UiNavigationController::~UiNavigationController()
 {
+	if (!_Listeners)
+		return;
+
+	for (BYTE i = 0; i < _ListenerCount; i++)
+	{
+		if (_Listeners[i])
+		{
+			delete _Listeners[i];
+			_Listeners[i] = NULL;
+		}
+	}
+
+	delete _Listeners;
+	_Listeners = NULL;
+
+	_ListenerCount = 0;
 }
 
-VOID UiNavigationController::ShiftOff()
+
+// OPERATORS
+
+PCIUIINPUTLISTENER UiNavigationController::operator[](CBYTE i) const
 {
+	if (!_Listeners)
+		return NULL;
+
+	return _Listeners[i];
 }
 
-VOID UiNavigationController::ToggleAlt()
+PIUIINPUTLISTENER UiNavigationController::operator[](CBYTE i)
 {
+	if (!_Listeners)
+		return NULL;
+
+	return _Listeners[i];
 }
 
-VOID UiNavigationController::AltOn()
+
+// ACCESSORS
+
+CBYTE UiNavigationController::ListenerCount() const
 {
+	return _ListenerCount;
 }
 
-VOID UiNavigationController::AltOff()
+RCIUIINPUTLISTENER UiNavigationController::Listener(CBYTE i) const
 {
+	return *this->operator[](i);
+}
+
+RIUIINPUTLISTENER UiNavigationController::Listener(CBYTE i)
+{
+	return *this->operator[](i);
 }
 
 
@@ -69,12 +109,44 @@ VOID UiNavigationController::Poll()
 
 // [IUiNavigationListener] IMPLEMENTATION
 
-VOID UiNavigationController::IsShiftOn() const
+CBOOL UiNavigationController::IsShiftOn() const
 {
+	return _ShiftOn;
 }
 
-VOID UiNavigationController::IsAltOn() const
+VOID UiNavigationController::ToggleShift()
 {
+	_ShiftOn = NOT _ShiftOn;
+}
+
+VOID UiNavigationController::ShiftOn()
+{
+	_ShiftOn = TRUE;
+}
+
+VOID UiNavigationController::ShiftOff()
+{
+	_ShiftOn = FALSE;
+}
+
+CBOOL UiNavigationController::IsAltOn() const
+{
+	return _AltOn;
+}
+
+VOID UiNavigationController::ToggleAlt()
+{
+	_AltOn = NOT _AltOn;
+}
+
+VOID UiNavigationController::AltOn()
+{
+	_AltOn = TRUE;
+}
+
+VOID UiNavigationController::AltOff()
+{
+	_AltOn = FALSE;
 }
 
 VOID UiNavigationController::Up()

@@ -41,6 +41,11 @@ namespace IttyBitty
 	{
 	public:
 
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiRenderer() { }
+
+
 		// ACCESSORS & MUTATORS
 
 		VIRTUAL CBYTE Cols() const = 0;

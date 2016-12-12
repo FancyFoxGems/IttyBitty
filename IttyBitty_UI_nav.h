@@ -13,6 +13,10 @@
 #include "IttyBitty_bits.h"
 
 
+// SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING
+IGNORE_WARNING(reorder)
+
+
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
@@ -57,14 +61,19 @@ namespace IttyBitty
 	{
 	public:
 
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiNavigationListener() { }
+
+
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL VOID IsShiftOn() const = 0;
+		VIRTUAL CBOOL IsShiftOn() const = 0;
 		VIRTUAL VOID ToggleShift() = 0;
 		VIRTUAL VOID ShiftOn() = 0;
 		VIRTUAL VOID ShiftOff() = 0;
 
-		VIRTUAL VOID IsAltOn() const = 0;
+		VIRTUAL CBOOL IsAltOn() const = 0;
 		VIRTUAL VOID ToggleAlt() = 0;
 		VIRTUAL VOID AltOn() = 0;
 		VIRTUAL VOID AltOff() = 0;
@@ -93,6 +102,11 @@ namespace IttyBitty
 	INTERFACE IUiInputListener
 	{
 	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiInputListener() { }
+
 
 		// INTERFACE METHODS
 
@@ -143,6 +157,28 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTORS/DESTRUCTOR
+
+		UiNavigationController(CBYTE = 0, PPIUIINPUTLISTENER = NULL);
+		UiNavigationController(RIUIINPUTLISTENER);
+
+		VIRTUAL ~UiNavigationController();
+
+
+		// OPERATORS
+
+		PCIUIINPUTLISTENER operator[](CBYTE) const;
+		PIUIINPUTLISTENER operator[](CBYTE);
+
+
+		// ACCESSORS
+
+		CBYTE ListenerCount() const;
+
+		RCIUIINPUTLISTENER Listener(CBYTE) const;
+		RIUIINPUTLISTENER Listener(CBYTE);
+
+
 		// [IUiListener] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsAsynchronous() const;
@@ -152,12 +188,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] IMPLEMENTATION
 
-		VIRTUAL VOID IsShiftOn() const;
+		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
 		VIRTUAL VOID ShiftOn();
 		VIRTUAL VOID ShiftOff();
 
-		VIRTUAL VOID IsAltOn() const;
+		VIRTUAL CBOOL IsAltOn() const;
 		VIRTUAL VOID ToggleAlt();
 		VIRTUAL VOID AltOn();
 		VIRTUAL VOID AltOff();
@@ -173,6 +209,9 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
+
+		PPIUIINPUTLISTENER _Listeners = NULL;
+		BYTE _ListenerCount = 0;
 
 		BOOL _ShiftOn = FALSE;
 		BOOL _AltOn = FALSE;

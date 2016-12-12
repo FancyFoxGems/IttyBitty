@@ -57,6 +57,11 @@ namespace IttyBitty
 	{
 	public:
 
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiElement() { }
+
+
 		// ACCESSORS/MUTATORS
 
 		VIRTUAL CBYTE Height() const = 0;
@@ -85,6 +90,7 @@ namespace IttyBitty
 	{
 	public:
 
+
 		// ACCESSORS/MUTATORS
 
 
@@ -105,6 +111,7 @@ namespace IttyBitty
 	{
 	public:
 
+
 		// ACCESSORS/MUTATORS
 
 
@@ -124,6 +131,7 @@ namespace IttyBitty
 	INTERFACE IUiDialog : public IUiElement
 	{
 	public:
+
 
 		// ACCESSORS/MUTATORS
 

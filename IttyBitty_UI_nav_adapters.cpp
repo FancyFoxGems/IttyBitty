@@ -14,6 +14,4 @@
 
 using namespace IttyBitty;
 
-
-
 #endif	// #ifndef NO_ITTYBITTY_UI_NAV_ADAPTERS
