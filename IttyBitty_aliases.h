@@ -181,53 +181,53 @@
 	typedef struct EXPAND_CONCAT(_, type_alias)  TYPE_ALIAS;			\
 	typedef const struct EXPAND_CONCAT(_, type_alias) & RC##TYPE_ALIAS
 
-#define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_args, type_name, TYPE_ALIAS)			\
+#define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_params, type_name, TYPE_ALIAS)			\
 	template T_clause																	\
-	using TYPE_ALIAS = type_name T_args;												\
+	using TYPE_ALIAS = type_name T_params;												\
 	template T_clause																	\
-	using P##TYPE_ALIAS = type_name T_args *;											\
+	using P##TYPE_ALIAS = type_name T_params *;											\
 	template T_clause																	\
-	using R##TYPE_ALIAS = type_name T_args &;											\
+	using R##TYPE_ALIAS = type_name T_params &;											\
 	template T_clause																	\
-	using PP##TYPE_ALIAS = type_name T_args **;											\
+	using PP##TYPE_ALIAS = type_name T_params **;											\
 	template T_clause																	\
-	using RR##TYPE_ALIAS = type_name T_args &&;											\
+	using RR##TYPE_ALIAS = type_name T_params &&;											\
 	template T_clause																	\
-	using C##TYPE_ALIAS = const type_name T_args;										\
+	using C##TYPE_ALIAS = const type_name T_params;										\
 	template T_clause																	\
-	using PC##TYPE_ALIAS = const type_name T_args *;									\
+	using PC##TYPE_ALIAS = const type_name T_params *;									\
 	template T_clause																	\
-	using RC##TYPE_ALIAS = const type_name T_args &;									\
+	using RC##TYPE_ALIAS = const type_name T_params &;									\
 	template T_clause																	\
-	using PPC##TYPE_ALIAS = const type_name T_args **;									\
+	using PPC##TYPE_ALIAS = const type_name T_params **;									\
 	template T_clause																	\
-	using RRC##TYPE_ALIAS = const type_name T_args &&
+	using RRC##TYPE_ALIAS = const type_name T_params &&
 
-#define TEMPLATE_STRUCT_USING_ALIASES(T_clause, T_args, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
+#define TEMPLATE_STRUCT_USING_ALIASES(T_clause, T_params, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
 	template T_clause																	\
-	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_args;	\
+	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_params;	\
 	template T_clause																	\
-	using type_alias = struct EXPAND_CONCAT(_, type_alias) T_args;						\
+	using type_alias = struct EXPAND_CONCAT(_, type_alias) T_params;						\
 	template T_clause																	\
-	using UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args;				\
+	using UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params;				\
 	template T_clause																	\
-	using P##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args *;			\
+	using P##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params *;			\
 	template T_clause																	\
-	using R##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args &;			\
+	using R##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params &;			\
 	template T_clause																	\
-	using PP##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args **;			\
+	using PP##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params **;			\
 	template T_clause																	\
-	using RR##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_args &&;			\
+	using RR##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params &&;			\
 	template T_clause																	\
-	using C##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args;		\
+	using C##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params;		\
 	template T_clause																	\
-	using PC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args *;	\
+	using PC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params *;	\
 	template T_clause																	\
-	using RC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args &;	\
+	using RC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params &;	\
 	template T_clause																	\
-	using PPC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args **;	\
+	using PPC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params **;	\
 	template T_clause																	\
-	using RRC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_args &&
+	using RRC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params &&
 
 
 

@@ -57,6 +57,10 @@ namespace IttyBitty
 	class FloatUiField;
 	TYPEDEF_CLASS_ALIASES(UiField, UIFIELD);
 
+
+	class ListUiFieldChoice;
+	TYPEDEF_CLASS_ALIASES(ListUiFieldChoice, LISTUIFIELDCHOICE);
+
 	class ListUiField;
 	TYPEDEF_CLASS_ALIASES(ListUiField, LISTUIFIELD);
 
@@ -281,21 +285,65 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [ListUiField] DEFINITION
+#pragma region [UiFieldChoice] DEFINITION
 
-	CLASS ListUiField : public UiFieldBase, public IUiListElement<IUiChoice>
+	CLASS ListUiFieldChoice : public UiFieldBase, public IUiChoice
 	{
 	public:
+
+
+		// [IUiElement] OVERRIDES
+
+		VIRTUAL VOID Render(PIUIRENDERER);
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+	};
+
+#pragma endregion
+
+
+#pragma region [ListUiField] DEFINITION
+
+	CLASS ListUiField : public UiFieldBase, public IUiListElement<ListUiFieldChoice>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		ListUiField(CBYTE, PPLISTUIFIELDCHOICE, CBOOL = FALSE);
+		ListUiField(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
+
+		VIRTUAL ~ListUiField();
+
+
+		// [IUiContainerElement] IMPLEMENTATION
+
+		VIRTUAL PCLISTUIFIELDCHOICE operator[](CBYTE) const;
+		VIRTUAL PLISTUIFIELDCHOICE operator[](CBYTE);
+
+		VIRTUAL CBYTE ChildCount() const;
+
+		VIRTUAL RCLISTUIFIELDCHOICE Child(CBYTE) const;
+		VIRTUAL RLISTUIFIELDCHOICE Child(CBYTE);
+
+
+		// [IUiListElement] IMPLEMENTATION
+
+		VIRTUAL CBOOL MultipleSelectionsAllowed() const;
+		VIRTUAL VOID SetAllowMultipleSelections(CBOOL);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		BYTE _NumChoices = 0;
-		PPCCHAR _Choices = NULL;
-
 		BOOL _AllowMultipleSelections = FALSE;
+
+		PPLISTUIFIELDCHOICE _Choices = NULL;
+		BYTE _ChoiceCount = 0;
 	};
 
 #pragma endregion

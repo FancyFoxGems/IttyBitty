@@ -310,18 +310,40 @@ using std::extent;
 /* DATA TYPE SIZES */
 
 #define BITS_PER_NYBBLE		4
-#define BITS_PER_BYTE		8
+#define NYBBLE_BITS			BITS_PER_NYBBLE
+#define NYBBLE_BITWIDTH		BITS_PER_NYBBLE
+#define BITS_PER_BYTE		(2 * BITS_PER_NYBBLE)
+#define BYTE_BITS			BITS_PER_BYTE
+#define BYTE_BITWIDTH		BITS_PER_BYTE
+#define BITS_PER_WORD		(2 * BITS_PER_BYTE)
+#define WORD_BITS			BITS_PER_WORD
+#define WORD_BITWIDTH		BITS_PER_WORD
+#define BITS_PER_DWORD		(2 * BITS_PER_WORD)
+#define DWORD_BITS			BITS_PER_DWORD
+#define DWORD_BITWIDTH		BITS_PER_DWORD
+#define BITS_PER_QWORD		(2 * BITS_PER_DWORD)
+#define QWORD_BITWIDTH		BITS_PER_QWORD
+#define QWORD_BITS			BITS_PER_QWORD
 
 #define kilo				1000
-#define kilobit				kilo
+#define kilobit_BITS		kilo
+#define kilobit				kilobit_BITS
+
 #define KILO				1024
-#define KILOBYTE			KILO
-#define KILObit				KILO
+#define KILObit_BITS		KILO
+#define KILObit				KILObit_BITS
+#define KILOBYTE_BITS		KILO * BITS_PER_BYTE
+#define KILOBYTE			KILOBYTE_BITS
+
 #define mega				kilo * kilo
-#define megabit				mega
+#define megabit_BITS		mega
+#define megabit				megabit_BITS
+
 #define MEGA				KILO * KILO
-#define MEGABYTE
-#define MEGAbit				MEGA
+#define MEGAbit_BITS		MEGA
+#define MEGAbit				MEGAbit_BITS
+#define MEGABYTE_BITS		MEGA * BITS_PER_BYTE
+#define MEGABYTE			MEGABYTE_BITS
 
 #define BYTE_SIZE(T)		SIZEOF(T)
 #define BYTE_SIZEOF(var)	BYTE_SIZE(TYPEOF(var))
@@ -455,12 +477,220 @@ INLINE PTR operator new[](SIZE size, PTR ptr)
 #endif	// if !defined(ARDUINO)...
 
 
-/* MISCELLANEOUS GENERAL PURPOSE FUNCTIONS */
+/* TYPE-AGNOSTIC EXPRESSION FUNCTIONS */
 
-template<typename T, typename R = VOID, typename ... args>
-INLINE R Apply(T * tInstance, R (T::*function)(args...), args ... params)
+template<typename TInstance>
+INLINE VOID Apply(TInstance & instance, VOID (TInstance::*function)())
 {
-	return (tInstance->*function)(&params...);
+	(instance.*function)();
+}
+
+template<typename TInstance, typename ... TParams>
+INLINE VOID Apply(TInstance & instance, VOID (TInstance::*function)(TParams...), TParams ... args)
+{
+	(instance.*function)(&args...);
+}
+
+template<typename TInstance>
+INLINE VOID PtrApply(TInstance * instance, VOID (TInstance::*function)())
+{
+	(instance->*function)();
+}
+
+template<typename TInstance, typename ... TParams>
+INLINE VOID PtrApply(TInstance * instance, VOID (TInstance::*function)(TParams...), TParams ... args)
+{
+	(instance->*function)(&args...);
+}
+
+template<typename TInstance, typename TResult>
+INLINE VOID Call(TInstance & instance, TResult & result, TResult (TInstance::*function)())
+{
+	result = (instance.*function)();
+}
+
+template<typename TInstance, typename TResult, typename ... TParams>
+INLINE VOID Call(TInstance & instance, TResult & result,
+	TResult (TInstance::*function)(TParams...), TParams ... args)
+{
+	result = (instance.*function)(&args...);
+}
+
+template<typename TInstance, typename TResult>
+INLINE VOID PtrCall(TInstance * instance, TResult & result, TResult (TInstance::*function)())
+{
+	result = (instance->*function)();
+}
+
+template<typename TInstance, typename TResult, typename ... TParams>
+INLINE VOID PtrCall(TInstance * instance, TResult & result,
+	TResult (TInstance::*function)(TParams...), TParams ... args)
+{
+	result = (instance->*function)(&args...);
+}
+
+template<typename TCount, typename TInstance>
+INLINE VOID ApplyAll(CONST TCount instanceCount, TInstance * instances,
+	VOID (TInstance::*function)())
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		(instances[i].*function)();
+}
+
+template<typename TCount, typename TInstance, typename ... TParams>
+INLINE VOID ApplyAll(CONST TCount instanceCount, TInstance * instances,
+	VOID (TInstance::*function)(TParams...), TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		(instances[i].*function)(&args...);
+}
+
+//template<typename TCount, typename TInstance>
+//INLINE VOID PtrApplyAll(CONST TCount instanceCount, TInstance ** instances,
+//	VOID (TInstance::*function)())
+//{
+//	for (TCount i = 0; i < instanceCount; i++)
+//		(instances[i]->*function)();
+//}
+
+template<typename TCount, typename TInstance, typename ... TParams>
+INLINE VOID PtrApplyAll(CONST TCount instanceCount, TInstance ** instances,
+	VOID (TInstance::*function)(TParams...), TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		(instances[i]->*function)(&args...);
+}
+
+template<typename TCount, typename TInstance, typename TResult>
+INLINE VOID CallAll(CONST TCount instanceCount, TInstance * instances, TResult *& results,
+	TResult (TInstance::*function)())
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		results[i] = (instances[i].*function)();
+}
+
+template<typename TCount, typename TInstance, typename TResult, typename ... TParams>
+INLINE VOID CallAll(CONST TCount instanceCount, TInstance * instances, TResult *& results,
+	TResult (TInstance::*function)(TParams...), TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		results[i] = (instances[i].*function)(&args...);
+}
+
+template<typename TCount, typename TInstance, typename TResult>
+INLINE VOID PtrCallAll(CONST TCount instanceCount, TInstance ** instances, TResult *& results,
+	TResult (TInstance::*function)())
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		results[i] = (instances[i]->*function)();
+}
+
+template<typename TCount, typename TInstance, typename TResult, typename ... TParams>
+INLINE VOID PtrCallAll(CONST TCount instanceCount, TInstance ** instances, TResult *& results,
+	TResult (TInstance::*function)(TParams...), TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+		results[i] = (instances[i]->*function)(&args...);
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL>
+INLINE CBOOL Any(CONST TCount instanceCount, TInstance * instances, TResult (TInstance::*function)() const)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if ((instances[i].*function)())
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL, typename ... TParams>
+INLINE CBOOL Any(CONST TCount instanceCount, TInstance * instances,
+	TResult (TInstance::*function)(TParams...) const, TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if ((instances[i].*function)(&args...))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL>
+INLINE CBOOL PtrAny(CONST TCount instanceCount, TInstance ** instances, TResult (TInstance::*function)() const)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if ((instances[i]->*function)())
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL, typename ... TParams>
+INLINE CBOOL PtrAny(CONST TCount instanceCount, TInstance ** instances,
+	TResult (TInstance::*function)(TParams...) const, TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if ((instances[i]->*function)(&args...))
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL>
+INLINE CBOOL All(CONST TCount instanceCount, TInstance * instances, TResult (TInstance::*function)() const)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if (!(instances[i].*function)())
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL, typename ... TParams>
+INLINE CBOOL All(CONST TCount instanceCount, TInstance * instances,
+	TResult (TInstance::*function)(TParams...) const, TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if (!(instances[i].*function)(&args...))
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL>
+INLINE CBOOL PtrAll(CONST TCount instanceCount, TInstance ** instances, TResult (TInstance::*function)() const)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if (!(instances[i]->*function)())
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+template<typename TCount, typename TInstance, typename TResult = CBOOL, typename ... TParams>
+INLINE CBOOL PtrAll(CONST TCount instanceCount, TInstance ** instances,
+	TResult (TInstance::*function)(TParams...) const, TParams ... args)
+{
+	for (TCount i = 0; i < instanceCount; i++)
+	{
+		if (!(instances[i]->*function)(&args...))
+			return FALSE;
+	}
+
+	return TRUE;
 }
 
 #endif

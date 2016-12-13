@@ -10,7 +10,6 @@
 #define _ITTYBITTY_UI_ELEMENTS_H
 
 
-#include "IttyBitty_UI_options.h"
 #include "IttyBitty_UI_nav.h"
 #include "IttyBitty_UI_display.h"
 
@@ -25,21 +24,23 @@ namespace IttyBitty
 	class UiElementBase;
 	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
 
+
 	#define UI_LIST_ELEMENT_T_CLAUSE_DEF	<class TElement>
 	#define UI_LIST_ELEMENT_T_CLAUSE		<class TElement>
 	#define UI_LIST_ELEMENT_T_ARGS			<TElement>
 
 	template UI_LIST_ELEMENT_T_CLAUSE
-	interface IUiListElement;
+	interface IUiContainerElement;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
-		CSL(UI_LIST_ELEMENT_T_ARGS), IUiListElement, IUILISTELEMENT);
-
+		CSL(UI_LIST_ELEMENT_T_ARGS), IUiContainerElement, IUICONTAINERELEMENT);
 
 	interface IUiChoice;
 	TYPEDEF_CLASS_ALIASES(IUiChoice, IUICHOICE);
 
-	class UiFieldChoice;
-	TYPEDEF_CLASS_ALIASES(UiFieldChoice, UIFIELDCHOICE);
+	template UI_LIST_ELEMENT_T_CLAUSE
+	interface IUiListElement;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
+		CSL(UI_LIST_ELEMENT_T_ARGS), IUiListElement, IUILISTELEMENT);
 
 
 	interface IUiDialog;
@@ -66,8 +67,8 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE Height() const = 0;
 		VIRTUAL CBYTE Width() const = 0;
-		VIRTUAL CBYTE Top() const = 0;
-		VIRTUAL CBYTE Left() const = 0;
+		VIRTUAL CBYTE TopOffset() const = 0;
+		VIRTUAL CBYTE LeftOffset() const = 0;
 
 
 		// INTERFACE METHODS
@@ -83,15 +84,30 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [IUiListElement] DEFINITION
+#pragma region [IUiContainerElement] DEFINITION
 
 	template UI_LIST_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiListElement : public IUiElement
+	INTERFACE IUiContainerElement : public IUiElement
 	{
 	public:
 
+		// DESTRUCTOR
 
-		// ACCESSORS/MUTATORS
+		VIRTUAL ~IUiContainerElement() { }
+
+
+		// OPERATORS
+
+		VIRTUAL CONST TElement * operator[](CBYTE) const = 0;
+		VIRTUAL TElement * operator[](CBYTE) = 0;
+
+
+		// ACCESSORS
+
+		VIRTUAL CBYTE ChildCount() const = 0;
+
+		VIRTUAL CONST TElement & Child(CBYTE) const = 0;
+		VIRTUAL TElement & Child(CBYTE) = 0;
 
 
 		// INTERFACE METHODS
@@ -99,7 +115,7 @@ namespace IttyBitty
 
 	protected:
 
-		IUiListElement() { }
+		IUiContainerElement() { }
 	};
 
 #pragma endregion
@@ -121,6 +137,32 @@ namespace IttyBitty
 	protected:
 
 		IUiChoice() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [IUiListElement] DEFINITION
+
+	template UI_LIST_ELEMENT_T_CLAUSE_DEF
+	INTERFACE IUiListElement : public IUiContainerElement<TElement>
+	{
+	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiListElement() { }
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBOOL MultipleSelectionsAllowed() const = 0;
+		VIRTUAL VOID SetAllowMultipleSelections(CBOOL) = 0;
+
+
+	protected:
+
+		IUiListElement() { }
 	};
 
 #pragma endregion
@@ -161,20 +203,20 @@ namespace IttyBitty
 
 		VIRTUAL VOID IsShiftOn();
 		VIRTUAL VOID IsAltOn();
-		VIRTUAL VOID Up();
-		VIRTUAL VOID Down();
-		VIRTUAL VOID Left();
-		VIRTUAL VOID Right();
-		VIRTUAL VOID Return();
-		VIRTUAL VOID Select();
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 		// [IUiElement] IMPLEMENTATION
 
 		VIRTUAL CBYTE Height() const;
 		VIRTUAL CBYTE Width() const;
-		VIRTUAL CBYTE Top() const;
-		VIRTUAL CBYTE Left() const;
+		VIRTUAL CBYTE TopOffset() const;
+		VIRTUAL CBYTE LeftOffset() const;
 
 		VIRTUAL VOID Render(PIUIRENDERER);
 
@@ -182,26 +224,6 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
-	};
-
-#pragma endregion
-
-
-#pragma region [UiFieldChoice] DEFINITION
-
-	CLASS UiFieldChoice : public UiElementBase, public IUiChoice
-	{
-	public:
-
-
-		// [IUiElement] OVERRIDES
-
-		VIRTUAL VOID Render(PIUIRENDERER);
-
-	protected:
-
-		// INSTANCE VARIABLES
-
 	};
 
 #pragma endregion

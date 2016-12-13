@@ -10,11 +10,27 @@
 #define _ITTYBITTY_UI_NAV_H
 
 
-#include "IttyBitty_bits.h"
+#include "IttyBitty_UI_options.h"
 
 
 // SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING
 IGNORE_WARNING(reorder)
+
+
+#pragma region DISPLAY ADAPTER OPTIONS/CONSTANTS
+
+// [SerialUiRenderer] default options
+
+#define MENUI_NAV_SERIAL_MENU_ITEM_GLYPH			'-'
+#define MENUI_NAV_SERIAL_LIST_CHOICE_GLYPH			'*'
+#define MENUI_NAV_SERIAL_CURR_ITEM_GLYPH			'>'
+#define MENUI_NAV_SERIAL_SELECTION_GLYPH			'X'
+#define MENUI_NAV_SERIAL_MULTI_SELECTION_GLYPH		'+'
+
+#define MENUI_NAV_SERIAL_STYLED_LINE_LEFT_GLYPH		'<'
+#define MENUI_NAV_SERIAL_STYLED_LINE_RIGHT_GLYPH	'>'
+
+#pragma endregion
 
 
 namespace IttyBitty
@@ -24,33 +40,14 @@ namespace IttyBitty
 	interface IUiNavigationListener;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
-	interface IUiInputListener;
-	TYPEDEF_CLASS_ALIASES(IUiInputListener, IUIINPUTLISTENER);
+	interface IUiInputSource;
+	TYPEDEF_CLASS_ALIASES(IUiInputSource, IUIINPUTSOURCE);
 
-	class UiInputListenerBase;
-	TYPEDEF_CLASS_ALIASES(UiInputListenerBase, UIINPUTLISTENERBASE);
+	class UiInputSourceBase;
+	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
-
-#pragma endregion
-
-
-#pragma region ENUMS
-
-	ENUM UiAction : BYTE
-	{
-		UP		= 0x01,
-		DOWN	= 0x02,
-		LEFT	= 0x04,
-		RIGHT	= 0x08,
-		RETURN	= 0x10,
-		SELECT	= 0x20,
-		SHIFT	= 0x40,
-		ALT		= 0x80
-	};
-
-	TYPEDEF_ENUM_ALIASES(UiAction, UIACTION);
 
 #pragma endregion
 
@@ -81,12 +78,12 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Up() = 0;
-		VIRTUAL VOID Down() = 0;
-		VIRTUAL VOID Left() = 0;
-		VIRTUAL VOID Right() = 0;
-		VIRTUAL VOID Return() = 0;
-		VIRTUAL VOID Select() = 0;
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK) = 0;
 
 
 	protected:
@@ -97,15 +94,15 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [IUiInputListener] DEFINITION
+#pragma region [IUiInputSource] DEFINITION
 
-	INTERFACE IUiInputListener
+	INTERFACE IUiInputSource
 	{
 	public:
 
 		// DESTRUCTOR
 
-		VIRTUAL ~IUiInputListener() { }
+		VIRTUAL ~IUiInputSource() { }
 
 
 		// INTERFACE METHODS
@@ -117,21 +114,21 @@ namespace IttyBitty
 
 	protected:
 
-		IUiInputListener() { }
+		IUiInputSource() { }
 	};
 
 #pragma endregion
 
 
-#pragma region [UiInputListenerBase] DEFINITION
+#pragma region [UiInputSourceBase] DEFINITION
 
-	CLASS UiInputListenerBase : public IUiInputListener
+	CLASS UiInputSourceBase : public IUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		UiInputListenerBase(PIUINAVIGATIONLISTENER);
+		UiInputSourceBase(PIUINAVIGATIONLISTENER);
 
 
 		// [IUiListener] IMPLEMENTATION
@@ -145,7 +142,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		PIUINAVIGATIONLISTENER _Navigation = NULL;
+		PIUINAVIGATIONLISTENER _NavListener = NULL;
 	};
 
 #pragma endregion
@@ -153,40 +150,40 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiInputListener, public IUiNavigationListener
+	class UiNavigationController : public IUiInputSource, public IUiNavigationListener
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		UiNavigationController(CBYTE = 0, PPIUIINPUTLISTENER = NULL);
-		UiNavigationController(RIUIINPUTLISTENER);
+		UiNavigationController(PIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
+		UiNavigationController(PIUINAVIGATIONLISTENER, RIUIINPUTSOURCE);
 
 		VIRTUAL ~UiNavigationController();
 
 
 		// OPERATORS
 
-		PCIUIINPUTLISTENER operator[](CBYTE) const;
-		PIUIINPUTLISTENER operator[](CBYTE);
+		PCIUIINPUTSOURCE operator[](CBYTE) const;
+		PIUIINPUTSOURCE operator[](CBYTE);
 
 
 		// ACCESSORS
 
-		CBYTE ListenerCount() const;
+		CBYTE InputSourceCount() const;
 
-		RCIUIINPUTLISTENER Listener(CBYTE) const;
-		RIUIINPUTLISTENER Listener(CBYTE);
+		RCIUIINPUTSOURCE InputSource(CBYTE = 0) const;
+		RIUIINPUTSOURCE InputSource(CBYTE = 0);
 
 
-		// [IUiListener] IMPLEMENTATION
+		// [IUiInputSource] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsAsynchronous() const;
 
 		VIRTUAL VOID Poll();
 
 
-		// [IUiNavigationListener] IMPLEMENTATION
+		// [IUiNavigationInputSource] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
@@ -198,20 +195,22 @@ namespace IttyBitty
 		VIRTUAL VOID AltOn();
 		VIRTUAL VOID AltOff();
 
-		VIRTUAL VOID Up();
-		VIRTUAL VOID Down();
-		VIRTUAL VOID Left();
-		VIRTUAL VOID Right();
-		VIRTUAL VOID Return();
-		VIRTUAL VOID Select();
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		PPIUIINPUTLISTENER _Listeners = NULL;
-		BYTE _ListenerCount = 0;
+		PIUINAVIGATIONLISTENER _NavListener = NULL;
+
+		PPIUIINPUTSOURCE _InputSources = NULL;
+		BYTE _InputSourceCount = 0;
 
 		BOOL _ShiftOn = FALSE;
 		BOOL _AltOn = FALSE;

@@ -428,6 +428,8 @@
 
 /* NYBBLE MANIPULATION MACROS */
 
+#define NYBBLES_TO_BYTE(nybble1, nybble2)				WITH_MASK(byte1) SHL BITS_PER_NYBBLE, byte2))
+
 #define LOW_NYBBLE_MASK									NYBBLE_MASK(0)
 #define HIGH_NYBBLE_MASK								NYBBLE_MASK(1)
 
@@ -457,6 +459,8 @@
 
 /* BYTE MANIPULATION MACROS */
 
+#define BYTES_TO_WORD(byte1, byte2)						WITH_MASK(WORD(byte1) SHL BITS_PER_BYTE, WORD(byte2))
+
 #define LOW_BYTE_MASK									BYTE_MASK(0)
 #define HIGH_BYTE_MASK									BYTE_MASK(1)
 
@@ -485,6 +489,8 @@
 
 
 /* WORD MANIPULATION MACROS */
+
+#define WORDS_TO_DWORD(byte1, byte2)					WITH_MASK(DWORD(byte1) SHL BITS_PER_BYTE, DWORD(byte2))
 
 #define LOW_WORD_MASK									WORD_MASK(0)
 #define HIGH_WORD_MASK									WORD_MASK(1)

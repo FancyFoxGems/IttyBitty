@@ -19,6 +19,14 @@ using namespace IttyBitty;
 
 // [IUiRenderer] IMPLEMENTATION
 
+CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
+
+CBYTE UiRendererBase::Rows() const { return MAX_BYTE; }
+
+CBOOL UiRendererBase::IsLineWrapEnabled() const { return FALSE; }
+
+VOID UiRendererBase::SetLineWrap(CBOOL) { }
+
 VOID UiRendererBase::CursorOff() { }
 
 VOID UiRendererBase::CursorBlinkOn() { }
@@ -58,29 +66,131 @@ CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 	return 1;
 }
 
+#ifndef NO_ITTYBITTY_EXTENSIONS
+
+VOID UiRendererBase::DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) { }
+
+VOID UiRendererBase::DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) { }
+
+VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL) { }
+
+#endif
+
 #pragma endregion
 
 
 #pragma region [UiDisplayController] IMPLEMENTATION
 
+UiDisplayController::UiDisplayController(CBYTE rendererCount, PPIUIRENDERER renderers)
+	: _RendererCount(rendererCount), _Renderers(renderers) { }
+
+UiDisplayController::UiDisplayController(RIUIRENDERER renderer) : _RendererCount(1)
+{
+	_Renderers = new PIUIRENDERER[1];
+	_Renderers[0] = &renderer;
+}
+
+UiDisplayController::~UiDisplayController()
+{
+	if (_Renderers)
+	{
+		for (BYTE i = 0; i < _RendererCount; i++)
+		{
+			if (_Renderers[i])
+			{
+				delete _Renderers[i];
+				_Renderers[i] = NULL;
+			}
+		}
+
+		delete _Renderers;
+		_Renderers = NULL;
+
+		_RendererCount = 0;
+	}
+}
+
+
+// OPERATORS
+
+PCIUIRENDERER UiDisplayController::operator[](CBYTE i) const
+{
+	if (!_Renderers)
+		return NULL;
+
+	return _Renderers[i];
+}
+
+PIUIRENDERER UiDisplayController::operator[](CBYTE i)
+{
+	if (!_Renderers)
+		return NULL;
+
+	return _Renderers[i];
+}
+
+
+// ACCESSORS
+
+CBYTE UiDisplayController::RendererCount() const
+{
+	return _RendererCount;
+}
+
+RCIUIRENDERER UiDisplayController::Renderer(CBYTE i) const
+{
+	return *this->operator[](i);
+}
+
+RIUIRENDERER UiDisplayController::Renderer(CBYTE i)
+{
+	return *this->operator[](i);
+}
+
+
 // [IUiRenderer] IMPLEMENTATION
 
 CBYTE UiDisplayController::Cols() const
 {
+	BYTE cols = MAX_BYTE;
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		cols = _Renderers[i]->Cols();
+		if (cols < MAX_BYTE)
+			return cols;
+	}
+
+	return cols;
 }
 
 CBYTE UiDisplayController::Rows() const
 {
+	BYTE rows = MAX_BYTE;
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		rows = _Renderers[i]->Rows();
+		if (rows < MAX_BYTE)
+			return rows;
+	}
+
+	return rows;
 }
 
-CBOOL UiDisplayController::IsLineWrapEnabled() { return FALSE; }
+CBOOL UiDisplayController::IsLineWrapEnabled() const
+{
+	return PtrAny<BYTE, IUIRENDERER>(_RendererCount, _Renderers, &IUiRenderer::IsLineWrapEnabled);
+}
 
 VOID UiDisplayController::SetLineWrap(CBOOL wrapLines)
 {
+	//PtrApplyAll<BYTE, IUIRENDERER, CBOOL>(_RendererCount, _Renderers, &IUiRenderer::SetLineWrap, wrapLines);
 }
 
 VOID UiDisplayController::CursorOff()
 {
+	PtrApplyAll<BYTE, IUIRENDERER>(_RendererCount, _Renderers, &IUiRenderer::CursorOff);
 }
 
 VOID UiDisplayController::CursorBlinkOn()

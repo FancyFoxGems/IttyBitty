@@ -15,99 +15,108 @@
 using namespace IttyBitty;
 
 
-#pragma region [UiInputListenerBase] IMPLEMENTATION
+#pragma region [UiInputSourceBase] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-UiInputListenerBase::UiInputListenerBase(PIUINAVIGATIONLISTENER navigation) : _Navigation(navigation) { }
+UiInputSourceBase::UiInputSourceBase(PIUINAVIGATIONLISTENER navListener) : _NavListener(navListener) { }
 
 
 // [IUiListener] IMPLEMENTATION
 
-CBOOL UiInputListenerBase::IsAsynchronous() const { return TRUE; }
+CBOOL UiInputSourceBase::IsAsynchronous() const { return TRUE; }
 
-VOID UiInputListenerBase::Poll() { }
+VOID UiInputSourceBase::Poll() { }
 
 #pragma endregion
 
 
 #pragma region [UiNavigationController] IMPLEMENTATION
 
-UiNavigationController::UiNavigationController(CBYTE listenerCount, PPIUIINPUTLISTENER listeners)
-	: _ListenerCount(listenerCount), _Listeners(listeners) { }
+UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener,
+	CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
+	 : _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources) { }
 
-UiNavigationController::UiNavigationController(RIUIINPUTLISTENER listener) : _ListenerCount(1)
+UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener,
+	RIUIINPUTSOURCE inputSource)  : _NavListener(navListener), _InputSourceCount(1)
 {
-	_Listeners = new PIUIINPUTLISTENER[1];
-	_Listeners[0] = &listener;
+	_InputSources = new PIUIINPUTSOURCE[1];
+	_InputSources[0] = &inputSource;
 }
 
 UiNavigationController::~UiNavigationController()
 {
-	if (!_Listeners)
-		return;
-
-	for (BYTE i = 0; i < _ListenerCount; i++)
+	if (_NavListener)
 	{
-		if (_Listeners[i])
-		{
-			delete _Listeners[i];
-			_Listeners[i] = NULL;
-		}
+		delete _NavListener;
+		_NavListener = NULL;
 	}
 
-	delete _Listeners;
-	_Listeners = NULL;
+	if (_InputSources)
+	{
+		for (BYTE i = 0; i < _InputSourceCount; i++)
+		{
+			if (_InputSources[i])
+			{
+				delete _InputSources[i];
+				_InputSources[i] = NULL;
+			}
+		}
 
-	_ListenerCount = 0;
+		delete _InputSources;
+		_InputSources = NULL;
+
+		_InputSourceCount = 0;
+	}
 }
 
 
 // OPERATORS
 
-PCIUIINPUTLISTENER UiNavigationController::operator[](CBYTE i) const
+PCIUIINPUTSOURCE UiNavigationController::operator[](CBYTE i) const
 {
-	if (!_Listeners)
+	if (!_InputSources)
 		return NULL;
 
-	return _Listeners[i];
+	return _InputSources[i];
 }
 
-PIUIINPUTLISTENER UiNavigationController::operator[](CBYTE i)
+PIUIINPUTSOURCE UiNavigationController::operator[](CBYTE i)
 {
-	if (!_Listeners)
+	if (!_InputSources)
 		return NULL;
 
-	return _Listeners[i];
+	return _InputSources[i];
 }
 
 
 // ACCESSORS
 
-CBYTE UiNavigationController::ListenerCount() const
+CBYTE UiNavigationController::InputSourceCount() const
 {
-	return _ListenerCount;
+	return _InputSourceCount;
 }
 
-RCIUIINPUTLISTENER UiNavigationController::Listener(CBYTE i) const
-{
-	return *this->operator[](i);
-}
-
-RIUIINPUTLISTENER UiNavigationController::Listener(CBYTE i)
+RCIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i) const
 {
 	return *this->operator[](i);
 }
 
+RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
+{
+	return *this->operator[](i);
+}
 
-// [IUiListener] IMPLEMENTATION
+
+// [IUiInputSource] IMPLEMENTATION
 
 VOID UiNavigationController::Poll()
 {
+	PtrApplyAll<BYTE, IUIINPUTSOURCE>(_InputSourceCount, _InputSources, &IUiInputSource::Poll);
 }
 
 
-// [IUiNavigationListener] IMPLEMENTATION
+// [IUiNavigationInputSource] IMPLEMENTATION
 
 CBOOL UiNavigationController::IsShiftOn() const
 {
@@ -149,27 +158,33 @@ VOID UiNavigationController::AltOff()
 	_AltOn = FALSE;
 }
 
-VOID UiNavigationController::Up()
+VOID UiNavigationController::Up(CUIACTIONSTATE state)
 {
+	_NavListener->Up(state);
 }
-VOID UiNavigationController::Down()
+VOID UiNavigationController::Down(CUIACTIONSTATE state)
 {
-}
-
-VOID UiNavigationController::Left()
-{
+	_NavListener->Down(state);
 }
 
-VOID UiNavigationController::Right()
+VOID UiNavigationController::Left(CUIACTIONSTATE state)
 {
+	_NavListener->Left(state);
 }
 
-VOID UiNavigationController::Return()
+VOID UiNavigationController::Right(CUIACTIONSTATE state)
 {
+	_NavListener->Up(state);
 }
 
-VOID UiNavigationController::Select()
+VOID UiNavigationController::Return(CUIACTIONSTATE state)
 {
+	_NavListener->Return(state);
+}
+
+VOID UiNavigationController::Select(CUIACTIONSTATE state)
+{
+	_NavListener->Select(state);
 }
 
 #pragma endregion

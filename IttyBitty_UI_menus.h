@@ -32,12 +32,20 @@ namespace IttyBitty
 	class MenuField;
 	TYPEDEF_CLASS_ALIASES(MenuField, MENUFIELD);
 
-	class MenuChoice;
-	TYPEDEF_CLASS_ALIASES(MenuChoice, MENUCHOICE);
 
+	#define MENU_BASE_T_CLAUSE_DEF		<typename TMenuItem>
+	#define MENU_BASE_T_CLAUSE			<typename TMenuItem>
+	#define MENU_BASE_T_ARGS			<TMenuItem>
+
+	template MENU_BASE_T_CLAUSE
+	class MenuBase;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(MENU_BASE_T_CLAUSE), CSL(MENU_BASE_T_ARGS), MenuBase, MENUBASE);
 
 	class Menu;
 	TYPEDEF_CLASS_ALIASES(Menu, MENU);
+
+	class ListMenuChoice;
+	TYPEDEF_CLASS_ALIASES(ListMenuChoice, LISTMENUCHOICE);
 
 	class ListMenu;
 	TYPEDEF_CLASS_ALIASES(ListMenu, LISTMENU);
@@ -139,9 +147,69 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [MenuChoice] DEFINITION
+#pragma region [MenuBase] DEFINITION
 
-	CLASS MenuChoice : public UiFieldChoice, public IMenuItem //public MenuItemBase, public IUiChoice
+	template MENU_BASE_T_CLAUSE_DEF
+	CLASS MenuBase : public MenuItemBase, public IUiContainerElement<TMenuItem>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MenuBase(CBYTE, PPIMENUITEM);
+		MenuBase(CBYTE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+
+		VIRTUAL ~MenuBase();
+
+
+		// [IUiListElement] IMPLEMENTATION
+
+		VIRTUAL CONST TMenuItem * operator[](CBYTE) const;
+		VIRTUAL TMenuItem * operator[](CBYTE);
+
+		VIRTUAL CBYTE ChildCount() const;
+
+		VIRTUAL CONST TMenuItem & Child(CBYTE) const;
+		VIRTUAL TMenuItem & Child(CBYTE);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		PPIMENUITEM _Children = NULL;
+		BYTE _ChildCount = 0;
+		BYTE _Capacity = 0;
+	};
+
+#pragma endregion
+
+
+#pragma region [Menu] DEFINITION
+
+	CLASS Menu : public MenuBase<IMenuItem>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		Menu(CBYTE, PPIMENUITEM);
+		Menu(CBYTE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+
+		VIRTUAL ~Menu();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+	};
+
+#pragma endregion
+
+
+#pragma region [ListMenuChoice] DEFINITION
+
+	CLASS ListMenuChoice : public MenuField, public IUiChoice
 	{
 	public:
 
@@ -153,40 +221,24 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [Menu] DEFINITION
-
-	CLASS Menu : public MenuItemBase, public IUiListElement<IMenuItem>
-	{
-	public:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		Menu(PPCIMENUITEM menuHierarchy = NULL, BYTE numChildren = 0);
-		Menu(CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		BYTE _Capacity = 0;
-		BYTE _NumChildren = 0;
-		PPIMENUITEM _Children = NULL;
-	};
-
-#pragma endregion
-
-
 #pragma region [ListMenu] DEFINITION
 
-	CLASS ListMenu : public Menu, public IUiListElement<MenuChoice>
+	CLASS ListMenu : public MenuBase<ListMenuChoice>, IUiListElement<ListMenuChoice>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		ListMenu(PPCIMENUITEM menuHierarchy = NULL);
-		ListMenu(CBYTE initMenuCapacity = 0);
+		ListMenu(CBYTE, PPIMENUITEM, CBOOL = FALSE);
+		ListMenu(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+
+		VIRTUAL ~ListMenu();
+
+
+		// [IUiListElement] IMPLEMENTATION
+
+		VIRTUAL CBOOL MultipleSelectionsAllowed() const;
+		VIRTUAL VOID SetAllowMultipleSelections(CBOOL);
 
 
 	protected:

@@ -15,8 +15,13 @@
 #else
 	#include "IttyBitty_bits.h"
 #endif
+#include "IttyBitty_UI_options.h"
 
 #include "Print.h"
+
+
+// SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING
+IGNORE_WARNING(reorder)
 
 
 namespace IttyBitty
@@ -51,7 +56,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE Cols() const = 0;
 		VIRTUAL CBYTE Rows() const = 0;
 
-		VIRTUAL CBOOL IsLineWrapEnabled() = 0;
+		VIRTUAL CBOOL IsLineWrapEnabled() const = 0;
 		VIRTUAL VOID SetLineWrap(CBOOL = TRUE) = 0;
 
 		VIRTUAL VOID CursorOn() = 0;
@@ -117,7 +122,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
 
-		VIRTUAL CBOOL IsLineWrapEnabled();
+		VIRTUAL CBOOL IsLineWrapEnabled() const;
 		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
 
 		VIRTUAL VOID CursorOn();
@@ -171,12 +176,68 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTORS/DESTRUCTOR
+
+		UiDisplayController(CBYTE = 0, PPIUIRENDERER = NULL);
+		UiDisplayController(RIUIRENDERER);
+
+		VIRTUAL ~UiDisplayController();
+
+
+		// OPERATORS
+
+		PCIUIRENDERER operator[](CBYTE) const;
+		PIUIRENDERER operator[](CBYTE);
+
+
+		// ACCESSORS
+
+		CBYTE RendererCount() const;
+
+		RCIUIRENDERER Renderer(CBYTE = 0) const;
+		RIUIRENDERER Renderer(CBYTE = 0);
+
+
+		// [Print] IMPLEMENTATION
+
+		VIRTUAL SIZE write(BYTE);
+		VIRTUAL SIZE write(PCBYTE buffer, SIZE size);
+
+		SIZE print(FLASH_STRING);
+		SIZE print(CONST String &);
+		SIZE print(PCCHAR);
+		SIZE print(CHAR);
+		SIZE print(BYTE, INT = DEC);
+		SIZE print(INT, INT = DEC);
+		SIZE print(UINT, INT = DEC);
+		SIZE print(LONG, INT = DEC);
+		SIZE print(DWORD, INT = DEC);
+		SIZE print(DOUBLE, INT = 2);
+		SIZE print(CONST Printable &);
+
+		SIZE println(FLASH_STRING);
+		SIZE println(CONST String &);
+		SIZE println(PCCHAR);
+		SIZE println(CHAR);
+		SIZE println(BYTE, INT = DEC);
+		SIZE println(INT, INT = DEC);
+		SIZE println(UINT, INT = DEC);
+		SIZE println(LONG, INT = DEC);
+		SIZE println(DWORD, INT = DEC);
+		SIZE println(DOUBLE, INT = 2);
+		SIZE println(CONST Printable &);
+		SIZE println();
+
+		INT printf(PCCHAR format, ...);
+		INT printf(FLASH_STRING format, ...);
+
+
 		// [IUiRenderer] IMPLEMENTATION
 
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
 
-		VIRTUAL CBOOL IsLineWrapEnabled();
+		VIRTUAL CBOOL IsLineWrapEnabled() const;
 		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
 
 		VIRTUAL VOID CursorOn();
@@ -189,6 +250,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow();
 
 		VIRTUAL CBOOL Available();
+		VIRTUAL VOID Flush();
 
 		VIRTUAL VOID Clear();
 		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);
@@ -224,9 +286,8 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-
-		BYTE _Cols = 0;
-		BYTE _Rows = 0;
+		PPIUIRENDERER _Renderers = NULL;
+		BYTE _RendererCount = 0;
 	};
 
 #pragma endregion

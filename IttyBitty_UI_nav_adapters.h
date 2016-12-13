@@ -15,6 +15,11 @@
 #include "HardwareSerial.h"
 
 
+#pragma region NAVIGATION ADAPTER OPTIONS/CONSTANTS
+
+#pragma endregion
+
+
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
@@ -26,40 +31,40 @@ namespace IttyBitty
 	#define DATA_BOUND_UI_INPUT_LISTENER_T_ARGS			<Action, TVar, Var, Tolerance>
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE
-	class DataBoundUiInputListener;
+	class DataBoundUiInputSource;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE), \
-		CSL(DATA_BOUND_UI_INPUT_LISTENER_T_ARGS), DataBoundUiInputListener, DATABOUNDUIINPUTLISTENER);
+		CSL(DATA_BOUND_UI_INPUT_LISTENER_T_ARGS), DataBoundUiInputSource, DATABOUNDUIINPUTSOURCE);
 
-	TYPEDEF_CLASS_ALIASES(SerialUiInputListener, SERIALUIINPUTLISTENER);
+	TYPEDEF_CLASS_ALIASES(SerialUiInputSource, SERIALUIINPUTSOURCE);
 
-	class DigitalPinUiInputListener;
-	TYPEDEF_CLASS_ALIASES(DigitalPinUiInputListener, DIGITALPINUIINPUTLISTENER);
+	class DigitalPinUiInputSource;
+	TYPEDEF_CLASS_ALIASES(DigitalPinUiInputSource, DIGITALPINUIINPUTSOURCE);
 
-	class AnalogPinUiInputListener;
-	TYPEDEF_CLASS_ALIASES(AnalogPinUiInputListener, ANALOGPINUIINPUTLISTENER);
+	class AnalogPinUiInputSource;
+	TYPEDEF_CLASS_ALIASES(AnalogPinUiInputSource, ANALOGPINUIINPUTSOURCE);
 
-	class SwitchUiInputListener;
-	TYPEDEF_CLASS_ALIASES(SwitchUiInputListener, SWITCHUIINPUTLISTENER);
+	class SwitchUiInputSource;
+	TYPEDEF_CLASS_ALIASES(SwitchUiInputSource, SWITCHUIINPUTSOURCE);
 
-	class ButtonUiInputListener;
-	TYPEDEF_CLASS_ALIASES(ButtonUiInputListener, BUTTONUIINPUTLISTENER);
+	class ButtonUiInputSource;
+	TYPEDEF_CLASS_ALIASES(ButtonUiInputSource, BUTTONUIINPUTSOURCE);
 
-	class RotaryUiInputListener;
-	TYPEDEF_CLASS_ALIASES(RotaryUiInputListener, ROTARYUIINPUTLISTENER);
+	class RotaryUiInputSource;
+	TYPEDEF_CLASS_ALIASES(RotaryUiInputSource, ROTARYUIINPUTSOURCE);
 
-	class ClickEncoderUiInputListener;
-	TYPEDEF_CLASS_ALIASES(ClickEncoderUiInputListener, CLICKENCODERUIINPUTLISTENER);
+	class ClickEncoderUiInputSource;
+	TYPEDEF_CLASS_ALIASES(ClickEncoderUiInputSource, CLICKENCODERUIINPUTSOURCE);
 
-	class PotentiometerUiInputListener;
-	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputListener, POTENTIOMETERUIINPUTLISTENER);
+	class PotentiometerUiInputSource;
+	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputSource, POTENTIOMETERUIINPUTSOURCE);
 
 #pragma endregion
 
 
-#pragma region [SerialUiInputListener] DEFINITION
+#pragma region [SerialUiInputSource] DEFINITION
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
-	CLASS DataBoundUiInputListener : public UiInputListenerBase
+	CLASS DataBoundUiInputSource : public UiInputSourceBase
 	{
 	public:
 
@@ -91,35 +96,35 @@ namespace IttyBitty
 			switch (Action)
 			{
 			case UiAction::UP:
-				_Navigation->Up();
+				_NavListener->Up();
 				break;
 
 			case UiAction::DOWN:
-				_Navigation->Down();
+				_NavListener->Down();
 				break;
 
 			case UiAction::LEFT:
-				_Navigation->Left();
+				_NavListener->Left();
 				break;
 
 			case UiAction::RIGHT:
-				_Navigation->Right();
+				_NavListener->Right();
 				break;
 
 			case UiAction::RETURN:
-				_Navigation->Return();
+				_NavListener->Return();
 				break;
 
 			case UiAction::SELECT:
-				_Navigation->Select();
+				_NavListener->Select();
 				break;
 
 			case UiAction::SHIFT:
-				_Navigation->ToggleShift();
+				_NavListener->ToggleShift();
 				break;
 
 			case UiAction::ALT:
-				_Navigation->ToggleAlt();
+				_NavListener->ToggleAlt();
 				break;
 
 			default:
@@ -131,9 +136,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [SerialUiInputListener] DEFINITION
+#pragma region [SerialUiInputSource] DEFINITION
 
-	CLASS SerialUiInputListener : public UiInputListenerBase
+	CLASS SerialUiInputSource : public UiInputSourceBase
 	{
 	public:
 
@@ -154,9 +159,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [DigitalPinUiInputListener] DEFINITION
+#pragma region [DigitalPinUiInputSource] DEFINITION
 
-	CLASS DigitalPinUiInputListener : public UiInputListenerBase
+	CLASS DigitalPinUiInputSource : public UiInputSourceBase
 	{
 	public:
 
@@ -178,9 +183,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [AnalogPinUiInputListener] DEFINITION
+#pragma region [AnalogPinUiInputSource] DEFINITION
 
-	CLASS AnalogPinUiInputListener : public DigitalPinUiInputListener
+	CLASS AnalogPinUiInputSource : public DigitalPinUiInputSource
 	{
 	public:
 
@@ -197,9 +202,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [SwitchUiInputListener] DEFINITION
+#pragma region [SwitchUiInputSource] DEFINITION
 
-	CLASS SwitchUiInputListener : public DigitalPinUiInputListener
+	CLASS SwitchUiInputSource : public DigitalPinUiInputSource
 	{
 	public:
 
@@ -212,9 +217,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [ButtonUiInputListener] DEFINITION
+#pragma region [ButtonUiInputSource] DEFINITION
 
-	CLASS ButtonUiInputListener : public SwitchUiInputListener
+	CLASS ButtonUiInputSource : public SwitchUiInputSource
 	{
 	public:
 
@@ -229,30 +234,9 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [RotaryUiInputListener] DEFINITION
+#pragma region [RotaryUiInputSource] DEFINITION
 
-	CLASS RotaryUiInputListener : public DigitalPinUiInputListener
-	{
-	public:
-
-		// [IUiListener] OVERRIDES
-
-		VOID Poll();
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-
-	};
-
-#pragma endregion
-
-
-#pragma region [ClickEncoderUiInputListener] DEFINITION
-
-	CLASS ClickEncoderUiInputListener : public RotaryUiInputListener
+	CLASS RotaryUiInputSource : public DigitalPinUiInputSource
 	{
 	public:
 
@@ -271,9 +255,30 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [PotentiometerUiInputListener] DEFINITION
+#pragma region [ClickEncoderUiInputSource] DEFINITION
 
-	CLASS PotentiometerUiInputListener : public AnalogPinUiInputListener
+	CLASS ClickEncoderUiInputSource : public RotaryUiInputSource
+	{
+	public:
+
+		// [IUiListener] OVERRIDES
+
+		VOID Poll();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
+	};
+
+#pragma endregion
+
+
+#pragma region [PotentiometerUiInputSource] DEFINITION
+
+	CLASS PotentiometerUiInputSource : public AnalogPinUiInputSource
 	{
 	public:
 

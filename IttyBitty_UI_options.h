@@ -26,16 +26,6 @@
 #define MENUI_DEFAULT_IDLE_TIMEOUT_TICKS		50
 
 
-// Navigation/input default options
-
-#define MENUI_DEFAULT_NAV_HOLD_THRESHOLD_MS		800
-#define MENUI_DEFAULT_NAV_HOLD_REPEAT_MS		50
-
-#define MENUI_DEFAULT_SELECT_ON_RETURN			FALSE
-#define MENUI_DEFAULT_HOLD_SELECT_TO_SELECT		TRUE
-#define MENUI_DEFAULT_HOLD_SELECT_TO_RETURN		TRUE
-
-
 // Rendering/display default options
 
 #define MENUI_DEFAULT_SHOW_CURSOR				TRUE
@@ -65,32 +55,43 @@
 #define MENUI_DEFAULT_HIGHLIGHT_SELECTIONS		FALSE
 
 
+// Navigation/input default options
+
+#define MENUI_DEFAULT_NAV_DBL_CLICK_THRESHOLD_MS	800
+#define MENUI_DEFAULT_NAV_HOLD_THRESHOLD_MS			800
+#define MENUI_DEFAULT_NAV_HOLD_REPEAT_MS			50
+
+#define MENUI_DEFAULT_SELECT_ON_RETURN				FALSE
+#define MENUI_DEFAULT_HOLD_SELECT_TO_SELECT			TRUE
+#define MENUI_DEFAULT_HOLD_SELECT_TO_RETURN			TRUE
+
+
 
 // MenUI FUNCTION OPTIONS
 
 // Text display default options
 
-#define MENUI_DEFAULT_TEXT_TIMEOUT_MS			0
-#define MENUI_DEFAULT_TEXT_ALLOW_ESCAPE			TRUE
-#define MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS	TRUE
+#define MENUI_DEFAULT_TEXT_TIMEOUT_MS				0
+#define MENUI_DEFAULT_TEXT_ALLOW_ESCAPE				TRUE
+#define MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS		TRUE
 
 
 // Menu/List default options
 
-#define MENUI_DEFAULT_MENU_CAPACITY				5
-#define MENUI_DEFAULT_LIST_CAPACITY				5
+#define MENUI_DEFAULT_MENU_CAPACITY					5
+#define MENUI_DEFAULT_LIST_CAPACITY					5
 
 
 // Dialog/field default options
 
-#define MENUI_DEFAULT_NUMERIC_FIELD_STEP		1
-#define MENUI_DEFAULT_NUMERIC_FIELD_STEP_LARGE	10
+#define MENUI_DEFAULT_NUMERIC_FIELD_STEP			1
+#define MENUI_DEFAULT_NUMERIC_FIELD_STEP_LARGE		10
 
 
 
 // MISCELLANEOUS MenUI CONSTANTS
 
-#define MENUI_IDLE_TICK_MS						100
+#define MENUI_IDLE_TICK_MS							100
 
 #pragma endregion
 
@@ -105,7 +106,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region ENUMS
+#pragma region UI OPTION & LAYOUT ENUMS
 
 	enum UiOrientation : BYTE
 	{
@@ -179,7 +180,7 @@ namespace IttyBitty
 
 	TYPEDEF_ENUM_ALIASES(UiLayout, UILAYOUT);
 
-	#define UI_LAYOUT_COLS_OFFSET		0x2
+	#define UI_LAYOUT_COLS_OFFSET			0x2
 
 	STATIC CBOOL UiLayoutIsHorizontal(CUILAYOUT layout)
 	{
@@ -203,6 +204,10 @@ namespace IttyBitty
 
 	TYPEDEF_ENUM_ALIASES(UiStatusIndicatorFlags, UISELECTIONSTATUSFLAGS);
 
+#pragma endregion
+
+
+#pragma region UI FIELD ENUMS
 
 	enum AllowedCharFlags : BYTE
 	{
@@ -213,6 +218,72 @@ namespace IttyBitty
 	};
 
 	TYPEDEF_ENUM_ALIASES(UiStatusIndicatorFlags, UISELECTIONSTATUSFLAGS);
+
+#pragma endregion
+
+
+#pragma region NAVIGATION ENUMS
+
+	enum UiActionType : BYTE
+	{
+		ACTION_UP		= 0x10,
+		ACTION_DOWN		= 0x20,
+		ACTION_LEFT		= 0x30,
+		ACTION_RIGHT	= 0x40,
+		ACTION_RETURN	= 0x50,
+		ACTION_SELECT	= 0x60,
+		ACTION_SHIFT	= 0x70,
+		ACTION_ALT		= 0x80
+	};
+
+	TYPEDEF_ENUM_ALIASES(UiActionType, UIACTIONTYPE);
+
+	enum UiActionBehavior : BYTE
+	{
+		ACTION_MOMENTARY	= 0x0,
+		ACTION_LATCH		= 0x1
+	};
+
+	TYPEDEF_ENUM_ALIASES(UiActionBehavior, UIACTIONBEHAVIOR);
+
+	ENUM UiAction : BYTE
+	{
+		UP		= ACTION_UP | ACTION_MOMENTARY,
+		DOWN	= ACTION_DOWN | ACTION_MOMENTARY,
+		LEFT	= ACTION_LEFT | ACTION_MOMENTARY,
+		RIGHT	= ACTION_RIGHT | ACTION_MOMENTARY,
+		RETURN	= ACTION_RETURN | ACTION_MOMENTARY,
+		SELECT	= ACTION_SELECT | ACTION_MOMENTARY,
+		SHIFT	= ACTION_SHIFT | ACTION_LATCH,
+		ALT		= ACTION_ALT | ACTION_LATCH
+	};
+
+	TYPEDEF_ENUM_ALIASES(UiAction, UIACTION);
+
+	#define UI_ACTION_BEHAVIOR_BIT			0x0
+
+	STATIC CBOOL UiActionHasLatchBehavior(CUIACTION action)
+	{
+		return static_cast<CBOOL>(CHECK_BIT((CBYTE)action, UI_ACTION_BEHAVIOR_BIT));
+	}
+
+	STATIC CUIACTIONTYPE UiActionToActionType(CUIACTION action)
+	{
+		return static_cast<CUIACTIONTYPE>(HIGH_NYBBLE((CBYTE)action));
+	}
+
+
+
+	ENUM UiActionState : BYTE
+	{
+		INACTIVE		= 0x0,
+		CLICK			= 0x1,
+		DOUBLE_CLICK	= 0x2,
+		HOLD			= 0x3,
+		RELEASE			= 0x4
+	};
+
+	TYPEDEF_ENUM_ALIASES(UiActionState, UIACTIONSTATE);
 
 #pragma endregion
 
@@ -232,16 +303,6 @@ namespace IttyBitty
 		BYTE ScrollHoldRow			= MENUI_DEFAULT_SCROLL_HOLD_ROW;
 
 		WORD IdleTimeoutTicks		= MENUI_DEFAULT_IDLE_TIMEOUT_TICKS;
-
-
-		// Navigation/input options
-
-		BOOL NavHoldThresholdMS		= MENUI_DEFAULT_NAV_HOLD_THRESHOLD_MS;
-		BOOL NavHoldRepeatMS		= MENUI_DEFAULT_NAV_HOLD_REPEAT_MS;
-
-		BOOL SelectOnReturn			= MENUI_DEFAULT_SELECT_ON_RETURN;
-		BOOL HoldSelectToSelect		= MENUI_DEFAULT_HOLD_SELECT_TO_SELECT;
-		BOOL HoldSelectToReturn		= MENUI_DEFAULT_HOLD_SELECT_TO_RETURN;
 
 
 		// Display/rendering options
@@ -271,6 +332,17 @@ namespace IttyBitty
 		CHAR StyledLineRightGlyph	= MENUI_DEFAULT_STYLED_LINE_RIGHT_GLYPH;
 
 		BOOL HighlightSelections UNUSED	= MENUI_DEFAULT_HIGHLIGHT_SELECTIONS;
+
+
+		// Navigation/input options
+
+		BOOL NavDblClickThresholdMS	= MENUI_DEFAULT_NAV_DBL_CLICK_THRESHOLD_MS;
+		BOOL NavHoldThresholdMS		= MENUI_DEFAULT_NAV_HOLD_THRESHOLD_MS;
+		BOOL NavHoldRepeatMS		= MENUI_DEFAULT_NAV_HOLD_REPEAT_MS;
+
+		BOOL SelectOnReturn			= MENUI_DEFAULT_SELECT_ON_RETURN;
+		BOOL HoldSelectToSelect		= MENUI_DEFAULT_HOLD_SELECT_TO_SELECT;
+		BOOL HoldSelectToReturn		= MENUI_DEFAULT_HOLD_SELECT_TO_RETURN;
 	};
 
 #pragma endregion
@@ -278,7 +350,10 @@ namespace IttyBitty
 
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 
-	EXTERN UIOPTIONS MenUIOptions;
+	namespace UI
+	{
+		EXTERN UIOPTIONS Options;
+	}
 
 #pragma endregion
 };

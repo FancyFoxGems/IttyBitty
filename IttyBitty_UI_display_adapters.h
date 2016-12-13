@@ -50,21 +50,12 @@ namespace IttyBitty
 	{
 	public:
 
-		// [Print] OVERRIDES
+		// [Print] IMPLEMENTATION
 
-		SIZE write(BYTE);
+		VIRTUAL SIZE write(BYTE);
 
 
-		// [IUiRenderer] IMPLEMENTATION
-
-		CBYTE Cols() const;
-		CBYTE Rows() const;
-
-		CBOOL IsLineWrapEnabled();
-		VOID SetLineWrap(CBOOL = TRUE);
-
-		CBYTE CursorCol();
-		CBYTE CursorRow();
+		// [IUiRenderer] OVERRIDES
 
 		CBOOL Available();
 		VOID Flush();
@@ -72,21 +63,12 @@ namespace IttyBitty
 		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
 		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
 
-		CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
-		CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
-
-	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
-		VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
-		VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
-	#endif
-
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
+		HardwareSerial * _Serial = NULL;
 	};
 
 #pragma endregion
@@ -101,11 +83,58 @@ namespace IttyBitty
 	{
 	public:
 
-		// [Print] OVERRIDES
+		// [Print] IMPLEMENTATION
 
-		SIZE write(BYTE);
+		VIRTUAL SIZE write(BYTE);
 
-		// [IUiRenderer] IMPLEMENTATION
+
+		// [IUiRenderer] OVERRIDES
+
+		CBYTE Cols() const;
+		CBYTE Rows() const;
+
+		CBOOL IsLineWrapEnabled() const;
+		VOID SetLineWrap(CBOOL = TRUE);
+
+		VOID CursorOn();
+		VOID CursorOff();
+
+		VOID CursorBlinkOn();
+		VOID CursorBlinkOff();
+
+		CBYTE CursorCol();
+		CBYTE CursorRow();
+
+		CBOOL Available();
+
+		VOID Clear();
+		VOID ClearCol(CBYTE = MAX_BYTE);
+		VOID ClearRow(CBYTE = MAX_BYTE);
+
+		VOID ScrollLeft();
+		VOID ScrollRight();
+
+		VOID Home();
+		VOID CursorPrev();
+		VOID CursorNext();
+		VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
+
+		VOID LoadCustomChar(BYTE, PCBYTE);
+		VOID LoadCustomChar_P(BYTE, PCBYTE);
+
+		CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
+
+		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+
+	#ifndef NO_ITTYBITTY_EXTENSIONS
+		VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
+	#endif
 
 
 	protected:

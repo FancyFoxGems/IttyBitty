@@ -39,14 +39,13 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIOPTIONS Options = IttyBitty::MenUIOptions;
+		RUIOPTIONS Options = IttyBitty::UI::Options;
 
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenUI(CBYTE cols, CBYTE rows, PPCIMENUITEM menuHierarchy, CBOOL useGlobalOptions = TRUE);
-		MenUI(CBYTE cols, CBYTE rows,
-			CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY, CBOOL useGlobalOptions = TRUE);
+		MenUI(CBYTE, CBYTE, CBYTE, PPIMENUITEM, CBOOL = TRUE);
+		MenUI(CBYTE cols, CBYTE rows, CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY, CBOOL useGlobalOptions = TRUE);
 
 
 		// ACCESSORS/MUTATORS
@@ -131,22 +130,22 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		CBOOL IsShiftOn() const = 0;
-		VOID ToggleShift() = 0;
-		VOID ShiftOn() = 0;
-		VOID ShiftOff() = 0;
+		CBOOL IsShiftOn() const;
+		VOID ToggleShift();
+		VOID ShiftOn();
+		VOID ShiftOff();
 
-		CBOOL IsAltOn() const = 0;
-		VOID ToggleAlt() = 0;
-		VOID AltOn() = 0;
-		VOID AltOff() = 0;
+		CBOOL IsAltOn() const;
+		VOID ToggleAlt();
+		VOID AltOn();
+		VOID AltOff();
 
-		VOID Up();
-		VOID Down();
-		VOID Left();
-		VOID Right();
-		VOID Return();
-		VOID Select();
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 	protected:
