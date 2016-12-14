@@ -48,8 +48,8 @@
 #define INTERNAL_VISIBILIITY		VISIBILITY(internal)
 #define PROTECTED_VISIBILIITY		VISIBILITY(protected)
 
-#define SECTION(section_name)			__attribute__((section("." EXPAND_STR(section_name))))
-#define MEMORY_SECTION(section_name)	SECTION(section_name)
+#define SECTION(section_name)				__attribute__((section("." EXPAND_STR(section_name))))
+#define MEMORY_SECTION(section_name)		SECTION(section_name)
 
 
 /* TYPE ATTRIBUTE ALIASES */
@@ -63,6 +63,13 @@
 
 #define VARIABLE_SIZE				__attribute__((bnd_variable_size))
 #define VARIABLE_SIZE_STRUCT		STRUCT VARIABLE_SIZE
+
+
+#define SCALAR_STORAGE_ORDER(endianness)	__attribute__((scalar_storage_order (EXPAND_STR(endianness))))
+#define ENDIANNESS(endianness)				SCALAR_STORAGE_ORDER(endianness)
+#define LITTLE_ENDIAN						SCALAR_STORAGE_ORDER(little-endian)
+#define BIG_ENDIAN							SCALAR_STORAGE_ORDER(big-endian)
+#define NETWORK_ORDER						BIG_ENDIAN
 
 #define PACKED						__attribute__((packed))
 #define PACKED_UNION				UNION PACKED

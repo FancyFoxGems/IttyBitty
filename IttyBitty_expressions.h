@@ -12,8 +12,10 @@
 
 #include "IttyBitty_util.h"
 
+#include "stdarg.h"
 
-#pragma region [Apply] EXPRESSION FUNCTION DEFINITIONS (Calls an object's method)
+
+#pragma region [Apply] EXPRESSION FUNCTION DEFINITIONS (Calls an objects method)
 
 template<typename TInstance, typename ...TParams, typename ...TArgs>
 INLINE VOID Apply(TInstance & instance, VOID (TInstance::*function)(TParams...), TArgs && ...args)
@@ -121,6 +123,7 @@ INLINE VOID PtrCallAll(CONST TCount instanceCount, TInstance ** instances,
 	for (TCount i = 0; i < instanceCount; i++)
 		results[i] = (instances[i]->*function)(FORWARD(TArgs, args)...);
 }
+
 #pragma endregion
 
 

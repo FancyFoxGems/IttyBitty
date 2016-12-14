@@ -20,15 +20,15 @@ IGNORE_WARNING(pointer-arith)
 
 /* (BYTE) ENDIANNESS DEFINES & TEST MACRO */
 
-#define LITTLE_ENDIAN	0
-#define BIG_ENDIAN		1
-#define NETWORK_ORDER	BIG_ENDIAN
+#define LITTLE_ENDIANNESS			0
+#define BIG_ENDIANNESS				1
+#define NETWORK_ORDER_ENDIANNESS	BIG_ENDIANNESS
 
 #ifdef __AVR_ARCH__
 	#if __AVR_ARCH__ <= 60		// AVR architecture 1-6
-		#define ENDIANNESS LITTLE_ENDIAN
+		#define MCU_ENDIANNESS LITTLE_ENDIANNESS
 	#elif __AVR_ARCH__ >= 100	// AVR architecture 10 (Xmega)
-		#define ENDIANNESS BIG_ENDIAN
+		#define MCU_ENDIANNESS BIG_ENDIANNESS
 	#else
 		#define TEST_ENDIANNESS
 	#endif
@@ -38,19 +38,19 @@ IGNORE_WARNING(pointer-arith)
 
 #ifdef TEST_ENDIANNESS
 	#undef TEST_ENDIANNESS
-	#define ENDIANNESS (*(uint16_t *)"\0\xff" < 0x100)
+	#define MCU_ENDIANNESS (*(uint16_t *)"\0\xff" < 0x100)
 #endif
 
-#define IS_LITTLE_ENDIAN	ENDIANNESS == LITTLE_ENDIAN
-#define IS_BIG_ENDIAN		ENDIANNESS == BIG_ENDIAN
+#define IS_LITTLE_ENDIAN	MCU_ENDIANNESS == LITTLE_ENDIANNESS
+#define IS_BIG_ENDIAN		MCU_ENDIANNESS == BIG_ENDIANNESS
 
 
 /* ENDIANNESS SWAPPING MACROS */
 
-#define REVERSE_ENDIANNESS_16(var) __builtin_bswap16(var)
-#define REVERSE_ENDIANNESS_32(var) __builtin_bswap32(var)
-#define REVERSE_ENDIANNESS_64(var) __builtin_bswap64(var)
-#define REVERSE_ENDIANNESS(var) REVERSE_ENDIANNESS_16(var)
+#define REVERSE_ENDIANNESS_16(var)		__builtin_bswap16(var)
+#define REVERSE_ENDIANNESS_32(var)		__builtin_bswap32(var)
+#define REVERSE_ENDIANNESS_64(var)		__builtin_bswap64(var)
+#define REVERSE_ENDIANNESS(var)			REVERSE_ENDIANNESS_16(var)
 
 
 namespace IttyBitty
@@ -529,7 +529,7 @@ namespace IttyBitty
 			for (SIZE i = 0; i < T_SIZE; i++)
 			{
 				if (i < byteWidth)
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 					_ByteFieldPtrs[i] = new ByteField((PVBYTE)memAddr + T_SIZE - 1 - i);
 			#else
 					_ByteFieldPtrs[i] = new ByteField((PVBYTE)memAddr + i);
@@ -765,7 +765,7 @@ namespace IttyBitty
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 				_ByteFieldPtrs[i] = new ByteField(*((PVBYTE)&tVal + T_SIZE - 1 - i));
 			#else
 				_ByteFieldPtrs[i] = new ByteField(*((PVBYTE)&tVal + i));
@@ -791,7 +791,7 @@ namespace IttyBitty
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 
 			for (SIZE i = 0; i < this->ByteSize(); i ++)
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 				_ByteFieldPtrs[i] = new ByteField((PVBYTE)tPtr + T_SIZE - 1 - i);
 			#else
 				_ByteFieldPtrs[i] = new ByteField((PVBYTE)tPtr + i);
@@ -983,7 +983,7 @@ namespace IttyBitty
 
 			for (SIZE i = 0; i < T_SIZE / 2; i ++)
 			{
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 				byteFieldPtrs[i * 2] = ((PWORDFIELD)(&wordFields + i))->Byte(T_SIZE - 2 - i * 2);
 				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(&wordFields + i))->Byte(T_SIZE - 1 - i * 2);
 			#else
@@ -1001,7 +1001,7 @@ namespace IttyBitty
 
 			for (SIZE i = 0; i < T_SIZE / 2; i ++)
 			{
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 				byteFieldPtrs[i * 2] = ((PWORDFIELD)(wordFields + i))->Byte(T_SIZE - 2 - i * 2);
 				byteFieldPtrs[i * 2 + 1] = ((PWORDFIELD)(wordFields + i))->Byte(T_SIZE - 1 - i * 2);
 			#else
@@ -1112,7 +1112,7 @@ namespace IttyBitty
 			_WordFieldPtrs = new PWORDFIELD[this->WordSize()];
 
 			for (SIZE i = 0; i < this->WordSize(); i++)
-			#if IS_BIG_ENDIAN
+			#if IS_BIG_ENDIANNESS
 				_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + T_SIZE - 2 - i * 2));
 			#else
 				_WordFieldPtrs[i] = new WordField((PBYTEFIELD)(this->Bytes() + i * 2));

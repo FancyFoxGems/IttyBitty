@@ -316,12 +316,8 @@ RIPARAM Message::Param(CBYTE i)
 
 // [IMessage] IMPLEMENTATION
 
-//VOID Message::Handle(...)
 BOOL Message::Handle(PTR results, CPTR state)
 {
-	//va_list args;
-	//va_start(args, 0);
-	//va_end(args);
 #ifdef DEBUG_MESSAGES
 	PrintLine(F("Message::Handle"));
 #endif
