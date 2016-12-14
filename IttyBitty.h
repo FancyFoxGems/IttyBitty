@@ -39,6 +39,8 @@
 *
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
+* [IttyBitty_expressions.h]: TYPE-AGNOSTIC EXPRESSION FUNCTIONS
+*
 * [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
 *
 * [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
@@ -112,18 +114,11 @@
 #endif
 
 
-/* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
+/* [IttyBitty_expressions.h]: TYPE-AGNOSTIC EXPRESSION FUNCTIONS */
 
-#ifndef NO_ITTYBITTY_BYTES
-	#include "IttyBitty_bytes.h"
-#else
-	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
+#ifndef NO_ITTYBITTY_EXPRESSIONS
+	#include "IttyBitty_expressions.h"
 #endif
-
-
-//#include "IttyBitty_util.h"					// Included by [IttyBitty_bits.h]
-//#include "IttyBitty_type_traits.h"			// Included by [IttyBitty_util.h]
-//#include "IttyBitty_aliases.h"				// Included by [IttyBitty_type_traits.h]
 
 
 /* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS */
@@ -139,6 +134,20 @@
 	#include "IttyBitty_info.h"
 	//#include "avr_cpunames.h"				// Included by [IttyBitty_info.h]
 #endif
+
+
+/* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
+
+#ifndef NO_ITTYBITTY_BYTES
+	#include "IttyBitty_bytes.h"
+#else
+	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
+#endif
+
+
+//#include "IttyBitty_util.h"					// Included by [IttyBitty_bits.h]
+//#include "IttyBitty_type_traits.h"			// Included by [IttyBitty_util.h]
+//#include "IttyBitty_aliases.h"				// Included by [IttyBitty_type_traits.h]
 
 
 /* [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY */

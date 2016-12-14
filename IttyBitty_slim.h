@@ -17,6 +17,8 @@
 *
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
+* [IttyBitty_expressions.h]: TYPE-AGNOSTIC EXPRESSION FUNCTIONS
+*
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
@@ -39,9 +41,8 @@
 
 #define ITTYBITTY_SLIM
 
-#define NO_ITTYBITTY_BYTES
-#define NO_ITTYBITTY_PRINT
 #define NO_ITTYBITTY_INFO
+#define NO_ITTYBITTY_BYTES
 #define NO_ITTYBITTY_LED
 #define NO_ITTYBITTY_VALUES
 

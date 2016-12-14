@@ -39,7 +39,7 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIOPTIONS Options = IttyBitty::UI::Options;
+		RUIOPTIONS Options = MUI::Options;
 
 
 		// CONSTRUCTORS/DESTRUCTOR

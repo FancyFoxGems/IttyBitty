@@ -270,8 +270,6 @@ namespace IttyBitty
 
 		// [Message] OVERRIDES
 
-		VOID Handle(...) { }
-
 		CBYTE GetMessageCode() const
 		{
 			return MESSAGE_CODE();

@@ -17,7 +17,7 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL CONSTANT & VARIABLE MEMBER DEFINITIONS
 
-UIOPTIONS UI::Options = UiOptions();
+UIOPTIONS MUI::Options = UiOptions();
 
 #pragma endregion
 

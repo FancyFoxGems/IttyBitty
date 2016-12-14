@@ -10,6 +10,7 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
+#include "IttyBitty_expressions.h"
 #include "IttyBitty_UI_nav.h"
 
 using namespace IttyBitty;
@@ -22,7 +23,7 @@ using namespace IttyBitty;
 UiInputSourceBase::UiInputSourceBase(PIUINAVIGATIONLISTENER navListener) : _NavListener(navListener) { }
 
 
-// [IUiListener] IMPLEMENTATION
+// [IUiListener] (NON-)IMPLEMENTATION
 
 CBOOL UiInputSourceBase::IsAsynchronous() const { return TRUE; }
 
@@ -112,7 +113,7 @@ RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 
 VOID UiNavigationController::Poll()
 {
-	PtrApplyAll<BYTE, IUIINPUTSOURCE>(_InputSourceCount, _InputSources, &IUiInputSource::Poll);
+	PtrApplyAll(_InputSourceCount, _InputSources, &IUiInputSource::Poll);
 }
 
 

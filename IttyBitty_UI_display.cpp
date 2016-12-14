@@ -10,6 +10,7 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
+#include "IttyBitty_expressions.h"
 #include "IttyBitty_UI_display.h"
 
 using namespace IttyBitty;
@@ -17,7 +18,7 @@ using namespace IttyBitty;
 
 #pragma region [UiRendererBase] IMPLEMENTATION
 
-// [IUiRenderer] IMPLEMENTATION
+// [IUiRenderer] (NON-)IMPLEMENTATION
 
 CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
 
@@ -61,9 +62,7 @@ VOID UiRendererBase::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
 
 CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
-	this->write(value);
-
-	return 1;
+	return (BYTE)this->write(value);
 }
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
@@ -148,6 +147,173 @@ RIUIRENDERER UiDisplayController::Renderer(CBYTE i)
 }
 
 
+// [Print] IMPLEMENTATION
+
+SIZE UiDisplayController::write(BYTE)
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintString_P, flashStr, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return 0;
+}
+
+SIZE UiDisplayController::write(PCBYTE buffer, SIZE size)
+{
+
+	return 0;
+}
+
+
+// [Print] OVERRIDES
+
+SIZE UiDisplayController::print(FLASH_STRING)
+{
+
+	return 0;
+}
+
+SIZE UiDisplayController::print(CONST String &)
+{
+
+	return 0;
+}
+
+SIZE UiDisplayController::print(PCCHAR)
+{
+}
+
+SIZE UiDisplayController::print(CHAR)
+{
+}
+
+SIZE UiDisplayController::print(BYTE, INT)
+{
+}
+
+SIZE UiDisplayController::print(INT, INT)
+{
+}
+
+SIZE UiDisplayController::print(UINT, INT)
+{
+}
+
+SIZE UiDisplayController::print(LONG, INT)
+{
+}
+
+SIZE UiDisplayController::print(DWORD, INT)
+{
+}
+
+SIZE UiDisplayController::print(DOUBLE, INT)
+{
+}
+
+SIZE UiDisplayController::print(CONST Printable &)
+{
+}
+
+SIZE UiDisplayController::println(FLASH_STRING)
+{
+}
+
+SIZE UiDisplayController::println(CONST String &)
+{
+}
+
+SIZE UiDisplayController::println(PCCHAR)
+{
+}
+
+SIZE UiDisplayController::println(CHAR)
+{
+}
+
+SIZE UiDisplayController::println(BYTE, INT)
+{
+}
+
+SIZE UiDisplayController::println(INT, INT)
+{
+}
+
+SIZE UiDisplayController::println(UINT, INT)
+{
+}
+
+SIZE UiDisplayController::println(LONG, INT)
+{
+}
+
+SIZE UiDisplayController::println(DWORD, INT)
+{
+}
+
+SIZE UiDisplayController::println(DOUBLE, INT)
+{
+}
+
+SIZE UiDisplayController::println(CONST Printable &)
+{
+
+	return 0;
+}
+
+SIZE UiDisplayController::println()
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintString_P, flashStr, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return 0;
+}
+
+INT UiDisplayController::printf(PCCHAR format, ...)
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::printf, format, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return 0;
+}
+
+INT UiDisplayController::printf(FLASH_STRING format, ...)
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::printf, format, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return 0;
+}
+
+
+
 // [IUiRenderer] IMPLEMENTATION
 
 CBYTE UiDisplayController::Cols() const
@@ -180,106 +346,188 @@ CBYTE UiDisplayController::Rows() const
 
 CBOOL UiDisplayController::IsLineWrapEnabled() const
 {
-	return PtrAny<BYTE, IUIRENDERER>(_RendererCount, _Renderers, &IUiRenderer::IsLineWrapEnabled);
+	return PtrAny(_RendererCount, _Renderers, &IUiRenderer::IsLineWrapEnabled);
 }
 
 VOID UiDisplayController::SetLineWrap(CBOOL wrapLines)
 {
-	//PtrApplyAll<BYTE, IUIRENDERER, CBOOL>(_RendererCount, _Renderers, &IUiRenderer::SetLineWrap, wrapLines);
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::SetLineWrap, wrapLines);
+}
+
+VOID UiDisplayController::CursorOn()
+{
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorOn);
 }
 
 VOID UiDisplayController::CursorOff()
 {
-	PtrApplyAll<BYTE, IUIRENDERER>(_RendererCount, _Renderers, &IUiRenderer::CursorOff);
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorOff);
 }
 
 VOID UiDisplayController::CursorBlinkOn()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorBlinkOn);
 }
 
 VOID UiDisplayController::CursorBlinkOff()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorBlinkOff);
 }
 
-CBOOL UiDisplayController::Available() { return TRUE; }
+CBOOL UiDisplayController::Available()
+{
+	PtrAll(_RendererCount, _Renderers, &IUiRenderer::Available);
+}
 
 VOID UiDisplayController::Clear()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::Clear);
 }
 
 VOID UiDisplayController::ClearCol(CBYTE col)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::ClearCol, col);
 }
 
 VOID UiDisplayController::ClearRow(CBYTE row)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::ClearRow, row);
 }
 
 VOID UiDisplayController::ScrollLeft()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::ScrollLeft);
 }
 
 VOID UiDisplayController::ScrollRight()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::ScrollRight);
 }
 
 VOID UiDisplayController::Home()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::Home);
 }
 
 VOID UiDisplayController::CursorPrev()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorPrev);
 }
 
 VOID UiDisplayController::CursorNext()
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::CursorNext);
 }
 
 VOID UiDisplayController::MoveCursor(CBYTE col, CBYTE row)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::MoveCursor, col, row);
 }
 
 VOID UiDisplayController::LoadCustomChar(BYTE charIndex, PCBYTE charData)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::LoadCustomChar, charIndex, charData);
 }
 
 VOID UiDisplayController::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::LoadCustomChar_P, charIndex, charDataAddr);
 }
 
 CBYTE UiDisplayController::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::WriteAt, value, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return MAX_BYTE;
 }
 
 CBYTE UiDisplayController::PrintString(PCCHAR str, BYTE col, BYTE row)
 {
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintString, str, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return MAX_BYTE;
 }
 
 CBYTE UiDisplayController::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintString_P, flashStr, col, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return MAX_BYTE;
 }
 
 CBYTE UiDisplayController::PrintStyledLine(PCCHAR str, BYTE row)
 {
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine, str, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return MAX_BYTE;
 }
 
 CBYTE UiDisplayController::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine_P, flashStr, row);
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (results[i] < MAX_BYTE)
+			return results[i];
+	}
+
+	return MAX_BYTE;
 }
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
 
 VOID UiDisplayController::DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::DrawScrollBar, percentage, options);
 }
 
-VOID UiDisplayController::DrawGraph(BYTE startCol, BYTE row, BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
+VOID UiDisplayController::DrawGraph(BYTE startCol, BYTE row,
+	BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::DrawGraph,
+		startCol, row, widthChars, percentage, options);
 }
 
 VOID UiDisplayController::DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
 	BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw)
 {
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::DrawSlider,
+		startCol, row, widthChars, percentage, options, redraw);
 }
 
 #endif

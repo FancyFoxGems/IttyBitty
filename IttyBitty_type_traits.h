@@ -444,12 +444,6 @@ namespace std
 	};
 
 	template DEFAULT_T_CLAUSE
-	STRUCT remove_reference<CONST T &>
-	{
-		typedef T type;
-	};
-
-	template DEFAULT_T_CLAUSE
 	STRUCT remove_reference<T &&>
 	{
 		using type = remove_rvalue_ref_t<T &&>;
@@ -589,7 +583,22 @@ namespace std
 	{
 		STATIC CONSTEXPR T value = N - 1;
 	};
-}
+
+
+	/* [forward]: METAFUNCTION FOR PERFECT FORWARDING */
+
+	template DEFAULT_T_CLAUSE
+	CONSTEXPR T && forward(typename remove_reference<T>::type & arg)
+	{
+		return static_cast<T &&>(arg);
+	}
+
+	template DEFAULT_T_CLAUSE
+	CONSTEXPR T && forward(typename remove_reference<T>::type && arg)
+	{
+		return static_cast<T &&>(arg);
+	}
+};
 
 
 #endif

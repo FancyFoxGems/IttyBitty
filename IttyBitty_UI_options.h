@@ -350,7 +350,7 @@ namespace IttyBitty
 
 #pragma region GLOBAL CONSTANT & VARIABLE DECLARATIONS
 
-	namespace UI
+	namespace MUI
 	{
 		EXTERN UIOPTIONS Options;
 	}

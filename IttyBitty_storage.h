@@ -339,7 +339,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [NullStorage] DEFINITION
+#pragma region [NullStorage] (NON-)IMPLEMENTATION
 
 	CLASS NullStorage final : public IStorage
 	{

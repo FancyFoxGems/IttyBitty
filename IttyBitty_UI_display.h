@@ -203,6 +203,8 @@ namespace IttyBitty
 		VIRTUAL SIZE write(BYTE);
 		VIRTUAL SIZE write(PCBYTE buffer, SIZE size);
 
+		// [Print] OVERRIDES
+
 		SIZE print(FLASH_STRING);
 		SIZE print(CONST String &);
 		SIZE print(PCCHAR);
@@ -228,7 +230,7 @@ namespace IttyBitty
 		SIZE println(CONST Printable &);
 		SIZE println();
 
-		INT printf(PCCHAR format, ...);
+		INT printf(PCCHAR format, ...) PRINTF_FORMAT(2, 3) ;
 		INT printf(FLASH_STRING format, ...);
 
 

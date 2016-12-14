@@ -16,15 +16,17 @@
 *
 * [IttyBitty_util.h]: MISCELLANEOUS HELPER MACROS, ETC.
 *
+* [IttyBitty_expressions.h]: TYPE-AGNOSTIC EXPRESSION FUNCTIONS
+*
+* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
+*
+* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
+*
 * [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
 *	NOTE: ^-- Base bundle excludes data structures for larger blocks
-*
-* [IttyBitty_print.h]: STREAM PRINTING UTILITY FUNCTIONS
-*
-* [IttyBitty_info.h]: UTILITY FUNCTIONS RELATED TO BOARD SPECS & MEMORY USAGE
 *
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *

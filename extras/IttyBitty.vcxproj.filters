@@ -48,9 +48,6 @@
     <Filter Include="Display">
       <UniqueIdentifier>{0d299d15-6c23-4f0a-b817-6fa42bc4004d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Info">
-      <UniqueIdentifier>{e616ff74-90ee-44b3-92d6-d70e7a3436d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="IO">
       <UniqueIdentifier>{10cba6eb-f737-4cce-aca7-8f64dfec2152}</UniqueIdentifier>
     </Filter>
@@ -62,6 +59,9 @@
     </Filter>
     <Filter Include="Types">
       <UniqueIdentifier>{64ceb909-aff6-42de-a06c-a0c0a8f6fda1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5ae123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +134,6 @@
     <ClInclude Include="..\IttyBitty_messages.h">
       <Filter>Communication</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_print.h">
-      <Filter>Communication</Filter>
-    </ClInclude>
     <ClInclude Include="..\IttyBitty_interrupts.h">
       <Filter>Control</Filter>
     </ClInclude>
@@ -181,12 +178,6 @@
     </ClInclude>
     <ClInclude Include="..\IttyBitty_LCD_I2C.h">
       <Filter>Display</Filter>
-    </ClInclude>
-    <ClInclude Include="..\avr_cpunames.h">
-      <Filter>Info</Filter>
-    </ClInclude>
-    <ClInclude Include="..\IttyBitty_info.h">
-      <Filter>Info</Filter>
     </ClInclude>
     <ClInclude Include="..\IttyBitty_GPIO.h">
       <Filter>IO</Filter>
@@ -248,14 +239,26 @@
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h">
       <Filter>Storage</Filter>
     </ClInclude>
+    <ClInclude Include="..\IttyBitty_aliases.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_expressions.h">
+      <Filter>Types</Filter>
+    </ClInclude>
     <ClInclude Include="..\IttyBitty_type_traits.h">
       <Filter>Types</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_util.h">
-      <Filter>Types</Filter>
+    <ClInclude Include="..\avr_cpunames.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\IttyBitty_aliases.h">
-      <Filter>Types</Filter>
+    <ClInclude Include="..\IttyBitty_info.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_print.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IttyBitty_util.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -361,9 +364,6 @@
     <ClCompile Include="..\IttyBitty_messages.cpp">
       <Filter>Communication</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_print.cpp">
-      <Filter>Communication</Filter>
-    </ClCompile>
     <ClCompile Include="..\IttyBitty_interrupts.cpp">
       <Filter>Control</Filter>
     </ClCompile>
@@ -418,9 +418,6 @@
     <ClCompile Include="..\IttyBitty_signals.cpp">
       <Filter>IO</Filter>
     </ClCompile>
-    <ClCompile Include="..\IttyBitty_info.cpp">
-      <Filter>Info</Filter>
-    </ClCompile>
     <ClCompile Include="..\IttyBitty_MenUI.cpp">
       <Filter>MenUI</Filter>
     </ClCompile>
@@ -462,6 +459,12 @@
     </ClCompile>
     <ClCompile Include="..\IttyBitty_storage_adapter_sd.cpp">
       <Filter>Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_info.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IttyBitty_print.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

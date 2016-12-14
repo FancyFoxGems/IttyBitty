@@ -82,6 +82,7 @@
     <ClInclude Include="..\IttyBitty_DB_table_defs.h" />
     <ClInclude Include="..\IttyBitty_DB_tables.h" />
     <ClInclude Include="..\IttyBitty_EEPROM_I2C.h" />
+    <ClInclude Include="..\IttyBitty_expressions.h" />
     <ClInclude Include="..\IttyBitty_fields.h" />
     <ClInclude Include="..\IttyBitty_GPIO.h" />
     <ClInclude Include="..\IttyBitty_GPIO_arduino.h" />
