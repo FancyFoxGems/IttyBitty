@@ -13,16 +13,57 @@
 #include "IttyBitty_UI_display_adapters.h"
 
 using namespace IttyBitty;
-// VIRTUAL
-//
 
-//([A-Za-z_]*) ([A-Za-z_]*)[(]
-//$1 UiDisplayController::$2(
 
-// = [A-Za-z0-9_]*
-//
+#pragma region [SerialUiRenderer] IMPLEMENTATION
 
-// { }
-//\n{\n\n}
+// CONSTRUCTOR/DESTRUCTOR
+
+SerialUiRenderer::SerialUiRenderer(HardwareSerial * serial) : _Serial(serial) { }
+
+SerialUiRenderer::~SerialUiRenderer()
+{
+	if (_Serial)
+	{
+		delete _Serial;
+		_Serial = NULL;
+	}
+}
+
+
+// [Print] IMPLEMENTATION
+
+SIZE SerialUiRenderer::write(BYTE value)
+{
+	return _Serial->write(value);
+}
+
+
+// [IUiRenderer] IMPLEMENTATION
+
+CBYTE SerialUiRenderer::PrintString(PCCHAR str, BYTE col, BYTE row)
+{
+	return _Serial->print(str);
+}
+
+CBYTE SerialUiRenderer::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
+{
+	return _Serial->print(flashStr);
+}
+
+
+// [IUiRenderer] OVERRIDES
+
+CBOOL SerialUiRenderer::Available()
+{
+	return _Serial->availableForWrite();
+}
+
+VOID SerialUiRenderer::Flush()
+{
+	return _Serial->flush();
+}
+
+#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_UI_DISPLAY_ADAPTERS

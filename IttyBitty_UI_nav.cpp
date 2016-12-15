@@ -111,6 +111,11 @@ RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 
 // [IUiInputSource] IMPLEMENTATION
 
+CBOOL UiNavigationController::IsAsynchronous() const
+{
+	return PtrAll(_InputSourceCount, _InputSources, &IUiInputSource::IsAsynchronous);
+}
+
 VOID UiNavigationController::Poll()
 {
 	PtrApplyAll(_InputSourceCount, _InputSources, &IUiInputSource::Poll);

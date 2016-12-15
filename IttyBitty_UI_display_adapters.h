@@ -19,6 +19,10 @@
 #include "HardwareSerial.h"
 
 
+// SUPRESS COMPILER WARNINGS RELATED TO NON-VIRTUAL DESTRUCTORS
+IGNORE_WARNING(delete-non-virtual-dtor);
+
+
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
@@ -50,18 +54,28 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR/DESTRUCTOR
+
+		SerialUiRenderer(HardwareSerial *);
+
+		VIRTUAL ~SerialUiRenderer();
+
+
 		// [Print] IMPLEMENTATION
 
 		VIRTUAL SIZE write(BYTE);
+
+
+		// [IUiRenderer] IMPLEMENTATION
+
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
 
 
 		// [IUiRenderer] OVERRIDES
 
 		CBOOL Available();
 		VOID Flush();
-
-		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
-		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
 
 
 	protected:
@@ -83,58 +97,179 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR/DESTRUCTOR
+
+		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd) : _LCD(lcd) { }
+
+		VIRTUAL ~LcdI2CUiRenderer()
+		{
+			if (_LCD)
+			{
+				delete _LCD;
+				_LCD = NULL;
+			}
+		}
+
+
 		// [Print] IMPLEMENTATION
 
-		VIRTUAL SIZE write(BYTE);
+		VIRTUAL SIZE write(BYTE value)
+		{
+			return _LCD->write(value);
+		}
+
+
+		// [IUiRenderer] IMPLEMENTATION
+
+		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return _LCD->PrintString(str, col, row);
+		}
+
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return _LCD->PrintString_P(flashStr, col, row);
+		}
 
 
 		// [IUiRenderer] OVERRIDES
 
-		CBYTE Cols() const;
-		CBYTE Rows() const;
+		CBOOL UseLcdChars() const
+		{
+			return TRUE;
+		}
 
-		CBOOL IsLineWrapEnabled() const;
-		VOID SetLineWrap(CBOOL = TRUE);
+		CBYTE Cols() const
+		{
+			return LineChars;
+		}
 
-		VOID CursorOn();
-		VOID CursorOff();
+		CBYTE Rows() const
+		{
+			return Lines;
+		}
 
-		VOID CursorBlinkOn();
-		VOID CursorBlinkOff();
+		CBOOL IsLineWrapEnabled() const
+		{
+			return _LCD->IsLineWrapEnabled();
+		}
 
-		CBYTE CursorCol();
-		CBYTE CursorRow();
+		VOID SetLineWrap(CBOOL wrapLines = TRUE)
+		{
+			_LCD->SetLineWrap(wrapLines);
+		}
 
-		CBOOL Available();
+		VOID CursorOn()
+		{
+			_LCD->CursorOn();
+		}
 
-		VOID Clear();
-		VOID ClearCol(CBYTE = MAX_BYTE);
-		VOID ClearRow(CBYTE = MAX_BYTE);
+		VOID CursorOff()
+		{
+			_LCD->CursorOff();
+		}
 
-		VOID ScrollLeft();
-		VOID ScrollRight();
+		VOID CursorBlinkOn()
+		{
+			_LCD->CursorBlinkOn();
+		}
 
-		VOID Home();
-		VOID CursorPrev();
-		VOID CursorNext();
-		VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
+		VOID CursorBlinkOff()
+		{
+			_LCD->CursorBlinkOff();
+		}
 
-		VOID LoadCustomChar(BYTE, PCBYTE);
-		VOID LoadCustomChar_P(BYTE, PCBYTE);
+		CBYTE CursorCol()
+		{
+			return _LCD->CursorCol();
+		}
 
-		CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
+		CBYTE CursorRow()
+		{
+			return _LCD->CursorRow();
+		}
 
-		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
-		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+		VOID Clear()
+		{
+			_LCD->Clear();
+		}
 
-		CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
-		CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+		VOID ClearCol(CBYTE col = MAX_BYTE)
+		{
+			_LCD->ClearRow(col);
+		}
+
+		VOID ClearRow(CBYTE row = MAX_BYTE)
+		{
+			_LCD->ClearRow(row);
+		}
+
+		VOID ScrollLeft()
+		{
+			_LCD->ScrollLeft();
+		}
+
+		VOID ScrollRight()
+		{
+			_LCD->ScrollRight();
+		}
+
+		VOID Home()
+		{
+			_LCD->Home();
+		}
+
+		VOID CursorPrev()
+		{
+			_LCD->CursorPrev();
+		}
+
+		VOID CursorNext()
+		{
+			_LCD->CursorNext();
+		}
+
+		VOID MoveCursor(CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		{
+			_LCD->MoveCursor(col, row);
+		}
+
+		VOID LoadCustomChar(BYTE charIndex, PCBYTE charData)
+		{
+			_LCD->LoadCustomChar(charIndex, charData);
+		}
+
+		VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
+		{
+			_LCD->LoadCustomChar_P(charIndex, charDataAddr);
+		}
+
+		CBYTE WriteAt(CBYTE value, CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		{
+			return _LCD->WriteAt(value, col, row);
+		}
+
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
-		VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
-		VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
-	#endif
+
+		VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
+		{
+			_LCD->DrawScrollBar(percentage, options);
+		}
+
+		VOID DrawGraph(BYTE startCol, BYTE row,
+			BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
+		{
+			_LCD->DrawGraph(startCol, row, widthChars, percentage, options);
+		}
+
+		VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
+			BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw = FALSE)
+		{
+			_LCD->DrawSlider(startCol, row, widthChars, percentage, options, redraw);
+		}
+
+	#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
 
 
 	protected:

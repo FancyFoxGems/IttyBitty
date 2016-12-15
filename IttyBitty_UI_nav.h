@@ -17,22 +17,6 @@
 IGNORE_WARNING(reorder)
 
 
-#pragma region DISPLAY ADAPTER OPTIONS/CONSTANTS
-
-// [SerialUiRenderer] default options
-
-#define MENUI_NAV_SERIAL_MENU_ITEM_GLYPH			'-'
-#define MENUI_NAV_SERIAL_LIST_CHOICE_GLYPH			'*'
-#define MENUI_NAV_SERIAL_CURR_ITEM_GLYPH			'>'
-#define MENUI_NAV_SERIAL_SELECTION_GLYPH			'X'
-#define MENUI_NAV_SERIAL_MULTI_SELECTION_GLYPH		'+'
-
-#define MENUI_NAV_SERIAL_STYLED_LINE_LEFT_GLYPH		'<'
-#define MENUI_NAV_SERIAL_STYLED_LINE_RIGHT_GLYPH	'>'
-
-#pragma endregion
-
-
 namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES

@@ -10,12 +10,11 @@
 #define _ITTYBITTY_UI_DISPLAY_H
 
 
+#include "IttyBitty_UI_options.h"
+
 #ifndef NO_ITTYBITTY_EXTENSIONS
 	#include "IttyBitty_LCD_I2C.h"
-#else
-	#include "IttyBitty_bits.h"
 #endif
-#include "IttyBitty_UI_options.h"
 
 #include "Print.h"
 
@@ -52,6 +51,8 @@ namespace IttyBitty
 
 
 		// ACCESSORS & MUTATORS
+
+		VIRTUAL CBOOL UseLcdChars() const = 0;
 
 		VIRTUAL CBYTE Cols() const = 0;
 		VIRTUAL CBYTE Rows() const = 0;
@@ -94,8 +95,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE) = 0;
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE) = 0;
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE) = 0;
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0) = 0;
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0) = 0;
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) = 0;
@@ -118,6 +119,8 @@ namespace IttyBitty
 	public:
 
 		// [IUiRenderer] IMPLEMENTATION
+
+		VIRTUAL CBOOL UseLcdChars() const;
 
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
@@ -154,11 +157,8 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
 
-		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
-
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
@@ -200,10 +200,11 @@ namespace IttyBitty
 
 		// [Print] IMPLEMENTATION
 
-		VIRTUAL SIZE write(BYTE);
-		VIRTUAL SIZE write(PCBYTE buffer, SIZE size);
+		SIZE write(BYTE);
 
 		// [Print] OVERRIDES
+
+		SIZE write(PCBYTE buffer, SIZE size);
 
 		SIZE print(FLASH_STRING);
 		SIZE print(CONST String &);
@@ -235,6 +236,8 @@ namespace IttyBitty
 
 
 		// [IUiRenderer] IMPLEMENTATION
+
+		VIRTUAL CBOOL UseLcdChars() const;
 
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
@@ -274,8 +277,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
