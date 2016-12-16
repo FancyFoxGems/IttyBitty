@@ -65,10 +65,16 @@ namespace IttyBitty
 
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL CBYTE Height() const = 0;
 		VIRTUAL CBYTE Width() const = 0;
-		VIRTUAL CBYTE TopOffset() const = 0;
-		VIRTUAL CBYTE LeftOffset() const = 0;
+		VIRTUAL CBYTE Height() const = 0;
+
+		VIRTUAL CBYTE GetLeft() const = 0;
+		VIRTUAL VOID SetLeft(CBYTE) = 0;
+
+		VIRTUAL CBYTE GetTop() const = 0;
+		VIRTUAL VOID SetTop(CBYTE) = 0;
+
+		VIRTUAL PCCHAR GetLabel() const = 0;
 
 
 		// INTERFACE METHODS
@@ -106,8 +112,13 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE ChildCount() const = 0;
 
-		VIRTUAL CONST TElement & Child(CBYTE) const = 0;
-		VIRTUAL TElement & Child(CBYTE) = 0;
+		VIRTUAL CONST TElement & Child(CBYTE = 0) const = 0;
+		VIRTUAL TElement & Child(CBYTE = 0) = 0;
+
+		VIRTUAL TElement & AddChild(TElement &);
+
+		VIRTUAL VOID RemoveChild(CBYTE);
+		VIRTUAL VOID RemoveChild(TElement &);
 
 
 		// INTERFACE METHODS
@@ -199,6 +210,22 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTORS/DESTRUCTOR
+
+		UiElementBase(CBYTE, CBYTE, CBYTE = 0, CBYTE = 0);
+
+		VIRTUAL ~UiElementBase();
+
+
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
 		// [IUiNavigationListener] IMPLEMENTATION
 
 		VIRTUAL VOID IsShiftOn();
@@ -213,17 +240,31 @@ namespace IttyBitty
 
 		// [IUiElement] IMPLEMENTATION
 
-		VIRTUAL CBYTE Height() const;
 		VIRTUAL CBYTE Width() const;
-		VIRTUAL CBYTE TopOffset() const;
-		VIRTUAL CBYTE LeftOffset() const;
+		VIRTUAL CBYTE Height() const;
+
+		VIRTUAL CBYTE GetLeft() const;
+		VIRTUAL VOID SetLeft(CBYTE);
+
+		VIRTUAL CBYTE GetTop() const ;
+		VIRTUAL VOID SetTop(CBYTE);
 
 		VIRTUAL VOID Render(PIUIRENDERER);
+
+		VIRTUAL PCCHAR GetLabel() const;
 
 
 	protected:
 
 		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
+
+		CBYTE _Width = 0;
+		CBYTE _Height = 0;
+
+		CBYTE _Left = 0;
+		CBYTE _Top = 0;
 	};
 
 #pragma endregion

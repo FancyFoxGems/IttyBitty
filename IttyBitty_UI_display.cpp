@@ -36,12 +36,18 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 
 #pragma region [UiRendererBase] IMPLEMENTATION
 
-// [IUiRenderer] (NON-)IMPLEMENTATION
+// CONSTRUCTORS
 
-CBOOL UiRendererBase::UseLcdChars() const
+UiRendererBase::UiRendererBase(CBOOL useLcdDefaultOptions)
 {
-	return FALSE;
+	if (useLcdDefaultOptions)
+		Options = MUI::GetDefaultLcdUiRendererOptions();
 }
+
+UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options) { }
+
+
+// [IUiRenderer] (NON-)IMPLEMENTATION
 
 CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
 
@@ -56,6 +62,71 @@ VOID UiRendererBase::CursorOff() { }
 VOID UiRendererBase::CursorBlinkOn() { }
 
 VOID UiRendererBase::CursorBlinkOff() { }
+//
+//CCHAR UiRendererBase::StyledLineLeftGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdStyledLineLeftGlyph;
+//
+//	return Options.StyledLineLeftGlyph;
+//}
+//
+//CCHAR UiRendererBase::StyledLineRightGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdStyledLineRightGlyph;
+//
+//	return Options.StyledLineRightGlyph;
+//}
+//
+//CCHAR UiRendererBase::MenuItemGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdMenuItemGlyph;
+//
+//	return Options.MenuItemGlyph;
+//}
+//
+//CCHAR UiRendererBase::ListChoiceGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdListChoiceGlyph;
+//
+//	return Options.ListChoiceGlyph;
+//}
+//
+//CCHAR UiRendererBase::CurrItemGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdCurrItemGlyph;
+//
+//	return Options.CurrItemGlyph;
+//}
+//
+//CCHAR UiRendererBase::SelectionGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdSelectionGlyph;
+//
+//	return Options.SelectionGlyph;
+//}
+//
+//CCHAR UiRendererBase::MultiSelectionGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdMultiSelectionGlyph;
+//
+//	return Options.MultiSelectionGlyph;
+//}
+//
+//CCHAR UiRendererBase::ValueSeparatorGlyph() const
+//{
+//	if (this->IsLcdBased())
+//		return Options.LcdValueSeparatorGlyph;
+//
+//	return Options.ValueSeparatorGlyph;
+//}
+
 
 CBOOL UiRendererBase::Available() { return TRUE; }
 
@@ -88,30 +159,40 @@ CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 	return (BYTE)this->write(value);
 }
 
-CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, CHAR leftGlyph, CHAR rightGlyph, BYTE row, CBYTE margin)
+CBYTE UiRendererBase::PrintString(PCCHAR str, BYTE col, BYTE row)
+{
+	return this->print(str);
+}
+
+CBYTE UiRendererBase::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
+{
+	return this->print(flashStr);
+}
+
+CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
 {
 	this->ClearRow(row);
 	this->MoveCursor(0, row);
 
 	BYTE strLen = strlen(str);
-	BYTE leftGlyphNum = (this->Cols() - strLen) / 2 - margin;
-	BYTE rightGlyphNum = this->Cols() - leftGlyphNum - strLen - margin;
+	BYTE leftGlyphNum = (this->Cols() - strLen) / 2 - Options.StyledLineMargins;
+	BYTE rightGlyphNum = this->Cols() - leftGlyphNum - strLen - Options.StyledLineMargins;
 
 	CHAR glyphs[rightGlyphNum + 1];
-	memset(glyphs, leftGlyph, leftGlyphNum);
+	memset(glyphs, this->StyledLineLeftGlyph(), leftGlyphNum);
 	glyphs[leftGlyphNum] = '\0';
 
 	BYTE charsWritten = this->print(glyphs);
 
-	for (BYTE i = 0; i < margin; i++)
+	for (BYTE i = 0; i < Options.StyledLineMargins; i++)
 		charsWritten += this->print(' ');
 
 	charsWritten += this->print(str);
 
-	for (BYTE i = 0; i < margin; i++)
+	for (BYTE i = 0; i < Options.StyledLineMargins; i++)
 		charsWritten += this->print(' ');
 
-	memset(glyphs, rightGlyph, rightGlyphNum);
+	memset(glyphs, this->StyledLineRightGlyph(), rightGlyphNum);
 	glyphs[rightGlyphNum] = '\0';
 
 	charsWritten += this->print(glyphs);
@@ -119,7 +200,7 @@ CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, CHAR leftGlyph, CHAR rightGlyp
 	return charsWritten;
 }
 
-CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, CHAR leftGlyph, CHAR rightGlyph, BYTE row, CBYTE margin)
+CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
 	BYTE strLen = 0;
 
@@ -141,7 +222,7 @@ CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, CHAR leftGlyph, C
 
 	str[strLen] = '\0';
 
-	return this->PrintStyledLine(str, leftGlyph, rightGlyph, row, margin);
+	return this->PrintStyledLine(str, row);
 }
 
 
@@ -161,9 +242,9 @@ VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL)
 #pragma region [UiDisplayController] IMPLEMENTATION
 
 UiDisplayController::UiDisplayController(CBYTE rendererCount, PPIUIRENDERER renderers)
-	: _RendererCount(rendererCount), _Renderers(renderers) { }
+	: _Dispose(FALSE), _RendererCount(rendererCount), _Renderers(renderers) { }
 
-UiDisplayController::UiDisplayController(RIUIRENDERER renderer) : _RendererCount(1)
+UiDisplayController::UiDisplayController(RIUIRENDERER renderer) : _Dispose(TRUE), _RendererCount(1)
 {
 	_Renderers = new PIUIRENDERER[1];
 	_Renderers[0] = &renderer;
@@ -171,7 +252,18 @@ UiDisplayController::UiDisplayController(RIUIRENDERER renderer) : _RendererCount
 
 UiDisplayController::~UiDisplayController()
 {
-	if (_Renderers)
+	this->Dispose();
+}
+
+
+// PROTECTED DISPOSAL METHOD
+
+VOID UiDisplayController::Dispose()
+{
+	if (!_Renderers)
+		return;
+
+	if (_Dispose)
 	{
 		for (BYTE i = 0; i < _RendererCount; i++)
 		{
@@ -181,12 +273,10 @@ UiDisplayController::~UiDisplayController()
 				_Renderers[i] = NULL;
 			}
 		}
-
-		delete _Renderers;
-		_Renderers = NULL;
-
-		_RendererCount = 0;
 	}
+
+	delete _Renderers;
+	_Renderers = NULL;
 }
 
 
@@ -209,7 +299,7 @@ PIUIRENDERER UiDisplayController::operator[](CBYTE i)
 }
 
 
-// ACCESSORS
+// ACCESSORS/MUTATORS
 
 CBYTE UiDisplayController::RendererCount() const
 {
@@ -224,6 +314,54 @@ RCIUIRENDERER UiDisplayController::Renderer(CBYTE i) const
 RIUIRENDERER UiDisplayController::Renderer(CBYTE i)
 {
 	return *this->operator[](i);
+}
+
+RIUIRENDERER UiDisplayController::AddRenderer(RIUIRENDERER renderer)
+{
+	PPIUIRENDERER newRenderers = new PIUIRENDERER[++_RendererCount];
+
+	for (BYTE i = 0; i < _RendererCount - 1; i++)
+		newRenderers[i] = _Renderers[i];
+
+	newRenderers[_RendererCount - 1] = &renderer;
+
+	this->Dispose();
+
+	_Renderers = newRenderers;
+
+	return renderer;
+}
+
+VOID UiDisplayController::RemoveRenderer(CBYTE rendererIdx)
+{
+	PPIUIRENDERER newRenderers = new PIUIRENDERER[--_RendererCount];
+	BYTE currIdx = 0;
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (currIdx != rendererIdx)
+			newRenderers[currIdx++] = _Renderers[i];
+	}
+
+	this->Dispose();
+
+	_Renderers = newRenderers;
+}
+
+VOID UiDisplayController::RemoveRenderer(RIUIRENDERER renderer)
+{
+	PPIUIRENDERER newRenderers = new PIUIRENDERER[--_RendererCount];
+	BYTE currIdx = 0;
+
+	for (BYTE i = 0; i < _RendererCount; i++)
+	{
+		if (_Renderers[i] != &renderer)
+			newRenderers[currIdx++] = _Renderers[i];
+	}
+
+	this->Dispose();
+
+	_Renderers = newRenderers;
 }
 
 
@@ -511,13 +649,7 @@ INT UiDisplayController::printf(FLASH_STRING format, ...)
 }
 
 
-
-// [IUiRenderer] IMPLEMENTATION
-
-CBOOL UiDisplayController::UseLcdChars() const
-{
-	return PtrAll(_RendererCount, _Renderers, &IUiRenderer::UseLcdChars);
-}
+// [IUiRenderer] OVERRIDES
 
 CBYTE UiDisplayController::Cols() const
 {
@@ -666,20 +798,20 @@ CBYTE UiDisplayController::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE r
 	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
 }
 
-CBYTE UiDisplayController::PrintStyledLine(PCCHAR str, CHAR leftGlyph, CHAR rightGlyph, BYTE row, CBYTE margin)
+CBYTE UiDisplayController::PrintStyledLine(PCCHAR str, BYTE row)
 {
 	BYTE results[_RendererCount];
 
-	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine, str, leftGlyph, rightGlyph, row, margin);
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine, str, row);
 
 	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
 }
 
-CBYTE UiDisplayController::PrintStyledLine_P(FLASH_STRING flashStr, CHAR leftGlyph, CHAR rightGlyph, BYTE row, CBYTE margin)
+CBYTE UiDisplayController::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
 	BYTE results[_RendererCount];
 
-	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine_P, flashStr, leftGlyph, rightGlyph, row, margin);
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine_P, flashStr, row);
 
 	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
 }

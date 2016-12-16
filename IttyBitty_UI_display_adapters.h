@@ -56,7 +56,8 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		SerialUiRenderer(HardwareSerial *);
+		SerialUiRenderer(HardwareSerial * = & SERIAL_PORT_MONITOR);
+		SerialUiRenderer(RUIRENDEREROPTIONS, HardwareSerial * = & SERIAL_PORT_MONITOR);
 
 		VIRTUAL ~SerialUiRenderer();
 
@@ -64,12 +65,6 @@ namespace IttyBitty
 		// [Print] IMPLEMENTATION
 
 		VIRTUAL SIZE write(BYTE);
-
-
-		// [IUiRenderer] IMPLEMENTATION
-
-		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
 
 
 		// [IUiRenderer] OVERRIDES
@@ -99,7 +94,10 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd) : _LCD(lcd) { }
+		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd) : UiRendererBase(TRUE), _LCD(lcd) { }
+
+		LcdI2CUiRenderer(RUIRENDEREROPTIONS options,
+			PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd) : UiRendererBase(options), _LCD(lcd) { }
 
 		VIRTUAL ~LcdI2CUiRenderer()
 		{
@@ -119,25 +117,7 @@ namespace IttyBitty
 		}
 
 
-		// [IUiRenderer] IMPLEMENTATION
-
-		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
-		{
-			return _LCD->PrintString(str, col, row);
-		}
-
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
-		{
-			return _LCD->PrintString_P(flashStr, col, row);
-		}
-
-
 		// [IUiRenderer] OVERRIDES
-
-		CBOOL UseLcdChars() const
-		{
-			return TRUE;
-		}
 
 		CBYTE Cols() const
 		{
@@ -247,6 +227,16 @@ namespace IttyBitty
 		CBYTE WriteAt(CBYTE value, CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
 		{
 			return _LCD->WriteAt(value, col, row);
+		}
+
+		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return _LCD->PrintString(str, col, row);
+		}
+
+		CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		{
+			return _LCD->PrintString_P(flashStr, col, row);
 		}
 
 

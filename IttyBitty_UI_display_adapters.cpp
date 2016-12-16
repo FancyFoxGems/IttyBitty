@@ -19,7 +19,9 @@ using namespace IttyBitty;
 
 // CONSTRUCTOR/DESTRUCTOR
 
-SerialUiRenderer::SerialUiRenderer(HardwareSerial * serial) : _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer(HardwareSerial * serial) : UiRendererBase(), _Serial(serial) { }
+
+SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options, HardwareSerial * serial) : UiRendererBase(options), _Serial(serial) { }
 
 SerialUiRenderer::~SerialUiRenderer()
 {
@@ -36,19 +38,6 @@ SerialUiRenderer::~SerialUiRenderer()
 SIZE SerialUiRenderer::write(BYTE value)
 {
 	return _Serial->write(value);
-}
-
-
-// [IUiRenderer] IMPLEMENTATION
-
-CBYTE SerialUiRenderer::PrintString(PCCHAR str, BYTE col, BYTE row)
-{
-	return _Serial->print(str);
-}
-
-CBYTE SerialUiRenderer::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
-{
-	return _Serial->print(flashStr);
 }
 
 

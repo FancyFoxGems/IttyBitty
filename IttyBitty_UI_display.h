@@ -50,9 +50,7 @@ namespace IttyBitty
 		VIRTUAL ~IUiRenderer() { }
 
 
-		// ACCESSORS & MUTATORS
-
-		VIRTUAL CBOOL UseLcdChars() const = 0;
+		// ACCESSORS/MUTATORS
 
 		VIRTUAL CBYTE Cols() const = 0;
 		VIRTUAL CBYTE Rows() const = 0;
@@ -68,6 +66,15 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE CursorCol() = 0;
 		VIRTUAL CBYTE CursorRow() = 0;
+
+		VIRTUAL CCHAR StyledLineLeftGlyph() const = 0;
+		VIRTUAL CCHAR StyledLineRightGlyph() const = 0;
+		VIRTUAL CCHAR MenuItemGlyph() const = 0;
+		VIRTUAL CCHAR ListChoiceGlyph() const = 0;
+		VIRTUAL CCHAR CurrItemGlyph() const = 0;
+		VIRTUAL CCHAR SelectionGlyph() const = 0;
+		VIRTUAL CCHAR MultiSelectionGlyph() const = 0;
+		VIRTUAL CCHAR ValueSeparatorGlyph() const = 0;
 
 
 		// INTERFACE METHODS
@@ -95,8 +102,8 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE) = 0;
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE) = 0;
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0) = 0;
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0) = 0;
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE) = 0;
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE) = 0;
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) = 0;
@@ -118,9 +125,18 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiRenderer] IMPLEMENTATION
+		// PUBLIC [UiOptions] MEMBER
 
-		VIRTUAL CBOOL UseLcdChars() const;
+		RUIRENDEREROPTIONS Options = MUI::DefaultUiRendererOptions;
+
+
+		// CONSTRUCTORS
+
+		UiRendererBase(CBOOL = FALSE);
+		UiRendererBase(RUIRENDEREROPTIONS);
+
+
+		// [IUiRenderer] IMPLEMENTATION
 
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
@@ -136,6 +152,15 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE CursorCol();
 		VIRTUAL CBYTE CursorRow();
+
+		VIRTUAL CCHAR StyledLineLeftGlyph() const;
+		VIRTUAL CCHAR StyledLineRightGlyph() const;
+		VIRTUAL CCHAR MenuItemGlyph() const;
+		VIRTUAL CCHAR ListChoiceGlyph() const;
+		VIRTUAL CCHAR CurrItemGlyph() const;
+		VIRTUAL CCHAR SelectionGlyph() const;
+		VIRTUAL CCHAR MultiSelectionGlyph() const;
+		VIRTUAL CCHAR ValueSeparatorGlyph() const;
 
 		VIRTUAL CBOOL Available();
 		VIRTUAL VOID Flush();
@@ -157,8 +182,11 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
+		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
@@ -172,7 +200,7 @@ namespace IttyBitty
 
 #pragma region [UiDisplayController] DEFINITION
 
-	CLASS UiDisplayController : public IUiRenderer
+	CLASS UiDisplayController : public UiRendererBase
 	{
 	public:
 
@@ -184,18 +212,32 @@ namespace IttyBitty
 		VIRTUAL ~UiDisplayController();
 
 
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
 		// OPERATORS
 
-		PCIUIRENDERER operator[](CBYTE) const;
-		PIUIRENDERER operator[](CBYTE);
+		VIRTUAL PCIUIRENDERER operator[](CBYTE) const;
+		VIRTUAL PIUIRENDERER operator[](CBYTE);
 
 
-		// ACCESSORS
+		// ACCESSORS/MUTATORS
 
-		CBYTE RendererCount() const;
+		VIRTUAL CBYTE RendererCount() const;
 
-		RCIUIRENDERER Renderer(CBYTE = 0) const;
-		RIUIRENDERER Renderer(CBYTE = 0);
+		VIRTUAL RCIUIRENDERER Renderer(CBYTE = 0) const;
+		VIRTUAL RIUIRENDERER Renderer(CBYTE = 0);
+
+		VIRTUAL RIUIRENDERER AddRenderer(RIUIRENDERER);
+
+		VIRTUAL VOID RemoveRenderer(CBYTE);
+		VIRTUAL VOID RemoveRenderer(RIUIRENDERER);
 
 
 		// [Print] IMPLEMENTATION
@@ -235,61 +277,63 @@ namespace IttyBitty
 		INT printf(FLASH_STRING format, ...);
 
 
-		// [IUiRenderer] IMPLEMENTATION
+		// [IUiRenderer] OVERRIDES
 
-		VIRTUAL CBOOL UseLcdChars() const;
+		CBOOL IsLcdBased() const;
 
-		VIRTUAL CBYTE Cols() const;
-		VIRTUAL CBYTE Rows() const;
+		CBYTE Cols() const;
+		CBYTE Rows() const;
 
-		VIRTUAL CBOOL IsLineWrapEnabled() const;
-		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
+		CBOOL IsLineWrapEnabled() const;
+		VOID SetLineWrap(CBOOL = TRUE);
 
-		VIRTUAL VOID CursorOn();
-		VIRTUAL VOID CursorOff();
+		VOID CursorOn();
+		VOID CursorOff();
 
-		VIRTUAL VOID CursorBlinkOn();
-		VIRTUAL VOID CursorBlinkOff();
+		VOID CursorBlinkOn();
+		VOID CursorBlinkOff();
 
-		VIRTUAL CBYTE CursorCol();
-		VIRTUAL CBYTE CursorRow();
+		CBYTE CursorCol();
+		CBYTE CursorRow();
 
-		VIRTUAL CBOOL Available();
-		VIRTUAL VOID Flush();
+		CBOOL Available();
+		VOID Flush();
 
-		VIRTUAL VOID Clear();
-		VIRTUAL VOID ClearCol(CBYTE = MAX_BYTE);
-		VIRTUAL VOID ClearRow(CBYTE = MAX_BYTE);
+		VOID Clear();
+		VOID ClearCol(CBYTE = MAX_BYTE);
+		VOID ClearRow(CBYTE = MAX_BYTE);
 
-		VIRTUAL VOID ScrollLeft();
-		VIRTUAL VOID ScrollRight();
+		VOID ScrollLeft();
+		VOID ScrollRight();
 
-		VIRTUAL VOID Home();
-		VIRTUAL VOID CursorPrev();
-		VIRTUAL VOID CursorNext();
-		VIRTUAL VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
+		VOID Home();
+		VOID CursorPrev();
+		VOID CursorNext();
+		VOID MoveCursor(CBYTE = MAX_BYTE, CBYTE = MAX_BYTE);
 
-		VIRTUAL VOID LoadCustomChar(BYTE, PCBYTE);
-		VIRTUAL VOID LoadCustomChar_P(BYTE, PCBYTE);
+		VOID LoadCustomChar(BYTE, PCBYTE);
+		VOID LoadCustomChar_P(BYTE, PCBYTE);
 
-		VIRTUAL CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
+		CBYTE WriteAt(CBYTE, CBYTE, CBYTE);
 
-		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
-		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
+		CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
+		CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
+		CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
-		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
-		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
-		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
+		VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
+		VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
+		VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
 
 
 	protected:
 
 		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
 
 		PPIUIRENDERER _Renderers = NULL;
 		BYTE _RendererCount = 0;

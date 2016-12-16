@@ -36,10 +36,10 @@ VOID UiInputSourceBase::Poll() { }
 
 UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener,
 	CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
-	 : _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources) { }
+	 : _Dispose(FALSE), _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources) { }
 
-UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener,
-	RIUIINPUTSOURCE inputSource)  : _NavListener(navListener), _InputSourceCount(1)
+UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener, RIUIINPUTSOURCE inputSource)
+	: _Dispose(TRUE), _NavListener(navListener), _InputSourceCount(1)
 {
 	_InputSources = new PIUIINPUTSOURCE[1];
 	_InputSources[0] = &inputSource;
@@ -47,13 +47,24 @@ UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListene
 
 UiNavigationController::~UiNavigationController()
 {
+	this->Dispose();
+}
+
+
+// PROTECTED DISPOSAL METHOD
+
+VOID UiNavigationController::Dispose()
+{
 	if (_NavListener)
 	{
 		delete _NavListener;
 		_NavListener = NULL;
 	}
 
-	if (_InputSources)
+	if (!_InputSources)
+		return;
+
+	if (_Dispose)
 	{
 		for (BYTE i = 0; i < _InputSourceCount; i++)
 		{
@@ -63,12 +74,10 @@ UiNavigationController::~UiNavigationController()
 				_InputSources[i] = NULL;
 			}
 		}
-
-		delete _InputSources;
-		_InputSources = NULL;
-
-		_InputSourceCount = 0;
 	}
+
+	delete _InputSources;
+	_InputSources = NULL;
 }
 
 
@@ -91,7 +100,7 @@ PIUIINPUTSOURCE UiNavigationController::operator[](CBYTE i)
 }
 
 
-// ACCESSORS
+// ACCESSORS/MUTATORS
 
 CBYTE UiNavigationController::InputSourceCount() const
 {
@@ -106,6 +115,57 @@ RCIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i) const
 RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 {
 	return *this->operator[](i);
+}
+
+RIUIINPUTSOURCE UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
+{
+	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[++_InputSourceCount];
+
+	for (BYTE i = 0; i < _InputSourceCount - 1; i++)
+		newInputSources[i] = _InputSources[i];
+
+	newInputSources[_InputSourceCount - 1] = &inputSource;
+
+	if (_InputSources)
+		delete[] _InputSources;
+
+	_InputSources = newInputSources;
+
+	return inputSource;
+}
+
+VOID UiNavigationController::RemoveInputSource(CBYTE inputSourceIdx)
+{
+	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[--_InputSourceCount];
+	BYTE currIdx = 0;
+
+	for (BYTE i = 0; i < _InputSourceCount; i++)
+	{
+		if (currIdx != inputSourceIdx)
+			newInputSources[currIdx++] = _InputSources[i];
+	}
+
+	if (_InputSources)
+		delete[] _InputSources;
+
+	_InputSources = newInputSources;
+}
+
+VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
+{
+	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[--_InputSourceCount];
+	BYTE currIdx = 0;
+
+	for (BYTE i = 0; i < _InputSourceCount; i++)
+	{
+		if (_InputSources[i] != &inputSource)
+			newInputSources[currIdx++] = _InputSources[i];
+	}
+
+	if (_InputSources)
+		delete[] _InputSources;
+
+	_InputSources = newInputSources;
 }
 
 

@@ -146,18 +146,32 @@ namespace IttyBitty
 		VIRTUAL ~UiNavigationController();
 
 
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
 		// OPERATORS
 
-		PCIUIINPUTSOURCE operator[](CBYTE) const;
-		PIUIINPUTSOURCE operator[](CBYTE);
+		VIRTUAL PCIUIINPUTSOURCE operator[](CBYTE) const;
+		VIRTUAL PIUIINPUTSOURCE operator[](CBYTE);
 
 
-		// ACCESSORS
+		// ACCESSORS/MUTATORS
 
-		CBYTE InputSourceCount() const;
+		VIRTUAL CBYTE InputSourceCount() const;
 
-		RCIUIINPUTSOURCE InputSource(CBYTE = 0) const;
-		RIUIINPUTSOURCE InputSource(CBYTE = 0);
+		VIRTUAL RCIUIINPUTSOURCE InputSource(CBYTE = 0) const;
+		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0);
+
+		VIRTUAL RIUIINPUTSOURCE AddInputSource(RIUIINPUTSOURCE);
+
+		VIRTUAL VOID RemoveInputSource(CBYTE);
+		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
 
 
 		// [IUiInputSource] IMPLEMENTATION
@@ -190,6 +204,8 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
 
 		PIUINAVIGATIONLISTENER _NavListener = NULL;
 

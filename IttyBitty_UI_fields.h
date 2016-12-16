@@ -319,6 +319,15 @@ namespace IttyBitty
 		VIRTUAL ~ListUiField();
 
 
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
 		// [IUiContainerElement] IMPLEMENTATION
 
 		VIRTUAL PCLISTUIFIELDCHOICE operator[](CBYTE) const;
@@ -326,8 +335,13 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE ChildCount() const;
 
-		VIRTUAL RCLISTUIFIELDCHOICE Child(CBYTE) const;
-		VIRTUAL RLISTUIFIELDCHOICE Child(CBYTE);
+		VIRTUAL RCLISTUIFIELDCHOICE Child(CBYTE = 0) const;
+		VIRTUAL RLISTUIFIELDCHOICE Child(CBYTE = 0);
+
+		VIRTUAL RLISTUIFIELDCHOICE AddChild(RLISTUIFIELDCHOICE);
+
+		VIRTUAL VOID RemoveChild(CBYTE);
+		VIRTUAL VOID RemoveChild(RLISTUIFIELDCHOICE);
 
 
 		// [IUiListElement] IMPLEMENTATION
@@ -339,6 +353,8 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
 
 		BOOL _AllowMultipleSelections = FALSE;
 

@@ -234,6 +234,9 @@ Message::~Message()
 	this->Dispose();
 }
 
+
+// PROTECTED DISPOSAL METHOD
+
 VOID Message::Dispose()
 {
 	if (!_Params)
@@ -253,8 +256,6 @@ VOID Message::Dispose()
 
 	delete[] _Params;
 	_Params = NULL;
-
-	_ParamCount = 0;
 }
 
 

@@ -67,9 +67,10 @@
 #define LCD_WAIT_INIT_1_uS				4500	// > 4.1 ms: minimum time for delay after first init command
 #define LCD_WAIT_INIT_2_uS				150		// > 100 us: minimum time for delay after second init command
 
-#define LCD_WAIT_CMD_HOME_uS			1483	// > (1,520 us - 37 us) = > 1,483 us: minimum execution time of "cursor home" command
+#define LCD_WAIT_CMD_HOME_CLEAR_uS		1483	// > (1,520 us - 37 us) = > 1,483 us: minimum execution time of "cursor home" and "clear display" commands
 
-#define LCD_WAIT_BUSY_DELAY_uS			50		// Delay period when Busy Flag is set (before checking again)
+#define LCD_WAIT_BUSY_DELAY_uS			10		// Delay period when Busy Flag is set (before checking again)
+#define LCD_WAIT_AC_UPDATE_DELAY_uS		4		// Delay period after Busy Flag is unset until Address Counter is updated
 
 
 // LCD CONTROLLER / I2C INTERFACE BIT-FLAGS & MASKS (HD44780-based display pins, relative to I2C I/O expander bits)
@@ -337,8 +338,13 @@ namespace IttyBitty
 		{
 			if (!_IsInitializing)
 			{
-				while (this->IsBusy())
-					delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
+				if (this->IsBusy())
+				{
+					while (this->IsBusy())
+						delayMicroseconds(LCD_WAIT_BUSY_DELAY_uS);
+
+					delayMicroseconds(LCD_WAIT_AC_UPDATE_DELAY_uS);
+				}
 			}
 
 			if (_Use8BitInterface)
@@ -538,7 +544,7 @@ namespace IttyBitty
 		}
 
 
-		// ACCESSORS & MUTATORS
+		// ACCESSORS/MUTATORS
 
 		CBOOL IsLineWrapEnabled()
 		{
@@ -768,6 +774,8 @@ namespace IttyBitty
 		VOID Clear()
 		{
 			this->Send(LCD_CMD_CLEAR_DISPLAY);
+
+			delayMicroseconds(LCD_WAIT_CMD_HOME_CLEAR_uS);
 		}
 
 		VOID Home()
@@ -777,7 +785,7 @@ namespace IttyBitty
 
 			this->Send(LCD_CMD_CURSOR_HOME);
 
-			delayMicroseconds(LCD_WAIT_CMD_HOME_uS);
+			delayMicroseconds(LCD_WAIT_CMD_HOME_CLEAR_uS);
 		}
 
 		VOID MoveCursor(BYTE col, BYTE row)

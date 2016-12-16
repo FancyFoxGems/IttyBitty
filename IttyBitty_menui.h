@@ -44,14 +44,14 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenUI(CBYTE, CBYTE, CBYTE, PPIMENUITEM, CBOOL = TRUE);
-		MenUI(CBYTE cols, CBYTE rows, CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY, CBOOL useGlobalOptions = TRUE);
+		MenUI(CBYTE, PPIMENUITEM, CBOOL = TRUE);
+		MenUI(CBYTE initMenuCapacity = MENUI_DEFAULT_MENU_CAPACITY, CBOOL useGlobalOptions = TRUE);
 
 
 		// ACCESSORS/MUTATORS
 
-		PUIDISPLAYCONTROLLER Display();
 		PUINAVIGATIONCONTROLLER Navigation();
+		PUIDISPLAYCONTROLLER Display();
 
 		VOID SetIdleCallback(PUICALLBACK onIdleCallback);
 
@@ -77,6 +77,26 @@ namespace IttyBitty
 
 			return T(T_MAX);
 		}
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		CBOOL IsShiftOn() const;
+		VOID ToggleShift();
+		VOID ShiftOn();
+		VOID ShiftOff();
+
+		CBOOL IsAltOn() const;
+		VOID ToggleAlt();
+		VOID AltOn();
+		VOID AltOff();
+
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 		// [IUiRenderer] IMPLEMENTATION
@@ -118,34 +138,14 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintString(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE);
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING, BYTE col = MAX_BYTE, BYTE = MAX_BYTE);
 
-		VIRTUAL CBYTE PrintStyledLine(PCCHAR, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
-		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, CHAR, CHAR, BYTE = MAX_BYTE, CBYTE = 0);
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
 		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
 		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
-
-
-		// [IUiNavigationListener] OVERRIDES
-
-		CBOOL IsShiftOn() const;
-		VOID ToggleShift();
-		VOID ShiftOn();
-		VOID ShiftOff();
-
-		CBOOL IsAltOn() const;
-		VOID ToggleAlt();
-		VOID AltOn();
-		VOID AltOff();
-
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 	protected:

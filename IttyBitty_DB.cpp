@@ -366,8 +366,7 @@ CDBRESULT Database::CreateTable(CSIZE rowSize, PCCHAR tableName, CSIZE dataAlloc
 	for (BYTE i = 0; i < _TableCount - 1; i++)
 		newTables[i] = _Tables[i];
 
-	if (_Tables)
-		delete[] _Tables;
+	this->Dispose();
 
 	_Tables = newTables;
 
@@ -383,8 +382,6 @@ CDBRESULT Database::DropTable(CBYTE tableIdx)
 
 	table->Drop(*this);
 
-	this->Dispose();
-
 	PPIDBTABLE newTables = new PIDBTABLE[--_TableCount];
 	BYTE currIdx = 0;
 
@@ -394,8 +391,7 @@ CDBRESULT Database::DropTable(CBYTE tableIdx)
 			newTables[currIdx++] = _Tables[i];
 	}
 
-	if (_Tables)
-		delete[] _Tables;
+	this->Dispose();
 
 	_Tables = newTables;
 

@@ -85,7 +85,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-
+		PCCHAR _Label = NULL;
 	};
 
 #pragma endregion
@@ -114,7 +114,7 @@ namespace IttyBitty
 
 #pragma region [FieldMenuItem] DEFINITION
 
-	CLASS FieldMenuItem : public MenuItemBase, public IUiField
+	CLASS FieldMenuItem : public UiFieldBase, public IMenuItem //public MenuItemBase, public IUiField
 	{
 	public:
 
@@ -127,7 +127,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-
+		PIUIFIELD _Field = NULL;
 	};
 
 #pragma endregion
@@ -162,6 +162,15 @@ namespace IttyBitty
 		VIRTUAL ~MenuBase();
 
 
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
 		// [IUiListElement] IMPLEMENTATION
 
 		VIRTUAL CONST TMenuItem * operator[](CBYTE) const;
@@ -169,13 +178,20 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE ChildCount() const;
 
-		VIRTUAL CONST TMenuItem & Child(CBYTE) const;
-		VIRTUAL TMenuItem & Child(CBYTE);
+		VIRTUAL CONST TMenuItem & Child(CBYTE = 0) const;
+		VIRTUAL TMenuItem & Child(CBYTE = 0);
+
+		VIRTUAL TMenuItem & AddChild(TMenuItem &);
+
+		VIRTUAL VOID RemoveChild(CBYTE);
+		VIRTUAL VOID RemoveChild(TMenuItem &);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
 
 		PPIMENUITEM _Children = NULL;
 		BYTE _ChildCount = 0;
