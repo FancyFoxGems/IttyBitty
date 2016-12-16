@@ -30,7 +30,7 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(VarLengthField, VARLENGTHFIELD);
 
 
-	#define TYPEDFIELD_T_CLAUSE				<typename T = PBYTE>
+	#define TYPEDFIELD_T_CLAUSE				<typename T = BYTE>
 
 	template TYPEDFIELD_T_CLAUSE
 	class TypedField;
@@ -195,10 +195,19 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RFIELD operator =(RCFIELD);
-		VIRTUAL RFIELD operator =(RRFIELD);
+		RFIELD operator =(RCFIELD);
+		RFIELD operator =(RRFIELD);
 
-		VIRTUAL RFIELD operator =(RVALUE);
+		RFIELD operator =(RCVALUE);
+
+		RFIELD operator =(RCCHAR);
+		RFIELD operator =(RCBYTE);
+		RFIELD operator =(RCBOOL);
+		RFIELD operator =(RCSHORT);
+		RFIELD operator =(RCWORD);
+		RFIELD operator =(RCLONG);
+		RFIELD operator =(RCDWORD);
+		RFIELD operator =(RCFLOAT);
 
 		VIRTUAL operator RCCHAR() const;
 		VIRTUAL operator RCHAR();
@@ -246,6 +255,10 @@ namespace IttyBitty
 		VIRTUAL RVARLENGTHFIELD operator =(RCVARLENGTHFIELD);
 		VIRTUAL RVARLENGTHFIELD operator =(RRVARLENGTHFIELD);
 
+		RVARLENGTHFIELD operator =(PBYTE);
+		RVARLENGTHFIELD operator =(PCHAR);
+		RVARLENGTHFIELD operator =(PBITPACK);
+
 		VIRTUAL operator PCBYTE() const;
 		VIRTUAL operator PBYTE();
 		VIRTUAL operator PCCHAR() const;
@@ -286,7 +299,7 @@ namespace IttyBitty
 		{
 			_Dispose = TRUE;
 
-			_DataType = TypedField<T>::FindDataType();
+			_DataType = FindDataType<T>();
 		}
 
 		TypedField(RCTYPEDFIELD<T> other)
@@ -306,7 +319,7 @@ namespace IttyBitty
 		TypedField(RVALUE value)
 		{
 			_Value = value;
-			_DataType = TypedField<T>::FindDataType();
+			_DataType = FindDataType<T>();
 		}
 
 		EXPLICIT TypedField(T & value)
@@ -327,40 +340,40 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RCTYPEDFIELD<T> rValue)
+		RTYPEDFIELD<T> operator =(RCTYPEDFIELD<T> rValue)
 		{
 			*this = TypedField<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RRTYPEDFIELD<T> rValue)
+		RTYPEDFIELD<T> operator =(RRTYPEDFIELD<T> rValue)
 		{
 			*this = TypedField<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDFIELD<T> operator =(RVALUE rValue)
+		RTYPEDFIELD<T> operator =(CONST T & rValue)
 		{
 			_Value = rValue;
 			return *this;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
+		operator UNSIGNED_TYPE(CONST T &)() const
 		{
 			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(T &)()
+		operator UNSIGNED_TYPE(T &)()
 		{
 			return (UNSIGNED_TYPE(T &))_Value;
 		}
 
-		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
+		operator SIGNED_TYPE(CONST T &)() const
 		{
 			return (SIGNED_TYPE(CONST T &))_Value;
 		}
 
-		VIRTUAL operator SIGNED_TYPE(T &)()
+		operator SIGNED_TYPE(T &)()
 		{
 			return (SIGNED_TYPE(T &))_Value;
 		}
@@ -369,125 +382,6 @@ namespace IttyBitty
 		// META-MEMBERS
 
 		typedef T FieldType;
-
-
-	protected:
-
-		// PROTECTED STATIC FUNCTIONS
-
-		STATIC CONSTEXPR CDATATYPE FindDataType()
-		{
-			return DataType::BYTE_DATUM;
-		}
-	};
-
-#pragma endregion
-
-
-#pragma region TypedField PARTIAL SPECIALIZATIONS
-
-	template<>
-	CLASS TypedField<CHAR>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::CHAR_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<BYTE>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BYTE_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<BOOL>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BOOL_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<SHORT>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::SHORT_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<WORD>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::WORD_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<LONG>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::LONG_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<DWORD>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::DWORD_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedField<FLOAT>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::FLOAT_DATUM;
-			}
 	};
 
 #pragma endregion
@@ -505,7 +399,7 @@ namespace IttyBitty
 		VarLengthTypedField(CSIZE length = 0) : TypedField<T>()
 		{
 			_Value = new T[length];
-			_DataType = VarLengthTypedField<T>::FindDataType();
+			_DataType = FindVarLengthDataType<T>();
 			_Length = length;
 		}
 
@@ -527,7 +421,7 @@ namespace IttyBitty
 		VarLengthTypedField(RCVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
-			_DataType = VarLengthTypedField<T>::FindDataType();
+			_DataType = FindVarLengthDataType<T>();
 
 			if (_DataType == DataType::STRING_DATUM)
 			{
@@ -550,24 +444,14 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
+		operator CONST T() const
 		{
-			return (UNSIGNED_TYPE(CONST T &))_Value;
+			return (CONST T)_Value;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(T &)()
+		operator T()
 		{
-			return (UNSIGNED_TYPE(T &))_Value;
-		}
-
-		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
-		{
-			return (SIGNED_TYPE(CONST T &))_Value;
-		}
-
-		VIRTUAL operator SIGNED_TYPE(T &)()
-		{
-			return (SIGNED_TYPE(T &))_Value;
+			return (T)_Value;
 		}
 
 
@@ -608,61 +492,9 @@ namespace IttyBitty
 		using TypedField<T>::IttyBitty::__datum_buffer;
 
 
-		// PROTECTED STATIC FUNCTIONS
-
-		STATIC CONSTEXPR CDATATYPE FindDataType()
-		{
-			return TypedField<T>::FindDataType();
-		}
-
-
 		// INSTANCE VARIABLES
 
 		SIZE _Length = 0;
-	};
-
-#pragma endregion
-
-
-#pragma region VarLengthTypedField PARTIAL SPECIALIZATIONS
-
-	template<>
-	CLASS VarLengthTypedField<PBYTE>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BYTES_DATUM;
-			}
-	};
-
-	template<>
-	CLASS VarLengthTypedField<PCHAR>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::STRING_DATUM;
-			}
-	};
-
-	template<>
-	CLASS VarLengthTypedField<BOOL>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BIT_DATUM;
-			}
 	};
 
 #pragma endregion

@@ -162,14 +162,14 @@ namespace IttyBitty
 		RVALUE operator =(PCHAR);
 		RVALUE operator =(PBITPACK);
 
-		RVALUE operator =(RCHAR);
-		RVALUE operator =(RBYTE);
-		RVALUE operator =(RBOOL);
-		RVALUE operator =(RSHORT);
-		RVALUE operator =(RWORD);
-		RVALUE operator =(RLONG);
-		RVALUE operator =(RDWORD);
-		RVALUE operator =(RFLOAT);
+		RVALUE operator =(RCCHAR);
+		RVALUE operator =(RCBYTE);
+		RVALUE operator =(RCBOOL);
+		RVALUE operator =(RCSHORT);
+		RVALUE operator =(RCWORD);
+		RVALUE operator =(RCLONG);
+		RVALUE operator =(RCDWORD);
+		RVALUE operator =(RCFLOAT);
 
 		operator PCBYTE() const;
 		operator PBYTE();

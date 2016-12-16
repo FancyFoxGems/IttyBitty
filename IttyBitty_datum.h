@@ -16,6 +16,7 @@
 	#include "Wire.h"
 #endif
 
+#include "IttyBitty_bytes.h"
 #include "IttyBitty_values.h"
 
 
@@ -117,6 +118,90 @@ namespace IttyBitty
 	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE dataType)
 	{
 		return static_cast<CDATATYPEFORMAT>(LOW_NYBBLE((CBYTE)dataType));
+	}
+
+#pragma endregion
+
+
+#pragma region FindDataType<T>() TEMPLATED FUNCTION W/ EXPLICIT SPECIALIZATIONS
+
+	template<typename T>
+	STATIC CONSTEXPR CDATATYPE FindDataType()
+	{
+		return DataType::BYTE_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<CHAR>()
+	{
+		return DataType::CHAR_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<BYTE>()
+	{
+		return DataType::BYTE_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<BOOL>()
+	{
+		return DataType::BOOL_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<SHORT>()
+	{
+		return DataType::SHORT_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<WORD>()
+	{
+		return DataType::WORD_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<LONG>()
+	{
+		return DataType::LONG_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<DWORD>()
+	{
+		return DataType::DWORD_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindDataType<FLOAT>()
+	{
+		return DataType::FLOAT_DATUM;
+	}
+
+
+	template<typename T>
+	STATIC CONSTEXPR CDATATYPE FindVarLengthDataType()
+	{
+		return DataType::BYTE_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindVarLengthDataType<BYTE>()
+	{
+		return DataType::BYTES_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindVarLengthDataType<CHAR>()
+	{
+		return DataType::STRING_DATUM;
+	}
+
+	template<>
+	INLINE CONSTEXPR CDATATYPE FindVarLengthDataType<BITPACK>()
+	{
+		return DataType::BIT_DATUM;
 	}
 
 #pragma endregion
@@ -255,8 +340,11 @@ namespace IttyBitty
 
 		VIRTUAL ~DatumBase()
 		{
-			if (_Dispose AND (_DataType == DataType::BYTES_DATUM
-					OR _DataType == DataType::STRING_DATUM OR _DataType == DataType::BIT_DATUM))
+			if (!_Dispose)
+				return;
+
+			if (_DataType == DataType::BYTES_DATUM OR _DataType == DataType::STRING_DATUM
+					OR _DataType == DataType::BIT_DATUM)
 				_Value.FreeData();
 			else
 				_Value.FreeReference();

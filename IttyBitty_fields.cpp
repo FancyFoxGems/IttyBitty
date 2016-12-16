@@ -432,7 +432,55 @@ RFIELD Field::operator =(RRFIELD rValue)
 	return *this;
 }
 
-RFIELD Field::operator =(RVALUE rValue)
+RFIELD Field::operator =(RCVALUE rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCCHAR rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCBYTE rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCBOOL rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCSHORT rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCWORD rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCLONG rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCDWORD rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RFIELD Field::operator =(RCFLOAT rValue)
 {
 	_Value = rValue;
 	return *this;
@@ -623,6 +671,24 @@ RVARLENGTHFIELD VarLengthField::operator =(RCVARLENGTHFIELD rValue)
 RVARLENGTHFIELD VarLengthField::operator =(RRVARLENGTHFIELD rValue)
 {
 	*this = VarLengthField(rValue);
+	return *this;
+}
+
+RVARLENGTHFIELD VarLengthField::operator =(PBYTE rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RVARLENGTHFIELD VarLengthField::operator =(PCHAR rValue)
+{
+	_Value = rValue;
+	return *this;
+}
+
+RVARLENGTHFIELD VarLengthField::operator =(PBITPACK rValue)
+{
+	_Value = rValue;
 	return *this;
 }
 

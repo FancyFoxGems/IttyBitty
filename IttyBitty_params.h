@@ -166,10 +166,10 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RPARAM operator =(RCPARAM);
-		VIRTUAL RPARAM operator =(RRPARAM);
+		RPARAM operator =(RCPARAM);
+		RPARAM operator =(RRPARAM);
 
-		VIRTUAL RPARAM operator =(RCCONSTVALUE);
+		RPARAM operator =(RCCONSTVALUE);
 
 		VIRTUAL operator RCCHAR() const;
 		VIRTUAL operator RCBYTE() const;
@@ -206,8 +206,8 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RVARLENGTHPARAM operator =(RCVARLENGTHPARAM);
-		VIRTUAL RVARLENGTHPARAM operator =(RRVARLENGTHPARAM);
+		RVARLENGTHPARAM operator =(RCVARLENGTHPARAM);
+		RVARLENGTHPARAM operator =(RRVARLENGTHPARAM);
 
 		VIRTUAL operator PCBYTE() const;
 		VIRTUAL operator PCCHAR() const;
@@ -235,7 +235,7 @@ namespace IttyBitty
 #pragma region [TypedParam] DEFINITION - TEMPLATED TAGGED UNION
 
 	template DEFAULT_T_CLAUSE
-	CLASS TypedParam : public DatumBase<ConstValue>, public IParam
+	CLASS TypedParam : public ParamBase
 	{
 	public:
 
@@ -245,7 +245,7 @@ namespace IttyBitty
 		{
 			_Dispose = TRUE;
 
-			_DataType = TypedParam<T>::FindDataType();
+			_DataType = FindDataType<T>();
 		}
 
 		TypedParam(RCTYPEDPARAM<T> other)
@@ -265,7 +265,7 @@ namespace IttyBitty
 		TypedParam(RCCONSTVALUE value)
 		{
 			_Value = value;
-			_DataType = TypedParam<T>::FindDataType();
+			_DataType = FindDataType<T>();
 		}
 
 		EXPLICIT TypedParam(CONST T & value)
@@ -286,30 +286,30 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL RTYPEDPARAM<T> operator =(RCTYPEDPARAM<T> rValue)
+		RTYPEDPARAM<T> operator =(RCTYPEDPARAM<T> rValue)
 		{
 			*this = TypedParam<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDPARAM<T> operator =(RRTYPEDPARAM<T> rValue)
+		RTYPEDPARAM<T> operator =(RRTYPEDPARAM<T> rValue)
 		{
 			*this = TypedParam<T>(rValue);
 			return *this;
 		}
 
-		VIRTUAL RTYPEDPARAM<T> operator =(RCCONSTVALUE rValue)
+		RTYPEDPARAM<T> operator =(RCCONSTVALUE rValue)
 		{
 			_Value = rValue;
 			return *this;
 		}
 
-		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
+		operator UNSIGNED_TYPE(CONST T &)() const
 		{
 			return (UNSIGNED_TYPE(CONST T &))_Value;
 		}
 
-		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
+		operator SIGNED_TYPE(CONST T &)() const
 		{
 			return (SIGNED_TYPE(CONST T &))_Value;
 		}
@@ -318,125 +318,6 @@ namespace IttyBitty
 		// META-MEMBERS
 
 		typedef T ParamType;
-
-
-	protected:
-
-		// PROTECTED STATIC FUNCTIONS
-
-		STATIC CONSTEXPR CDATATYPE FindDataType()
-		{
-			return DataType::BYTE_DATUM;
-		}
-	};
-
-#pragma endregion
-
-
-#pragma region TypedParam PARTIAL SPECIALIZATIONS
-
-	template<>
-	CLASS TypedParam<CHAR>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::CHAR_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<BYTE>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BYTE_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<BOOL>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BOOL_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<SHORT>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::SHORT_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<WORD>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::WORD_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<LONG>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::LONG_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<DWORD>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::DWORD_DATUM;
-			}
-	};
-
-	template<>
-	CLASS TypedParam<FLOAT>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::FLOAT_DATUM;
-			}
 	};
 
 #pragma endregion
@@ -454,7 +335,7 @@ namespace IttyBitty
 		VarLengthTypedParam(CSIZE length = 0) : TypedParam<T>()
 		{
 			_Value = new T[length];
-			_DataType = VarLengthTypedParam<T>::FindDataType();
+			_DataType = FindVarLengthDataType<T>();
 			_Length = length;
 		}
 
@@ -476,7 +357,7 @@ namespace IttyBitty
 		VarLengthTypedParam(RCCONSTVALUE value, CSIZE length = 0)
 		{
 			_Value = value;
-			_DataType = VarLengthTypedParam<T>::FindDataType();
+			_DataType = FindVarLengthDataType<T>();
 
 			if (_DataType == DataType::STRING_DATUM)
 			{
@@ -499,14 +380,14 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL operator UNSIGNED_TYPE(CONST T &)() const
+		operator CONST T() const
 		{
-			return (UNSIGNED_TYPE(CONST T &))_Value;
+			return (CONST T)_Value;
 		}
 
-		VIRTUAL operator SIGNED_TYPE(CONST T &)() const
+		operator T()
 		{
-			return (SIGNED_TYPE(CONST T &))_Value;
+			return (T)_Value;
 		}
 
 
@@ -547,61 +428,9 @@ namespace IttyBitty
 		using TypedParam<T>::IttyBitty::__datum_buffer;
 
 
-		// PROTECTED STATIC FUNCTIONS
-
-		STATIC CONSTEXPR CDATATYPE FindDataType()
-		{
-			return TypedParam<T>::FindDataType();
-		}
-
-
 		// INSTANCE VARIABLES
 
 		SIZE _Length = 0;
-	};
-
-#pragma endregion
-
-
-#pragma region VarLengthTypedParam PARTIAL SPECIALIZATIONS
-
-	template<>
-	CLASS VarLengthTypedParam<PBYTE>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BYTES_DATUM;
-			}
-	};
-
-	template<>
-	CLASS VarLengthTypedParam<PCHAR>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::STRING_DATUM;
-			}
-	};
-
-	template<>
-	CLASS VarLengthTypedParam<BOOL>
-	{
-	protected:
-
-			// PROTECTED STATIC FUNCTIONS
-
-			STATIC CONSTEXPR CDATATYPE FindDataType()
-			{
-				return DataType::BIT_DATUM;
-			}
 	};
 
 #pragma endregion

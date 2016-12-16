@@ -281,49 +281,49 @@ RVALUE Value::operator =(PBITPACK rValue)
 	return *this;
 }
 
-RVALUE Value::operator =(RCHAR rValue)
+RVALUE Value::operator =(RCCHAR rValue)
 {
 	*this->CharRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RBYTE rValue)
+RVALUE Value::operator =(RCBYTE rValue)
 {
 	*this->ByteRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RBOOL rValue)
+RVALUE Value::operator =(RCBOOL rValue)
 {
 	*this->BoolRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RSHORT rValue)
+RVALUE Value::operator =(RCSHORT rValue)
 {
 	*this->ShortRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RWORD rValue)
+RVALUE Value::operator =(RCWORD rValue)
 {
 	*this->WordRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RLONG rValue)
+RVALUE Value::operator =(RCLONG rValue)
 {
 	*this->LongRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RDWORD rValue)
+RVALUE Value::operator =(RCDWORD rValue)
 {
 	*this->DWordRef = rValue;
 	return *this;
 }
 
-RVALUE Value::operator =(RFLOAT rValue)
+RVALUE Value::operator =(RCFLOAT rValue)
 {
 	*this->FloatRef = rValue;
 	return *this;
@@ -449,7 +449,7 @@ VOID Value::FreeData()
 	{
 		if (*this->BytesRef)
 		{
-			delete[] * this->BytesRef;
+			delete[] *this->BytesRef;
 			*this->BytesRef = NULL;
 		}
 

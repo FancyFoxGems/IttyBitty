@@ -249,9 +249,9 @@ namespace IttyBitty
 		VIRTUAL CBYTE GetTop() const ;
 		VIRTUAL VOID SetTop(CBYTE);
 
-		VIRTUAL VOID Render(PIUIRENDERER);
-
 		VIRTUAL PCCHAR GetLabel() const;
+
+		VIRTUAL VOID Render(PIUIRENDERER);
 
 
 	protected:
