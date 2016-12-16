@@ -26,11 +26,13 @@ namespace IttyBitty
 	class CustomMenuItem;
 	TYPEDEF_CLASS_ALIASES(CustomMenuItem, CUSTOMMENUITEM);
 
+	template DEFAULT_T_CLAUSE
 	class FieldMenuItem;
-	TYPEDEF_CLASS_ALIASES(FieldMenuItem, FIELDMENUITEM);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), CSL(DEFAULT_T_ARGS), FieldMenuItem, FIELDMENUITEM);
 
+	template DEFAULT_T_CLAUSE
 	class MenuField;
-	TYPEDEF_CLASS_ALIASES(MenuField, MENUFIELD);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), CSL(DEFAULT_T_ARGS), MenuField, MENUFIELD);
 
 
 	#define MENU_BASE_T_CLAUSE_DEF		<typename TMenuItem>
@@ -114,7 +116,8 @@ namespace IttyBitty
 
 #pragma region [FieldMenuItem] DEFINITION
 
-	CLASS FieldMenuItem : public UiFieldBase, public IMenuItem //public MenuItemBase, public IUiField
+	template DEFAULT_T_CLAUSE
+	CLASS FieldMenuItem : public UiFieldBase<T>, public IMenuItem //public MenuItemBase, public IUiField<T>
 	{
 	public:
 
@@ -127,7 +130,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		PIUIFIELD _Field = NULL;
+		PIUIFIELD<T> _Field = NULL;
 	};
 
 #pragma endregion
@@ -135,7 +138,8 @@ namespace IttyBitty
 
 #pragma region [MenuField] DEFINITION
 
-	CLASS MenuField : public FieldMenuItem
+	template DEFAULT_T_CLAUSE
+	CLASS MenuField : public FieldMenuItem<T>
 	{
 	public:
 
@@ -225,7 +229,7 @@ namespace IttyBitty
 
 #pragma region [ListMenuChoice] DEFINITION
 
-	CLASS ListMenuChoice : public MenuField, public IUiChoice
+	CLASS ListMenuChoice : public MenuItemBase, public IUiChoice
 	{
 	public:
 

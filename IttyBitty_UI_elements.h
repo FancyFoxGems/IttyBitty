@@ -75,6 +75,9 @@ namespace IttyBitty
 		VIRTUAL VOID SetTop(CBYTE) = 0;
 
 		VIRTUAL PCCHAR GetLabel() const = 0;
+		VIRTUAL VOID SetLabel(PCCHAR) = 0;
+
+		VIRTUAL PPCCHAR Lines() const = 0;
 
 
 		// INTERFACE METHODS
@@ -212,7 +215,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		UiElementBase(CBYTE, CBYTE, CBYTE = 0, CBYTE = 0);
+		UiElementBase(PCCHAR, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
+		UiElementBase(FLASH_STRING, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
 
 		VIRTUAL ~UiElementBase();
 
@@ -250,6 +254,9 @@ namespace IttyBitty
 		VIRTUAL VOID SetTop(CBYTE);
 
 		VIRTUAL PCCHAR GetLabel() const;
+		VIRTUAL VOID SetLabel(PCCHAR);
+
+		VIRTUAL PPCCHAR Lines() const;
 
 		VIRTUAL VOID Render(PIUIRENDERER);
 
@@ -265,6 +272,8 @@ namespace IttyBitty
 
 		CBYTE _Left = 0;
 		CBYTE _Top = 0;
+
+		PCCHAR _Label = NULL;
 	};
 
 #pragma endregion

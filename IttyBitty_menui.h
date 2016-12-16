@@ -70,10 +70,10 @@ namespace IttyBitty
 		VOID Prompt(RUIDIALOG dialog);
 
 		template<typename T>
-		CONST T Prompt(RIUIFIELD field)
+		CONST T Prompt(RIUIFIELD<T> field)
 		{
 			if (field.Prompt(_Display))
-				return (T)field.Value();
+				return field.Value();
 
 			return T(T_MAX);
 		}

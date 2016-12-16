@@ -18,11 +18,25 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	template DEFAULT_T_CLAUSE
 	interface IUiField;
-	TYPEDEF_CLASS_ALIASES(IUiField, IUIFIELD);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), IUiField, IUIFIELD);
 
+	template DEFAULT_T_CLAUSE
+	class BaseUiFieldBase;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), BaseUiFieldBase, BASEUIFIELDBASE);
+
+	template DEFAULT_T_CLAUSE
 	class UiFieldBase;
-	TYPEDEF_CLASS_ALIASES(UiFieldBase, UIFIELDBASE);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), UiFieldBase, UIFIELDBASE);
+
+	template DEFAULT_T_CLAUSE
+	class VarLengthUiFieldBase;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), VarLengthUiFieldBase, VARLENGTHUIFIELDBASE);
 
 	class BooleanUiField;
 	TYPEDEF_CLASS_ALIASES(BooleanUiField, BOOLEANUIFIELD);
@@ -45,38 +59,39 @@ namespace IttyBitty
 	class TimeUiField;
 	TYPEDEF_CLASS_ALIASES(TimeUiField, TIMEUIFIELD);
 
-	#define NUMERIC_UI_FIELD_T_CLAUSE_DEF	<typename T>
-	#define NUMERIC_UI_FIELD_T_CLAUSE		<typename T>
-	#define NUMERIC_UI_FIELD_T_ARGS			<T>
-
-	template NUMERIC_UI_FIELD_T_CLAUSE
+	template DEFAULT_T_CLAUSE
 	class NumericUiField;
-	TEMPLATE_CLASS_USING_ALIASES(CSL(NUMERIC_UI_FIELD_T_CLAUSE), \
-		CSL(NUMERIC_UI_FIELD_T_ARGS), NumericUiField, NUMERICUIFIELD);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), NumericUiField, NUMERICUIFIELD);
 
 	class FloatUiField;
 	TYPEDEF_CLASS_ALIASES(UiField, UIFIELD);
 
 
+	template DEFAULT_T_CLAUSE
 	class ListUiFieldChoice;
-	TYPEDEF_CLASS_ALIASES(ListUiFieldChoice, LISTUIFIELDCHOICE);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), ListUiFieldChoice, LISTUIFIELDCHOICE);
 
+	template DEFAULT_T_CLAUSE
 	class ListUiField;
-	TYPEDEF_CLASS_ALIASES(ListUiField, LISTUIFIELD);
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), ListUiField, LISTUIFIELD);
 
 #pragma endregion
 
 
 #pragma region [IUiField] DEFINITION
 
+	template DEFAULT_T_CLAUSE
 	INTERFACE IUiField : public IUiElement
 	{
 	public:
 
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL RCVALUE Value() const = 0;
-		VIRTUAL RVALUE Value() = 0;
+		VIRTUAL CONST T & Value() const = 0;
+		VIRTUAL T & Value() = 0;
 
 		VIRTUAL CBOOL ShowLabel() const = 0;
 
@@ -94,16 +109,14 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiFieldBase] DEFINITION
+#pragma region [BaseUiFieldBase] DEFINITION
 
-	CLASS UiFieldBase : public UiElementBase, public IUiField
+	template DEFAULT_T_CLAUSE
+	CLASS BaseUiFieldBase : public UiElementBase, public IUiField<T>
 	{
 	public:
 
 		// [IUiField] IMPLEMENTATION
-
-		VIRTUAL RCVALUE Value() const;
-		VIRTUAL RVALUE Value();
 
 		VIRTUAL CBOOL ShowLabel() const;
 
@@ -114,9 +127,61 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		PFIELD _Field = NULL;
-
 		BOOL _ShowLabel = TRUE;
+	};
+
+#pragma endregion
+
+
+#pragma region [UiFieldBase] DEFINITION
+
+	template DEFAULT_T_CLAUSE
+	CLASS UiFieldBase : public BaseUiFieldBase<T>
+	{
+	public:
+
+		// [IUiField] IMPLEMENTATION
+
+		VIRTUAL CONST T & Value() const;
+		VIRTUAL T & Value();
+
+		VIRTUAL CBOOL ShowLabel() const;
+
+		VIRTUAL CBOOL Prompt(PIUIRENDERER);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		PTYPEDFIELD<T> _Field = NULL;
+	};
+
+#pragma endregion
+
+
+#pragma region [UiFieldBase] DEFINITION
+
+	template DEFAULT_T_CLAUSE
+	CLASS VarLengthUiFieldBase : public BaseUiFieldBase<T>
+	{
+	public:
+
+		// [IUiField] IMPLEMENTATION
+
+		VIRTUAL CONST T & Value() const;
+		VIRTUAL T & Value();
+
+		VIRTUAL CBOOL ShowLabel() const;
+
+		VIRTUAL CBOOL Prompt(PIUIRENDERER);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		PVARLENGTHTYPEDFIELD<T> _Field = NULL;
 	};
 
 #pragma endregion
@@ -124,7 +189,7 @@ namespace IttyBitty
 
 #pragma region [BooleanUiField] DEFINITION
 
-	CLASS BooleanUiField : public UiFieldBase
+	CLASS BooleanUiField : public UiFieldBase<BOOL>
 	{
 	public:
 
@@ -141,7 +206,7 @@ namespace IttyBitty
 
 #pragma region [AlphaUiField] DEFINITION
 
-	CLASS AlphaUiFieldBase : public UiFieldBase
+	CLASS AlphaUiFieldBase : public VarLengthUiFieldBase<CHAR>
 	{
 	public:
 
@@ -246,8 +311,8 @@ namespace IttyBitty
 
 #pragma region [NumericUiField] DEFINITION
 
-	template NUMERIC_UI_FIELD_T_CLAUSE_DEF
-	CLASS NumericUiField : public UiFieldBase
+	template DEFAULT_T_CLAUSE
+	CLASS NumericUiField : public UiFieldBase<T>
 	{
 	public:
 
@@ -287,7 +352,8 @@ namespace IttyBitty
 
 #pragma region [UiFieldChoice] DEFINITION
 
-	CLASS ListUiFieldChoice : public UiFieldBase, public IUiChoice
+	template DEFAULT_T_CLAUSE
+	CLASS ListUiFieldChoice : public UiFieldBase<T>, public IUiChoice
 	{
 	public:
 
@@ -307,13 +373,14 @@ namespace IttyBitty
 
 #pragma region [ListUiField] DEFINITION
 
-	CLASS ListUiField : public UiFieldBase, public IUiListElement<ListUiFieldChoice>
+	template DEFAULT_T_CLAUSE
+	CLASS ListUiField : public UiFieldBase<T>, public IUiListElement<ListUiFieldChoice<T>>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		ListUiField(CBYTE, PPLISTUIFIELDCHOICE, CBOOL = FALSE);
+		ListUiField(CBYTE, PPLISTUIFIELDCHOICE<T>, CBOOL = FALSE);
 		ListUiField(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
 
 		VIRTUAL ~ListUiField();
@@ -330,18 +397,18 @@ namespace IttyBitty
 
 		// [IUiContainerElement] IMPLEMENTATION
 
-		VIRTUAL PCLISTUIFIELDCHOICE operator[](CBYTE) const;
-		VIRTUAL PLISTUIFIELDCHOICE operator[](CBYTE);
+		VIRTUAL PCLISTUIFIELDCHOICE<T> operator[](CBYTE) const;
+		VIRTUAL PLISTUIFIELDCHOICE<T> operator[](CBYTE);
 
 		VIRTUAL CBYTE ChildCount() const;
 
-		VIRTUAL RCLISTUIFIELDCHOICE Child(CBYTE = 0) const;
-		VIRTUAL RLISTUIFIELDCHOICE Child(CBYTE = 0);
+		VIRTUAL RCLISTUIFIELDCHOICE<T> Child(CBYTE = 0) const;
+		VIRTUAL RLISTUIFIELDCHOICE<T> Child(CBYTE = 0);
 
-		VIRTUAL RLISTUIFIELDCHOICE AddChild(RLISTUIFIELDCHOICE);
+		VIRTUAL RLISTUIFIELDCHOICE<T> AddChild(RLISTUIFIELDCHOICE<T>);
 
 		VIRTUAL VOID RemoveChild(CBYTE);
-		VIRTUAL VOID RemoveChild(RLISTUIFIELDCHOICE);
+		VIRTUAL VOID RemoveChild(RLISTUIFIELDCHOICE<T>);
 
 
 		// [IUiListElement] IMPLEMENTATION
@@ -358,7 +425,7 @@ namespace IttyBitty
 
 		BOOL _AllowMultipleSelections = FALSE;
 
-		PPLISTUIFIELDCHOICE _Choices = NULL;
+		PPLISTUIFIELDCHOICE<T> _Choices = NULL;
 		BYTE _ChoiceCount = 0;
 	};
 

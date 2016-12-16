@@ -581,17 +581,17 @@ VarLengthField::VarLengthField(CDATATYPE dataType, CSIZE length)
 	{
 	case DataType::BYTES_DATUM:
 
-		_Value = new byte[length];
+		_Value = Value(new byte[length]);
 		break;
 
 	case DataType::STRING_DATUM:
 
-		_Value = new char[length];
+		_Value = Value(new char[length]);
 		break;
 
 	case DataType::BIT_DATUM:
 
-		_Value = new BITPACK[length];
+		_Value = Value(new BITPACK[length]);
 		break;
 
 	default:

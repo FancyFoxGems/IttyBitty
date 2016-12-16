@@ -299,6 +299,7 @@ namespace IttyBitty
 		{
 			_Dispose = TRUE;
 
+			_Value = Value(new T());
 			_DataType = FindDataType<T>();
 		}
 
@@ -398,7 +399,7 @@ namespace IttyBitty
 
 		VarLengthTypedField(CSIZE length = 0) : TypedField<T>()
 		{
-			_Value = new T[length];
+			_Value = Value(new T[length]);
 			_DataType = FindVarLengthDataType<T>();
 			_Length = length;
 		}
