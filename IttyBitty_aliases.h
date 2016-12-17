@@ -104,6 +104,10 @@
 
 /* TYPEDEF & TEMPLATED USING ALIAS MACROS */
 
+#define TYPEDEF_FUNCTION_ALIASES(return_type, parameter_clause, function_name, FUNCTION_ALIAS)					\
+	typedef return_type function_name(parameter_clause), return_type FUNCTION_ALIAS(parameter_clause)			\
+		return_type (*P##FUNCTION_ALIAS)(parameter_clause), return_type (&R##FUNCTION_ALIAS)(parameter_clause)
+
 #define TYPEDEF_MODIFIER_ALIASES(modified_type_name, TYPE_ALIAS)		\
 	typedef modified_type_name TYPE_ALIAS, * P##TYPE_ALIAS, & R##TYPE_ALIAS
 #define TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS)		TYPEDEF_MODIFIER_ALIASES(type_name, TYPE_ALIAS)

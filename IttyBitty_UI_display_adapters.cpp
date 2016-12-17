@@ -17,27 +17,23 @@ using namespace IttyBitty;
 
 #pragma region [SerialUiRenderer] IMPLEMENTATION
 
-// CONSTRUCTOR/DESTRUCTOR
+// CONSTRUCTORS
 
-SerialUiRenderer::SerialUiRenderer(HardwareSerial * serial) : UiRendererBase(), _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer() : UiRendererBase() { }
 
-SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options, HardwareSerial * serial) : UiRendererBase(options), _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial) : UiRendererBase(), _Serial(serial) { }
 
-SerialUiRenderer::~SerialUiRenderer()
-{
-	if (_Serial)
-	{
-		delete _Serial;
-		_Serial = NULL;
-	}
-}
+SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options) : UiRendererBase(options) { }
+
+SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options,
+	HardwareSerial & serial) : UiRendererBase(options), _Serial(serial) { }
 
 
 // [Print] IMPLEMENTATION
 
 SIZE SerialUiRenderer::write(BYTE value)
 {
-	return _Serial->write(value);
+	return _Serial.write(value);
 }
 
 
@@ -45,12 +41,12 @@ SIZE SerialUiRenderer::write(BYTE value)
 
 CBOOL SerialUiRenderer::Available()
 {
-	return _Serial->availableForWrite();
+	return _Serial.availableForWrite();
 }
 
 VOID SerialUiRenderer::Flush()
 {
-	return _Serial->flush();
+	return _Serial.flush();
 }
 
 #pragma endregion

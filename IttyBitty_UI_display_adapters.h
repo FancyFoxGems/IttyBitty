@@ -54,17 +54,19 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTOR/DESTRUCTOR
+		// CONSTRUCTORS
 
-		SerialUiRenderer(HardwareSerial * = & SERIAL_PORT_MONITOR);
-		SerialUiRenderer(RUIRENDEREROPTIONS, HardwareSerial * = & SERIAL_PORT_MONITOR);
-
-		VIRTUAL ~SerialUiRenderer();
+		SerialUiRenderer();
+		SerialUiRenderer(HardwareSerial &);
+		SerialUiRenderer(RUIRENDEREROPTIONS);
+		SerialUiRenderer(RUIRENDEREROPTIONS, HardwareSerial & );
 
 
 		// [Print] IMPLEMENTATION
 
 		VIRTUAL SIZE write(BYTE);
+
+		using Print::write;
 
 
 		// [IUiRenderer] OVERRIDES
@@ -77,7 +79,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		HardwareSerial * _Serial = NULL;
+		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
 	};
 
 #pragma endregion
@@ -115,6 +117,8 @@ namespace IttyBitty
 		{
 			return _LCD->write(value);
 		}
+
+		using Print::write;
 
 
 		// [IUiRenderer] OVERRIDES

@@ -226,6 +226,8 @@ namespace IttyBitty
 
 		VIRTUAL SIZE write(BYTE);
 
+		using Print::write;
+
 		// [Print] OVERRIDES
 
 		//SIZE write(PCBYTE buffer, SIZE size);

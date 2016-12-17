@@ -417,6 +417,16 @@ namespace IttyBitty
 		VIRTUAL VOID SetAllowMultipleSelections(CBOOL);
 
 
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+
+
 	protected:
 
 		// INSTANCE VARIABLES

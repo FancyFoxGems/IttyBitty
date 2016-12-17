@@ -25,15 +25,16 @@ namespace IttyBitty
 	class MenUI;
 	TYPEDEF_CLASS_ALIASES(MenUI, MENUI);
 
+
+	typedef VOID UiCallback(RMENUI, PTR, CPTR), UICALLBACK(RMENUI, PTR, CPTR),
+		(*PUICALLBACK)(RMENUI, PTR, CPTR), (**PPUICALLBACK)(RMENUI, PTR, CPTR);
+
 #pragma endregion
 
 
 #pragma region [MenUI] DEFINITION
 
-	typedef VOID UiCallback(RMENUI, PTR, CPTR), UICALLBACK(RMENUI, PTR, CPTR),
-		(*PUICALLBACK)(RMENUI, PTR, CPTR), (**PPUICALLBACK)(RMENUI, PTR, CPTR);
-
-	CLASS MenUI : public Menu, public IUiRenderer
+	CLASS MenUI : public Menu, public IUiInputSource, public IUiRenderer
 	{
 	public:
 
@@ -55,8 +56,8 @@ namespace IttyBitty
 		PUINAVIGATIONCONTROLLER Navigation();
 		PUIDISPLAYCONTROLLER Display();
 
-		PUICALLBACK GetIdleCallback() const;
-		VOID SetIdleCallback(PUICALLBACK);
+		PUICALLBACK GetIdleHandler() const;
+		VOID SetIdleHandler(PUICALLBACK);
 
 
 		// USER METHODS
@@ -167,7 +168,7 @@ namespace IttyBitty
 
 		// EVENT CALLBACKS
 
-		PUICALLBACK _OnIdleCallback = NULL;
+		PUICALLBACK _OnIdleHandler = NULL;
 	};
 
 #pragma endregion

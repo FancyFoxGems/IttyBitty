@@ -178,7 +178,11 @@ CBOOL UiNavigationController::IsAsynchronous() const
 
 VOID UiNavigationController::Poll()
 {
-	PtrApplyAll(_InputSourceCount, _InputSources, &IUiInputSource::Poll);
+	for (BYTE i = 0; i < _InputSourceCount; i++)
+	{
+		if (!_InputSources[i]->IsAsynchronous())
+			_InputSources[i]->Poll();
+	}
 }
 
 

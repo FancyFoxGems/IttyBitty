@@ -56,14 +56,14 @@ PUIDISPLAYCONTROLLER MenUI::Display()
 	return _Display;
 }
 
-PUICALLBACK MenUI::GetIdleCallback() const
+PUICALLBACK MenUI::GetIdleHandler() const
 {
-	return _OnIdleCallback;
+	return _OnIdleHandler;
 }
 
-VOID MenUI::SetIdleCallback(PUICALLBACK onIdleCallback)
+VOID MenUI::SetIdleHandler(PUICALLBACK onIdleHandler)
 {
-	_OnIdleCallback = onIdleCallback;
+	_OnIdleHandler = onIdleHandler;
 }
 
 
@@ -72,6 +72,7 @@ VOID MenUI::SetIdleCallback(PUICALLBACK onIdleCallback)
 
 VOID MenUI::Update()
 {
+	_Navigation->Poll();
 }
 
 VOID MenUI::ShowText(PCCHAR str, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
@@ -116,38 +117,17 @@ CBOOL MenUI::IsAltOn() const
 
 VOID MenUI::ToggleAlt()
 {
+	_Navigation->ToggleAlt();
 }
 
 VOID MenUI::AltOn()
 {
+	_Navigation->AltOn();
 }
 
 VOID MenUI::AltOff()
 {
-}
-
-VOID MenUI::Up(CUIACTIONSTATE actionState)
-{
-}
-
-VOID MenUI::Down(CUIACTIONSTATE actionState)
-{
-}
-
-VOID MenUI::Left(CUIACTIONSTATE actionState)
-{
-}
-
-VOID MenUI::Right(CUIACTIONSTATE actionState)
-{
-}
-
-VOID MenUI::Return(CUIACTIONSTATE actionState)
-{
-}
-
-VOID MenUI::Select(CUIACTIONSTATE actionState)
-{
+	_Navigation->AltOff();
 }
 
 

@@ -10,6 +10,7 @@
 #define _ITTYBITTY_UI_NAV_ADAPTERS_H
 
 
+#include "IttyBitty_GPIO.h"
 #include "IttyBitty_UI_nav.h"
 
 #include "HardwareSerial.h"
@@ -24,11 +25,9 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF	\
-		<CUIACTION Action, typename TVar, CONST TVar & Var, CONST TVar Tolerance>
-	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE		\
-		<CUIACTION Action, typename TVar, CONST TVar & Var, CONST TVar Tolerance = TVar(1)>
-	#define DATA_BOUND_UI_INPUT_LISTENER_T_ARGS			<Action, TVar, Var, Tolerance>
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF	<typename TVar>
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE		<typename TVar>
+	#define DATA_BOUND_UI_INPUT_LISTENER_T_ARGS			<TVar>
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE
 	class DataBoundUiInputSource;
@@ -69,15 +68,21 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		DataBoundUiInputSource(CUIACTION action, CONST TVar & variable, CONST TVar tolerance = TVar(1))
+			: _Action(action), _Variable(variable), _Tolerance(tolerance) { }
+
+
 		// [IUiListener] OVERRIDES
 
 		CBOOL IsAsynchronous() const { return FALSE; }
 
 		VOID Poll()
 		{
-			if (_PrevValue + Tolerance <= Var)
+			if (_PrevValue + _Tolerance <= _Variable)
 			{
-				_PrevValue = Var;
+				_PrevValue = _Variable;
 				this->DoAction();
 			}
 		}
@@ -87,6 +92,11 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
+		CUIACTION _Action = UiAction::SELECT;
+
+		CONST TVar & _Variable;
+		CONST TVar _Tolerance = TVar(0);
+
 		TVar _PrevValue = 0;
 
 
@@ -94,7 +104,7 @@ namespace IttyBitty
 
 		VOID DoAction()
 		{
-			switch (Action)
+			switch (_Action)
 			{
 			case UiAction::UP:
 				_NavListener->Up();
@@ -143,6 +153,12 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		SerialUiInputSource();
+		SerialUiInputSource(HardwareSerial &);
+
+
 		// [IUiListener] OVERRIDES
 
 		CBOOL IsAsynchronous() const;
@@ -165,6 +181,11 @@ namespace IttyBitty
 	CLASS DigitalPinUiInputSource : public UiInputSourceBase
 	{
 	public:
+
+		// CONSTRUCTOR
+
+		DigitalPinUiInputSource(CBYTE, CUIACTION);
+
 
 		// [IUiListener] OVERRIDES
 

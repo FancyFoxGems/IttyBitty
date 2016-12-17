@@ -182,7 +182,7 @@ namespace IttyBitty
 
 	public:
 
-		// [IUiListElement] IMPLEMENTATION
+		// [IUiContainerElement] IMPLEMENTATION
 
 		VIRTUAL CONST TMenuItem * operator[](CBYTE) const;
 		VIRTUAL TMenuItem * operator[](CBYTE);
@@ -196,6 +196,16 @@ namespace IttyBitty
 
 		VIRTUAL VOID RemoveChild(CBYTE);
 		VIRTUAL VOID RemoveChild(TMenuItem &);
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 	protected:

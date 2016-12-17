@@ -134,7 +134,7 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiNavigationListener, public IUiInputSource
+	class UiNavigationController : public IUiNavigationListener
 	{
 	public:
 

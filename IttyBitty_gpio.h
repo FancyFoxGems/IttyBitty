@@ -103,7 +103,8 @@ namespace IttyBitty
 	{
 	private:
 
-		_PortRegisters() : DirectionReg(ByteField::NULL_OBJECT()), OutputReg(ByteField::NULL_OBJECT()), InputReg(ByteField::NULL_OBJECT()) { }
+		_PortRegisters() : DirectionReg(ByteField::NULL_OBJECT()),
+			OutputReg(ByteField::NULL_OBJECT()), InputReg(ByteField::NULL_OBJECT()) { }
 
 
 	public:
@@ -295,7 +296,7 @@ namespace IttyBitty
 
 		VIRTUAL ~_Pin() { }
 
-		STATIC CPINMODE Mode()
+		STATIC CPINMODE GetMode()
 		{
 			return PortPtr->GetPinMode(PinNum);
 		}
