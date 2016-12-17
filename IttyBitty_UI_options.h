@@ -400,7 +400,7 @@ namespace IttyBitty
 	{
 		EXTERN UIOPTIONS Options;
 
-		EXTERN UIRENDEREROPTIONS DefaultUiRendererOptions;
+		EXTERN UIRENDEREROPTIONS RendererOptions;
 
 		EXTERN UIRENDEREROPTIONS GetDefaultLcdUiRendererOptions();
 	}

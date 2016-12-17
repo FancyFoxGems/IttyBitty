@@ -129,6 +129,16 @@ namespace IttyBitty
 			return Lines;
 		}
 
+		CBYTE CursorCol()
+		{
+			return _LCD->CursorCol();
+		}
+
+		CBYTE CursorRow()
+		{
+			return _LCD->CursorRow();
+		}
+
 		CBOOL IsLineWrapEnabled() const
 		{
 			return _LCD->IsLineWrapEnabled();
@@ -157,16 +167,6 @@ namespace IttyBitty
 		VOID CursorBlinkOff()
 		{
 			_LCD->CursorBlinkOff();
-		}
-
-		CBYTE CursorCol()
-		{
-			return _LCD->CursorCol();
-		}
-
-		CBYTE CursorRow()
-		{
-			return _LCD->CursorRow();
 		}
 
 		VOID Clear()

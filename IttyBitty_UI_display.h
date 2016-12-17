@@ -55,6 +55,9 @@ namespace IttyBitty
 		VIRTUAL CBYTE Cols() const = 0;
 		VIRTUAL CBYTE Rows() const = 0;
 
+		VIRTUAL CBYTE CursorCol() const = 0;
+		VIRTUAL CBYTE CursorRow() const = 0;
+
 		VIRTUAL CBOOL IsLineWrapEnabled() const = 0;
 		VIRTUAL VOID SetLineWrap(CBOOL = TRUE) = 0;
 
@@ -63,18 +66,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID CursorBlinkOn() = 0;
 		VIRTUAL VOID CursorBlinkOff() = 0;
-
-		VIRTUAL CBYTE CursorCol() = 0;
-		VIRTUAL CBYTE CursorRow() = 0;
-
-		VIRTUAL CCHAR StyledLineLeftGlyph() const = 0;
-		VIRTUAL CCHAR StyledLineRightGlyph() const = 0;
-		VIRTUAL CCHAR MenuItemGlyph() const = 0;
-		VIRTUAL CCHAR ListChoiceGlyph() const = 0;
-		VIRTUAL CCHAR CurrItemGlyph() const = 0;
-		VIRTUAL CCHAR SelectionGlyph() const = 0;
-		VIRTUAL CCHAR MultiSelectionGlyph() const = 0;
-		VIRTUAL CCHAR ValueSeparatorGlyph() const = 0;
 
 
 		// INTERFACE METHODS
@@ -127,7 +118,7 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIRENDEREROPTIONS Options = MUI::DefaultUiRendererOptions;
+		RUIRENDEREROPTIONS Options = MUI::RendererOptions;
 
 
 		// CONSTRUCTORS
@@ -141,6 +132,9 @@ namespace IttyBitty
 		VIRTUAL CBYTE Cols() const;
 		VIRTUAL CBYTE Rows() const;
 
+		VIRTUAL CBYTE CursorCol() const;
+		VIRTUAL CBYTE CursorRow() const;
+
 		VIRTUAL CBOOL IsLineWrapEnabled() const;
 		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
 
@@ -149,18 +143,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID CursorBlinkOn();
 		VIRTUAL VOID CursorBlinkOff();
-
-		VIRTUAL CBYTE CursorCol();
-		VIRTUAL CBYTE CursorRow();
-
-		VIRTUAL CCHAR StyledLineLeftGlyph() const;
-		VIRTUAL CCHAR StyledLineRightGlyph() const;
-		VIRTUAL CCHAR MenuItemGlyph() const;
-		VIRTUAL CCHAR ListChoiceGlyph() const;
-		VIRTUAL CCHAR CurrItemGlyph() const;
-		VIRTUAL CCHAR SelectionGlyph() const;
-		VIRTUAL CCHAR MultiSelectionGlyph() const;
-		VIRTUAL CCHAR ValueSeparatorGlyph() const;
 
 		VIRTUAL CBOOL Available();
 		VIRTUAL VOID Flush();
@@ -242,47 +224,51 @@ namespace IttyBitty
 
 		// [Print] IMPLEMENTATION
 
-		SIZE write(BYTE);
+		VIRTUAL SIZE write(BYTE);
 
 		// [Print] OVERRIDES
 
-		SIZE write(PCBYTE buffer, SIZE size);
+		//SIZE write(PCBYTE buffer, SIZE size);
 
-		SIZE print(FLASH_STRING);
-		SIZE print(CONST String &);
-		SIZE print(PCCHAR);
-		SIZE print(CHAR);
-		SIZE print(BYTE, INT = DEC);
-		SIZE print(INT, INT = DEC);
-		SIZE print(UINT, INT = DEC);
-		SIZE print(LONG, INT = DEC);
-		SIZE print(DWORD, INT = DEC);
-		SIZE print(DOUBLE, INT = 2);
-		SIZE print(CONST Printable &);
+		//SIZE write(PCCHAR buffer);
+		//SIZE write(PCBYTE buffer, SIZE size);
 
-		SIZE println(FLASH_STRING);
-		SIZE println(CONST String &);
-		SIZE println(PCCHAR);
-		SIZE println(CHAR);
-		SIZE println(BYTE, INT = DEC);
-		SIZE println(INT, INT = DEC);
-		SIZE println(UINT, INT = DEC);
-		SIZE println(LONG, INT = DEC);
-		SIZE println(DWORD, INT = DEC);
-		SIZE println(DOUBLE, INT = 2);
-		SIZE println(CONST Printable &);
-		SIZE println();
+		//SIZE print(FLASH_STRING);
+		//SIZE print(CONST String &);
+		//SIZE print(PCCHAR);
+		//SIZE print(CHAR);
+		//SIZE print(BYTE, INT = DEC);
+		//SIZE print(INT, INT = DEC);
+		//SIZE print(UINT, INT = DEC);
+		//SIZE print(LONG, INT = DEC);
+		//SIZE print(DWORD, INT = DEC);
+		//SIZE print(DOUBLE, INT = 2);
+		//SIZE print(CONST Printable &);
 
-		INT printf(PCCHAR format, ...) PRINTF_FORMAT(2, 3) ;
-		INT printf(FLASH_STRING format, ...);
+		//SIZE println(FLASH_STRING);
+		//SIZE println(CONST String &);
+		//SIZE println(PCCHAR);
+		//SIZE println(CHAR);
+		//SIZE println(BYTE, INT = DEC);
+		//SIZE println(INT, INT = DEC);
+		//SIZE println(UINT, INT = DEC);
+		//SIZE println(LONG, INT = DEC);
+		//SIZE println(DWORD, INT = DEC);
+		//SIZE println(DOUBLE, INT = 2);
+		//SIZE println(CONST Printable &);
+		//SIZE println();
+
+		//INT printf(PCCHAR format, ...) PRINTF_FORMAT(2, 3) ;
+		//INT printf(FLASH_STRING format, ...);
 
 
 		// [IUiRenderer] OVERRIDES
 
-		CBOOL IsLcdBased() const;
-
 		CBYTE Cols() const;
 		CBYTE Rows() const;
+
+		CBYTE CursorCol() const;
+		CBYTE CursorRow() const;
 
 		CBOOL IsLineWrapEnabled() const;
 		VOID SetLineWrap(CBOOL = TRUE);
@@ -292,9 +278,6 @@ namespace IttyBitty
 
 		VOID CursorBlinkOn();
 		VOID CursorBlinkOff();
-
-		CBYTE CursorCol();
-		CBYTE CursorRow();
 
 		CBOOL Available();
 		VOID Flush();

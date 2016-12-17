@@ -19,7 +19,7 @@ using namespace IttyBitty;
 
 UIOPTIONS Options = UiOptions();
 
-UIRENDEREROPTIONS DefaultUiRendererOptions = UiRendererOptions();
+UIRENDEREROPTIONS RendererOptions = UiRendererOptions();
 
 UIRENDEREROPTIONS GetDefaultLcdUiRendererOptions()
 {

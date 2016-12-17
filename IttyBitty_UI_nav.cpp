@@ -182,7 +182,7 @@ VOID UiNavigationController::Poll()
 }
 
 
-// [IUiNavigationInputSource] IMPLEMENTATION
+// [IUiNavigationListener] IMPLEMENTATION
 
 CBOOL UiNavigationController::IsShiftOn() const
 {

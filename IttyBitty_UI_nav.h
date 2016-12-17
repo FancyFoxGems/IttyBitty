@@ -21,59 +21,17 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	interface IUiNavigationListener;
-	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
-
 	interface IUiInputSource;
 	TYPEDEF_CLASS_ALIASES(IUiInputSource, IUIINPUTSOURCE);
 
 	class UiInputSourceBase;
 	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
 
+	interface IUiNavigationListener;
+	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
+
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
-
-#pragma endregion
-
-
-#pragma region [IUiNavigationListener] DEFINITION
-
-	INTERFACE IUiNavigationListener
-	{
-	public:
-
-		// DESTRUCTOR
-
-		VIRTUAL ~IUiNavigationListener() { }
-
-
-		// ACCESSORS/MUTATORS
-
-		VIRTUAL CBOOL IsShiftOn() const = 0;
-		VIRTUAL VOID ToggleShift() = 0;
-		VIRTUAL VOID ShiftOn() = 0;
-		VIRTUAL VOID ShiftOff() = 0;
-
-		VIRTUAL CBOOL IsAltOn() const = 0;
-		VIRTUAL VOID ToggleAlt() = 0;
-		VIRTUAL VOID AltOn() = 0;
-		VIRTUAL VOID AltOff() = 0;
-
-
-		// INTERFACE METHODS
-
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-
-
-	protected:
-
-		IUiNavigationListener() { }
-	};
 
 #pragma endregion
 
@@ -132,9 +90,51 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [IUiNavigationListener] DEFINITION
+
+	INTERFACE IUiNavigationListener
+	{
+	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiNavigationListener() { }
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBOOL IsShiftOn() const = 0;
+		VIRTUAL VOID ToggleShift() = 0;
+		VIRTUAL VOID ShiftOn() = 0;
+		VIRTUAL VOID ShiftOff() = 0;
+
+		VIRTUAL CBOOL IsAltOn() const = 0;
+		VIRTUAL VOID ToggleAlt() = 0;
+		VIRTUAL VOID AltOn() = 0;
+		VIRTUAL VOID AltOff() = 0;
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+
+
+	protected:
+
+		IUiNavigationListener() { }
+	};
+
+#pragma endregion
+
+
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiInputSource, public IUiNavigationListener
+	class UiNavigationController : public IUiNavigationListener, public IUiInputSource
 	{
 	public:
 
@@ -181,7 +181,7 @@ namespace IttyBitty
 		VIRTUAL VOID Poll();
 
 
-		// [IUiNavigationInputSource] IMPLEMENTATION
+		// [IUiNavigationListener] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();

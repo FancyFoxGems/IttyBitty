@@ -11,6 +11,26 @@
 #ifndef NO_ITTYBITTY_UI_NAV_ADAPTERS
 
 #include "IttyBitty_UI_nav_adapters.h"
+// VIRTUAL
+//
+
+//([A-Za-z_]*) ([A-Za-z_]*)[(]
+//$1 UiDisplayController::$2(
+
+// = [A-Za-z0-9_]*
+//
+
+// { }
+//\n{\n\n}
+
+	//class SerialUiInputSource;
+	//class DigitalPinUiInputSource;
+	//class AnalogPinUiInputSource;
+	//class SwitchUiInputSource;
+	//class ButtonUiInputSource;
+	//class RotaryUiInputSource;
+	//class ClickEncoderUiInputSource;
+	//class PotentiometerUiInputSource;
 
 using namespace IttyBitty;
 

@@ -52,6 +52,13 @@ namespace IttyBitty
 	class ListMenu;
 	TYPEDEF_CLASS_ALIASES(ListMenu, LISTMENU);
 
+
+	interface IUiDialog;
+	TYPEDEF_CLASS_ALIASES(IUiDialog, IUIDIALOG);
+
+	class UiDialog;
+	TYPEDEF_CLASS_ALIASES(UiDialog, UIDIALOG);
+
 #pragma endregion
 
 
@@ -243,13 +250,13 @@ namespace IttyBitty
 
 #pragma region [ListMenu] DEFINITION
 
-	CLASS ListMenu : public MenuBase<ListMenuChoice>, IUiListElement<ListMenuChoice>
+	CLASS ListMenu : public MenuBase<ListMenuChoice>, public IUiListElement<ListMenuChoice>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		ListMenu(CBYTE, PPIMENUITEM, CBOOL = FALSE);
+		ListMenu(CBYTE, PPLISTMENUCHOICE, CBOOL = FALSE);
 		ListMenu(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
 
 		VIRTUAL ~ListMenu();
@@ -266,6 +273,57 @@ namespace IttyBitty
 		// INSTANCE VARIABLES
 
 		BOOL _AllowMultipleSelections = FALSE;
+	};
+
+#pragma endregion
+
+
+#pragma region [IUiDialog] DEFINITION
+
+	INTERFACE IUiDialog : public IUiElement
+	{
+	public:
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBOOL ShowMessage() const = 0;
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL VOID Prompt(PIUIRENDERER) = 0;
+
+
+	protected:
+
+		IUiDialog() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [UiDialog] DEFINITION
+
+	CLASS UiDialog : public UiElementBase, public IUiDialog
+	{
+	public:
+
+		// [IUiDialog] IMPLEMENTATION
+
+		VIRTUAL CBOOL ShowMessage() const;
+
+
+		// INTERFACE METHODS
+
+		VIRTUAL VOID Prompt(PIUIRENDERER);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+
 	};
 
 #pragma endregion

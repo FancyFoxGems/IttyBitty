@@ -38,9 +38,9 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 
 // CONSTRUCTORS
 
-UiRendererBase::UiRendererBase(CBOOL useLcdDefaultOptions)
+UiRendererBase::UiRendererBase(CBOOL useLcdGlobalOptions)
 {
-	if (useLcdDefaultOptions)
+	if (useLcdGlobalOptions)
 		Options = MUI::GetDefaultLcdUiRendererOptions();
 }
 
@@ -53,6 +53,10 @@ CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
 
 CBYTE UiRendererBase::Rows() const { return MAX_BYTE; }
 
+CBYTE UiRendererBase::CursorCol() const { return MAX_BYTE; }
+
+CBYTE UiRendererBase::CursorRow() const { return MAX_BYTE; }
+
 CBOOL UiRendererBase::IsLineWrapEnabled() const { return FALSE; }
 
 VOID UiRendererBase::SetLineWrap(CBOOL) { }
@@ -62,71 +66,6 @@ VOID UiRendererBase::CursorOff() { }
 VOID UiRendererBase::CursorBlinkOn() { }
 
 VOID UiRendererBase::CursorBlinkOff() { }
-//
-//CCHAR UiRendererBase::StyledLineLeftGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdStyledLineLeftGlyph;
-//
-//	return Options.StyledLineLeftGlyph;
-//}
-//
-//CCHAR UiRendererBase::StyledLineRightGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdStyledLineRightGlyph;
-//
-//	return Options.StyledLineRightGlyph;
-//}
-//
-//CCHAR UiRendererBase::MenuItemGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdMenuItemGlyph;
-//
-//	return Options.MenuItemGlyph;
-//}
-//
-//CCHAR UiRendererBase::ListChoiceGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdListChoiceGlyph;
-//
-//	return Options.ListChoiceGlyph;
-//}
-//
-//CCHAR UiRendererBase::CurrItemGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdCurrItemGlyph;
-//
-//	return Options.CurrItemGlyph;
-//}
-//
-//CCHAR UiRendererBase::SelectionGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdSelectionGlyph;
-//
-//	return Options.SelectionGlyph;
-//}
-//
-//CCHAR UiRendererBase::MultiSelectionGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdMultiSelectionGlyph;
-//
-//	return Options.MultiSelectionGlyph;
-//}
-//
-//CCHAR UiRendererBase::ValueSeparatorGlyph() const
-//{
-//	if (this->IsLcdBased())
-//		return Options.LcdValueSeparatorGlyph;
-//
-//	return Options.ValueSeparatorGlyph;
-//}
-
 
 CBOOL UiRendererBase::Available() { return TRUE; }
 
@@ -179,7 +118,7 @@ CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
 	BYTE rightGlyphNum = this->Cols() - leftGlyphNum - strLen - Options.StyledLineMargins;
 
 	CHAR glyphs[rightGlyphNum + 1];
-	memset(glyphs, this->StyledLineLeftGlyph(), leftGlyphNum);
+	memset(glyphs, Options.StyledLineLeftGlyph, leftGlyphNum);
 	glyphs[leftGlyphNum] = '\0';
 
 	BYTE charsWritten = this->print(glyphs);
@@ -192,7 +131,7 @@ CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
 	for (BYTE i = 0; i < Options.StyledLineMargins; i++)
 		charsWritten += this->print(' ');
 
-	memset(glyphs, this->StyledLineRightGlyph(), rightGlyphNum);
+	memset(glyphs, Options.StyledLineRightGlyph, rightGlyphNum);
 	glyphs[rightGlyphNum] = '\0';
 
 	charsWritten += this->print(glyphs);
@@ -379,8 +318,28 @@ SIZE UiDisplayController::write(BYTE value)
 
 
 // [Print] OVERRIDES
-
+/*
 SIZE UiDisplayController::write(PCBYTE buffer, SIZE size)
+{
+	SIZE results[_RendererCount];
+
+	PtrCallAll<BYTE, Print, SIZE, PCBYTE, SIZE>(_RendererCount,
+		(Print **)_Renderers, results, &IUiRenderer::write, buffer, size);
+
+	return __ResultFromCallResults(results, _RendererCount);
+}
+
+SIZE UiDisplayController::write(PCCHAR str)
+{
+	SIZE results[_RendererCount];
+
+	PtrCallAll<BYTE, Print, SIZE, PCBYTE, SIZE>(_RendererCount,
+		(Print **)_Renderers, results, &IUiRenderer::write, str);
+
+	return __ResultFromCallResults(results, _RendererCount);
+}
+
+SIZE UiDisplayController::write(PCCHAR buffer, SIZE size)
 {
 	SIZE results[_RendererCount];
 
@@ -647,38 +606,45 @@ INT UiDisplayController::printf(FLASH_STRING format, ...)
 
 	return __ResultFromCallResults(results, _RendererCount);
 }
+*/
 
 
 // [IUiRenderer] OVERRIDES
 
 CBYTE UiDisplayController::Cols() const
 {
-	BYTE cols = MAX_BYTE;
+	BYTE results[_RendererCount];
 
-	for (BYTE i = 0; i < _RendererCount; i++)
-	{
-		cols = _Renderers[i]->Cols();
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::Cols);
 
-		if (cols < MAX_BYTE)
-			return cols;
-	}
-
-	return cols;
+	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
 }
 
 CBYTE UiDisplayController::Rows() const
 {
-	BYTE rows = MAX_BYTE;
+	BYTE results[_RendererCount];
 
-	for (BYTE i = 0; i < _RendererCount; i++)
-	{
-		rows = _Renderers[i]->Rows();
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::Rows);
 
-		if (rows < MAX_BYTE)
-			return rows;
-	}
+	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
+}
 
-	return rows;
+CBYTE UiDisplayController::CursorCol() const
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::CursorCol);
+
+	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
+}
+
+CBYTE UiDisplayController::CursorRow() const
+{
+	BYTE results[_RendererCount];
+
+	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::CursorRow);
+
+	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
 }
 
 CBOOL UiDisplayController::IsLineWrapEnabled() const

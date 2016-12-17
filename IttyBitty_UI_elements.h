@@ -19,7 +19,7 @@ namespace IttyBitty
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
 	interface IUiElement;
-	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
+	TYPEDEF_CLASS_ALIASES(IUiElement, IUIELEMENT);
 
 	class UiElementBase;
 	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
@@ -34,6 +34,7 @@ namespace IttyBitty
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
 		CSL(UI_LIST_ELEMENT_T_ARGS), IUiContainerElement, IUICONTAINERELEMENT);
 
+
 	interface IUiChoice;
 	TYPEDEF_CLASS_ALIASES(IUiChoice, IUICHOICE);
 
@@ -41,13 +42,6 @@ namespace IttyBitty
 	interface IUiListElement;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_LIST_ELEMENT_T_CLAUSE), \
 		CSL(UI_LIST_ELEMENT_T_ARGS), IUiListElement, IUILISTELEMENT);
-
-
-	interface IUiDialog;
-	TYPEDEF_CLASS_ALIASES(IUiDialog, IUIDIALOG);
-
-	class UiDialog;
-	TYPEDEF_CLASS_ALIASES(UiDialog, UIDIALOG);
 
 #pragma endregion
 
@@ -64,6 +58,8 @@ namespace IttyBitty
 
 
 		// ACCESSORS/MUTATORS
+
+		VIRTUAL PIUIELEMENT Parent() const = 0;
 
 		VIRTUAL CBYTE Width() const = 0;
 		VIRTUAL CBYTE Height() const = 0;
@@ -135,6 +131,90 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [UiElementBase] DEFINITION
+
+	CLASS UiElementBase : public IUiElement
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		UiElementBase(PIUIELEMENT, PCCHAR, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
+		UiElementBase(PIUIELEMENT, FLASH_STRING, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
+
+		VIRTUAL ~UiElementBase();
+
+
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
+		// [IUiElement] IMPLEMENTATION
+
+		VIRTUAL PIUIELEMENT Parent() const;
+
+		VIRTUAL CBYTE Width() const;
+		VIRTUAL CBYTE Height() const;
+
+		VIRTUAL CBYTE GetLeft() const;
+		VIRTUAL VOID SetLeft(CBYTE);
+
+		VIRTUAL CBYTE GetTop() const ;
+		VIRTUAL VOID SetTop(CBYTE);
+
+		VIRTUAL PCCHAR GetLabel() const;
+		VIRTUAL VOID SetLabel(PCCHAR);
+
+		VIRTUAL PPCCHAR Lines() const;
+
+		VIRTUAL VOID Render(PIUIRENDERER);
+
+
+		// [IUiNavigationListener] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsShiftOn() const;
+		VIRTUAL VOID ToggleShift();
+		VIRTUAL VOID ShiftOn();
+		VIRTUAL VOID ShiftOff();
+
+		VIRTUAL CBOOL IsAltOn() const;
+		VIRTUAL VOID ToggleAlt();
+		VIRTUAL VOID AltOn();
+		VIRTUAL VOID AltOff();
+
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
+
+		PIUIELEMENT _Parent = NULL;
+
+		CBYTE _Width = 0;
+		CBYTE _Height = 0;
+
+		CBYTE _Left = 0;
+		CBYTE _Top = 0;
+
+		PCCHAR _Label = NULL;
+	};
+
+#pragma endregion
+
+
 #pragma region [IUiChoice] DEFINITION
 
 	INTERFACE IUiChoice : public IUiElement
@@ -177,129 +257,6 @@ namespace IttyBitty
 	protected:
 
 		IUiListElement() { }
-	};
-
-#pragma endregion
-
-
-#pragma region [IUiDialog] DEFINITION
-
-	INTERFACE IUiDialog : public IUiElement
-	{
-	public:
-
-
-		// ACCESSORS/MUTATORS
-
-		VIRTUAL CBOOL ShowMessage() const = 0;
-
-
-		// INTERFACE METHODS
-
-		VIRTUAL VOID Prompt(PIUIRENDERER) = 0;
-
-
-	protected:
-
-		IUiDialog() { }
-	};
-
-#pragma endregion
-
-
-#pragma region [UiElementBase] DEFINITION
-
-	CLASS UiElementBase : public IUiElement
-	{
-	public:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		UiElementBase(PCCHAR, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
-		UiElementBase(FLASH_STRING, CBYTE = MAX_BYTE, CBYTE = 1, CBYTE = 0, CBYTE = 0);
-
-		VIRTUAL ~UiElementBase();
-
-
-	protected:
-
-		// PROTECTED DISPOSAL METHOD
-
-		VIRTUAL VOID Dispose();
-
-
-	public:
-
-		// [IUiNavigationListener] IMPLEMENTATION
-
-		VIRTUAL VOID IsShiftOn();
-		VIRTUAL VOID IsAltOn();
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
-
-
-		// [IUiElement] IMPLEMENTATION
-
-		VIRTUAL CBYTE Width() const;
-		VIRTUAL CBYTE Height() const;
-
-		VIRTUAL CBYTE GetLeft() const;
-		VIRTUAL VOID SetLeft(CBYTE);
-
-		VIRTUAL CBYTE GetTop() const ;
-		VIRTUAL VOID SetTop(CBYTE);
-
-		VIRTUAL PCCHAR GetLabel() const;
-		VIRTUAL VOID SetLabel(PCCHAR);
-
-		VIRTUAL PPCCHAR Lines() const;
-
-		VIRTUAL VOID Render(PIUIRENDERER);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		BOOL _Dispose = FALSE;
-
-		CBYTE _Width = 0;
-		CBYTE _Height = 0;
-
-		CBYTE _Left = 0;
-		CBYTE _Top = 0;
-
-		PCCHAR _Label = NULL;
-	};
-
-#pragma endregion
-
-
-#pragma region [UiDialog] DEFINITION
-
-	CLASS UiDialog : public UiElementBase, public IUiDialog
-	{
-	public:
-
-		// [IUiDialog] IMPLEMENTATION
-
-		VIRTUAL CBOOL ShowMessage() const;
-
-
-		// INTERFACE METHODS
-
-		VIRTUAL VOID Prompt(PIUIRENDERER);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-
 	};
 
 #pragma endregion
