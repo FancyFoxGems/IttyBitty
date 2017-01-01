@@ -51,8 +51,6 @@
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
 *	NOTE: ^-- Base option (NO_ITTYBITTY_FULL_BYTES) excludes data structures for larger blocks
 *
-* [IttyBitty_bittable.h]: DATA STRUCTURE FOR MANAGEMENT OF BITMAPS
-*
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
 * [IttyBitty_GPIO.h]: STRUCTURED BIT-MAPPING OF GENERAL-PURPOSE IO PORTS/PINS
@@ -141,14 +139,7 @@
 /* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
 
 #ifndef NO_ITTYBITTY_BYTES
-
 	#include "IttyBitty_bytes.h"
-
-	/* [IttyBitty_bittable.h]: DATA STRUCTURE FOR MANAGEMENT OF BITMAPS */
-	#ifndef NO_ITTYBITTY_BITTABLE
-		#include "IttyBitty_bittable.h"
-	#endif
-
 #else
 
 	/* [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE */
