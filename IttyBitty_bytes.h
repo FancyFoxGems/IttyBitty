@@ -1,5 +1,6 @@
 /***********************************************************************************************
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ...
+*	NOTE: ^-- Base option (NO_ITTYBITTY_FULL_BYTES) excludes data structures for larger blocks
 *
 * This file is part of the Itty Bitty Arduino library.
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.
@@ -127,7 +128,7 @@ namespace IttyBitty
 #endif	// #ifndef NO_ITTYBITTY_FULL_BYTES
 
 
-	/* [BITPROXY]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
+	/* [_BitProxy]: STRUCTURE FOR BIT-/BYTE-ADDRESSABLE BITMAPPED-MEMORY DATA STRUCTURES */
 
 	STRUCT _BitProxy
 	{
@@ -558,7 +559,7 @@ namespace IttyBitty
 		}
 
 		BitField(BYTEFIELD byteFields[T_SIZE])
-			: _DisposalLevel(DisposalLevel::FieldPtrPtr) // TODO: FieldPtrs?
+			: _DisposalLevel(DisposalLevel::FieldPtrPtr)
 		{
 			_ByteFieldPtrs = new PBYTEFIELD[T_SIZE];
 

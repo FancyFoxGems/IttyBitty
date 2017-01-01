@@ -101,17 +101,17 @@ namespace IttyBitty
 			return this->Find(rowIdx, reinterpret_cast<PBYTE &>(result));
 		}
 
-		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
-		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
+		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_VALUE(SIZE)) = 0;
+		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_VALUE(SIZE)) = 0;
 
 		template DEFAULT_T_CLAUSE
-		CDBRESULT Insert(CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		CDBRESULT Insert(CONST T & rowData, CSIZE insertIdx = MAX_VALUE(SIZE))
 		{
 			return this->Insert(reinterpret_cast<PCBYTE>(rowData), insertIdx);
 		}
 
 		template DEFAULT_T_CLAUSE
-		CDBRESULT Insert(RIDBTABLESET tableSet, CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		CDBRESULT Insert(RIDBTABLESET tableSet, CONST T & rowData, CSIZE insertIdx = MAX_VALUE(SIZE))
 		{
 			return this->Insert(tableSet, reinterpret_cast<PCBYTE>(rowData), insertIdx);
 		}
@@ -229,8 +229,8 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT SelectAll(PBYTE &, RSIZE, PSIZE = NULL);
 		VIRTUAL CDBRESULT Find(CSIZE, PBYTE &, PSIZE = NULL);
 
-		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_OF(SIZE));
-		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE));
+		VIRTUAL CDBRESULT Insert(PCBYTE, CSIZE = MAX_VALUE(SIZE));
+		VIRTUAL CDBRESULT Insert(RIDBTABLESET, PCBYTE, CSIZE = MAX_VALUE(SIZE));
 		VIRTUAL CDBRESULT Update(PCBYTE, CSIZE);
 
 		VIRTUAL CDBRESULT Delete(CSIZE);
@@ -295,7 +295,7 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VIRTUAL CDBRESULT InsertRow(PIDBTABLESET, PCBYTE, CSIZE = MAX_OF(SIZE));
+		VIRTUAL CDBRESULT InsertRow(PIDBTABLESET, PCBYTE, CSIZE = MAX_VALUE(SIZE));
 
 
 		// [IDbTable] HELPER METHODS
@@ -383,7 +383,7 @@ namespace IttyBitty
 			return IDbTable::Find<T>(rowIdx, result);
 		}
 
-		CDBRESULT Insert(CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		CDBRESULT Insert(CONST T & rowData, CSIZE insertIdx = MAX_VALUE(SIZE))
 		{
 			return IDbTable::Insert<T>(rowData, insertIdx);
 		}
@@ -517,11 +517,11 @@ namespace IttyBitty
 			return table->Find<T>(rowIdx, resultRow);
 		}
 
-		VIRTUAL CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
-		VIRTUAL CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_OF(SIZE)) = 0;
+		VIRTUAL CDBRESULT InsertInto(CBYTE, PCBYTE, CSIZE = MAX_VALUE(SIZE)) = 0;
+		VIRTUAL CDBRESULT InsertInto(PCCHAR, PCBYTE, CSIZE = MAX_VALUE(SIZE)) = 0;
 
 		template DEFAULT_T_CLAUSE
-		CDBRESULT InsertInto(CBYTE tableIdx, CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		CDBRESULT InsertInto(CBYTE tableIdx, CONST T & rowData, CSIZE insertIdx = MAX_VALUE(SIZE))
 		{
 			PIDBTABLE table = this->operator[](tableIdx);
 
@@ -529,7 +529,7 @@ namespace IttyBitty
 		}
 
 		template DEFAULT_T_CLAUSE
-		CDBRESULT InsertInto(PCCHAR tableName, CONST T & rowData, CSIZE insertIdx = MAX_OF(SIZE))
+		CDBRESULT InsertInto(PCCHAR tableName, CONST T & rowData, CSIZE insertIdx = MAX_VALUE(SIZE))
 		{
 			PIDBTABLE table = this->operator[](tableName);
 

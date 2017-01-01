@@ -450,45 +450,6 @@ namespace std
 	};
 
 
-	/* [make_signed]: METAFUNCTION W/ SPECIALIZATION ON FUNDAMENTAL UNSIGNED TYPES TO REFERENCE SIGNED CONJUGATE OF A GIVEN TYPE */
-
-	template<typename T = VOID>
-	STRUCT make_signed : identity<T> { };
-
-	template<>
-	STRUCT make_signed<BYTE>
-	{
-		typedef CHAR type;
-	};
-
-	template<>
-	STRUCT make_signed<WORD>
-	{
-		typedef SHORT type;
-	};
-
-	template<>
-	STRUCT make_signed<DWORD>
-	{
-		typedef LONG type;
-	};
-
-	template<>
-	STRUCT make_signed<QWORD>
-	{
-		typedef LONGLONG type;
-	};
-
-	template<>
-	STRUCT make_signed<UINT>
-	{
-		typedef INT type;
-	};
-
-	template<typename T = VOID>
-	using make_signed_t = typename make_signed<T>::type;
-
-
 	/* [make_unsigned]: METAFUNCTION W/ SPECIALIZATION ON FUNDAMENTAL SIGNED TYPES TO REFERENCE UNSIGNED CONJUGATE OF A GIVEN TYPE */
 
 	template<typename T = VOID>
@@ -526,6 +487,45 @@ namespace std
 
 	template<typename T = VOID>
 	using make_unsigned_t = typename make_unsigned<T>::type;
+
+
+	/* [make_signed]: METAFUNCTION W/ SPECIALIZATION ON FUNDAMENTAL UNSIGNED TYPES TO REFERENCE SIGNED CONJUGATE OF A GIVEN TYPE */
+
+	template<typename T = VOID>
+	STRUCT make_signed : identity<T> { };
+
+	template<>
+	STRUCT make_signed<BYTE>
+	{
+		typedef CHAR type;
+	};
+
+	template<>
+	STRUCT make_signed<WORD>
+	{
+		typedef SHORT type;
+	};
+
+	template<>
+	STRUCT make_signed<DWORD>
+	{
+		typedef LONG type;
+	};
+
+	template<>
+	STRUCT make_signed<QWORD>
+	{
+		typedef LONGLONG type;
+	};
+
+	template<>
+	STRUCT make_signed<UINT>
+	{
+		typedef INT type;
+	};
+
+	template<typename T = VOID>
+	using make_signed_t = typename make_signed<T>::type;
 
 
 	/* [enable_if]: METAFUNCTION W/ SPECIALIZATION ON CONDITION TO EXCLUDE OVERLOAD RESULTIONS  */

@@ -19,11 +19,17 @@ using namespace IttyBitty;
 
 UIOPTIONS Options = UiOptions();
 
-UIRENDEREROPTIONS RendererOptions = UiRendererOptions();
 
-UIRENDEREROPTIONS GetDefaultLcdUiRendererOptions()
+RUIRENDEREROPTIONS GetDefaultRendererOptions()
 {
-	STATIC UiRendererOptions rendererOptions;
+	STATIC UIRENDEREROPTIONS rendererOptions;
+
+	return rendererOptions;
+}
+
+RUIRENDEREROPTIONS GetDefaultLcdRendererOptions()
+{
+	STATIC UIRENDEREROPTIONS rendererOptions;
 
 	rendererOptions.StyledLineLeftGlyph		= MENUI_DEFAULT_LCD_STYLED_LINE_LEFT_GLYPH;
 	rendererOptions.StyledLineRightGlyph	= MENUI_DEFAULT_LCD_STYLED_LINE_RIGHT_GLYPH;

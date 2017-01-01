@@ -64,7 +64,7 @@ namespace IttyBitty
 
 #pragma region [IMenuItem] DEFINITION
 
-	INTERFACE IMenuItem : public IUiElement	// TODO: Remove IUiElement parent?
+	INTERFACE IMenuItem : public IUiElement
 	{
 	public:
 
@@ -275,7 +275,7 @@ namespace IttyBitty
 		// [IUiListElement] IMPLEMENTATION
 
 		VIRTUAL CBOOL MultipleSelectionsAllowed() const;
-		VIRTUAL VOID SetAllowMultipleSelections(CBOOL);
+		VIRTUAL VOID SetAllowMultipleSelections(CBOOL = TRUE);
 
 
 	protected:

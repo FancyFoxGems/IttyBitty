@@ -226,6 +226,45 @@
 #define FINI0						FINI_SECTION(0)
 
 
+/* DATA TYPE SIZES */
+
+#define BITS_PER_NYBBLE		4
+#define NYBBLE_BITS			BITS_PER_NYBBLE
+#define NYBBLE_BITWIDTH		BITS_PER_NYBBLE
+#define BITS_PER_BYTE		(2 * BITS_PER_NYBBLE)
+#define BYTE_BITS			BITS_PER_BYTE
+#define BYTE_BITWIDTH		BITS_PER_BYTE
+#define BITS_PER_WORD		(2 * BITS_PER_BYTE)
+#define WORD_BITS			BITS_PER_WORD
+#define WORD_BITWIDTH		BITS_PER_WORD
+#define BITS_PER_DWORD		(2 * BITS_PER_WORD)
+#define DWORD_BITS			BITS_PER_DWORD
+#define DWORD_BITWIDTH		BITS_PER_DWORD
+#define BITS_PER_QWORD		(2 * BITS_PER_DWORD)
+#define QWORD_BITWIDTH		BITS_PER_QWORD
+#define QWORD_BITS			BITS_PER_QWORD
+
+#define kilo				1000
+#define kilobit_BITS		kilo
+#define kilobit				kilobit_BITS
+
+#define KILO				1024
+#define KILObit_BITS		KILO
+#define KILObit				KILObit_BITS
+#define KILOBYTE_BITS		KILO * BITS_PER_BYTE
+#define KILOBYTE			KILOBYTE_BITS
+
+#define mega				kilo * kilo
+#define megabit_BITS		mega
+#define megabit				megabit_BITS
+
+#define MEGA				KILO * KILO
+#define MEGAbit_BITS		MEGA
+#define MEGAbit				MEGAbit_BITS
+#define MEGABYTE_BITS		MEGA * BITS_PER_BYTE
+#define MEGABYTE			MEGABYTE_BITS
+
+
 /* TYPE INFO ALIASES */
 
 #define typeof(var)					decltype(var)
@@ -235,8 +274,45 @@
 
 #define SIZEOF(var)					sizeof(var)
 
-#define countof(var)				(SIZEOF(var) / SIZEOF(0[var]))
-#define COUNTOF(var)				countof(var)
+
+/* COMPILER MACROS */
+
+#define ASM(expr)						__asm__ __volatile__(expr)
+
+#define NOP()							ASM("nop")
+
+#define COMPILER_BARRIER()				ASM("" : : : "memory")
+#define MEMORY_BARRIER()				COMPILER_BARRIER()
+#define BARRIER()						COMPILER_BARRIER()
+
+#define PREFETCH(addr, ARGS...)			VA_MACRO(PREFETCH, addr, ##ARGS)
+#define PREFETCH_1(addr)				__builtin_prefetch (addr)
+#define PREFETCH_2(addr, rw)			__builtin_prefetch (addr, rw)
+#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch (addr, rw, locality)
+
+#define EXPECT(expr, val)				__builtin_expect(expr, val)
+#define EXPECTED(expr)					EXPECT(expr, TRUE)
+#define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
+
+#define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
+#define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W" #gcc_warning)
+
+#define CODE_FILE_NAME()				_builtin_FILE()
+#define CODE_LINE_NUMBER()				_builtin_LINE()
+#define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
+#define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
+
+#define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
+#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
+#define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
+#define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
+
+#define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)
+#define PRINT_VAR(var)					PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
+
+#define PRINT_COMPILE_CONST(var)											\
+	std::overflow<TYPEOF(var), var> _PRINT_COMPILE_CONST_##var;				\
+	TYPEOF(var) __PRINT_COMPILE_CONST_##var = _PRINT_COMPILE_CONST_##var()
 
 
 /* METAFUNCTION ALIASES */
@@ -300,14 +376,14 @@ using std::forward;
 #define UNREFERENCE_TYPE(T)				remove_pointer_t<T>
 #define UNREFERENCE_TYPEOF(var)			UNREFERENCE_TYPE(TYPEOF(var))
 
-#define SIGNED_TYPE(T)					make_signed_t<T>
-#define SIGNED_TYPEOF(var)				SIGNED_TYPE(TYPEOF(var))
-
 #define UNSIGNED_TYPE(T)				make_unsigned_t<T>
 #define UNSIGNED_TYPEOF(var)			UNSIGNED_TYPE(TYPEOF(var))
 
-#define MAKE_SIGNED(var)				static_cast<SIGNED_TYPEOF(var)>(var)
+#define SIGNED_TYPE(T)					make_signed_t<T>
+#define SIGNED_TYPEOF(var)				SIGNED_TYPE(TYPEOF(var))
+
 #define MAKE_UNSIGNED(var)				static_cast<UNSIGNED_TYPEOF(var)>(var)
+#define MAKE_SIGNED(var)				static_cast<SIGNED_TYPEOF(var)>(var)
 
 #define ENABLE_IF(condition, T)			enable_if_t<condition, T>
 #define TYPE_IF(condition, T, F)		conditional_t<condition, T, F>
@@ -315,51 +391,6 @@ using std::forward;
 #define CAPACITY(var)					extent<TYPEOF(var)>::value
 
 #define FORWARD(T, arg)					forward<T>(arg)
-
-
-/* DATA TYPE SIZES */
-
-#define BITS_PER_NYBBLE		4
-#define NYBBLE_BITS			BITS_PER_NYBBLE
-#define NYBBLE_BITWIDTH		BITS_PER_NYBBLE
-#define BITS_PER_BYTE		(2 * BITS_PER_NYBBLE)
-#define BYTE_BITS			BITS_PER_BYTE
-#define BYTE_BITWIDTH		BITS_PER_BYTE
-#define BITS_PER_WORD		(2 * BITS_PER_BYTE)
-#define WORD_BITS			BITS_PER_WORD
-#define WORD_BITWIDTH		BITS_PER_WORD
-#define BITS_PER_DWORD		(2 * BITS_PER_WORD)
-#define DWORD_BITS			BITS_PER_DWORD
-#define DWORD_BITWIDTH		BITS_PER_DWORD
-#define BITS_PER_QWORD		(2 * BITS_PER_DWORD)
-#define QWORD_BITWIDTH		BITS_PER_QWORD
-#define QWORD_BITS			BITS_PER_QWORD
-
-#define kilo				1000
-#define kilobit_BITS		kilo
-#define kilobit				kilobit_BITS
-
-#define KILO				1024
-#define KILObit_BITS		KILO
-#define KILObit				KILObit_BITS
-#define KILOBYTE_BITS		KILO * BITS_PER_BYTE
-#define KILOBYTE			KILOBYTE_BITS
-
-#define mega				kilo * kilo
-#define megabit_BITS		mega
-#define megabit				megabit_BITS
-
-#define MEGA				KILO * KILO
-#define MEGAbit_BITS		MEGA
-#define MEGAbit				MEGAbit_BITS
-#define MEGABYTE_BITS		MEGA * BITS_PER_BYTE
-#define MEGABYTE			MEGABYTE_BITS
-
-#define BYTE_SIZE(T)		SIZEOF(T)
-#define BYTE_SIZEOF(var)	BYTE_SIZE(TYPEOF(var))
-
-#define BIT_SIZE(type)		static_cast<SIZE>(SIZEOF(type) * BITS_PER_BYTE)
-#define BIT_SIZEOF(var)		BIT_SIZE(TYPEOF(var))
 
 
 /* CASTING MACROS */
@@ -374,6 +405,54 @@ using std::forward;
 #define UNCONST(var)				MAKE_UNCONST(var)
 
 #define UNION_CAST(var, to_type)	(((UNION {TYPEOF(var) from; to_type to;})(var)).to)
+
+
+/* TYPE INFO MACROS */
+
+#define TO_UNSIGNED_TYPE_OF_SIZE(var, size)		\
+	((size == 1) ? BYTE(var) : (size == 2) ? WORD(var) : (size == 4) ? DWORD(var) : QWORD(var))
+#define TO_SIGNED_TYPE_OF_SIZE(var, size)		MAKE_SIGNED(TO_UNSIGNED_TYPE_OF_SIZE(var, size))
+
+#define BYTE_SIZE(T)				SIZEOF(T)
+#define BYTE_SIZEOF(var)			BYTE_SIZE(TYPEOF(var))
+
+#define BIT_SIZE(T)					static_cast<SIZE>(SIZEOF(T) * BITS_PER_BYTE)
+#define BIT_SIZEOF(var)				BIT_SIZE(TYPEOF(var))
+
+#define countof(var)				(SIZEOF(var) / SIZEOF(0[var]))
+#define COUNTOF(var)				countof(var)
+
+#define IS_SIGNED(T)				(T(~T(0)) < 0)
+#define IS_UNSIGNED(T)				!IS_SIGNED(T)
+
+#define MAX_UNSIGNED_VALUE(T)		((T)(T(0) - 0b1))
+#define MAX_UNSIGNED_VALUE_OF(var)	MAX_UNSIGNED_VALUE(TYPEOF(var))
+
+#define MAX_BYTE					MAX_UNSIGNED_VALUE(BYTE)
+#define MAX_WORD					MAX_UNSIGNED_VALUE(WORD)
+#define MAX_DWORD					MAX_UNSIGNED_VALUE(DWORD)
+#define MAX_QWORD					MAX_UNSIGNED_VALUE(QWORD)
+
+#define MAX_SIGNED_VALUE(T)			((T)(MAX_UNSIGNED_VALUE(UNSIGNED_TYPE(T)) / 2))
+#define MAX_SIGNED(T)				MAX_SIGNED_VALUE(T)
+
+#define MAX_CHAR					MAX_SIGNED(CHAR)
+#define MAX_SHORT					MAX_SIGNED(SHORT)
+#define MAX_LONG					MAX_SIGNED(LONG)
+#define MAX_LONGLONG				MAX_SIGNED(LONGLONG)
+
+#define MAX_VALUE(T)				(IS_SIGNED(T) ? MAX_UNSIGNED_VALUE(T) : MAX_SIGNED_VALUE(T))
+#define MAX_VALUE_OF(var)			MAX_VALUE(TYPEOF(var))
+#define MAXOF(var)					MAX_VALUE_OF(var)
+
+#define VALUE_RANGE(T)				(static_cast<DWORD>(BIT_SIZE(T)) * static_cast<DWORD>(BIT_SIZE(T)))
+#define RANGE(T)					VALUE_RANGE(T)
+#define VALUE_RANGE_OF(var)			VALUE_RANGE(TYPEOF(var))
+#define RANGEOF(var)				VALUE_RANGE_OF(var)
+
+#define T_SIZE						SIZEOF(T)
+#define T_RANGE						RANGE(T)
+#define T_MAX						MAX_VALUE(T)
 
 
 /* FLASH DATA ADDRESSING MACROS */
@@ -393,72 +472,16 @@ using std::forward;
 #define CALL_FLASH_FUNC(func, flash_string)		PASS_FLASH_STRING(func, flash_string)
 
 
-/* COMPILER MACROS */
-
-#define ASM(expr)						__asm__ __volatile__(expr)
-
-#define NOP()							ASM("nop")
-
-#define COMPILER_BARRIER()				ASM("" : : : "memory")
-#define MEMORY_BARRIER()				COMPILER_BARRIER()
-#define BARRIER()						COMPILER_BARRIER()
-
-#define PREFETCH(addr, ARGS...)			VA_MACRO(PREFETCH, addr, ##ARGS)
-#define PREFETCH_1(addr)				__builtin_prefetch (addr)
-#define PREFETCH_2(addr, rw)			__builtin_prefetch (addr, rw)
-#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch (addr, rw, locality)
-
-#define EXPECT(expr, val)				__builtin_expect(expr, val)
-#define EXPECTED(expr)					EXPECT(expr, TRUE)
-#define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
-
-#define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
-#define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W" #gcc_warning)
-
-#define CODE_FILE_NAME()				_builtin_FILE()
-#define CODE_LINE_NUMBER()				_builtin_LINE()
-#define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
-#define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
-
-#define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
-#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
-#define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
-#define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
-
-#define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)
-#define PRINT_VAR(var)					PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
-
-#define PRINT_COMPILE_CONST(var)											\
-	std::overflow<TYPEOF(var), var> _PRINT_COMPILE_CONST_##var;				\
-	TYPEOF(var) __PRINT_COMPILE_CONST_##var = _PRINT_COMPILE_CONST_##var()
-
-
 /* MISCELLANEOUS GENERAL PURPOSE MACROS */
 
-#define ever				(;;)
-#define forever				for ever
-
-#define MAX_VALUE_OF(T)		((T)(T(0) - 0b1))
-#define MAX_OF(T)			MAX_VALUE_OF(T)
-
-#define MAX_BYTE			MAX_OF(BYTE)
-#define MAX_WORD			MAX_OF(WORD)
-#define MAX_DWORD			MAX_OF(DWORD)
-#define MAX_QWORD			MAX_OF(QWORD)
-
-#define MAX_SIGNED_VALUE_OF(T, UT)		((T)(MAX_VALUE_OF(UT) / 2))
-#define MAX_SIGNED_OF(T, UT)			MAX_SIGNED_VALUE_OF(T, UT)
-
-#define MAX_CHAR			MAX_SIGNED_OF(CHAR, BYTE)
-#define MAX_SHORT			MAX_SIGNED_OF(SHORT, WORD)
-#define MAX_LONG			MAX_SIGNED_OF(LONG, DWORD)
-#define MAX_LONGLONG		MAX_SIGNED_OF(LONGLONG, QWORD)
-
-#define T_SIZE				SIZEOF(T)
-#define T_MAX				MAX_OF(T)
+#define ever		(;;)
+#define forever		for ever
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)	(constructor_expr)
 #define _CONSTRUCT(constructor_expr)					FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
+
+
+/* MISCELLANEOUS AVR-SPECIFIC MACROS */
 
 #define SOFT_RESET()			\
 	do							\
@@ -484,6 +507,6 @@ INLINE PTR operator new[](SIZE size, PTR ptr)
 	return ptr;
 }
 
-#endif	// if !defined(ARDUINO)...
+#endif	// if !defined(ARDUINO). || ARDUINO < 20000
 
 #endif

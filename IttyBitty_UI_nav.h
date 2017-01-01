@@ -140,8 +140,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		UiNavigationController(PIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
-		UiNavigationController(PIUINAVIGATIONLISTENER, RIUIINPUTSOURCE);
+		UiNavigationController(RIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
+		UiNavigationController(RIUINAVIGATIONLISTENER, RIUIINPUTSOURCE);
 
 		VIRTUAL ~UiNavigationController();
 
@@ -207,7 +207,7 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		PIUINAVIGATIONLISTENER _NavListener = NULL;
+		RIUINAVIGATIONLISTENER _NavListener;
 
 		PPIUIINPUTSOURCE _InputSources = NULL;
 		BYTE _InputSourceCount = 0;

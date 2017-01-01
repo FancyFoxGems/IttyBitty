@@ -19,7 +19,7 @@
 using namespace IttyBitty;
 
 
-/* [BITPROXY/BITREF]: PROXY CLASS TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
+/* [_BitProxy/BITREF]: PROXY STRUCT TO ALLOW FOR INDIVIDUAL BIT-ADDRESSED MEMORY WRITES */
 
 #ifndef NO_ITTYBITTY_FULL_BYTES
 _BitProxy::_BitProxy(PIBYTEFIELD pParent, SIZE i)
@@ -111,6 +111,7 @@ ByteField::~ByteField()
 {
 	if (_DisposeByte AND _pByte)
 	{
+		// TODO: Dispose PBYTE
 		//delete _pByte;
 		_pByte = NULL;
 	}

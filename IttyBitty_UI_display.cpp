@@ -38,11 +38,7 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 
 // CONSTRUCTORS
 
-UiRendererBase::UiRendererBase(CBOOL useLcdGlobalOptions)
-{
-	if (useLcdGlobalOptions)
-		Options = MUI::GetDefaultLcdUiRendererOptions();
-}
+UiRendererBase::UiRendererBase() : Options(MUI::GetDefaultRendererOptions()) { }
 
 UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options) { }
 

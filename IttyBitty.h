@@ -49,7 +49,9 @@
 *	NOTE: ^-- The fastest method of register data manipulation for ATmegas
 *
 * [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES (ONLY)
-*	NOTE: ^-- Base bundle excludes data structures for larger blocks
+*	NOTE: ^-- Base option (NO_ITTYBITTY_FULL_BYTES) excludes data structures for larger blocks
+*
+* [IttyBitty_bittable.h]: DATA STRUCTURE FOR MANAGEMENT OF BITMAPS
 *
 * [IttyBitty_registers.h]: REGISTER ABSTRACTIONS FOR CONVENIENCE AND CLARITY
 *
@@ -139,13 +141,23 @@
 /* [IttyBitty_bytes.h]: DATA STRUCTURES FOR BIT-PACKING BYTES, WORDS, DWORDS, ... */
 
 #ifndef NO_ITTYBITTY_BYTES
+
 	#include "IttyBitty_bytes.h"
+
+	/* [IttyBitty_bittable.h]: DATA STRUCTURE FOR MANAGEMENT OF BITMAPS */
+	#ifndef NO_ITTYBITTY_BITTABLE
+		#include "IttyBitty_bittable.h"
+	#endif
+
 #else
+
+	/* [IttyBitty_bits.h]: BIT-TWIDDLING MACROS FOR YOUR CODING PLEASURE */
 	#include "IttyBitty_bits.h"			// Included by [IttyBitty_bytes.h] otherwise
+
 #endif
 
 
-//#include "IttyBitty_util.h"					// Included by [IttyBitty_bits.h]
+//#include "IttyBitty_util.h"					// Included by [IttyBitty_bits.h] and other code units
 //#include "IttyBitty_type_traits.h"			// Included by [IttyBitty_util.h]
 //#include "IttyBitty_aliases.h"				// Included by [IttyBitty_type_traits.h]
 

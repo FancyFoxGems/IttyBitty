@@ -48,7 +48,7 @@ namespace IttyBitty
 
 #pragma region [IUiElement] DEFINITION
 
-	INTERFACE IUiElement : public IUiNavigationListener
+	INTERFACE IUiElement : public virtual IUiNavigationListener
 	{
 	public:
 
@@ -221,7 +221,6 @@ namespace IttyBitty
 	{
 	public:
 
-
 		// ACCESSORS/MUTATORS
 
 
@@ -251,7 +250,7 @@ namespace IttyBitty
 		// ACCESSORS/MUTATORS
 
 		VIRTUAL CBOOL MultipleSelectionsAllowed() const = 0;
-		VIRTUAL VOID SetAllowMultipleSelections(CBOOL) = 0;
+		VIRTUAL VOID SetAllowMultipleSelections(CBOOL = TRUE) = 0;
 
 
 	protected:

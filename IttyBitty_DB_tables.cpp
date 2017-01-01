@@ -478,7 +478,7 @@ CDBRESULT DbTable::InsertRow(PIDBTABLESET tableSet, PCBYTE rowData, CSIZE rowIdx
 	CSIZE rowSize = this->RowBinarySize();
 #endif
 
-	if (rowIdx < MAX_OF(SIZE))
+	if (rowIdx < MAX_VALUE(SIZE))
 	{
 		result = (CDBRESULT)this->MoveData(rowSize, rowIdx * rowSize);
 		if ((BYTE)result)

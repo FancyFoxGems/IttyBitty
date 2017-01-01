@@ -34,11 +34,11 @@ VOID UiInputSourceBase::Poll() { }
 
 #pragma region [UiNavigationController] IMPLEMENTATION
 
-UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener,
+UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener,
 	CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
 	 : _Dispose(FALSE), _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources) { }
 
-UiNavigationController::UiNavigationController(PIUINAVIGATIONLISTENER navListener, RIUIINPUTSOURCE inputSource)
+UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, RIUIINPUTSOURCE inputSource)
 	: _Dispose(TRUE), _NavListener(navListener), _InputSourceCount(1)
 {
 	_InputSources = new PIUIINPUTSOURCE[1];
@@ -55,12 +55,6 @@ UiNavigationController::~UiNavigationController()
 
 VOID UiNavigationController::Dispose()
 {
-	if (_NavListener)
-	{
-		delete _NavListener;
-		_NavListener = NULL;
-	}
-
 	if (!_InputSources)
 		return;
 
@@ -230,31 +224,31 @@ VOID UiNavigationController::AltOff()
 
 VOID UiNavigationController::Up(CUIACTIONSTATE state)
 {
-	_NavListener->Up(state);
+	_NavListener.Up(state);
 }
 VOID UiNavigationController::Down(CUIACTIONSTATE state)
 {
-	_NavListener->Down(state);
+	_NavListener.Down(state);
 }
 
 VOID UiNavigationController::Left(CUIACTIONSTATE state)
 {
-	_NavListener->Left(state);
+	_NavListener.Left(state);
 }
 
 VOID UiNavigationController::Right(CUIACTIONSTATE state)
 {
-	_NavListener->Up(state);
+	_NavListener.Up(state);
 }
 
 VOID UiNavigationController::Return(CUIACTIONSTATE state)
 {
-	_NavListener->Return(state);
+	_NavListener.Return(state);
 }
 
 VOID UiNavigationController::Select(CUIACTIONSTATE state)
 {
-	_NavListener->Select(state);
+	_NavListener.Select(state);
 }
 
 #pragma endregion

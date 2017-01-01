@@ -118,12 +118,12 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIRENDEREROPTIONS Options = MUI::RendererOptions;
+		RUIRENDEREROPTIONS Options;// = MUI::DefaultRendererOptions;
 
 
 		// CONSTRUCTORS
 
-		UiRendererBase(CBOOL = FALSE);
+		UiRendererBase();
 		UiRendererBase(RUIRENDEREROPTIONS);
 
 
