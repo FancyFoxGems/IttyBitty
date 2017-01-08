@@ -46,11 +46,18 @@ namespace IttyBitty
 	class Menu;
 	TYPEDEF_CLASS_ALIASES(Menu, MENU);
 
-	class ListMenuChoice;
-	TYPEDEF_CLASS_ALIASES(ListMenuChoice, LISTMENUCHOICE);
+
+	class ListMenuBase;
+	TYPEDEF_CLASS_ALIASES(ListMenuBase, LISTMENUBASE);
 
 	class ListMenu;
 	TYPEDEF_CLASS_ALIASES(ListMenu, LISTMENU);
+
+	class MultiListMenu;
+	TYPEDEF_CLASS_ALIASES(MultiListMenu, MULTILISTMENU);
+
+	class ListMenuChoice;
+	TYPEDEF_CLASS_ALIASES(ListMenuChoice, LISTMENUCHOICE);
 
 
 	interface IUiDialog;
@@ -64,13 +71,13 @@ namespace IttyBitty
 
 #pragma region [IMenuItem] DEFINITION
 
-	INTERFACE IMenuItem : public IUiElement
+	INTERFACE IMenuItem : public IUiChildElement<Menu>
 	{
 	public:
 
 		// INTERFACE METHODS
 
-		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL) = 0;
+		VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL) = 0;
 
 
 	protected:
@@ -87,14 +94,19 @@ namespace IttyBitty
 	{
 	public:
 
+		// [IUiChildElement] IMPLEMENTATION
+
+		VIRTUAL PCMENU Parent() const;
+
+
 		// [IMenuItem] IMPLEMENTATION
+
+		VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
-
-		PCCHAR _Label = NULL;
 	};
 
 #pragma endregion
@@ -106,9 +118,9 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IMenuItem] IMPLEMENTATION
+		// [IMenuItem] OVERRIDE
 
-		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL);
+		CBOOL Action(PTR = NULL, CPTR = NULL);
 
 
 	protected:
@@ -130,7 +142,7 @@ namespace IttyBitty
 
 		// [IMenuItem] IMPLEMENTATION
 
-		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL);
+		VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL);
 
 
 	protected:
@@ -150,9 +162,9 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IMenuItem] IMPLEMENTATION
+		// [IMenuItem] OVERRIDE
 
-		BOOL Action(PTR = NULL, CPTR = NULL);
+		CBOOL Action(PTR = NULL, CPTR = NULL);
 	};
 
 #pragma endregion
@@ -244,15 +256,18 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [ListMenuChoice] DEFINITION
+#pragma region [ListMenuBase] DEFINITION
 
-	CLASS ListMenuChoice : public MenuItemBase, public IUiChoice
+	CLASS ListMenuBase : public MenuBase<ListMenuChoice>
 	{
 	public:
 
-		// [IMenuItem] IMPLEMENTATION
+		// CONSTRUCTORS/DESTRUCTOR
 
-		VIRTUAL BOOL Action(PTR = NULL, CPTR = NULL);
+		ListMenuBase(CBYTE, PPLISTMENUCHOICE, CBOOL = FALSE);
+		ListMenuBase(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+
+		VIRTUAL ~ListMenuBase();
 	};
 
 #pragma endregion
@@ -260,7 +275,7 @@ namespace IttyBitty
 
 #pragma region [ListMenu] DEFINITION
 
-	CLASS ListMenu : public MenuBase<ListMenuChoice>, public IUiListElement<ListMenuChoice>
+	CLASS ListMenu : public ListMenuBase, public IUiListElement<ListMenuChoice>
 	{
 	public:
 
@@ -274,15 +289,59 @@ namespace IttyBitty
 
 		// [IUiListElement] IMPLEMENTATION
 
-		VIRTUAL CBOOL MultipleSelectionsAllowed() const;
-		VIRTUAL VOID SetAllowMultipleSelections(CBOOL = TRUE);
+		VIRTUAL RCLISTMENUCHOICE GetSelectedItem() const;
+		VIRTUAL VOID SetSelectedItem(RCLISTMENUCHOICE);
+	};
+
+#pragma endregion
+
+
+#pragma region [MultiListMenu] DEFINITION
+
+	CLASS MultiListMenu : public ListMenuBase, public IUiMultiListElement<ListMenuChoice>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MultiListMenu(CBYTE, PPLISTMENUCHOICE, CBOOL = FALSE);
+		MultiListMenu(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+
+		VIRTUAL ~MultiListMenu();
+
+
+		// [IUiMultiListElement] IMPLEMENTATION
+
+		VIRTUAL CBYTE NumSelected() const;
+
+		VIRTUAL PCLISTMENUCHOICE GetSelectedItems() const;
+		VIRTUAL VOID SetSelectedItems(PCLISTMENUCHOICE &, CBYTE);
+	};
+
+#pragma endregion
+
+#pragma region [ListMenuChoice] DEFINITION
+
+	CLASS ListMenuChoice : public MenuItemBase, public IUiChoice<ListMenu>
+	{
+	public:
+
+		// [IUiChoice] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsSelected() const;
+		VIRTUAL VOID SetSelected(CBOOL);
+
+
+		// [IMenuItem] OVERRIDE
+
+		CBOOL Action(PTR = NULL, CPTR = NULL);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		BOOL _AllowMultipleSelections = FALSE;
+		BOOL _Selected = FALSE;
 	};
 
 #pragma endregion

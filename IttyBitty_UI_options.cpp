@@ -17,17 +17,17 @@ using namespace IttyBitty;
 
 #pragma region GLOBAL VARIABLE & FUNCTION DEFINITIONS
 
-UIOPTIONS Options = UiOptions();
+UIOPTIONS MUI::Options = UiOptions();
 
 
-RUIRENDEREROPTIONS GetDefaultRendererOptions()
+RUIRENDEREROPTIONS MUI::DefaultRendererOptions()
 {
 	STATIC UIRENDEREROPTIONS rendererOptions;
 
 	return rendererOptions;
 }
 
-RUIRENDEREROPTIONS GetDefaultLcdRendererOptions()
+RUIRENDEREROPTIONS MUI::DefaultLcdRendererOptions()
 {
 	STATIC UIRENDEREROPTIONS rendererOptions;
 

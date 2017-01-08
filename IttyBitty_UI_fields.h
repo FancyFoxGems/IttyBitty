@@ -69,14 +69,24 @@ namespace IttyBitty
 
 
 	template DEFAULT_T_CLAUSE
-	class ListUiFieldChoice;
+	class ListUiFieldBase;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
-		CSL(DEFAULT_T_ARGS), ListUiFieldChoice, LISTUIFIELDCHOICE);
+		CSL(DEFAULT_T_ARGS), ListUiFieldBase, LISTUIFIELDBASE);
 
 	template DEFAULT_T_CLAUSE
 	class ListUiField;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
 		CSL(DEFAULT_T_ARGS), ListUiField, LISTUIFIELD);
+
+	template DEFAULT_T_CLAUSE
+	class MultiListUiField;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), MultiListUiField, MULTILISTUIFIELD);
+
+	template DEFAULT_T_CLAUSE
+	class ListUiFieldChoice;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), ListUiFieldChoice, LISTUIFIELDCHOICE);
 
 #pragma endregion
 
@@ -350,40 +360,19 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiFieldChoice] DEFINITION
+#pragma region [ListUiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldChoice : public UiFieldBase<T>, public IUiChoice
-	{
-	public:
-
-
-		// [IUiElement] OVERRIDES
-
-		VIRTUAL VOID Render(PIUIRENDERER);
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-	};
-
-#pragma endregion
-
-
-#pragma region [ListUiField] DEFINITION
-
-	template DEFAULT_T_CLAUSE
-	CLASS ListUiField : public UiFieldBase<T>, public IUiListElement<ListUiFieldChoice<T>>
+	CLASS ListUiFieldBase : public UiFieldBase<T>, public IUiContainerElement<ListUiFieldChoice<T>>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		ListUiField(CBYTE, PPLISTUIFIELDCHOICE<T>, CBOOL = FALSE);
-		ListUiField(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
+		ListUiFieldBase(CBYTE, PPLISTUIFIELDCHOICE<T>, CBOOL = FALSE);
+		ListUiFieldBase(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
 
-		VIRTUAL ~ListUiField();
+		VIRTUAL ~ListUiFieldBase();
 
 
 	protected:
@@ -411,12 +400,6 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveChild(RLISTUIFIELDCHOICE<T> child);
 
 
-		// [IUiListElement] IMPLEMENTATION
-
-		VIRTUAL CBOOL MultipleSelectionsAllowed() const;
-		VIRTUAL VOID SetAllowMultipleSelections(CBOOL multipleSelectionsAllowed = TRUE);
-
-
 		// [IUiNavigationListener] OVERRIDES
 
 		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
@@ -433,10 +416,130 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		BOOL _AllowMultipleSelections = FALSE;
-
 		PPLISTUIFIELDCHOICE<T> _Choices = NULL;
 		BYTE _ChoiceCount = 0;
+	};
+
+#pragma endregion
+
+
+#pragma region [ListUiField] DEFINITION
+
+	template DEFAULT_T_CLAUSE
+	CLASS ListUiField : public ListUiFieldBase<T>, public IUiListElement<T>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		ListUiField(CBYTE, PPLISTUIFIELDCHOICE<T>, CBOOL = FALSE);
+		ListUiField(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
+
+		VIRTUAL ~ListUiField();
+
+
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
+		// [IUiListElement] IMPLEMENTATION
+
+		VIRTUAL CONST T & GetSelectedItem() const;
+		VIRTUAL VOID SetSelectedItem(CONST T &);
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+	};
+
+#pragma endregion
+
+
+#pragma region [MultiListUiField] DEFINITION
+
+	template DEFAULT_T_CLAUSE
+	CLASS MultiListUiField : public ListUiFieldBase<T>, public IUiMultiListElement<T>
+	{
+	public:
+
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MultiListUiField(CBYTE, PPLISTUIFIELDCHOICE<T>, CBOOL = FALSE);
+		MultiListUiField(CBOOL = FALSE, CBYTE = MENUI_DEFAULT_LIST_CAPACITY);
+
+		VIRTUAL ~MultiListUiField();
+
+
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose();
+
+
+	public:
+
+		// [IUiMultiListElement] IMPLEMENTATION
+
+		VIRTUAL CBYTE NumSelected() const;
+
+		VIRTUAL CONST T * GetSelectedItems() const;
+		VIRTUAL VOID SetSelectedItems(CONST T * &, CBYTE);
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+	};
+
+#pragma endregion
+
+
+#pragma region [UiFieldChoice] DEFINITION
+
+	template DEFAULT_T_CLAUSE
+	CLASS ListUiFieldChoice : public UiFieldBase<T>, public IUiChoice<ListUiField<T>>
+	{
+	public:
+
+		// [IUiChildElement] IMPLEMENTATION
+
+		VIRTUAL PCLISTUIFIELD<T> Parent() const;
+
+
+		// [IUiChoice] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsSelected() const;
+		VIRTUAL VOID SetSelected(CBOOL);
+
+
+		// [IUiElement] OVERRIDES
+
+		VOID Render(RIUIRENDERER, CBYTE = 0, CBYTE = 0);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		BOOL _Selected = FALSE;
+
 	};
 
 #pragma endregion

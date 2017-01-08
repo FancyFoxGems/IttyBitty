@@ -118,7 +118,7 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIRENDEREROPTIONS Options;// = MUI::DefaultRendererOptions;
+		RUIRENDEREROPTIONS const Options;
 
 
 		// CONSTRUCTORS
@@ -182,14 +182,13 @@ namespace IttyBitty
 
 #pragma region [UiDisplayController] DEFINITION
 
-	CLASS UiDisplayController : public UiRendererBase
+	CLASS UiDisplayController : public IUiRenderer
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
 		UiDisplayController(CBYTE = 0, PPIUIRENDERER = NULL);
-		UiDisplayController(RIUIRENDERER);
 
 		VIRTUAL ~UiDisplayController();
 
@@ -216,7 +215,7 @@ namespace IttyBitty
 		VIRTUAL RCIUIRENDERER Renderer(CBYTE = 0) const;
 		VIRTUAL RIUIRENDERER Renderer(CBYTE = 0);
 
-		VIRTUAL RIUIRENDERER AddRenderer(RIUIRENDERER);
+		VIRTUAL CBOOL AddRenderer(RIUIRENDERER);
 
 		VIRTUAL VOID RemoveRenderer(CBYTE);
 		VIRTUAL VOID RemoveRenderer(RIUIRENDERER);
@@ -227,41 +226,6 @@ namespace IttyBitty
 		VIRTUAL SIZE write(BYTE);
 
 		using Print::write;
-
-		// [Print] OVERRIDES
-
-		//SIZE write(PCBYTE buffer, SIZE size);
-
-		//SIZE write(PCCHAR buffer);
-		//SIZE write(PCBYTE buffer, SIZE size);
-
-		//SIZE print(FLASH_STRING);
-		//SIZE print(CONST String &);
-		//SIZE print(PCCHAR);
-		//SIZE print(CHAR);
-		//SIZE print(BYTE, INT = DEC);
-		//SIZE print(INT, INT = DEC);
-		//SIZE print(UINT, INT = DEC);
-		//SIZE print(LONG, INT = DEC);
-		//SIZE print(DWORD, INT = DEC);
-		//SIZE print(DOUBLE, INT = 2);
-		//SIZE print(CONST Printable &);
-
-		//SIZE println(FLASH_STRING);
-		//SIZE println(CONST String &);
-		//SIZE println(PCCHAR);
-		//SIZE println(CHAR);
-		//SIZE println(BYTE, INT = DEC);
-		//SIZE println(INT, INT = DEC);
-		//SIZE println(UINT, INT = DEC);
-		//SIZE println(LONG, INT = DEC);
-		//SIZE println(DWORD, INT = DEC);
-		//SIZE println(DOUBLE, INT = 2);
-		//SIZE println(CONST Printable &);
-		//SIZE println();
-
-		//INT printf(PCCHAR format, ...) PRINTF_FORMAT(2, 3) ;
-		//INT printf(FLASH_STRING format, ...);
 
 
 		// [IUiRenderer] OVERRIDES

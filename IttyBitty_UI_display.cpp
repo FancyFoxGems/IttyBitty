@@ -38,9 +38,13 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 
 // CONSTRUCTORS
 
-UiRendererBase::UiRendererBase() : Options(MUI::GetDefaultRendererOptions()) { }
+UiRendererBase::UiRendererBase() : UiRendererBase(MUI::DefaultRendererOptions()) { }
 
-UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options) { }
+UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options)
+{
+	if (Options.WrapText)
+		this->SetLineWrap();
+}
 
 
 // [IUiRenderer] (NON-)IMPLEMENTATION
@@ -177,12 +181,10 @@ VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL)
 #pragma region [UiDisplayController] IMPLEMENTATION
 
 UiDisplayController::UiDisplayController(CBYTE rendererCount, PPIUIRENDERER renderers)
-	: _Dispose(FALSE), _RendererCount(rendererCount), _Renderers(renderers) { }
-
-UiDisplayController::UiDisplayController(RIUIRENDERER renderer) : _Dispose(TRUE), _RendererCount(1)
+	: _RendererCount(rendererCount), _Renderers(renderers)
 {
-	_Renderers = new PIUIRENDERER[1];
-	_Renderers[0] = &renderer;
+	if (!_Renderers)
+		_Dispose = TRUE;
 }
 
 UiDisplayController::~UiDisplayController()
@@ -251,8 +253,11 @@ RIUIRENDERER UiDisplayController::Renderer(CBYTE i)
 	return *this->operator[](i);
 }
 
-RIUIRENDERER UiDisplayController::AddRenderer(RIUIRENDERER renderer)
+CBOOL UiDisplayController::AddRenderer(RIUIRENDERER renderer)
 {
+	if (!_Dispose)
+		return FALSE;
+
 	PPIUIRENDERER newRenderers = new PIUIRENDERER[++_RendererCount];
 
 	for (BYTE i = 0; i < _RendererCount - 1; i++)
@@ -264,7 +269,7 @@ RIUIRENDERER UiDisplayController::AddRenderer(RIUIRENDERER renderer)
 
 	_Renderers = newRenderers;
 
-	return renderer;
+	return TRUE;
 }
 
 VOID UiDisplayController::RemoveRenderer(CBYTE rendererIdx)
@@ -311,298 +316,6 @@ SIZE UiDisplayController::write(BYTE value)
 
 	return __ResultFromCallResults(results, _RendererCount);
 }
-
-
-// [Print] OVERRIDES
-/*
-SIZE UiDisplayController::write(PCBYTE buffer, SIZE size)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, PCBYTE, SIZE>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::write, buffer, size);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::write(PCCHAR str)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, PCBYTE, SIZE>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::write, str);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::write(PCCHAR buffer, SIZE size)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, PCBYTE, SIZE>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::write, buffer, size);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(FLASH_STRING flashStr)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, FLASH_STRING>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, flashStr);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(CONST String & str)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CONST String &>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, str);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(PCCHAR str)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, PCCHAR>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, str);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(CHAR value)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CHAR>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(BYTE value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, BYTE, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(INT value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, INT, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(UINT value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, UINT, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(LONG value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, LONG, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(DWORD value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, DWORD, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(DOUBLE value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, DOUBLE, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::print(CONST Printable & printable)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CONST Printable &>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::print, printable);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(FLASH_STRING flashStr)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, FLASH_STRING>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, flashStr);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(CONST String & str)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CONST String &>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, str);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(PCCHAR str)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, PCCHAR>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, str);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(CHAR value)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CHAR>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(BYTE value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, BYTE, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(INT value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, INT, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(UINT value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, UINT, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(LONG value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, LONG, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(DWORD value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, DWORD, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(DOUBLE value, INT base)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, DOUBLE, INT>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, value, base);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println(CONST Printable & printable)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, CONST Printable &>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println, printable);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-SIZE UiDisplayController::println()
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::println);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-INT UiDisplayController::printf(PCCHAR format, ...)
-{
-	INT results[_RendererCount];
-
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-
-	for (BYTE i = 0; i < _RendererCount; i++)
-		results[i] = _Renderers[i]->printf(format, args);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-INT UiDisplayController::printf(FLASH_STRING format, ...)
-{
-	INT results[_RendererCount];
-
-	va_list args;
-	va_start(args, 0);
-	va_end(args);
-
-	for (BYTE i = 0; i < _RendererCount; i++)
-		results[i] = _Renderers[i]->printf(format, args);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-*/
 
 
 // [IUiRenderer] OVERRIDES

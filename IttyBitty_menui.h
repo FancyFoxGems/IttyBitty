@@ -38,23 +38,21 @@ namespace IttyBitty
 	{
 	public:
 
-		// PUBLIC [UiOptions] MEMBER
+		// PUBLIC MEMBER VARIABLES
 
-		RUIOPTIONS Options = MUI::Options;
+		UIDISPLAYCONTROLLER Display;
+		UINAVIGATIONCONTROLLER Navigation;
 
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenUI(CBYTE = MENUI_DEFAULT_MENU_CAPACITY, CBOOL = TRUE);
-		MenUI(CBYTE, PPIUIINPUTSOURCE, CBYTE, PPIUIRENDERER, CBYTE = MENUI_DEFAULT_MENU_CAPACITY, CBOOL = TRUE);
+		MenUI(CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+		MenUI(CBYTE, PPIUIRENDERER, CBYTE, PPIUIINPUTSOURCE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
 
 		~MenUI();
 
 
 		// ACCESSORS/MUTATORS
-
-		RUINAVIGATIONCONTROLLER Navigation();
-		RUIDISPLAYCONTROLLER Display();
 
 		PUICALLBACK GetIdleHandler() const;
 		VOID SetIdleHandler(PUICALLBACK);
@@ -76,7 +74,7 @@ namespace IttyBitty
 		template<typename T>
 		CONST T Prompt(RIUIFIELD<T> field)
 		{
-			if (field.Prompt(_Display))
+			if (field.Prompt(Display))
 				return field.Value();
 
 			return T(T_MAX);
@@ -162,8 +160,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		UIDISPLAYCONTROLLER _Display;
-		UINAVIGATIONCONTROLLER _Navigation;
+		WORD _TextShownMS = 0;
 
 
 		// EVENT CALLBACKS

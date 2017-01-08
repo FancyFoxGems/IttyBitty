@@ -97,7 +97,7 @@ namespace IttyBitty
 		// CONSTRUCTOR/DESTRUCTOR
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd)
-			: UiRendererBase(MUI::GetDefaultLcdRendererOptions()), _LCD(lcd) { }
+			: UiRendererBase(MUI::DefaultLcdRendererOptions()), _LCD(lcd) { }
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd, RUIRENDEREROPTIONS options)
 			: UiRendererBase(options), _LCD(lcd) { }

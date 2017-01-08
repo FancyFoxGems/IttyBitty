@@ -141,7 +141,6 @@ namespace IttyBitty
 		// CONSTRUCTORS/DESTRUCTOR
 
 		UiNavigationController(RIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
-		UiNavigationController(RIUINAVIGATIONLISTENER, RIUIINPUTSOURCE);
 
 		VIRTUAL ~UiNavigationController();
 
@@ -168,7 +167,7 @@ namespace IttyBitty
 		VIRTUAL RCIUIINPUTSOURCE InputSource(CBYTE = 0) const;
 		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0);
 
-		VIRTUAL RIUIINPUTSOURCE AddInputSource(RIUIINPUTSOURCE);
+		VIRTUAL CBOOL AddInputSource(RIUIINPUTSOURCE);
 
 		VIRTUAL VOID RemoveInputSource(CBYTE);
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
@@ -203,6 +202,17 @@ namespace IttyBitty
 
 	protected:
 
+		// [__StateEntry] DEFINITION
+
+		STRUCT __StateEntry
+		{
+			UIACTIONSTATE State = UiActionState::INACTION;
+			LONG Timestamp = 0;
+		};
+
+		typedef struct __StateEntry STATEENTRY, & RSTATEENTRY;
+
+
 		// INSTANCE VARIABLES
 
 		BOOL _Dispose = FALSE;
@@ -214,6 +224,13 @@ namespace IttyBitty
 
 		BOOL _ShiftOn = FALSE;
 		BOOL _AltOn = FALSE;
+
+		STATEENTRY _PrevStates[MENUI_NUM_STATEFUL_ACTIONS];
+
+
+		// PROTECTED MEMBER FUNCTION DECLARATION
+
+		CUIACTIONSTATE UpdateState(CUIACTIONTYPE, CUIACTIONSTATE);
 	};
 
 #pragma endregion

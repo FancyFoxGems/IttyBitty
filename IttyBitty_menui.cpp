@@ -13,41 +13,23 @@
 #include "IttyBitty_menui.h"
 
 using namespace IttyBitty;
+using namespace IttyBitty::MUI;
 
 
 #pragma region [MenUI] IMPLEMENTATION
 
 // CONSTRUCTORS/DESTRUCTOR
 
-MenUI::MenUI(CBYTE initMenuCapacity, CBOOL useGlobalOptions) : Menu(initMenuCapacity),
-	_Navigation(UiNavigationController(*this)), _Display(UiDisplayController())
-{
-}
+MenUI::MenUI(CBYTE initMenuCapacity)
+	: MenUI(0, NULL, 0, NULL, initMenuCapacity) { }
 
-MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources,
-		CBYTE rendererCount, PPIUIRENDERER renderers, CBYTE initMenuCapacity, CBOOL useGlobalOptions)
-	: Menu(initMenuCapacity), _Navigation(UiNavigationController(*this,	inputSourceCount, inputSources)),
-		_Display(UiDisplayController(rendererCount, renderers))
-{
-}
-
-MenUI::~MenUI()
-{
-	//~Menu();
-}
+MenUI::MenUI(CBYTE rendererCount, PPIUIRENDERER renderers,
+		CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE initMenuCapacity)
+	: Menu(initMenuCapacity), Display(UiDisplayController(rendererCount, renderers)),
+		Navigation(UiNavigationController(*this, inputSourceCount, inputSources)) { }
 
 
 // ACCESSORS/MUTATORS
-
-RUINAVIGATIONCONTROLLER MenUI::Navigation()
-{
-	return _Navigation;
-}
-
-RUIDISPLAYCONTROLLER MenUI::Display()
-{
-	return _Display;
-}
 
 PUICALLBACK MenUI::GetIdleHandler() const
 {
@@ -65,7 +47,7 @@ VOID MenUI::SetIdleHandler(PUICALLBACK onIdleHandler)
 
 VOID MenUI::Update()
 {
-	_Navigation.Poll();
+	Navigation.Poll();
 }
 
 VOID MenUI::ShowText(PCCHAR str, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
@@ -85,42 +67,41 @@ VOID MenUI::Prompt(RUIDIALOG dialog)
 
 CBOOL MenUI::IsShiftOn() const
 {
-	return _Navigation.IsShiftOn();
+	return Navigation.IsShiftOn();
 }
 
 VOID MenUI::ToggleShift()
 {
-	_Navigation.ToggleShift();
+	Navigation.ToggleShift();
 }
-
 VOID MenUI::ShiftOn()
 {
-	_Navigation.ShiftOn();
+	Navigation.ShiftOn();
 }
 
 VOID MenUI::ShiftOff()
 {
-	_Navigation.ShiftOff();
+	Navigation.ShiftOff();
 }
 
 CBOOL MenUI::IsAltOn() const
 {
-	return _Navigation.IsAltOn();
+	return Navigation.IsAltOn();
 }
 
 VOID MenUI::ToggleAlt()
 {
-	_Navigation.ToggleAlt();
+	Navigation.ToggleAlt();
 }
 
 VOID MenUI::AltOn()
 {
-	_Navigation.AltOn();
+	Navigation.AltOn();
 }
 
 VOID MenUI::AltOff()
 {
-	_Navigation.AltOff();
+	Navigation.AltOff();
 }
 
 
@@ -128,7 +109,7 @@ VOID MenUI::AltOff()
 
 SIZE MenUI::write(BYTE value)
 {
-	return _Display.write(value);
+	return Display.write(value);
 }
 
 
@@ -136,142 +117,142 @@ SIZE MenUI::write(BYTE value)
 
 CBYTE MenUI::Cols() const
 {
-	return _Display.Cols();
+	return Display.Cols();
 }
 
 CBYTE MenUI::Rows() const
 {
-	return _Display.Rows();
+	return Display.Rows();
 }
 
 CBYTE MenUI::CursorCol() const
 {
-	return _Display.CursorCol();
+	return Display.CursorCol();
 }
 
 CBYTE MenUI::CursorRow() const
 {
-	return _Display.CursorRow();
+	return Display.CursorRow();
 }
 
 CBOOL MenUI::IsLineWrapEnabled() const
 {
-	return _Display.IsLineWrapEnabled();
+	return Display.IsLineWrapEnabled();
 }
 
 VOID MenUI::SetLineWrap(CBOOL wrapLines)
 {
-	_Display.SetLineWrap(wrapLines);
+	Display.SetLineWrap(wrapLines);
 }
 
 VOID MenUI::CursorOn()
 {
-	_Display.CursorOn();
+	Display.CursorOn();
 }
 
 VOID MenUI::CursorOff()
 {
-	_Display.CursorOn();
+	Display.CursorOn();
 }
 
 VOID MenUI::CursorBlinkOn()
 {
-	_Display.CursorOn();
+	Display.CursorOn();
 }
 
 VOID MenUI::CursorBlinkOff()
 {
-	_Display.CursorOn();
+	Display.CursorOn();
 }
 
 CBOOL MenUI::Available()
 {
-	return _Display.Available();
+	return Display.Available();
 }
 
 VOID MenUI::Flush()
 {
-	_Display.Flush();
+	Display.Flush();
 }
 
 VOID MenUI::Clear()
 {
-	_Display.Clear();
+	Display.Clear();
 }
 
 VOID MenUI::ClearCol(CBYTE col)
 {
-	_Display.ClearCol(col);
+	Display.ClearCol(col);
 }
 
 VOID MenUI::ClearRow(CBYTE row)
 {
-	_Display.ClearRow(row);
+	Display.ClearRow(row);
 }
 
 VOID MenUI::ScrollLeft()
 {
-	_Display.ScrollLeft();
+	Display.ScrollLeft();
 }
 
 VOID MenUI::ScrollRight()
 {
-	_Display.ScrollRight();
+	Display.ScrollRight();
 }
 
 VOID MenUI::Home()
 {
-	_Display.Home();
+	Display.Home();
 }
 
 VOID MenUI::CursorPrev()
 {
-	_Display.CursorPrev();
+	Display.CursorPrev();
 }
 
 VOID MenUI::CursorNext()
 {
-	_Display.CursorNext();
+	Display.CursorNext();
 }
 
 VOID MenUI::MoveCursor(CBYTE col, CBYTE row)
 {
-	_Display.MoveCursor(col, row);
+	Display.MoveCursor(col, row);
 }
 
 VOID MenUI::LoadCustomChar(BYTE charIndex, PCBYTE charData)
 {
-	_Display.LoadCustomChar(charIndex, charData);
+	Display.LoadCustomChar(charIndex, charData);
 }
 
 VOID MenUI::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 {
-	_Display.LoadCustomChar_P(charIndex, charDataAddr);
+	Display.LoadCustomChar_P(charIndex, charDataAddr);
 }
 
 CBYTE MenUI::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
-	return _Display.WriteAt(value, col, row);
+	return Display.WriteAt(value, col, row);
 }
 
 CBYTE MenUI::PrintString(PCCHAR str, BYTE col, BYTE row)
 {
-	return _Display.PrintString(str, col, row);
+	return Display.PrintString(str, col, row);
 }
 
 CBYTE MenUI::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
-	return _Display.PrintString_P(flashStr, col, row);
+	return Display.PrintString_P(flashStr, col, row);
 }
 
 CBYTE MenUI::PrintStyledLine(PCCHAR str, BYTE row)
 {
-	return _Display.PrintStyledLine(str, row);
+	return Display.PrintStyledLine(str, row);
 }
 
 CBYTE MenUI::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
-	return _Display.PrintStyledLine_P(flashStr, row);
+	return Display.PrintStyledLine_P(flashStr, row);
 }
 
 
@@ -279,19 +260,19 @@ CBYTE MenUI::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 
 VOID MenUI::DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
 {
-	_Display.DrawScrollBar(percentage, options);
+	Display.DrawScrollBar(percentage, options);
 }
 
 VOID MenUI::DrawGraph(BYTE startCol, BYTE row,
 	BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 {
-	_Display.DrawGraph(startCol, row, widthChars, percentage, options);
+	Display.DrawGraph(startCol, row, widthChars, percentage, options);
 }
 
 VOID MenUI::DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
 	BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw)
 {
-	_Display.DrawSlider(startCol, row, widthChars, percentage, options, redraw);
+	Display.DrawSlider(startCol, row, widthChars, percentage, options, redraw);
 }
 
 #endif	// #ifndef NO_ITTYBITTY_EXTENSIONS

@@ -14,6 +14,7 @@
 #include "IttyBitty_UI_nav.h"
 
 using namespace IttyBitty;
+using namespace IttyBitty::MUI;
 
 
 #pragma region [UiInputSourceBase] IMPLEMENTATION
@@ -35,14 +36,11 @@ VOID UiInputSourceBase::Poll() { }
 #pragma region [UiNavigationController] IMPLEMENTATION
 
 UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener,
-	CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
-	 : _Dispose(FALSE), _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources) { }
-
-UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, RIUIINPUTSOURCE inputSource)
-	: _Dispose(TRUE), _NavListener(navListener), _InputSourceCount(1)
+		CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
+	: _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
 {
-	_InputSources = new PIUIINPUTSOURCE[1];
-	_InputSources[0] = &inputSource;
+	if (!_InputSources)
+		_Dispose = TRUE;
 }
 
 UiNavigationController::~UiNavigationController()
@@ -111,8 +109,11 @@ RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 	return *this->operator[](i);
 }
 
-RIUIINPUTSOURCE UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
+CBOOL UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
 {
+	if (!_Dispose)
+		return FALSE;
+
 	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[++_InputSourceCount];
 
 	for (BYTE i = 0; i < _InputSourceCount - 1; i++)
@@ -125,7 +126,7 @@ RIUIINPUTSOURCE UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSour
 
 	_InputSources = newInputSources;
 
-	return inputSource;
+	return TRUE;
 }
 
 VOID UiNavigationController::RemoveInputSource(CBYTE inputSourceIdx)
@@ -177,6 +178,43 @@ VOID UiNavigationController::Poll()
 		if (!_InputSources[i]->IsAsynchronous())
 			_InputSources[i]->Poll();
 	}
+
+	UIACTIONSTATE resultState = INACTION;
+
+	for (BYTE actionType = 0; actionType < MENUI_NUM_STATEFUL_ACTIONS; actionType++)
+	{
+		resultState = this->UpdateState(static_cast<CUIACTIONTYPE>(actionType), INACTION);
+
+		if (resultState != INACTION)
+		{
+			switch (actionType)
+			{
+			case ACTION_UP:
+				this->Up(resultState);
+				break;
+
+			case ACTION_DOWN:
+				this->Down(resultState);
+				break;
+
+			case ACTION_LEFT:
+				this->Left(resultState);
+				break;
+
+			case ACTION_RIGHT:
+				this->Right(resultState);
+				break;
+
+			case ACTION_SELECT:
+				this->Select(resultState);
+				break;
+
+			case ACTION_RETURN:
+				this->Return(resultState);
+				break;
+			}
+		}
+	}
 }
 
 
@@ -224,31 +262,180 @@ VOID UiNavigationController::AltOff()
 
 VOID UiNavigationController::Up(CUIACTIONSTATE state)
 {
-	_NavListener.Up(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_UP, state);
+
+	if (resultState != INACTION)
+		_NavListener.Up(resultState);
 }
 VOID UiNavigationController::Down(CUIACTIONSTATE state)
 {
-	_NavListener.Down(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Down(resultState);
 }
 
 VOID UiNavigationController::Left(CUIACTIONSTATE state)
 {
-	_NavListener.Left(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_LEFT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Left(resultState);
 }
 
 VOID UiNavigationController::Right(CUIACTIONSTATE state)
 {
-	_NavListener.Up(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RIGHT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Right(resultState);
 }
 
 VOID UiNavigationController::Return(CUIACTIONSTATE state)
 {
-	_NavListener.Return(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RETURN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Return(resultState);
 }
 
 VOID UiNavigationController::Select(CUIACTIONSTATE state)
 {
-	_NavListener.Select(state);
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_SELECT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Select(resultState);
+}
+
+
+// PROTECTED MEMBER FUNCTION DEFINITION
+
+CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUIACTIONSTATE newState)
+{
+	RSTATEENTRY entry = _PrevStates[actionType];
+	LONG now = millis();
+
+	if (newState != INACTION)
+	{
+		for (BYTE i = 0; i < MENUI_NUM_STATEFUL_ACTIONS; i++)
+		{
+			if (i == actionType)
+				continue;
+
+			if (_PrevStates[i].State == HELD)
+				_PrevStates[i].Timestamp = now;
+			else if (_PrevStates[i].State != PRESSED)
+				_PrevStates[i].State = INACTION;
+		}
+	}
+
+	switch (newState)
+	{
+	case INACTION:
+
+		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Navigation.HoldThresholdMS)
+		{
+			entry.State = HELD;
+			entry.Timestamp = now;
+
+			return HELD;
+		}
+
+		if (entry.State == HELD && entry.Timestamp - now >= Options.Navigation.HoldRepeatMS)
+		{
+			entry.Timestamp = now;
+
+			return CLICK;
+		}
+
+		return INACTION;
+
+
+	case PRESSED:
+
+		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Navigation.HoldThresholdMS)
+		{
+			entry.State = HELD;
+			entry.Timestamp = now;
+
+			return HELD;
+		}
+
+		if (entry.State == CLICK || entry.State == DOUBLE_CLICK)
+			return PRESSED;
+
+		if (entry.State == HELD)
+			return HELD;
+
+		entry.State = PRESSED;
+		entry.Timestamp = now;
+
+		return entry.State;
+
+
+	case RELEASED:
+
+		if (entry.State == PRESSED)
+		{
+			entry.State = CLICK;
+			entry.Timestamp = now;
+
+			return CLICK;
+		}
+
+		if ((entry.State == CLICK || entry.State == DOUBLE_CLICK)
+			&& now - entry.Timestamp <= Options.Navigation.DblClickThresholdMS)
+		{
+			entry.State = CLICK;
+			entry.Timestamp = now;
+
+			return DOUBLE_CLICK;
+		}
+
+		entry.State = INACTION;
+
+		return RELEASED;
+
+
+	case CLICK:
+
+		if ((entry.State == RELEASED || entry.State == CLICK || entry.State == DOUBLE_CLICK)
+			&& now - entry.Timestamp <= Options.Navigation.DblClickThresholdMS)
+		{
+			entry.State = CLICK;
+			entry.Timestamp = now;
+
+			return DOUBLE_CLICK;
+		}
+
+		if (entry.State != PRESSED)
+			entry.Timestamp = now;
+
+		entry.State = CLICK;
+
+		return CLICK;
+
+
+	case DOUBLE_CLICK:
+
+		entry.State = CLICK;
+		entry.Timestamp = now;
+
+		return DOUBLE_CLICK;
+
+
+	case HELD:
+
+		if (entry.State != HELD)
+		{
+			entry.State = HELD;
+			entry.Timestamp = now;
+		}
+
+		return HELD;
+	}
+
+	return newState;
 }
 
 #pragma endregion
