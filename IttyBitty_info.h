@@ -87,7 +87,7 @@ namespace IttyBitty
 		WDT_TIMEOUT		= 0x8
 	};
 
-	TYPEDEF_ENUM_ALIASES(ResetSource, RESETSOURCE);
+	DECLARE_ENUM_AS_FLAGS(ResetSource, RESETSOURCE);
 
 
 	enum WdtInterval : BYTE
@@ -104,7 +104,7 @@ namespace IttyBitty
 		WDT_8S		= WDTO_8S
 	};
 
-	TYPEDEF_ENUM_ALIASES(WdtInterval, WDTINTERVAL);
+	DECLARE_ENUM_AS_FLAGS(WdtInterval, WDTINTERVAL);
 
 #pragma endregion
 

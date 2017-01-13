@@ -21,7 +21,7 @@ using namespace IttyBitty::MUI;
 
 // CONSTRUCTOR
 
-UiInputSourceBase::UiInputSourceBase(PIUINAVIGATIONLISTENER navListener) : _NavListener(navListener) { }
+UiInputSourceBase::UiInputSourceBase(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
 
 
 // [IUiListener] (NON-)IMPLEMENTATION
@@ -34,6 +34,8 @@ VOID UiInputSourceBase::Poll() { }
 
 
 #pragma region [UiNavigationController] IMPLEMENTATION
+
+// CONSTRUCTOR/DESTRUCTOR
 
 UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener,
 		CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
@@ -164,6 +166,99 @@ VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 }
 
 
+// [IUiNavigationController] IMPLEMENTATION
+
+VOID UiNavigationController::ToggleShift()
+{
+	_ShiftOn = NOT _ShiftOn;
+}
+
+VOID UiNavigationController::ShiftOn()
+{
+	_ShiftOn = TRUE;
+}
+
+VOID UiNavigationController::ShiftOff()
+{
+	_ShiftOn = FALSE;
+}
+
+VOID UiNavigationController::ToggleAlt()
+{
+	_AltOn = NOT _AltOn;
+}
+
+VOID UiNavigationController::AltOn()
+{
+	_AltOn = TRUE;
+}
+
+VOID UiNavigationController::AltOff()
+{
+	_AltOn = FALSE;
+}
+
+
+// [IUiNavigationListener] IMPLEMENTATION
+
+CBOOL UiNavigationController::IsShiftOn() const
+{
+	return _ShiftOn;
+}
+
+CBOOL UiNavigationController::IsAltOn() const
+{
+	return _AltOn;
+}
+
+VOID UiNavigationController::Up(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_UP, state);
+
+	if (resultState != INACTION)
+		_NavListener.Up(this->ApplyShiftAltFlags(resultState));
+}
+VOID UiNavigationController::Down(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Down(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Left(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_LEFT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Left(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Right(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RIGHT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Right(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Return(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RETURN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Return(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Select(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_SELECT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
+}
+
+
 // [IUiInputSource] IMPLEMENTATION
 
 CBOOL UiNavigationController::IsAsynchronous() const
@@ -190,27 +285,27 @@ VOID UiNavigationController::Poll()
 			switch (actionType)
 			{
 			case ACTION_UP:
-				this->Up(resultState);
+				this->Up(this->ApplyShiftAltFlags(resultState));
 				break;
 
 			case ACTION_DOWN:
-				this->Down(resultState);
+				this->Down(this->ApplyShiftAltFlags(resultState));
 				break;
 
 			case ACTION_LEFT:
-				this->Left(resultState);
+				this->Left(this->ApplyShiftAltFlags(resultState));
 				break;
 
 			case ACTION_RIGHT:
-				this->Right(resultState);
+				this->Right(this->ApplyShiftAltFlags(resultState));
 				break;
 
 			case ACTION_SELECT:
-				this->Select(resultState);
+				this->Select(this->ApplyShiftAltFlags(resultState));
 				break;
 
 			case ACTION_RETURN:
-				this->Return(resultState);
+				this->Return(this->ApplyShiftAltFlags(resultState));
 				break;
 			}
 		}
@@ -218,97 +313,7 @@ VOID UiNavigationController::Poll()
 }
 
 
-// [IUiNavigationListener] IMPLEMENTATION
-
-CBOOL UiNavigationController::IsShiftOn() const
-{
-	return _ShiftOn;
-}
-
-VOID UiNavigationController::ToggleShift()
-{
-	_ShiftOn = NOT _ShiftOn;
-}
-
-VOID UiNavigationController::ShiftOn()
-{
-	_ShiftOn = TRUE;
-}
-
-VOID UiNavigationController::ShiftOff()
-{
-	_ShiftOn = FALSE;
-}
-
-CBOOL UiNavigationController::IsAltOn() const
-{
-	return _AltOn;
-}
-
-VOID UiNavigationController::ToggleAlt()
-{
-	_AltOn = NOT _AltOn;
-}
-
-VOID UiNavigationController::AltOn()
-{
-	_AltOn = TRUE;
-}
-
-VOID UiNavigationController::AltOff()
-{
-	_AltOn = FALSE;
-}
-
-VOID UiNavigationController::Up(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_UP, state);
-
-	if (resultState != INACTION)
-		_NavListener.Up(resultState);
-}
-VOID UiNavigationController::Down(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
-
-	if (resultState != INACTION)
-		_NavListener.Down(resultState);
-}
-
-VOID UiNavigationController::Left(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_LEFT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Left(resultState);
-}
-
-VOID UiNavigationController::Right(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_RIGHT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Right(resultState);
-}
-
-VOID UiNavigationController::Return(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_RETURN, state);
-
-	if (resultState != INACTION)
-		_NavListener.Return(resultState);
-}
-
-VOID UiNavigationController::Select(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_SELECT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Select(resultState);
-}
-
-
-// PROTECTED MEMBER FUNCTION DEFINITION
+// PROTECTED MEMBER FUNCTION DEFINITIONS
 
 CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUIACTIONSTATE newState)
 {
@@ -333,7 +338,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 	{
 	case INACTION:
 
-		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Navigation.HoldThresholdMS)
+		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Input.HoldThresholdMS)
 		{
 			entry.State = HELD;
 			entry.Timestamp = now;
@@ -341,7 +346,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 			return HELD;
 		}
 
-		if (entry.State == HELD && entry.Timestamp - now >= Options.Navigation.HoldRepeatMS)
+		if (entry.State == HELD && entry.Timestamp - now >= Options.Input.HoldRepeatMS)
 		{
 			entry.Timestamp = now;
 
@@ -353,7 +358,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 
 	case PRESSED:
 
-		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Navigation.HoldThresholdMS)
+		if (entry.State == PRESSED && entry.Timestamp - now >= Options.Input.HoldThresholdMS)
 		{
 			entry.State = HELD;
 			entry.Timestamp = now;
@@ -384,7 +389,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 		}
 
 		if ((entry.State == CLICK || entry.State == DOUBLE_CLICK)
-			&& now - entry.Timestamp <= Options.Navigation.DblClickThresholdMS)
+			&& now - entry.Timestamp <= Options.Input.DblClickThresholdMS)
 		{
 			entry.State = CLICK;
 			entry.Timestamp = now;
@@ -400,7 +405,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 	case CLICK:
 
 		if ((entry.State == RELEASED || entry.State == CLICK || entry.State == DOUBLE_CLICK)
-			&& now - entry.Timestamp <= Options.Navigation.DblClickThresholdMS)
+			&& now - entry.Timestamp <= Options.Input.DblClickThresholdMS)
 		{
 			entry.State = CLICK;
 			entry.Timestamp = now;
@@ -433,9 +438,19 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 		}
 
 		return HELD;
+
+
+	default:
+
+		return newState;
 	}
 
 	return newState;
+}
+
+CUIACTIONSTATE UiNavigationController::ApplyShiftAltFlags(CUIACTIONSTATE state)
+{
+	return static_cast<CUIACTIONSTATE>(WITH_BITS(state, (_ShiftOn ? SHIFT_ON : 0x0) OR (_AltOn ? ALT_ON : 0x0)));
 }
 
 #pragma endregion

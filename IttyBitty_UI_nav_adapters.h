@@ -83,7 +83,7 @@ namespace IttyBitty
 			if (_PrevValue + _Tolerance <= _Variable)
 			{
 				_PrevValue = _Variable;
-				this->DoAction();
+				this.DoAction();
 			}
 		}
 
@@ -107,35 +107,35 @@ namespace IttyBitty
 			switch (_Action)
 			{
 			case UiAction::UP:
-				_NavListener->Up();
+				_Navigation.Up();
 				break;
 
 			case UiAction::DOWN:
-				_NavListener->Down();
+				_Navigation.Down();
 				break;
 
 			case UiAction::LEFT:
-				_NavListener->Left();
+				_Navigation.Left();
 				break;
 
 			case UiAction::RIGHT:
-				_NavListener->Right();
+				_Navigation.Right();
 				break;
 
 			case UiAction::RETURN:
-				_NavListener->Return();
+				_Navigation.Return();
 				break;
 
 			case UiAction::SELECT:
-				_NavListener->Select();
+				_Navigation.Select();
 				break;
 
 			case UiAction::SHIFT:
-				_NavListener->ToggleShift();
+				_Navigation.ToggleShift();
 				break;
 
 			case UiAction::ALT:
-				_NavListener->ToggleAlt();
+				_Navigation.ToggleAlt();
 				break;
 
 			default:

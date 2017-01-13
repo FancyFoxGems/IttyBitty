@@ -35,7 +35,7 @@ namespace IttyBitty
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), CSL(DEFAULT_T_ARGS), MenuField, MENUFIELD);
 
 
-	#define MENU_BASE_T_CLAUSE_DEF		<typename TMenuItem>
+	#define MENU_BASE_T_CLAUSE_DEF		<typename TMenuItem = IMenuItem>
 	#define MENU_BASE_T_CLAUSE			<typename TMenuItem>
 	#define MENU_BASE_T_ARGS			<TMenuItem>
 
@@ -94,9 +94,16 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTORS/DESTRUCTOR
+
+		MenuItemBase(PCMENU);
+
+		~MenuItemBase();
+
+
 		// [IUiChildElement] IMPLEMENTATION
 
-		VIRTUAL PCMENU Parent() const;
+		VIRTUAL PMENU Parent() const;
 
 
 		// [IMenuItem] IMPLEMENTATION
@@ -107,6 +114,8 @@ namespace IttyBitty
 	protected:
 
 		// INSTANCE VARIABLES
+
+		PCMENU _Parent = NULL;
 	};
 
 #pragma endregion
@@ -361,7 +370,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Prompt(PIUIRENDERER) = 0;
+		VIRTUAL VOID Prompt(RIUIRENDERER) = 0;
 
 
 	protected:
@@ -385,7 +394,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Prompt(PIUIRENDERER);
+		VIRTUAL VOID Prompt(RIUIRENDERER);
 
 
 	protected:

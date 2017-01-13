@@ -23,10 +23,10 @@ using namespace IttyBitty::MUI;
 MenUI::MenUI(CBYTE initMenuCapacity)
 	: MenUI(0, NULL, 0, NULL, initMenuCapacity) { }
 
-MenUI::MenUI(CBYTE rendererCount, PPIUIRENDERER renderers,
-		CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE initMenuCapacity)
-	: Menu(initMenuCapacity), Display(UiDisplayController(rendererCount, renderers)),
-		Navigation(UiNavigationController(*this, inputSourceCount, inputSources)) { }
+MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources,
+		CBYTE rendererCount, PPIUIRENDERER renderers, CBYTE initMenuCapacity)
+	: Menu(initMenuCapacity), Navigation(UiNavigationController(*this, inputSourceCount, inputSources)),
+		Display(UiDisplayController(rendererCount, renderers)) { }
 
 
 // ACCESSORS/MUTATORS
@@ -64,6 +64,33 @@ VOID MenUI::Prompt(RUIDIALOG dialog)
 
 
 // [IUiNavigationListener] OVERRIDES
+
+VOID MenUI::Up(CUIACTIONSTATE state)
+{
+}
+
+VOID MenUI::Down(CUIACTIONSTATE state)
+{
+}
+
+VOID MenUI::Left(CUIACTIONSTATE state)
+{
+}
+
+VOID MenUI::Right(CUIACTIONSTATE state)
+{
+}
+
+VOID MenUI::Return(CUIACTIONSTATE state)
+{
+}
+
+VOID MenUI::Select(CUIACTIONSTATE state)
+{
+}
+
+
+// [IUiNavigationController] IMPLEMENTATION
 
 CBOOL MenUI::IsShiftOn() const
 {

@@ -24,11 +24,14 @@ namespace IttyBitty
 	interface IUiInputSource;
 	TYPEDEF_CLASS_ALIASES(IUiInputSource, IUIINPUTSOURCE);
 
-	class UiInputSourceBase;
-	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
-
 	interface IUiNavigationListener;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
+
+	interface IUiNavigationController;
+	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
+
+	class UiInputSourceBase;
+	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
@@ -62,34 +65,6 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiInputSourceBase] DEFINITION
-
-	CLASS UiInputSourceBase : public IUiInputSource
-	{
-	public:
-
-		// CONSTRUCTOR
-
-		UiInputSourceBase(PIUINAVIGATIONLISTENER);
-
-
-		// [IUiListener] IMPLEMENTATION
-
-		VIRTUAL CBOOL IsAsynchronous() const;
-
-		VIRTUAL VOID Poll();
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		PIUINAVIGATIONLISTENER _NavListener = NULL;
-	};
-
-#pragma endregion
-
-
 #pragma region [IUiNavigationListener] DEFINITION
 
 	INTERFACE IUiNavigationListener
@@ -99,19 +74,6 @@ namespace IttyBitty
 		// DESTRUCTOR
 
 		VIRTUAL ~IUiNavigationListener() { }
-
-
-		// ACCESSORS/MUTATORS
-
-		VIRTUAL CBOOL IsShiftOn() const = 0;
-		VIRTUAL VOID ToggleShift() = 0;
-		VIRTUAL VOID ShiftOn() = 0;
-		VIRTUAL VOID ShiftOff() = 0;
-
-		VIRTUAL CBOOL IsAltOn() const = 0;
-		VIRTUAL VOID ToggleAlt() = 0;
-		VIRTUAL VOID AltOn() = 0;
-		VIRTUAL VOID AltOff() = 0;
 
 
 		// INTERFACE METHODS
@@ -132,13 +94,73 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiNavigationController] DEFINITION
+#pragma region [IUiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiNavigationListener
+	INTERFACE IUiNavigationController : public IUiNavigationListener, public IUiInputSource
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiNavigationController() { }
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBOOL IsShiftOn() const = 0;
+		VIRTUAL VOID ToggleShift() = 0;
+		VIRTUAL VOID ShiftOn() = 0;
+		VIRTUAL VOID ShiftOff() = 0;
+
+		VIRTUAL CBOOL IsAltOn() const = 0;
+		VIRTUAL VOID ToggleAlt() = 0;
+		VIRTUAL VOID AltOn() = 0;
+		VIRTUAL VOID AltOff() = 0;
+
+
+	protected:
+
+		IUiNavigationController() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [UiInputSourceBase] DEFINITION
+
+	CLASS UiInputSourceBase : public IUiInputSource
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		UiInputSourceBase(RIUINAVIGATIONCONTROLLER);
+
+
+		// [IUiListener] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const;
+
+		VIRTUAL VOID Poll();
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		RIUINAVIGATIONCONTROLLER _Navigation;
+	};
+
+#pragma endregion
+
+
+#pragma region [UiNavigationController] DEFINITION
+
+	class UiNavigationController : public IUiNavigationController
+	{
+	public:
+
+		// CONSTRUCTOR/DESTRUCTOR
 
 		UiNavigationController(RIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
 
@@ -173,14 +195,7 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
 
 
-		// [IUiInputSource] IMPLEMENTATION
-
-		VIRTUAL CBOOL IsAsynchronous() const;
-
-		VIRTUAL VOID Poll();
-
-
-		// [IUiNavigationListener] IMPLEMENTATION
+		// [IUiNavigationController] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
@@ -192,12 +207,22 @@ namespace IttyBitty
 		VIRTUAL VOID AltOn();
 		VIRTUAL VOID AltOff();
 
+
+		// [IUiNavigationListener] IMPLEMENTATION
+
 		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
 		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
 		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
 		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
 		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
 		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+
+
+		// [IUiInputSource] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const;
+
+		VIRTUAL VOID Poll();
 
 
 	protected:
@@ -228,9 +253,10 @@ namespace IttyBitty
 		STATEENTRY _PrevStates[MENUI_NUM_STATEFUL_ACTIONS];
 
 
-		// PROTECTED MEMBER FUNCTION DECLARATION
+		// PROTECTED MEMBER FUNCTION DECLARATIONS
 
 		CUIACTIONSTATE UpdateState(CUIACTIONTYPE, CUIACTIONSTATE);
+		CUIACTIONSTATE ApplyShiftAltFlags(CUIACTIONSTATE);
 	};
 
 #pragma endregion

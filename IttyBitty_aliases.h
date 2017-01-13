@@ -110,8 +110,8 @@
 
 #define TYPEDEF_MODIFIER_ALIASES(modified_type_name, TYPE_ALIAS)		\
 	typedef modified_type_name TYPE_ALIAS, * P##TYPE_ALIAS, & R##TYPE_ALIAS
-#define TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS)		TYPEDEF_MODIFIER_ALIASES(type_name, TYPE_ALIAS)
 
+#define TYPEDEF_ALIASES_NOMODIFIER(type_name, TYPE_ALIAS)		TYPEDEF_MODIFIER_ALIASES(type_name, TYPE_ALIAS)
 #define TYPEDEF_CONST_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_MODIFIER_ALIASES(const type_name, C##TYPE_ALIAS)
 #define TYPEDEF_VOLATILE_ALIASES(type_name, TYPE_ALIAS)			TYPEDEF_MODIFIER_ALIASES(volatile type_name, V##TYPE_ALIAS)
 #define TYPEDEF_CONST_VOLATILE_ALIASES(type_name, TYPE_ALIAS)	TYPEDEF_MODIFIER_ALIASES(const volatile type_name, CV##TYPE_ALIAS)
@@ -160,7 +160,7 @@
 	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
 
 #define TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(type_name, TYPE_ALIAS)	\
-	TYPEDEF_ALIASES_WITH_VOLATILE_AND_PP(type_name, TYPE_ALIAS);		\
+	TYPEDEF_ALIASES_WITH_VOLATILE_AND_PP(type_name, TYPE_ALIAS);			\
 	TYPEDEF_PROGMEM_ALIAS(type_name, TYPE_ALIAS)
 
 #define TYPEDEF_ENUM_ALIASES(type_name, TYPE_ALIAS)				TYPEDEF_ALIASES_WITH_PP(enum type_name, TYPE_ALIAS)
@@ -181,58 +181,86 @@
 	typedef volatile struct EXPAND_CONCAT(_, type_alias) EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t), type_alias;	\
 	TYPEDEF_ALIASES_AS_VOLATILE_WITH_PP(struct EXPAND_CONCAT(_, type_alias), UPPER_TYPE_ALIAS)
 
-#define TYPEDEF_SINGLETON_STRUCT_ALIASES(type_alias, TYPE_ALIAS)			\
+#define TYPEDEF_SINGLETON_STRUCT_ALIASES(type_alias, TYPE_ALIAS)		\
 	typedef struct EXPAND_CONCAT(_, type_alias)  TYPE_ALIAS;			\
 	typedef const struct EXPAND_CONCAT(_, type_alias) & RC##TYPE_ALIAS
 
-#define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_params, type_name, TYPE_ALIAS)			\
-	template T_clause																	\
-	using TYPE_ALIAS = type_name T_params;												\
-	template T_clause																	\
-	using P##TYPE_ALIAS = type_name T_params *;											\
-	template T_clause																	\
-	using R##TYPE_ALIAS = type_name T_params &;											\
-	template T_clause																	\
+#define TEMPLATE_CLASS_USING_ALIASES(T_clause, T_params, type_name, TYPE_ALIAS)				\
+	template T_clause																		\
+	using TYPE_ALIAS = type_name T_params;													\
+	template T_clause																		\
+	using P##TYPE_ALIAS = type_name T_params *;												\
+	template T_clause																		\
+	using R##TYPE_ALIAS = type_name T_params &;												\
+	template T_clause																		\
 	using PP##TYPE_ALIAS = type_name T_params **;											\
-	template T_clause																	\
+	template T_clause																		\
 	using RR##TYPE_ALIAS = type_name T_params &&;											\
-	template T_clause																	\
-	using C##TYPE_ALIAS = const type_name T_params;										\
-	template T_clause																	\
-	using PC##TYPE_ALIAS = const type_name T_params *;									\
-	template T_clause																	\
-	using RC##TYPE_ALIAS = const type_name T_params &;									\
-	template T_clause																	\
+	template T_clause																		\
+	using C##TYPE_ALIAS = const type_name T_params;											\
+	template T_clause																		\
+	using PC##TYPE_ALIAS = const type_name T_params *;										\
+	template T_clause																		\
+	using RC##TYPE_ALIAS = const type_name T_params &;										\
+	template T_clause																		\
 	using PPC##TYPE_ALIAS = const type_name T_params **;									\
-	template T_clause																	\
+	template T_clause																		\
 	using RRC##TYPE_ALIAS = const type_name T_params &&
 
-#define TEMPLATE_STRUCT_USING_ALIASES(T_clause, T_params, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)			\
-	template T_clause																	\
+#define TEMPLATE_STRUCT_USING_ALIASES(T_clause, T_params, type_alias, lower_type_alias, UPPER_TYPE_ALIAS)		\
+	template T_clause																		\
 	using EXPAND_CONCAT(EXPAND_CONCAT(_, lower_type_alias),_t) = struct EXPAND_CONCAT(_, type_alias) T_params;	\
-	template T_clause																	\
+	template T_clause																		\
 	using type_alias = struct EXPAND_CONCAT(_, type_alias) T_params;						\
-	template T_clause																	\
-	using UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params;				\
-	template T_clause																	\
-	using P##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params *;			\
-	template T_clause																	\
-	using R##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params &;			\
-	template T_clause																	\
+	template T_clause																		\
+	using UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params;					\
+	template T_clause																		\
+	using P##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params *;				\
+	template T_clause																		\
+	using R##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params &;				\
+	template T_clause																		\
 	using PP##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params **;			\
-	template T_clause																	\
+	template T_clause																		\
 	using RR##UPPER_TYPE_ALIAS = struct EXPAND_CONCAT(_, type_alias) T_params &&;			\
-	template T_clause																	\
-	using C##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params;		\
-	template T_clause																	\
-	using PC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params *;	\
-	template T_clause																	\
-	using RC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params &;	\
-	template T_clause																	\
+	template T_clause																		\
+	using C##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params;			\
+	template T_clause																		\
+	using PC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params *;		\
+	template T_clause																		\
+	using RC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params &;		\
+	template T_clause																		\
 	using PPC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params **;	\
-	template T_clause																	\
+	template T_clause																		\
 	using RRC##UPPER_TYPE_ALIAS = const struct EXPAND_CONCAT(_, type_alias) T_params &&
 
+
+
+/* FLAG ENUMERATION DEFINITION ALIASES */
+
+#define DEFINE_FLAG_ENUM_OPERATORS(enum_type, TYPE_ALIAS)	\
+	INLINE CONST TYPE_ALIAS operator ~(CONST TYPE_ALIAS a) {							\
+		return TYPE_ALIAS(INV static_cast<CBYTE>(a)); }									\
+	INLINE CONST TYPE_ALIAS operator &(CONST TYPE_ALIAS a, CONST TYPE_ALIAS b) {		\
+		return TYPE_ALIAS(BAND(static_cast<CBYTE>(a), static_cast<CBYTE>(b))); }		\
+	INLINE CONST TYPE_ALIAS operator |(CONST TYPE_ALIAS a, CONST TYPE_ALIAS b) {		\
+		return TYPE_ALIAS(BOR(static_cast<CBYTE>(a), static_cast<CBYTE>(b))); }			\
+	INLINE CONST TYPE_ALIAS operator ^(CONST TYPE_ALIAS a, CONST TYPE_ALIAS b) {		\
+		return TYPE_ALIAS(BXOR(static_cast<CBYTE>(a), static_cast<CBYTE>(b))); }		\
+	INLINE TYPE_ALIAS & operator &=(TYPE_ALIAS & a, CONST TYPE_ALIAS b) {				\
+		return reinterpret_cast<TYPE_ALIAS &>(											\
+			MASK_BITS(reinterpret_cast<RBYTE>(a), static_cast<CBYTE>(b))); }			\
+	INLINE TYPE_ALIAS & operator |=(TYPE_ALIAS & a, CONST TYPE_ALIAS b) {				\
+		return reinterpret_cast<TYPE_ALIAS &>(											\
+			SET_BITS(reinterpret_cast<RBYTE>(a), static_cast<CBYTE>(b))); }				\
+	INLINE TYPE_ALIAS & operator ^=(TYPE_ALIAS & a, CONST TYPE_ALIAS b) {				\
+		return reinterpret_cast<TYPE_ALIAS &>(											\
+			FLIP_BITS(reinterpret_cast<RBYTE>(a), static_cast<CBYTE>(b))); }			\
+	INLINE CONST TYPE_ALIAS enum_type##Has(CONST TYPE_ALIAS a, CONST TYPE_ALIAS b) {	\
+		return MASK(a, b); }															\
+
+#define DECLARE_ENUM_AS_FLAGS(enum_type, TYPE_ALIAS)		\
+	TYPEDEF_ENUM_ALIASES(enum_type, TYPE_ALIAS);			\
+	DEFINE_FLAG_ENUM_OPERATORS(enum_type, TYPE_ALIAS);
 
 
 

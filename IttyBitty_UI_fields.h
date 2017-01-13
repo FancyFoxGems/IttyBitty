@@ -108,7 +108,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CBOOL Prompt(PIUIRENDERER) = 0;
+		VIRTUAL CBOOL Prompt(RIUIRENDERER) = 0;
 
 
 	protected:
@@ -130,7 +130,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL ShowLabel() const;
 
-		VIRTUAL CBOOL Prompt(PIUIRENDERER);
+		VIRTUAL CBOOL Prompt(RIUIRENDERER);
 
 
 	protected:
@@ -157,7 +157,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL ShowLabel() const;
 
-		VIRTUAL CBOOL Prompt(PIUIRENDERER);
+		VIRTUAL CBOOL Prompt(RIUIRENDERER);
 
 
 	protected:
@@ -184,7 +184,7 @@ namespace IttyBitty
 
 		VIRTUAL CBOOL ShowLabel() const;
 
-		VIRTUAL CBOOL Prompt(PIUIRENDERER);
+		VIRTUAL CBOOL Prompt(RIUIRENDERER);
 
 
 	protected:
@@ -520,7 +520,7 @@ namespace IttyBitty
 
 		// [IUiChildElement] IMPLEMENTATION
 
-		VIRTUAL PCLISTUIFIELD<T> Parent() const;
+		VIRTUAL PLISTUIFIELD<T> Parent() const;
 
 
 		// [IUiChoice] IMPLEMENTATION

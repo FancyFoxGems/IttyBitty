@@ -15,6 +15,65 @@
 #include "stdarg.h"
 
 
+#pragma region MATHEMATICAL EXPRESSION FUNCTION DEFINITIONS
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T & LeastOf(CONST T * array, CONST TCount count)
+{
+	TCount i = 0;
+	T & result = *array;
+
+	while (++i < count)
+	{
+		if (array[i] < result)
+			result = array[i];
+	}
+
+	return result;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T & GreatestOf(CONST T * array, CONST TCount count)
+{
+	TCount i = 0;
+	T & result = *array;
+
+	while (++i < count)
+	{
+		if (array[i] > result)
+			result = array[i];
+	}
+
+	return result;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T SumOf(CONST T * array, CONST TCount count)
+{
+	TCount i = 0;
+	T result = T(0);
+
+	while (i < count)
+		result += array[i++];
+
+	return result;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T MeanOf(CONST T * array, CONST TCount count)
+{
+	TCount i = 0;
+	T result = T(0);
+
+	while (i < count)
+		result += array[i++];
+
+	return result / (T)count;
+}
+
+#pragma endregion
+
+
 #pragma region [Apply] EXPRESSION FUNCTION DEFINITIONS (Calls an objects method)
 
 template<typename TInstance, typename ...TParams, typename ...TArgs>

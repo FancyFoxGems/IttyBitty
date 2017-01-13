@@ -74,7 +74,7 @@ namespace IttyBitty
 		FOUR_BYTES	= 0x80
 	};
 
-	TYPEDEF_ENUM_ALIASES(DataSize, DATASIZE);
+	DECLARE_ENUM_AS_FLAGS(DataSize, DATASIZE);
 
 
 	enum DataTypeFormat : BYTE
@@ -84,7 +84,7 @@ namespace IttyBitty
 		SPECIAL_DATA_TYPE	= 0x2
 	};
 
-	TYPEDEF_ENUM_ALIASES(DataTypeFormat, DATATYPEFORMAT);
+	DECLARE_ENUM_AS_FLAGS(DataTypeFormat, DATATYPEFORMAT);
 
 
 	ENUM DataType : BYTE
@@ -108,14 +108,14 @@ namespace IttyBitty
 	TYPEDEF_ENUM_ALIASES(DataType, DATATYPE);
 
 
-	STATIC CDATASIZE DataTypeToDataSize(CDATATYPE dataType)
+	INLINE CDATASIZE DataTypeToDataSize(CDATATYPE dataType)
 	{
 		return static_cast<CDATASIZE>(HIGH_NYBBLE((CBYTE)dataType));
 	}
 
-	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE) USED;
+	INLINE CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE) USED;
 
-	STATIC CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE dataType)
+	INLINE CDATATYPEFORMAT DataTypeToDataTypeFormat(CDATATYPE dataType)
 	{
 		return static_cast<CDATATYPEFORMAT>(LOW_NYBBLE((CBYTE)dataType));
 	}

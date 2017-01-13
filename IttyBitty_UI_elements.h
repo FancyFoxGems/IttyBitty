@@ -21,13 +21,10 @@ namespace IttyBitty
 	interface IUiElement;
 	TYPEDEF_CLASS_ALIASES(IUiElement, IUIELEMENT);
 
-	class UiElementBase;
-	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
 
-
-	#define UI_CONTAINER_ELEMENT_T_CLAUSE_DEF	<class TElement>
-	#define UI_CONTAINER_ELEMENT_T_CLAUSE		<class TElement>
-	#define UI_CONTAINER_ELEMENT_T_ARGS			<TElement>
+	#define UI_CONTAINER_ELEMENT_T_CLAUSE_DEF	<class TChild = IUiElement>
+	#define UI_CONTAINER_ELEMENT_T_CLAUSE		<class TChild>
+	#define UI_CONTAINER_ELEMENT_T_ARGS			<TChild>
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE
 	interface IUiContainerElement;
@@ -59,6 +56,15 @@ namespace IttyBitty
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_CHILD_ELEMENT_T_CLAUSE), \
 		CSL(UI_CHILD_ELEMENT_T_ARGS), IUiChoice, IUICHOICE);
 
+
+	class UiElementBase;
+	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
+
+	template UI_CONTAINER_ELEMENT_T_CLAUSE
+	interface UiContainerElementBase;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_CONTAINER_ELEMENT_T_CLAUSE), \
+		CSL(UI_CONTAINER_ELEMENT_T_ARGS), UiContainerElementBase, UICONTAINERELEMENTBASE);
+
 #pragma endregion
 
 
@@ -73,20 +79,18 @@ namespace IttyBitty
 		VIRTUAL ~IUiElement() { }
 
 
+		// OPERATORS
+
+		VIRTUAL CBOOL operator >(RIUIELEMENT) const = 0;
+
+
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL PCCHAR Label() const = 0;
+		VIRTUAL FLASH_STRING Label() const = 0;
+		VIRTUAL PCCHAR LabelString() const = 0;
 
 		VIRTUAL CBYTE Width() const = 0;
 		VIRTUAL CBYTE Height() const = 0;
-
-		VIRTUAL CBYTE GetLeft() const = 0;
-		VIRTUAL VOID SetLeft(CBYTE) = 0;
-
-		VIRTUAL CBYTE GetTop() const = 0;
-		VIRTUAL VOID SetTop(CBYTE) = 0;
-
-		VIRTUAL PPCCHAR Lines() const = 0;
 
 
 		// INTERFACE METHODS
@@ -97,86 +101,6 @@ namespace IttyBitty
 	protected:
 
 		IUiElement() { }
-	};
-
-#pragma endregion
-
-
-#pragma region [UiElementBase] DEFINITION
-
-	CLASS UiElementBase : public IUiElement
-	{
-	public:
-
-		// CONSTRUCTORS/DESTRUCTOR
-
-		UiElementBase(PIUIELEMENT, FLASH_STRING);
-
-		VIRTUAL ~UiElementBase();
-
-
-	protected:
-
-		// PROTECTED DISPOSAL METHOD
-
-		VIRTUAL VOID Dispose();
-
-
-	public:
-
-		// [IUiElement] IMPLEMENTATION
-
-		VIRTUAL PCCHAR Label() const;
-
-		VIRTUAL CBYTE Width() const;
-		VIRTUAL CBYTE Height() const;
-
-		VIRTUAL CBYTE GetLeft() const;
-		VIRTUAL VOID SetLeft(CBYTE);
-
-		VIRTUAL CBYTE GetTop() const;
-		VIRTUAL VOID SetTop(CBYTE);
-
-		VIRTUAL PPCCHAR Lines() const;
-
-		VIRTUAL VOID Render(RIUIRENDERER, CBYTE = 0, CBYTE = 0);
-
-
-		// [IUiNavigationListener] IMPLEMENTATION
-
-		VIRTUAL CBOOL IsShiftOn() const;
-		VIRTUAL VOID ToggleShift();
-		VIRTUAL VOID ShiftOn();
-		VIRTUAL VOID ShiftOff();
-
-		VIRTUAL CBOOL IsAltOn() const;
-		VIRTUAL VOID ToggleAlt();
-		VIRTUAL VOID AltOn();
-		VIRTUAL VOID AltOff();
-
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		BOOL _Dispose = FALSE;
-
-		PIUIELEMENT _Parent = NULL;
-
-		CBYTE _Width = 0;
-		CBYTE _Height = 0;
-
-		CBYTE _Left = 0;
-		CBYTE _Top = 0;
-
-		PCCHAR _Label = NULL;
 	};
 
 #pragma endregion
@@ -196,24 +120,26 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL CONST TElement * operator[](CBYTE) const = 0;
-		VIRTUAL TElement * operator[](CBYTE) = 0;
+		VIRTUAL CONST TChild * operator[](CBYTE) const = 0;
+		VIRTUAL TChild * operator[](CBYTE) = 0;
 
 
-		// ACCESSORS
+		// ACCESSORS/MUTATORS
 
 		VIRTUAL CBYTE ChildCount() const = 0;
 
-		VIRTUAL CONST TElement & Child(CBYTE = 0) const = 0;
-		VIRTUAL TElement & Child(CBYTE = 0) = 0;
+		VIRTUAL CONST TChild & Child(CBYTE = 0) const = 0;
+		VIRTUAL TChild & Child(CBYTE = 0) = 0;
 
-		VIRTUAL TElement & AddChild(TElement &);
+		VIRTUAL TChild & AddChild(TChild &) = 0;
 
-		VIRTUAL VOID RemoveChild(CBYTE);
-		VIRTUAL VOID RemoveChild(TElement &);
+		VIRTUAL VOID RemoveChild(CBYTE) = 0;
+		VIRTUAL VOID RemoveChild(TChild &) = 0;
 
 
 		// INTERFACE METHODS
+
+		VIRTUAL VOID DrawScreen(RIUIRENDERER) = 0;
 
 
 	protected:
@@ -227,7 +153,7 @@ namespace IttyBitty
 #pragma region [IUiListElement] DEFINITION
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiListElement : public IUiContainerElement<TElement>
+	INTERFACE IUiListElement : public IUiContainerElement<TChild>
 	{
 	public:
 
@@ -238,8 +164,8 @@ namespace IttyBitty
 
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL CONST TElement & GetSelectedItem() const = 0;
-		VIRTUAL VOID SetSelectedItem(CONST TElement &) = 0;
+		VIRTUAL CONST TChild & GetSelectedItem() const = 0;
+		VIRTUAL VOID SetSelectedItem(CONST TChild &) = 0;
 
 
 	protected:
@@ -253,7 +179,7 @@ namespace IttyBitty
 #pragma region [IUiMultiListElement] DEFINITION
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiMultiListElement : public IUiContainerElement<TElement>
+	INTERFACE IUiMultiListElement : public IUiContainerElement<TChild>
 	{
 	public:
 
@@ -266,8 +192,8 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE NumSelected() const = 0;
 
-		VIRTUAL CONST TElement * GetSelectedItems() const = 0;
-		VIRTUAL VOID SetSelectedItems(CONST TElement * &, CBYTE) = 0;
+		VIRTUAL CONST TChild * GetSelectedItems() const = 0;
+		VIRTUAL VOID SetSelectedItems(CONST TChild * &, CBYTE) = 0;
 
 
 	protected:
@@ -292,7 +218,8 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		VIRTUAL CONST TParent * Parent() const = 0;
+		VIRTUAL TParent * Parent() const = 0;
+		VIRTUAL VOID SetParent(TParent *) = 0;
 
 
 	protected:
@@ -322,6 +249,208 @@ namespace IttyBitty
 	protected:
 
 		IUiChoice() { }
+	};
+
+#pragma endregion
+
+
+#pragma region [UiElementBase] DEFINITION
+
+	CLASS UiElementBase : public IUiElement
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		UiElementBase(FLASH_STRING);
+
+
+		// OPERATORS
+
+		VIRTUAL CBOOL operator >(RIUIELEMENT) const;
+
+
+		// [IUiElement] IMPLEMENTATION
+
+		VIRTUAL FLASH_STRING Label() const;
+		VIRTUAL PCCHAR LabelString() const;
+
+		VIRTUAL CBYTE Width() const;
+		VIRTUAL CBYTE Height() const;
+
+		VIRTUAL VOID Render(RIUIRENDERER, CBYTE = 0, CBYTE = 0);
+
+
+		// [IUiNavigationListener] IMPLEMENTATION
+
+		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+
+
+	protected:
+
+		FLASH_STRING _Label = NULL;
+	};
+
+#pragma endregion
+
+
+#pragma region [UiContainerElementBase] IMPLEMENTATION
+
+	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
+	CLASS UiContainerElementBase : public UiElementBase, public IUiContainerElement UI_CONTAINER_ELEMENT_T_ARGS
+	{
+	public:
+
+		// CONSTRUCTOR/DESTRUCTOR
+
+		UiContainerElementBase(CBYTE childCount = 0, TChild ** children = NULL) : _ChildCount(childCount), _Children(children)
+		{
+			if (!_Children)
+				_Dispose = TRUE;
+		}
+
+		VIRTUAL ~UiContainerElementBase()
+		{
+			this->Dispose();
+		}
+
+
+	protected:
+
+		// PROTECTED DISPOSAL METHOD
+
+		VIRTUAL VOID Dispose()
+		{
+			if (!_Children)
+				return;
+
+			if (_Dispose)
+			{
+				for (BYTE i = 0; i < _ChildCount; i++)
+				{
+					if (_Children[i])
+					{
+						delete _Children[i];
+						_Children[i] = NULL;
+					}
+				}
+			}
+
+			delete _Children;
+			_Children = NULL;
+		}
+
+
+	public:
+
+		// [IUiContainerElement] IMPLEMENTATION
+
+		VIRTUAL CONST TChild * operator[](CBYTE i) const
+		{
+			if (!_Children)
+				return NULL;
+
+			return _Children[i];
+		}
+
+		VIRTUAL TChild * operator[](CBYTE i)
+		{
+			if (!_Children)
+				return NULL;
+
+			return _Children[i];
+		}
+
+		VIRTUAL CBYTE ChildCount() const
+		{
+			return _ChildCount;
+		}
+
+		VIRTUAL CONST TChild & Child(CBYTE i) const
+		{
+			return *this->operator[](i);
+		}
+
+		VIRTUAL TChild & Child(CBYTE i)
+		{
+			return *this->operator[](i);
+		}
+
+		VIRTUAL TChild & AddChild(TChild &)
+		{
+		}
+
+		VIRTUAL VOID RemoveChild(CBYTE)
+		{
+		}
+
+		VIRTUAL VOID RemoveChild(TChild &)
+		{
+		}
+
+		VIRTUAL VOID DrawScreen(RIUIRENDERER)
+		{
+		}
+
+
+		// [IUiElement] OVERRIDES
+
+		CBYTE Width() const
+		{
+			return GreatestOf<TChild>(_Children);
+		}
+
+		CBYTE Height() const
+		{
+			return _ChildCount;
+		}
+
+		VOID Render(RIUIRENDERER renderer, CBYTE col = 0, CBYTE row = 0)
+		{
+			this->DrawScreen(renderer);
+		}
+
+
+		// [IUiNavigationListener] OVERRIDES
+
+		VOID Up(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+		VOID Down(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+		VOID Left(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+		VOID Right(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+		VOID Return(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+		VOID Select(CUIACTIONSTATE state = UiActionState::CLICK)
+		{
+		}
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		BOOL _Dispose = FALSE;
+
+		TChild ** _Children = NULL;
+		BYTE _ChildCount = 0;
 	};
 
 #pragma endregion

@@ -68,7 +68,7 @@ namespace IttyBitty
 		BLOCK_INDICATOR = 0x10
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdScrollBarIndicator, LCDSCROLLBARINDICATOR);
+	DECLARE_ENUM_AS_FLAGS(LcdScrollBarIndicator, LCDSCROLLBARINDICATOR);
 
 
 	enum LcdScrollBarPosition : BYTE
@@ -77,7 +77,7 @@ namespace IttyBitty
 		LEFT_POSITION = 0x1
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdScrollBarPosition, LCDSCROLLBARPOSITION);
+	DECLARE_ENUM_AS_FLAGS(LcdScrollBarPosition, LCDSCROLLBARPOSITION);
 
 
 	ENUM LcdScrollBarOptions : BYTE
@@ -93,12 +93,12 @@ namespace IttyBitty
 
 
 
-	STATIC CLCDSCROLLBARINDICATOR LcdScrollBarOptionsToLcdScrollBarIndicator(CLCDSCROLLBAROPTIONS lcdScrollBarOptions)
+	INLINE CLCDSCROLLBARINDICATOR LcdScrollBarOptionsToLcdScrollBarIndicator(CLCDSCROLLBAROPTIONS lcdScrollBarOptions)
 	{
 		return static_cast<CLCDSCROLLBARINDICATOR>(HIGH_NYBBLE((CBYTE)lcdScrollBarOptions));
 	}
 
-	STATIC CLCDSCROLLBARPOSITION LcdScrollBarOptionsToLcdScrollBarPosition(CLCDSCROLLBAROPTIONS lcdScrollBarOptions)
+	INLINE CLCDSCROLLBARPOSITION LcdScrollBarOptionsToLcdScrollBarPosition(CLCDSCROLLBAROPTIONS lcdScrollBarOptions)
 	{
 		return static_cast<CLCDSCROLLBARPOSITION>(LOW_NYBBLE((CBYTE)lcdScrollBarOptions));
 	}
@@ -121,7 +121,7 @@ namespace IttyBitty
 		DOTS_SPACE		= 0x7
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdSpaceStyle, LCDSPACETYLE);
+	DECLARE_ENUM_AS_FLAGS(LcdSpaceStyle, LCDSPACETYLE);
 
 
 	enum LcdGraphCell : BYTE
@@ -135,7 +135,7 @@ namespace IttyBitty
 		STRIPES_CELL	= 0x60
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdGraphCell, LCDGRAPHCELL);
+	DECLARE_ENUM_AS_FLAGS(LcdGraphCell, LCDGRAPHCELL);
 
 
 	enum LcdGraphPartialStyle : BYTE
@@ -144,7 +144,7 @@ namespace IttyBitty
 		SEMI_FILL_PARTIAL	= 0x80
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdGraphPartialStyle, LCDGRAPHPARTIALSTYLE);
+	DECLARE_ENUM_AS_FLAGS(LcdGraphPartialStyle, LCDGRAPHPARTIALSTYLE);
 
 
 	ENUM LcdGraphOptions : BYTE
@@ -293,19 +293,19 @@ namespace IttyBitty
 
 	#define LCD_GRAPH_PARTIAL_CELL_STYLE_MASK	0x80
 
-	STATIC CLCDGRAPHCELL LcdGraphOptionsToLcdGraphCell(CLCDGRAPHOPTIONS lcdGraphOptions)
+	INLINE CLCDGRAPHCELL LcdGraphOptionsToLcdGraphCell(CLCDGRAPHOPTIONS lcdGraphOptions)
 	{
 		return static_cast<CLCDGRAPHCELL>(HIGH_NYBBLE(
 			WITHOUT_BITS((CBYTE)lcdGraphOptions, (CBYTE)LCD_GRAPH_PARTIAL_CELL_STYLE_MASK)));
 	}
 
-	STATIC CLCDGRAPHPARTIALSTYLE LcdGraphOptionsToLcdGraphPartialStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
+	INLINE CLCDGRAPHPARTIALSTYLE LcdGraphOptionsToLcdGraphPartialStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
 	{
 		return static_cast<CLCDGRAPHPARTIALSTYLE>(HIGH_NYBBLE(
 			MASK((CBYTE)lcdGraphOptions, LCD_GRAPH_PARTIAL_CELL_STYLE_MASK)));
 	}
 
-	STATIC CLCDSPACETYLE LcdGraphOptionsToLcdSpaceStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
+	INLINE CLCDSPACETYLE LcdGraphOptionsToLcdSpaceStyle(CLCDGRAPHOPTIONS lcdGraphOptions)
 	{
 		return static_cast<CLCDSPACETYLE>(LOW_NYBBLE((CBYTE)lcdGraphOptions));
 	}
@@ -327,7 +327,7 @@ namespace IttyBitty
 		STRIPES_MARKER	= 0x70
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdSliderMarker, LCDSLIDERMARKER);
+	DECLARE_ENUM_AS_FLAGS(LcdSliderMarker, LCDSLIDERMARKER);
 
 
 	enum LcdSliderEnds : BYTE
@@ -336,7 +336,7 @@ namespace IttyBitty
 		NORMAL_ENDS		= 0x80
 	};
 
-	TYPEDEF_ENUM_ALIASES(LcdSliderEnds, LCDSLIDERENDS);
+	DECLARE_ENUM_AS_FLAGS(LcdSliderEnds, LCDSLIDERENDS);
 
 
 	ENUM LcdSliderOptions : BYTE
@@ -499,19 +499,19 @@ namespace IttyBitty
 
 	#define LCD_SLIDER_ENDS_MASK	0x80
 
-	STATIC CLCDSLIDERMARKER LcdSliderOptionsToLcdSliderMarker(CLCDSLIDEROPTIONS lcdSliderOptions)
+	INLINE CLCDSLIDERMARKER LcdSliderOptionsToLcdSliderMarker(CLCDSLIDEROPTIONS lcdSliderOptions)
 	{
 		return static_cast<CLCDSLIDERMARKER>(HIGH_NYBBLE(
 			WITHOUT_BITS((CBYTE)lcdSliderOptions, (CBYTE)LCD_SLIDER_ENDS_MASK)));
 	}
 
-	STATIC CLCDSLIDERENDS LcdSliderOptionsToLcdSliderEnds(CLCDSLIDEROPTIONS lcdSliderOptions)
+	INLINE CLCDSLIDERENDS LcdSliderOptionsToLcdSliderEnds(CLCDSLIDEROPTIONS lcdSliderOptions)
 	{
 		return static_cast<CLCDSLIDERENDS>(HIGH_NYBBLE(
 			MASK((CBYTE)lcdSliderOptions, LCD_SLIDER_ENDS_MASK)));
 	}
 
-	STATIC CLCDSPACETYLE LcdSliderOptionsToLcdSpaceStyle(CLCDSLIDEROPTIONS lcdSliderOptions)
+	INLINE CLCDSPACETYLE LcdSliderOptionsToLcdSpaceStyle(CLCDSLIDEROPTIONS lcdSliderOptions)
 	{
 		return static_cast<CLCDSPACETYLE>(LOW_NYBBLE((CBYTE)lcdSliderOptions));
 	}

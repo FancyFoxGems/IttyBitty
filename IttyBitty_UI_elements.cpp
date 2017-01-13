@@ -1,7 +1,9 @@
 /**********************************************************************************************
 * This file is part of the Itty Bitty Arduino library.                                        *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.            *
-* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
+* RELEASED UNDER THE GPL v3.0 LICENSE
+{
+} SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
 #ifdef ITTYBITTY_BASE
@@ -13,16 +15,70 @@
 #include "IttyBitty_UI_elements.h"
 
 using namespace IttyBitty;
-// VIRTUAL
-//
 
-//([A-Za-z_]*) ([A-Za-z_]*)[(]
-//$1 UiDisplayController::$2(
 
-// = [A-Za-z0-9_]*
-//
+#pragma region [UiElementBase] IMPLEMENTATION
 
-// { }
-//\n{\n\n}
+// CONSTRUCTOR
+
+UiElementBase::UiElementBase(FLASH_STRING label) : _Label(label) { }
+
+
+// OPERATORS
+
+CBOOL UiElementBase::operator >(RIUIELEMENT other) const
+{
+	return this->Width() > other.Width();
+}
+
+
+// [IUiElement] IMPLEMENTATION
+
+FLASH_STRING UiElementBase::Label() const
+{
+	return _Label;
+}
+
+PCCHAR UiElementBase::LabelString() const
+{
+	PGM_P pLabel = reinterpret_cast<PGM_P>(_Label);
+	PCHAR label = new char[strlen_P(pLabel)];
+
+	strcpy_P(label, pLabel);
+
+	return label;
+}
+
+CBYTE UiElementBase::Width() const
+{
+	return strlen_P(reinterpret_cast<PGM_P>(_Label));
+}
+
+CBYTE UiElementBase::Height() const
+{
+	return 1;
+}
+
+VOID UiElementBase::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
+{
+	renderer.PrintString_P(_Label, col, row);
+}
+
+
+// [IUiNavigationListener] IMPLEMENTATION
+
+VOID UiElementBase::Up(CUIACTIONSTATE state) { }
+
+VOID UiElementBase::Down(CUIACTIONSTATE state) { }
+
+VOID UiElementBase::Left(CUIACTIONSTATE state) { }
+
+VOID UiElementBase::Right(CUIACTIONSTATE state) { }
+
+VOID UiElementBase::Return(CUIACTIONSTATE state) { }
+
+VOID UiElementBase::Select(CUIACTIONSTATE state) { }
+
+#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

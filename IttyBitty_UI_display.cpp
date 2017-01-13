@@ -10,7 +10,6 @@
 
 #ifndef NO_ITTYBITTY_MENUI
 
-#include "IttyBitty_expressions.h"
 #include "IttyBitty_UI_display.h"
 
 using namespace IttyBitty;
@@ -179,6 +178,8 @@ VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL)
 
 
 #pragma region [UiDisplayController] IMPLEMENTATION
+
+// CONSTRUCTOR/DESTRUCTOR
 
 UiDisplayController::UiDisplayController(CBYTE rendererCount, PPIUIRENDERER renderers)
 	: _RendererCount(rendererCount), _Renderers(renderers)

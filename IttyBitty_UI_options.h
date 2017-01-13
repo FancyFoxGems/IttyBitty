@@ -18,7 +18,7 @@
 
 // [UiOptions] DEFAULT OPTIONS
 
-// Layout & behavior/interaction default options
+// Layout & general presentation/interaction default options
 
 #define MENUI_DEFAULT_MENU_LAYOUT					UiLayout::VERTICAL_CENTERED
 #define MENUI_DEFAULT_LIST_LAYOUT					UiLayout::HORIZONTAL_AUTO
@@ -26,21 +26,27 @@
 #define MENUI_DEFAULT_MENU_STATUS					UiStatusFlags::UI_STATUS_SCROLLBAR
 #define MENUI_DEFAULT_LIST_STATUS					UiStatusFlags::UI_STATUS_SCROLLBAR
 
-#define MENUI_DEFAULT_SCROLL_WRAP					TRUE
-#define MENUI_DEFAULT_SCROLL_BEHAVIOR				UiScrollBehavior::NORMAL
-
-#define MENUI_DEFAULT_AUTO_SCROLL_DELAY_MS			2000
-#define MENUI_DEFAULT_HORIZONTAL_SCROLL_MS			500
-#define MENUI_DEFAULT_VERTICAL_SCROLL_MS			500
-
 #define MENUI_DEFAULT_IDLE_TIMEOUT_TICKS			50
 
 
-// Navigation/input default options
+// Scrolling default options
+
+#define MENUI_DEFAULT_SCROLL_BEHAVIOR				UiScrollBehavior::NORMAL
+#define MENUI_DEFAULT_SCROLL_WRAP					TRUE
+
+#define MENUI_DEFAULT_SCROLL_AUTO_DELAY_MS			2000
+#define MENUI_DEFAULT_SCROLL_HORIZONTAL_MS			500
+#define MENUI_DEFAULT_SCROLL_VERTICAL_MS			500
+
+
+// Input default options
 
 #define MENUI_DEFAULT_DBL_CLICK_THRESHOLD_MS		2000
 #define MENUI_DEFAULT_HOLD_THRESHOLD_MS				800
 #define MENUI_DEFAULT_HOLD_REPEAT_MS				500
+
+
+// Navigation default options
 
 #define MENUI_DEFAULT_SET_ON_RETURN					FALSE
 #define MENUI_DEFAULT_DBL_CLICK_SELECT_TO_SET		TRUE
@@ -99,22 +105,22 @@
 
 
 
-// MenUI FUNCTION OPTIONS
+// MenUI PARAMETER DEFAULT VALUES
 
-// Text display default options
+// Text display default values
 
 #define MENUI_DEFAULT_TEXT_TIMEOUT_MS				0
 #define MENUI_DEFAULT_TEXT_ALLOW_ESCAPE				TRUE
 #define MENUI_DEFAULT_TEXT_ANY_ACTION_RETURNS		TRUE
 
 
-// Menu/List default options
+// Menu/List default values
 
 #define MENUI_DEFAULT_MENU_CAPACITY					5
 #define MENUI_DEFAULT_LIST_CAPACITY					5
 
 
-// Dialog/field default options
+// Dialog/field default values
 
 #define MENUI_DEFAULT_NUMERIC_FIELD_STEP			1
 #define MENUI_DEFAULT_NUMERIC_FIELD_STEP_LARGE		10
@@ -143,8 +149,7 @@ namespace IttyBitty
 
 #pragma region UI NAVIGATION ENUMS
 
-	#define MENUI_NUM_STATEFUL_ACTIONS		0x8
-
+	#define MENUI_NUM_STATEFUL_ACTIONS		0x6
 
 	enum UiActionType : BYTE
 	{
@@ -158,7 +163,7 @@ namespace IttyBitty
 		ACTION_ALT		= 0x7
 	};
 
-	TYPEDEF_ENUM_ALIASES(UiActionType, UIACTIONTYPE);
+	DECLARE_ENUM_AS_FLAGS(UiActionType, UIACTIONTYPE);
 
 	enum UiActionBehavior : BYTE
 	{
@@ -166,7 +171,7 @@ namespace IttyBitty
 		ACTION_STATEFUL		= 0x10
 	};
 
-	TYPEDEF_ENUM_ALIASES(UiActionBehavior, UIACTIONBEHAVIOR);
+	DECLARE_ENUM_AS_FLAGS(UiActionBehavior, UIACTIONBEHAVIOR);
 
 	ENUM UiAction : BYTE
 	{
@@ -182,12 +187,12 @@ namespace IttyBitty
 
 	TYPEDEF_ENUM_ALIASES(UiAction, UIACTION);
 
-	STATIC CBOOL UiActionIsStateful(CUIACTION action)
+	INLINE CBOOL UiActionIsStateful(CUIACTION action)
 	{
 		return static_cast<CBOOL>(HIGH_NYBBLE((CBYTE)action));
 	}
 
-	STATIC CUIACTIONTYPE UiActionToActionType(CUIACTION action)
+	INLINE CUIACTIONTYPE UiActionToActionType(CUIACTION action)
 	{
 		return static_cast<CUIACTIONTYPE>(LOW_NYBBLE((CBYTE)action));
 	}
@@ -200,14 +205,41 @@ namespace IttyBitty
 		RELEASED		= 0x02,
 		CLICK			= 0x04 | RELEASED,
 		DOUBLE_CLICK	= 0x08 | CLICK,
-		HELD			= 0x10 | PRESSED
+		HELD			= 0x10 | PRESSED,
+		SHIFT_ON		= 0x20,
+		ALT_ON			= 0x40,
+
+		SHIFT_CLICK			= CLICK | SHIFT_ON,
+		ALT_CLICK			= CLICK | ALT_ON,
+		SHIFT_ALT_CLICK		= CLICK | SHIFT_ON | ALT_ON,
+		SHIFT_DOUBLE		= DOUBLE_CLICK | SHIFT_ON,
+		ALT_DOUBLE			= DOUBLE_CLICK | ALT_ON,
+		SHIFT_ALT_DOUBLE	= DOUBLE_CLICK | SHIFT_ON | ALT_ON,
+		SHIFT_HELD			= HELD | SHIFT_ON,
+		ALT_HELD			= HELD | ALT_ON,
+		SHIFT_ALT_HELD		= HELD | SHIFT_ON | ALT_ON
 	};
 
-	TYPEDEF_ENUM_ALIASES(UiActionState, UIACTIONSTATE);
+	DECLARE_ENUM_AS_FLAGS(UiActionState, UIACTIONSTATE);
 
-	STATIC CBOOL UiActionStateIsPressed(CUIACTIONSTATE state)
+	INLINE CBOOL UiActionStateIsPressed(CUIACTIONSTATE state)
 	{
-		return static_cast<CBOOL>(MASK(state, UiActionState::PRESSED));
+		return UiActionStateHas(state, PRESSED);
+	}
+
+	INLINE CBOOL UiActionStateIsShiftOn(CUIACTIONSTATE state)
+	{
+		return UiActionStateHas(state, SHIFT_ON);
+	}
+
+	INLINE CBOOL UiActionStateIsAltOn(CUIACTIONSTATE state)
+	{
+		return UiActionStateHas(state, ALT_ON);
+	}
+
+	INLINE CBOOL UiActionStateIsShiftAltOn(CUIACTIONSTATE state)
+	{
+		return UiActionStateHas(state, static_cast<CUIACTIONSTATE>(BOR(SHIFT_ON, ALT_ON)));
 	}
 
 #pragma endregion
@@ -221,7 +253,7 @@ namespace IttyBitty
 		HORIZONTAL	= 0x1
 	};
 
-	TYPEDEF_ENUM_ALIASES(UiOrientation, UIORIENTATION);
+	DECLARE_ENUM_AS_FLAGS(UiOrientation, UIORIENTATION);
 
 
 	ENUM UiDirection : BYTE
@@ -237,12 +269,12 @@ namespace IttyBitty
 	#define UI_DIRECTION_ORIENTATION_BIT	0x0
 	#define UI_DIRECTION_BACKWARDS_BIT		0x1
 
-	STATIC CBOOL UiDirectionIsHorizontal(CUIDIRECTION layoutDirection)
+	INLINE CBOOL UiDirectionIsHorizontal(CUIDIRECTION layoutDirection)
 	{
 		return static_cast<CBOOL>(CHECK_BIT((CBYTE)layoutDirection, UI_DIRECTION_ORIENTATION_BIT));
 	}
 
-	STATIC CBOOL UiDirectionIsBackwards(CUIDIRECTION layoutDirection)
+	INLINE CBOOL UiDirectionIsBackwards(CUIDIRECTION layoutDirection)
 	{
 		return static_cast<CBOOL>(CHECK_BIT((CBYTE)layoutDirection, UI_DIRECTION_BACKWARDS_BIT));
 	}
@@ -292,12 +324,12 @@ namespace IttyBitty
 
 	#define UI_LAYOUT_COLS_OFFSET			0x2
 
-	STATIC CBOOL UiLayoutIsHorizontal(CUILAYOUT layout)
+	INLINE CBOOL UiLayoutIsHorizontal(CUILAYOUT layout)
 	{
 		return static_cast<CBOOL>(CHECK_BIT((CBYTE)layout, UI_DIRECTION_ORIENTATION_BIT));
 	}
 
-	STATIC CBYTE UiLayoutToNumCols(CUILAYOUT layout)
+	INLINE CBYTE UiLayoutToNumCols(CUILAYOUT layout)
 	{
 		return (CBYTE)layout SHR UI_LAYOUT_COLS_OFFSET;
 	}
@@ -312,7 +344,7 @@ namespace IttyBitty
 		UI_STATUS_SHOW_TOTAL		= 0x8
 	};
 
-	TYPEDEF_ENUM_ALIASES(UiStatusFlags, UISTATUSFLAGS);
+	DECLARE_ENUM_AS_FLAGS(UiStatusFlags, UISTATUSFLAGS);
 
 
 	ENUM UiScrollBehavior : BYTE
@@ -339,53 +371,64 @@ namespace IttyBitty
 		ALLOWED_CHARS_LOWER		= 0x4
 	};
 
-	TYPEDEF_ENUM_ALIASES(AllowedCharFlags, ALLOWEDCHARFLAGS);
+	DECLARE_ENUM_AS_FLAGS(AllowedCharFlags, ALLOWEDCHARFLAGS);
 
 #pragma endregion
-
 
 
 #pragma region [UiOptions] DEFINITION
 
 	STRUCT _UiOptions final
 	{
-	public:
-
 		// PUBLIC INSTANCE VARIABLES
 
-		// Layout & behavior/interaction options
+		// Layout & general presentation/interaction options
 
-		UILAYOUT MenuLayout				= MENUI_DEFAULT_MENU_LAYOUT;
-		UILAYOUT ListLayout				= MENUI_DEFAULT_LIST_LAYOUT;
+		UILAYOUT MenuLayout					= MENUI_DEFAULT_MENU_LAYOUT;
+		UILAYOUT ListLayout					= MENUI_DEFAULT_LIST_LAYOUT;
 
-		UISTATUSFLAGS MenuStatus		= MENUI_DEFAULT_MENU_STATUS;
-		UISTATUSFLAGS ListStatus		= MENUI_DEFAULT_LIST_STATUS;
+		UISTATUSFLAGS MenuStatus			= MENUI_DEFAULT_MENU_STATUS;
+		UISTATUSFLAGS ListStatus			= MENUI_DEFAULT_LIST_STATUS;
 
-		BOOL ScrollWrap					= MENUI_DEFAULT_SCROLL_WRAP;
-		UISCROLLBEHAVIOR ScrollHoldRow	= MENUI_DEFAULT_SCROLL_BEHAVIOR;
-
-		WORD AutoScrollDelayMS			= MENUI_DEFAULT_AUTO_SCROLL_DELAY_MS;
-		WORD HorizontalScrollMS			= MENUI_DEFAULT_HORIZONTAL_SCROLL_MS;
-		WORD VerticalScrollMS			= MENUI_DEFAULT_VERTICAL_SCROLL_MS;
-
-		WORD IdleTimeoutTicks			= MENUI_DEFAULT_IDLE_TIMEOUT_TICKS;
+		WORD IdleTimeoutTicks				= MENUI_DEFAULT_IDLE_TIMEOUT_TICKS;
 
 
-		// Navigation/input options
+		// Scrolling options
 
 		STRUCT
 		{
-			WORD DblClickThresholdMS	= MENUI_DEFAULT_DBL_CLICK_THRESHOLD_MS;
-			WORD HoldThresholdMS		= MENUI_DEFAULT_HOLD_THRESHOLD_MS;
-			WORD HoldRepeatMS			= MENUI_DEFAULT_HOLD_REPEAT_MS;
+			UISCROLLBEHAVIOR Behavior		= MENUI_DEFAULT_SCROLL_BEHAVIOR;
+			BOOL Wrap						= MENUI_DEFAULT_SCROLL_WRAP;
+			WORD AutoDelayMS				= MENUI_DEFAULT_SCROLL_AUTO_DELAY_MS;
+			WORD HorizontalMS				= MENUI_DEFAULT_SCROLL_HORIZONTAL_MS;
+			WORD VerticalMS					= MENUI_DEFAULT_SCROLL_VERTICAL_MS;
+		}
+		Scrolling;
 
-			BOOL SetOnReturn			= MENUI_DEFAULT_SET_ON_RETURN;
-			BOOL DblClickSelectToSet	= MENUI_DEFAULT_DBL_CLICK_SELECT_TO_SET;
-			BOOL HoldSelectToSet		= MENUI_DEFAULT_HOLD_SELECT_TO_SET;
-			BOOL DblClickSelectToEscape	= MENUI_DEFAULT_DBL_CLICK_SELECT_TO_ESCAPE;
-			BOOL HoldSelectToEscape		= MENUI_DEFAULT_HOLD_SELECT_TO_ESCAPE;
-			BOOL DblClickReturnToEscape	= MENUI_DEFAULT_DBL_CLICK_RETURN_TO_HOME;
-			BOOL HoldReturnToHome		= MENUI_DEFAULT_HOLD_RETURN_TO_HOME;
+
+		// Input options
+
+
+		STRUCT _UiInputOptions
+		{
+			WORD DblClickThresholdMS		= MENUI_DEFAULT_DBL_CLICK_THRESHOLD_MS;
+			WORD HoldThresholdMS			= MENUI_DEFAULT_HOLD_THRESHOLD_MS;
+			WORD HoldRepeatMS				= MENUI_DEFAULT_HOLD_REPEAT_MS;
+		}
+		Input;
+
+
+		// Navigation options
+
+		STRUCT
+		{
+			BOOL SetOnReturn				= MENUI_DEFAULT_SET_ON_RETURN;
+			BOOL DblClickSelectToSet		= MENUI_DEFAULT_DBL_CLICK_SELECT_TO_SET;
+			BOOL HoldSelectToSet			= MENUI_DEFAULT_HOLD_SELECT_TO_SET;
+			BOOL DblClickSelectToEscape		= MENUI_DEFAULT_DBL_CLICK_SELECT_TO_ESCAPE;
+			BOOL HoldSelectToEscape			= MENUI_DEFAULT_HOLD_SELECT_TO_ESCAPE;
+			BOOL DblClickReturnToEscape		= MENUI_DEFAULT_DBL_CLICK_RETURN_TO_HOME;
+			BOOL HoldReturnToHome			= MENUI_DEFAULT_HOLD_RETURN_TO_HOME;
 		}
 		Navigation;
 
@@ -394,12 +437,12 @@ namespace IttyBitty
 
 		STRUCT
 		{
-			BOOL ShowCursorOnEntry		= MENUI_DEFAULT_SHOW_CURSOR_ON_ENTRY;
-			BOOL BlinkCursorOnEntry		= MENUI_DEFAULT_BLINK_CURSOR_ON_ENTRY;
+			BOOL ShowCursorOnEntry			= MENUI_DEFAULT_SHOW_CURSOR_ON_ENTRY;
+			BOOL BlinkCursorOnEntry			= MENUI_DEFAULT_BLINK_CURSOR_ON_ENTRY;
 
-			BYTE LayoutColSpacing		= MENUI_DEFAULT_LAYOUT_COL_SPACING;
-			BYTE ListItemMargin			= MENUI_DEFAULT_LIST_ITEM_MARGIN;
-			BYTE SelectionGlyphOffset	= MENUI_DEFAULT_SELECTION_GLYPH_OFFSET;
+			BYTE LayoutColSpacing			= MENUI_DEFAULT_LAYOUT_COL_SPACING;
+			BYTE ListItemMargin				= MENUI_DEFAULT_LIST_ITEM_MARGIN;
+			BYTE SelectionGlyphOffset		= MENUI_DEFAULT_SELECTION_GLYPH_OFFSET;
 
 			BOOL HighlightSelections UNUSED	= MENUI_DEFAULT_HIGHLIGHT_SELECTIONS;
 		}
@@ -420,21 +463,21 @@ namespace IttyBitty
 
 		// General renderer-specific options
 
-		BOOL WrapText					= MENUI_DEFAULT_WRAP_TEXT;
-		BYTE StyledLineMargins			= MENUI_DEFAULT_STYLED_LINE_MARGINS;
+		BOOL WrapText				= MENUI_DEFAULT_WRAP_TEXT;
+		BYTE StyledLineMargins		= MENUI_DEFAULT_STYLED_LINE_MARGINS;
 
 
 		// Glyph options
 
-		CHAR StyledLineLeftGlyph		= MENUI_DEFAULT_STYLED_LINE_LEFT_GLYPH;
-		CHAR StyledLineRightGlyph		= MENUI_DEFAULT_STYLED_LINE_RIGHT_GLYPH;
+		CHAR StyledLineLeftGlyph	= MENUI_DEFAULT_STYLED_LINE_LEFT_GLYPH;
+		CHAR StyledLineRightGlyph	= MENUI_DEFAULT_STYLED_LINE_RIGHT_GLYPH;
 
-		CHAR MenuItemGlyph				= MENUI_DEFAULT_MENU_ITEM_GLYPH;
-		CHAR ListChoiceGlyph			= MENUI_DEFAULT_LIST_CHOICE_GLYPH;
-		CHAR CurrItemGlyph				= MENUI_DEFAULT_CURR_ITEM_GLYPH;
-		CHAR SelectionGlyph				= MENUI_DEFAULT_SELECTION_GLYPH;
-		CHAR MultiSelectionGlyph		= MENUI_DEFAULT_MULTI_SELECTION_GLYPH;
-		CHAR ValueSeparatorGlyph		= MENUI_DEFAULT_VALUE_SEPARATOR_GLYPH;
+		CHAR MenuItemGlyph			= MENUI_DEFAULT_MENU_ITEM_GLYPH;
+		CHAR ListChoiceGlyph		= MENUI_DEFAULT_LIST_CHOICE_GLYPH;
+		CHAR CurrItemGlyph			= MENUI_DEFAULT_CURR_ITEM_GLYPH;
+		CHAR SelectionGlyph			= MENUI_DEFAULT_SELECTION_GLYPH;
+		CHAR MultiSelectionGlyph	= MENUI_DEFAULT_MULTI_SELECTION_GLYPH;
+		CHAR ValueSeparatorGlyph	= MENUI_DEFAULT_VALUE_SEPARATOR_GLYPH;
 	};
 
 #pragma endregion

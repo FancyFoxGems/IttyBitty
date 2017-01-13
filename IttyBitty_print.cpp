@@ -142,25 +142,25 @@ namespace IttyBitty
 		FlushAndDelay();
 	}
 
-	VOID PrintString(PCCHAR buffer, HardwareSerial & printer)
+	VOID PrintString(PCCHAR data, HardwareSerial & printer)
 	{
-		printer.print(buffer);
+		printer.print(data);
 	}
 
-	VOID PrintLine(PCCHAR buffer, HardwareSerial & printer)
+	VOID PrintLine(PCCHAR data, HardwareSerial & printer)
 	{
-		printer.println(buffer);
+		printer.println(data);
 		FlushAndDelay();
 	}
 
-	VOID PrintString(CONST __FlashStringHelper * flashBuffer, HardwareSerial & printer)
+	VOID PrintString(FLASH_STRING data, HardwareSerial & printer)
 	{
-		printer.print(flashBuffer);
+		printer.print(data);
 	}
 
-	VOID PrintLine(CONST __FlashStringHelper * flashBuffer, HardwareSerial & printer)
+	VOID PrintLine(FLASH_STRING data, HardwareSerial & printer)
 	{
-		printer.println(flashBuffer);
+		printer.println(data);
 		FlushAndDelay();
 	}
 

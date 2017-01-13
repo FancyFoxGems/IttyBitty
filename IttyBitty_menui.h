@@ -40,14 +40,14 @@ namespace IttyBitty
 
 		// PUBLIC MEMBER VARIABLES
 
-		UIDISPLAYCONTROLLER Display;
 		UINAVIGATIONCONTROLLER Navigation;
+		UIDISPLAYCONTROLLER Display;
 
 
 		// CONSTRUCTORS/DESTRUCTOR
 
 		MenUI(CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
-		MenUI(CBYTE, PPIUIRENDERER, CBYTE, PPIUIINPUTSOURCE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+		MenUI(CBYTE, PPIUIINPUTSOURCE, CBYTE, PPIUIRENDERER, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
 
 		~MenUI();
 
@@ -83,6 +83,16 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+
+
+		// [IUiNavigationController] IMPLEMENTATION
+
 		CBOOL IsShiftOn() const;
 		VOID ToggleShift();
 		VOID ShiftOn();
@@ -92,13 +102,6 @@ namespace IttyBitty
 		VOID ToggleAlt();
 		VOID AltOn();
 		VOID AltOff();
-
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
 
 
 		// [Print] IMPLEMENTATION

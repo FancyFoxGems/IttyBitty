@@ -10,6 +10,7 @@
 #define _ITTYBITTY_UI_DISPLAY_H
 
 
+#include "IttyBitty_expressions.h"
 #include "IttyBitty_UI_options.h"
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
@@ -186,7 +187,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTORS/DESTRUCTOR
+		// CONSTRUCTOR/DESTRUCTOR
 
 		UiDisplayController(CBYTE = 0, PPIUIRENDERER = NULL);
 

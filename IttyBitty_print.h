@@ -93,8 +93,8 @@ namespace IttyBitty
 	VOID PrintString(PCCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 	VOID PrintLine(PCCHAR = "", HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
-	VOID PrintString(CONST __FlashStringHelper *, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CONST __FlashStringHelper *, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintString(FLASH_STRING, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	VOID PrintLine(FLASH_STRING, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
 
 #pragma endregion
 }
