@@ -34,22 +34,16 @@ namespace IttyBitty
 
 #pragma region [MenUI] DEFINITION
 
-	CLASS MenUI : public Menu, public IUiRenderer
+	CLASS MenUI : public Menu, public IUiNavigationController, public IUiDisplayController
 	{
 	public:
 
-		// PUBLIC MEMBER VARIABLES
-
-		UINAVIGATIONCONTROLLER Navigation;
-		UIDISPLAYCONTROLLER Display;
-
-
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenUI(CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
-		MenUI(CBYTE, PPIUIINPUTSOURCE, CBYTE, PPIUIRENDERER, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+		MenUI(FLASH_STRING = NULL, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
+		MenUI(CBYTE, PPIUIINPUTSOURCE, CBYTE, PPIUIRENDERER, FLASH_STRING = NULL, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
 
-		~MenUI();
+		VIRTUAL ~MenUI() { }
 
 
 		// ACCESSORS/MUTATORS
@@ -74,7 +68,7 @@ namespace IttyBitty
 		template<typename T>
 		CONST T Prompt(RIUIFIELD<T> field)
 		{
-			if (field.Prompt(Display))
+			if (field.Prompt(_Display))
 				return field.Value();
 
 			return T(T_MAX);
@@ -93,20 +87,38 @@ namespace IttyBitty
 
 		// [IUiNavigationController] IMPLEMENTATION
 
-		CBOOL IsShiftOn() const;
-		VOID ToggleShift();
-		VOID ShiftOn();
-		VOID ShiftOff();
+		VIRTUAL CBYTE InputSourceCount() const;
 
-		CBOOL IsAltOn() const;
-		VOID ToggleAlt();
-		VOID AltOn();
-		VOID AltOff();
+		VIRTUAL RCIUIINPUTSOURCE InputSource(CBYTE = 0) const;
+		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0);
+
+		VIRTUAL CBOOL AddInputSource(RIUIINPUTSOURCE);
+
+		VIRTUAL VOID RemoveInputSource(CBYTE);
+		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
+
+		VIRTUAL CBOOL IsShiftOn() const;
+		VIRTUAL VOID ToggleShift();
+		VIRTUAL VOID ShiftOn();
+		VIRTUAL VOID ShiftOff();
+
+		VIRTUAL CBOOL IsAltOn() const;
+		VIRTUAL VOID ToggleAlt();
+		VIRTUAL VOID AltOn();
+		VIRTUAL VOID AltOff();
 
 
-		// [Print] IMPLEMENTATION
+		// [IUiDisplayController] IMPLEMENTATION
 
-		VIRTUAL SIZE write(BYTE);
+		VIRTUAL CBYTE RendererCount() const;
+
+		VIRTUAL RCIUIRENDERER Renderer(CBYTE = 0) const;
+		VIRTUAL RIUIRENDERER Renderer(CBYTE = 0);
+
+		VIRTUAL CBOOL AddRenderer(RIUIRENDERER);
+
+		VIRTUAL VOID RemoveRenderer(CBYTE);
+		VIRTUAL VOID RemoveRenderer(RIUIRENDERER);
 
 
 		// [IUiRenderer] IMPLEMENTATION
@@ -159,9 +171,17 @@ namespace IttyBitty
 	#endif
 
 
+		// [Print] IMPLEMENTATION
+
+		VIRTUAL SIZE write(BYTE);
+
+
 	protected:
 
 		// INSTANCE VARIABLES
+
+		UINAVIGATIONCONTROLLER _Navigation;
+		UIDISPLAYCONTROLLER _Display;
 
 		WORD _TextShownMS = 0;
 

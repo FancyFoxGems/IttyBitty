@@ -237,7 +237,7 @@ PIUIRENDERER UiDisplayController::operator[](CBYTE i)
 }
 
 
-// ACCESSORS/MUTATORS
+// [IUiDisplayController] IMPLEMENTATION
 
 CBYTE UiDisplayController::RendererCount() const
 {
@@ -306,20 +306,7 @@ VOID UiDisplayController::RemoveRenderer(RIUIRENDERER renderer)
 }
 
 
-// [Print] IMPLEMENTATION
-
-SIZE UiDisplayController::write(BYTE value)
-{
-	SIZE results[_RendererCount];
-
-	PtrCallAll<BYTE, Print, SIZE, BYTE>(_RendererCount,
-		(Print **)_Renderers, results, &IUiRenderer::write, value);
-
-	return __ResultFromCallResults(results, _RendererCount);
-}
-
-
-// [IUiRenderer] OVERRIDES
+// [IUiRenderer] IMPLEMENTATION
 
 CBYTE UiDisplayController::Cols() const
 {
@@ -390,6 +377,11 @@ VOID UiDisplayController::CursorBlinkOff()
 CBOOL UiDisplayController::Available()
 {
 	return PtrAll(_RendererCount, _Renderers, &IUiRenderer::Available);
+}
+
+VOID UiDisplayController::Flush()
+{
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::Flush);
 }
 
 VOID UiDisplayController::Clear()
@@ -515,6 +507,19 @@ VOID UiDisplayController::DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
 }
 
 #endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
+
+
+// [Print] IMPLEMENTATION
+
+SIZE UiDisplayController::write(BYTE value)
+{
+	SIZE results[_RendererCount];
+
+	PtrCallAll<BYTE, Print, SIZE, BYTE>(_RendererCount,
+		(Print **)_Renderers, results, &IUiRenderer::write, value);
+
+	return __ResultFromCallResults(results, _RendererCount);
+}
 
 #pragma endregion
 

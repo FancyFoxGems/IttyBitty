@@ -94,7 +94,7 @@ PIUIINPUTSOURCE UiNavigationController::operator[](CBYTE i)
 }
 
 
-// ACCESSORS/MUTATORS
+// [IUiNavigationController] IMPLEMENTATION
 
 CBYTE UiNavigationController::InputSourceCount() const
 {
@@ -164,9 +164,6 @@ VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 
 	_InputSources = newInputSources;
 }
-
-
-// [IUiNavigationController] IMPLEMENTATION
 
 VOID UiNavigationController::ToggleShift()
 {

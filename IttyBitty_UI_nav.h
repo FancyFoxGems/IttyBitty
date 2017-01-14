@@ -30,6 +30,7 @@ namespace IttyBitty
 	interface IUiNavigationController;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
 
+
 	class UiInputSourceBase;
 	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
 
@@ -96,13 +97,26 @@ namespace IttyBitty
 
 #pragma region [IUiNavigationController] DEFINITION
 
-	INTERFACE IUiNavigationController : public IUiNavigationListener, public IUiInputSource
+	INTERFACE IUiNavigationController : public virtual IUiNavigationListener
 	{
 	public:
 
 		// DESTRUCTOR
 
 		VIRTUAL ~IUiNavigationController() { }
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBYTE InputSourceCount() const = 0;
+
+		VIRTUAL RCIUIINPUTSOURCE InputSource(CBYTE = 0) const = 0;
+		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0) = 0;
+
+		VIRTUAL CBOOL AddInputSource(RIUIINPUTSOURCE) = 0;
+
+		VIRTUAL VOID RemoveInputSource(CBYTE) = 0;
+		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE) = 0;
 
 
 		// ACCESSORS/MUTATORS
@@ -156,7 +170,7 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiNavigationController
+	class UiNavigationController : public IUiNavigationController, public IUiInputSource
 	{
 	public:
 
@@ -182,7 +196,7 @@ namespace IttyBitty
 		VIRTUAL PIUIINPUTSOURCE operator[](CBYTE);
 
 
-		// ACCESSORS/MUTATORS
+		// [IUiNavigationController] IMPLEMENTATION
 
 		VIRTUAL CBYTE InputSourceCount() const;
 
@@ -193,9 +207,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID RemoveInputSource(CBYTE);
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
-
-
-		// [IUiNavigationController] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
@@ -242,7 +253,7 @@ namespace IttyBitty
 
 		BOOL _Dispose = FALSE;
 
-		RIUINAVIGATIONLISTENER _NavListener;
+		RIUINAVIGATIONLISTENER const _NavListener;
 
 		PPIUIINPUTSOURCE _InputSources = NULL;
 		BYTE _InputSourceCount = 0;

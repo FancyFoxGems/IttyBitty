@@ -24,15 +24,12 @@ using namespace IttyBitty;
 UiElementBase::UiElementBase(FLASH_STRING label) : _Label(label) { }
 
 
-// OPERATORS
+// [IUiElement] IMPLEMENTATION
 
-CBOOL UiElementBase::operator >(RIUIELEMENT other) const
+CBOOL UiElementBase::operator >(RCIUIELEMENT other) const
 {
 	return this->Width() > other.Width();
 }
-
-
-// [IUiElement] IMPLEMENTATION
 
 FLASH_STRING UiElementBase::Label() const
 {

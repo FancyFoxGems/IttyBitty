@@ -363,7 +363,7 @@ namespace IttyBitty
 #pragma region [ListUiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldBase : public UiFieldBase<T>, public IUiContainerElement<ListUiFieldChoice<T>>
+	CLASS ListUiFieldBase : public UiFieldBase<T>, public UiContainerElementBase<ListUiFieldChoice<T>>
 	{
 	public:
 
@@ -384,22 +384,6 @@ namespace IttyBitty
 
 	public:
 
-		// [IUiContainerElement] IMPLEMENTATION
-
-		VIRTUAL PCLISTUIFIELDCHOICE<T> operator[](CBYTE i) const;
-		VIRTUAL PLISTUIFIELDCHOICE<T> operator[](CBYTE i);
-
-		VIRTUAL CBYTE ChildCount() const;
-
-		VIRTUAL RCLISTUIFIELDCHOICE<T> Child(CBYTE i = 0) const;
-		VIRTUAL RLISTUIFIELDCHOICE<T> Child(CBYTE i = 0);
-
-		VIRTUAL RLISTUIFIELDCHOICE<T> AddChild(RLISTUIFIELDCHOICE<T> child);
-
-		VIRTUAL VOID RemoveChild(CBYTE i);
-		VIRTUAL VOID RemoveChild(RLISTUIFIELDCHOICE<T> child);
-
-
 		// [IUiNavigationListener] OVERRIDES
 
 		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
@@ -411,13 +395,6 @@ namespace IttyBitty
 
 
 	protected:
-
-		// INSTANCE VARIABLES
-
-		BOOL _Dispose = FALSE;
-
-		PPLISTUIFIELDCHOICE<T> _Choices = NULL;
-		BYTE _ChoiceCount = 0;
 	};
 
 #pragma endregion
@@ -521,6 +498,7 @@ namespace IttyBitty
 		// [IUiChildElement] IMPLEMENTATION
 
 		VIRTUAL PLISTUIFIELD<T> Parent() const;
+		VIRTUAL VOID SetParent(PLISTUIFIELD<T>);
 
 
 		// [IUiChoice] IMPLEMENTATION

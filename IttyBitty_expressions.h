@@ -21,30 +21,60 @@ template<typename T, typename TCount = BYTE>
 INLINE CONST T & LeastOf(CONST T * array, CONST TCount count)
 {
 	TCount i = 0;
-	T & result = *array;
+	CONST T * result = *array;
 
 	while (++i < count)
 	{
-		if (array[i] < result)
+		if (array[i] < *result)
+			result = &array[i];
+	}
+
+	return *result;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T & PtrLeastOf(CONST T ** array, CONST TCount count)
+{
+	TCount i = 0;
+	CONST T * result = **array;
+
+	while (++i < count)
+	{
+		if (*array[i] < *result)
 			result = array[i];
 	}
 
-	return result;
+	return *result;
 }
 
 template<typename T, typename TCount = BYTE>
 INLINE CONST T & GreatestOf(CONST T * array, CONST TCount count)
 {
 	TCount i = 0;
-	T & result = *array;
+	CONST T * result = *array;
 
 	while (++i < count)
 	{
 		if (array[i] > result)
+			result = &array[i];
+	}
+
+	return *result;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T & PtrGreatestOf(CONST T ** array, CONST TCount count)
+{
+	TCount i = 0;
+	CONST T * result = *array;
+
+	while (++i < count)
+	{
+		if (*array[i] > *result)
 			result = array[i];
 	}
 
-	return result;
+	return *result;
 }
 
 template<typename T, typename TCount = BYTE>
@@ -60,6 +90,18 @@ INLINE CONST T SumOf(CONST T * array, CONST TCount count)
 }
 
 template<typename T, typename TCount = BYTE>
+INLINE CONST T PtrSumOf(CONST T ** array, CONST TCount count)
+{
+	TCount i = 0;
+	T result = T(0);
+
+	while (i < count)
+		result += *array[i++];
+
+	return result;
+}
+
+template<typename T, typename TCount = BYTE>
 INLINE CONST T MeanOf(CONST T * array, CONST TCount count)
 {
 	TCount i = 0;
@@ -67,6 +109,18 @@ INLINE CONST T MeanOf(CONST T * array, CONST TCount count)
 
 	while (i < count)
 		result += array[i++];
+
+	return result / (T)count;
+}
+
+template<typename T, typename TCount = BYTE>
+INLINE CONST T PtrMeanOf(CONST T ** array, CONST TCount count)
+{
+	TCount i = 0;
+	T result = T(0);
+
+	while (i < count)
+		result += *array[i++];
 
 	return result / (T)count;
 }

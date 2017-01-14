@@ -77,7 +77,7 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL) = 0;
+		//VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL) = 0;
 
 
 	protected:
@@ -96,26 +96,25 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenuItemBase(PCMENU);
-
-		~MenuItemBase();
+		MenuItemBase(FLASH_STRING label, PMENU parent) : UiElementBase(label) { }
 
 
 		// [IUiChildElement] IMPLEMENTATION
 
-		VIRTUAL PMENU Parent() const;
+		//VIRTUAL PMENU Parent() const;
+		//VIRTUAL VOID SetParent(PMENU);
 
 
 		// [IMenuItem] IMPLEMENTATION
 
-		VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL);
+		//VIRTUAL CBOOL Action(PTR = NULL, CPTR = NULL);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		PCMENU _Parent = NULL;
+		PMENU _Parent = NULL;
 	};
 
 #pragma endregion
@@ -182,62 +181,78 @@ namespace IttyBitty
 #pragma region [MenuBase] DEFINITION
 
 	template MENU_BASE_T_CLAUSE_DEF
-	CLASS MenuBase : public MenuItemBase, public IUiContainerElement<TMenuItem>
+	CLASS MenuBase : public MenuItemBase, public UiContainerElementBase<TMenuItem>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenuBase(CBYTE, PPIMENUITEM);
-		MenuBase(CBYTE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
-
-		VIRTUAL ~MenuBase();
-
-
-	protected:
-
-		// PROTECTED DISPOSAL METHOD
-
-		VIRTUAL VOID Dispose();
+		MenuBase(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPIMENUITEM children = NULL)
+			: MenuItemBase(label, parent), UiContainerElementBase<TMenuItem>(label, childCount, children) { }
 
 
 	public:
 
-		// [IUiContainerElement] IMPLEMENTATION
-
-		VIRTUAL CONST TMenuItem * operator[](CBYTE) const;
-		VIRTUAL TMenuItem * operator[](CBYTE);
-
-		VIRTUAL CBYTE ChildCount() const;
-
-		VIRTUAL CONST TMenuItem & Child(CBYTE = 0) const;
-		VIRTUAL TMenuItem & Child(CBYTE = 0);
-
-		VIRTUAL TMenuItem & AddChild(TMenuItem &);
-
-		VIRTUAL VOID RemoveChild(CBYTE);
-		VIRTUAL VOID RemoveChild(TMenuItem &);
-
-
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Up(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
+
+		VOID Down(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
+
+		VOID Left(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
+
+		VOID Right(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
+
+		VOID Return(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
+
+		VOID Select(CUIACTIONSTATE = UiActionState::CLICK)
+		{
+		}
 
 
-	protected:
+		// [IUiElement] IMPLEMENTATION
 
-		// INSTANCE VARIABLES
+		VIRTUAL CBOOL operator >(RCIUIELEMENT other) const
+		{
+			//return UiContainerElementBase<TMenuItem>::operator >(other);
 
-		BOOL _Dispose = FALSE;
+		}
 
-		PPIMENUITEM _Children = NULL;
-		BYTE _ChildCount = 0;
-		BYTE _Capacity = 0;
+		VIRTUAL FLASH_STRING Label() const
+		{
+			//return UiContainerElementBase<TMenuItem>::Label();
+
+		}
+
+		VIRTUAL PCCHAR LabelString() const
+		{
+			//return UiContainerElementBase<TMenuItem>::LabelString();
+		}
+
+		VIRTUAL CBYTE Width() const
+		{
+			//return UiContainerElementBase<TMenuItem>::Width();
+
+		}
+		VIRTUAL CBYTE Height() const
+		{
+			//return UiContainerElementBase<TMenuItem>::Height();
+		}
+
+		VIRTUAL VOID Render(RIUIRENDERER renderer, CBYTE col = 0, CBYTE row = 0)
+		{
+			//UiContainerElementBase<TMenuItem>::Render(renderer, col, row);
+		}
 	};
 
 #pragma endregion
@@ -251,10 +266,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Menu(CBYTE, PPIMENUITEM);
-		Menu(CBYTE, CBYTE = MENUI_DEFAULT_MENU_CAPACITY);
-
-		VIRTUAL ~Menu();
+		Menu(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPIMENUITEM children = NULL)
+			: MenuBase(label, parent, childCount, children) { }
 
 
 	protected:

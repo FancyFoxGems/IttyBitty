@@ -81,7 +81,7 @@ namespace IttyBitty
 
 		// OPERATORS
 
-		VIRTUAL CBOOL operator >(RIUIELEMENT) const = 0;
+		VIRTUAL CBOOL operator >(RCIUIELEMENT) const = 0;
 
 
 		// ACCESSORS/MUTATORS
@@ -207,7 +207,7 @@ namespace IttyBitty
 #pragma region [IUiChildElement] DEFINITION
 
 	template UI_CHILD_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiChildElement : public IUiElement
+	INTERFACE IUiChildElement : public virtual IUiElement
 	{
 	public:
 
@@ -218,8 +218,8 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		VIRTUAL TParent * Parent() const = 0;
-		VIRTUAL VOID SetParent(TParent *) = 0;
+		//VIRTUAL TParent * Parent() const = 0;
+		//VIRTUAL VOID SetParent(TParent *) = 0;
 
 
 	protected:
@@ -256,21 +256,18 @@ namespace IttyBitty
 
 #pragma region [UiElementBase] DEFINITION
 
-	CLASS UiElementBase : public IUiElement
+	CLASS UiElementBase : public virtual IUiElement
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		UiElementBase(FLASH_STRING);
-
-
-		// OPERATORS
-
-		VIRTUAL CBOOL operator >(RIUIELEMENT) const;
+		UiElementBase(FLASH_STRING = NULL);
 
 
 		// [IUiElement] IMPLEMENTATION
+
+		VIRTUAL CBOOL operator >(RCIUIELEMENT) const;
 
 		VIRTUAL FLASH_STRING Label() const;
 		VIRTUAL PCCHAR LabelString() const;
@@ -308,7 +305,8 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		UiContainerElementBase(CBYTE childCount = 0, TChild ** children = NULL) : _ChildCount(childCount), _Children(children)
+		UiContainerElementBase(FLASH_STRING label = NULL, CBYTE childCount = 0, TChild ** children = NULL)
+			: UiElementBase(label), _ChildCount(childCount), _Children(children)
 		{
 			if (!_Children)
 				_Dispose = TRUE;
@@ -324,12 +322,12 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose()
+		VIRTUAL VOID Dispose(CBOOL forceDispose = FALSE)
 		{
 			if (!_Children)
 				return;
 
-			if (_Dispose)
+			if (_Dispose OR forceDispose)
 			{
 				for (BYTE i = 0; i < _ChildCount; i++)
 				{
@@ -402,7 +400,7 @@ namespace IttyBitty
 
 		CBYTE Width() const
 		{
-			return GreatestOf<TChild>(_Children);
+			return PtrGreatestOf<TChild>(MAKE_CONST(_Children), _ChildCount).Width();
 		}
 
 		CBYTE Height() const
