@@ -35,8 +35,8 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(IUiDisplayController, IUIDISPLAYCONTROLLER);
 
 
-	class UiRendererBase;
-	TYPEDEF_CLASS_ALIASES(UiRendererBase, UIRENDERERBASE);
+	class UiRenderer;
+	TYPEDEF_CLASS_ALIASES(UiRenderer, UIRENDERER);
 
 	class UiDisplayController;
 	TYPEDEF_CLASS_ALIASES(UiDisplayController, UIDISPLAYCONTROLLER);
@@ -107,6 +107,7 @@ namespace IttyBitty
 		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE) = 0;
 	#endif
 
+
 	protected:
 
 		IUiRenderer() { }
@@ -138,6 +139,7 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveRenderer(CBYTE) = 0;
 		VIRTUAL VOID RemoveRenderer(RIUIRENDERER) = 0;
 
+
 	protected:
 
 		IUiDisplayController() { }
@@ -145,9 +147,10 @@ namespace IttyBitty
 
 #pragma endregion
 
-#pragma region [UiRendererBase] DEFINITION
 
-	CLASS UiRendererBase : public IUiRenderer
+#pragma region [UiRenderer] DEFINITION
+
+	CLASS UiRenderer : public IUiRenderer
 	{
 	public:
 
@@ -158,8 +161,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		UiRendererBase();
-		UiRendererBase(RUIRENDEREROPTIONS);
+		UiRenderer();
+		UiRenderer(RUIRENDEREROPTIONS);
 
 
 		// [IUiRenderer] IMPLEMENTATION

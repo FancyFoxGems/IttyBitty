@@ -17,26 +17,26 @@
 using namespace IttyBitty;
 
 
-#pragma region [UiElementBase] IMPLEMENTATION
+#pragma region [UiElement] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-UiElementBase::UiElementBase(FLASH_STRING label) : _Label(label) { }
+UiElement::UiElement(FLASH_STRING label) : _Label(label) { }
 
 
 // [IUiElement] IMPLEMENTATION
 
-CBOOL UiElementBase::operator >(RCIUIELEMENT other) const
+CBOOL UiElement::operator >(RCUIELEMENT other) const
 {
 	return this->Width() > other.Width();
 }
 
-FLASH_STRING UiElementBase::Label() const
+FLASH_STRING UiElement::Label() const
 {
 	return _Label;
 }
 
-PCCHAR UiElementBase::LabelString() const
+PCCHAR UiElement::LabelString() const
 {
 	PGM_P pLabel = reinterpret_cast<PGM_P>(_Label);
 	PCHAR label = new char[strlen_P(pLabel)];
@@ -46,17 +46,17 @@ PCCHAR UiElementBase::LabelString() const
 	return label;
 }
 
-CBYTE UiElementBase::Width() const
+CBYTE UiElement::Width() const
 {
 	return strlen_P(reinterpret_cast<PGM_P>(_Label));
 }
 
-CBYTE UiElementBase::Height() const
+CBYTE UiElement::Height() const
 {
 	return 1;
 }
 
-VOID UiElementBase::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
+VOID UiElement::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
 {
 	renderer.PrintString_P(_Label, col, row);
 }
@@ -64,17 +64,17 @@ VOID UiElementBase::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
 
 // [IUiNavigationListener] IMPLEMENTATION
 
-VOID UiElementBase::Up(CUIACTIONSTATE state) { }
+VOID UiElement::Up(CUIACTIONSTATE state) { }
 
-VOID UiElementBase::Down(CUIACTIONSTATE state) { }
+VOID UiElement::Down(CUIACTIONSTATE state) { }
 
-VOID UiElementBase::Left(CUIACTIONSTATE state) { }
+VOID UiElement::Left(CUIACTIONSTATE state) { }
 
-VOID UiElementBase::Right(CUIACTIONSTATE state) { }
+VOID UiElement::Right(CUIACTIONSTATE state) { }
 
-VOID UiElementBase::Return(CUIACTIONSTATE state) { }
+VOID UiElement::Return(CUIACTIONSTATE state) { }
 
-VOID UiElementBase::Select(CUIACTIONSTATE state) { }
+VOID UiElement::Select(CUIACTIONSTATE state) { }
 
 #pragma endregion
 

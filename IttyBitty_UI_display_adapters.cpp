@@ -19,14 +19,14 @@ using namespace IttyBitty;
 
 // CONSTRUCTORS
 
-SerialUiRenderer::SerialUiRenderer() : UiRendererBase() { }
+SerialUiRenderer::SerialUiRenderer() : UiRenderer() { }
 
-SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial) : UiRendererBase(), _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial) : UiRenderer(), _Serial(serial) { }
 
-SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options) : UiRendererBase(options) { }
+SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options) : UiRenderer(options) { }
 
 SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options,
-	HardwareSerial & serial) : UiRendererBase(options), _Serial(serial) { }
+	HardwareSerial & serial) : UiRenderer(options), _Serial(serial) { }
 
 
 // [Print] IMPLEMENTATION

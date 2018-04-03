@@ -50,7 +50,7 @@ namespace IttyBitty
 
 #pragma region [SerialUiRenderer] DEFINITION
 
-	CLASS SerialUiRenderer : public UiRendererBase
+	CLASS SerialUiRenderer : public UiRenderer
 	{
 	public:
 
@@ -90,17 +90,17 @@ namespace IttyBitty
 #pragma region [LcdI2CUiRenderer] DEFINITION
 
 	template LCDI2C_UI_RENDERER_T_CLAUSE_DEF
-	CLASS LcdI2CUiRenderer : public UiRendererBase
+	CLASS LcdI2CUiRenderer : public UiRenderer
 	{
 	public:
 
 		// CONSTRUCTOR/DESTRUCTOR
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd)
-			: UiRendererBase(MUI::DefaultLcdRendererOptions()), _LCD(lcd) { }
+			: UiRenderer(MUI::DefaultLcdRendererOptions()), _LCD(lcd) { }
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd, RUIRENDEREROPTIONS options)
-			: UiRendererBase(options), _LCD(lcd) { }
+			: UiRenderer(options), _LCD(lcd) { }
 
 		VIRTUAL ~LcdI2CUiRenderer()
 		{

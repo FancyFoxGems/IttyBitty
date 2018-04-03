@@ -33,13 +33,13 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 #pragma endregion
 
 
-#pragma region [UiRendererBase] IMPLEMENTATION
+#pragma region [UiRenderer] IMPLEMENTATION
 
 // CONSTRUCTORS
 
-UiRendererBase::UiRendererBase() : UiRendererBase(MUI::DefaultRendererOptions()) { }
+UiRenderer::UiRenderer() : UiRenderer(MUI::DefaultRendererOptions()) { }
 
-UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options)
+UiRenderer::UiRenderer(RUIRENDEREROPTIONS options) : Options(options)
 {
 	if (Options.WrapText)
 		this->SetLineWrap();
@@ -48,66 +48,66 @@ UiRendererBase::UiRendererBase(RUIRENDEREROPTIONS options) : Options(options)
 
 // [IUiRenderer] (NON-)IMPLEMENTATION
 
-CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
+CBYTE UiRenderer::Cols() const { return MAX_BYTE; }
 
-CBYTE UiRendererBase::Rows() const { return MAX_BYTE; }
+CBYTE UiRenderer::Rows() const { return MAX_BYTE; }
 
-CBYTE UiRendererBase::CursorCol() const { return MAX_BYTE; }
+CBYTE UiRenderer::CursorCol() const { return MAX_BYTE; }
 
-CBYTE UiRendererBase::CursorRow() const { return MAX_BYTE; }
+CBYTE UiRenderer::CursorRow() const { return MAX_BYTE; }
 
-CBOOL UiRendererBase::IsLineWrapEnabled() const { return FALSE; }
+CBOOL UiRenderer::IsLineWrapEnabled() const { return FALSE; }
 
-VOID UiRendererBase::SetLineWrap(CBOOL) { }
+VOID UiRenderer::SetLineWrap(CBOOL) { }
 
-VOID UiRendererBase::CursorOff() { }
+VOID UiRenderer::CursorOff() { }
 
-VOID UiRendererBase::CursorBlinkOn() { }
+VOID UiRenderer::CursorBlinkOn() { }
 
-VOID UiRendererBase::CursorBlinkOff() { }
+VOID UiRenderer::CursorBlinkOff() { }
 
-CBOOL UiRendererBase::Available() { return TRUE; }
+CBOOL UiRenderer::Available() { return TRUE; }
 
-VOID UiRendererBase::Flush() { }
+VOID UiRenderer::Flush() { }
 
-VOID UiRendererBase::Clear() { }
+VOID UiRenderer::Clear() { }
 
-VOID UiRendererBase::ClearCol(CBYTE) { }
+VOID UiRenderer::ClearCol(CBYTE) { }
 
-VOID UiRendererBase::ClearRow(CBYTE) { }
+VOID UiRenderer::ClearRow(CBYTE) { }
 
-VOID UiRendererBase::ScrollLeft() { }
+VOID UiRenderer::ScrollLeft() { }
 
-VOID UiRendererBase::ScrollRight() { }
+VOID UiRenderer::ScrollRight() { }
 
-VOID UiRendererBase::Home() { }
+VOID UiRenderer::Home() { }
 
-VOID UiRendererBase::CursorPrev() { }
+VOID UiRenderer::CursorPrev() { }
 
-VOID UiRendererBase::CursorNext() { }
+VOID UiRenderer::CursorNext() { }
 
-VOID UiRendererBase::MoveCursor(CBYTE, CBYTE) { }
+VOID UiRenderer::MoveCursor(CBYTE, CBYTE) { }
 
-VOID UiRendererBase::LoadCustomChar(BYTE charIndex, PCBYTE charData) { }
+VOID UiRenderer::LoadCustomChar(BYTE charIndex, PCBYTE charData) { }
 
-VOID UiRendererBase::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
+VOID UiRenderer::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
 
-CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
+CBYTE UiRenderer::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
 	return (BYTE)this->write(value);
 }
 
-CBYTE UiRendererBase::PrintString(PCCHAR str, BYTE col, BYTE row)
+CBYTE UiRenderer::PrintString(PCCHAR str, BYTE col, BYTE row)
 {
 	return this->print(str);
 }
 
-CBYTE UiRendererBase::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
+CBYTE UiRenderer::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
 	return this->print(flashStr);
 }
 
-CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
+CBYTE UiRenderer::PrintStyledLine(PCCHAR str, BYTE row)
 {
 	this->ClearRow(row);
 	this->MoveCursor(0, row);
@@ -138,7 +138,7 @@ CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
 	return charsWritten;
 }
 
-CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
+CBYTE UiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
 	BYTE strLen = 0;
 
@@ -166,11 +166,11 @@ CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
 
-VOID UiRendererBase::DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) { }
+VOID UiRenderer::DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) { }
 
-VOID UiRendererBase::DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) { }
+VOID UiRenderer::DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) { }
 
-VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL) { }
+VOID UiRenderer::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL) { }
 
 #endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
 

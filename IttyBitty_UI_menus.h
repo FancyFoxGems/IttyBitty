@@ -20,8 +20,8 @@ namespace IttyBitty
 	interface IMenuItem;
 	TYPEDEF_CLASS_ALIASES(IMenuItem, IMENUITEM);
 
-	class MenuItemBase;
-	TYPEDEF_CLASS_ALIASES(MenuItemBase, MENUITEMBASE);
+	class MenuItem;
+	TYPEDEF_CLASS_ALIASES(MenuItem, MENUITEM);
 
 	class CustomMenuItem;
 	TYPEDEF_CLASS_ALIASES(CustomMenuItem, CUSTOMMENUITEM);
@@ -88,15 +88,15 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [MenuItemBase] DEFINITION
+#pragma region [MenuItem] DEFINITION
 
-	CLASS MenuItemBase : public UiElementBase, public IMenuItem
+	CLASS MenuItem : public UiElement//, public IMenuItem
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenuItemBase(FLASH_STRING label, PMENU parent) : UiElementBase(label) { }
+		MenuItem(FLASH_STRING label, PMENU parent) : UiElement(label) { }
 
 
 		// [IUiChildElement] IMPLEMENTATION
@@ -122,7 +122,7 @@ namespace IttyBitty
 
 #pragma region [CustomMenuItem] DEFINITION
 
-	CLASS CustomMenuItem : public MenuItemBase
+	CLASS CustomMenuItem : public MenuItem
 	{
 	public:
 
@@ -144,7 +144,7 @@ namespace IttyBitty
 #pragma region [FieldMenuItem] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS FieldMenuItem : public UiFieldBase<T>, public IMenuItem //public MenuItemBase, public IUiField<T>
+	CLASS FieldMenuItem : public UiField<T>, public IMenuItem //public MenuItem, public IUiField<T>
 	{
 	public:
 
@@ -181,78 +181,78 @@ namespace IttyBitty
 #pragma region [MenuBase] DEFINITION
 
 	template MENU_BASE_T_CLAUSE_DEF
-	CLASS MenuBase : public MenuItemBase, public UiContainerElementBase<TMenuItem>
+	CLASS MenuBase : public MenuItem, public UiContainerElement<TMenuItem>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenuBase(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPIMENUITEM children = NULL)
-			: MenuItemBase(label, parent), UiContainerElementBase<TMenuItem>(label, childCount, children) { }
+		MenuBase(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPMENUITEM children = NULL)
+			: MenuItem(label, parent), UiContainerElement<TMenuItem>(label, childCount, children) { }
 
 
 	public:
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Up(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Down(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Left(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Right(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Return(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK)
+		VOID Select(CUIACTIONSTATE = CLICK)
 		{
 		}
 
 
 		// [IUiElement] IMPLEMENTATION
 
-		VIRTUAL CBOOL operator >(RCIUIELEMENT other) const
+	/*	VIRTUAL CBOOL operator >(RCIUIELEMENT other) const
 		{
-			//return UiContainerElementBase<TMenuItem>::operator >(other);
+			return UiContainerElement<TMenuItem>::operator >(other);
 
 		}
 
 		VIRTUAL FLASH_STRING Label() const
 		{
-			//return UiContainerElementBase<TMenuItem>::Label();
+			return UiContainerElement<TMenuItem>::Label();
 
 		}
 
 		VIRTUAL PCCHAR LabelString() const
 		{
-			//return UiContainerElementBase<TMenuItem>::LabelString();
+			return UiContainerElement<TMenuItem>::LabelString();
 		}
 
 		VIRTUAL CBYTE Width() const
 		{
-			//return UiContainerElementBase<TMenuItem>::Width();
+			return UiContainerElement<TMenuItem>::Width();
 
 		}
 		VIRTUAL CBYTE Height() const
 		{
-			//return UiContainerElementBase<TMenuItem>::Height();
+			return UiContainerElement<TMenuItem>::Height();
 		}
 
 		VIRTUAL VOID Render(RIUIRENDERER renderer, CBYTE col = 0, CBYTE row = 0)
 		{
-			//UiContainerElementBase<TMenuItem>::Render(renderer, col, row);
-		}
+			UiContainerElement<TMenuItem>::Render(renderer, col, row);
+		}*/
 	};
 
 #pragma endregion
@@ -260,13 +260,13 @@ namespace IttyBitty
 
 #pragma region [Menu] DEFINITION
 
-	CLASS Menu : public MenuBase<IMenuItem>
+	CLASS Menu : public MenuBase<MenuItem>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		Menu(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPIMENUITEM children = NULL)
+		Menu(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPMENUITEM children = NULL)
 			: MenuBase(label, parent, childCount, children) { }
 
 
@@ -344,7 +344,7 @@ namespace IttyBitty
 
 #pragma region [ListMenuChoice] DEFINITION
 
-	CLASS ListMenuChoice : public MenuItemBase, public IUiChoice<ListMenu>
+	CLASS ListMenuChoice : public MenuItem, public IUiChoice<ListMenu>
 	{
 	public:
 
@@ -396,7 +396,7 @@ namespace IttyBitty
 
 #pragma region [UiDialog] DEFINITION
 
-	CLASS UiDialog : public UiElementBase, public IUiDialog
+	CLASS UiDialog : public UiElement, public IUiDialog
 	{
 	public:
 

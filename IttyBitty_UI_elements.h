@@ -57,13 +57,13 @@ namespace IttyBitty
 		CSL(UI_CHILD_ELEMENT_T_ARGS), IUiChoice, IUICHOICE);
 
 
-	class UiElementBase;
+	class UiElement;
 	TYPEDEF_CLASS_ALIASES(UiElement, UIELEMENT);
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE
-	interface UiContainerElementBase;
+	interface UiContainerElement;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(UI_CONTAINER_ELEMENT_T_CLAUSE), \
-		CSL(UI_CONTAINER_ELEMENT_T_ARGS), UiContainerElementBase, UICONTAINERELEMENTBASE);
+		CSL(UI_CONTAINER_ELEMENT_T_ARGS), UiContainerElement, UICONTAINERELEMENT);
 
 #pragma endregion
 
@@ -109,7 +109,7 @@ namespace IttyBitty
 #pragma region [IUiContainerElement] DEFINITION
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiContainerElement : public IUiElement
+	INTERFACE IUiContainerElement //: public IUiElement
 	{
 	public:
 
@@ -254,20 +254,20 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiElementBase] DEFINITION
+#pragma region [UiElement] DEFINITION
 
-	CLASS UiElementBase : public virtual IUiElement
+	CLASS UiElement : public virtual IUiNavigationListener //: public virtual IUiElement
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		UiElementBase(FLASH_STRING = NULL);
+		UiElement(FLASH_STRING = NULL);
 
 
 		// [IUiElement] IMPLEMENTATION
 
-		VIRTUAL CBOOL operator >(RCIUIELEMENT) const;
+		VIRTUAL CBOOL operator >(RCUIELEMENT) const;
 
 		VIRTUAL FLASH_STRING Label() const;
 		VIRTUAL PCCHAR LabelString() const;
@@ -280,12 +280,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] IMPLEMENTATION
 
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Up(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
 
 	protected:
@@ -296,23 +296,23 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiContainerElementBase] IMPLEMENTATION
+#pragma region [UiContainerElement] IMPLEMENTATION
 
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
-	CLASS UiContainerElementBase : public UiElementBase, public IUiContainerElement UI_CONTAINER_ELEMENT_T_ARGS
+	CLASS UiContainerElement : public UiElement, public IUiContainerElement UI_CONTAINER_ELEMENT_T_ARGS
 	{
 	public:
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		UiContainerElementBase(FLASH_STRING label = NULL, CBYTE childCount = 0, TChild ** children = NULL)
-			: UiElementBase(label), _ChildCount(childCount), _Children(children)
+		UiContainerElement(FLASH_STRING label = NULL, CBYTE childCount = 0, TChild ** children = NULL)
+			: UiElement(label), _ChildCount(childCount), _Children(children)
 		{
 			if (!_Children)
 				_Dispose = TRUE;
 		}
 
-		VIRTUAL ~UiContainerElementBase()
+		VIRTUAL ~UiContainerElement()
 		{
 			this->Dispose();
 		}
@@ -416,27 +416,27 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Up(CUIACTIONSTATE state = CLICK)
 		{
 		}
 
-		VOID Down(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Down(CUIACTIONSTATE state = CLICK)
 		{
 		}
 
-		VOID Left(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Left(CUIACTIONSTATE state = CLICK)
 		{
 		}
 
-		VOID Right(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Right(CUIACTIONSTATE state = CLICK)
 		{
 		}
 
-		VOID Return(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Return(CUIACTIONSTATE state = CLICK)
 		{
 		}
 
-		VOID Select(CUIACTIONSTATE state = UiActionState::CLICK)
+		VOID Select(CUIACTIONSTATE state = CLICK)
 		{
 		}
 

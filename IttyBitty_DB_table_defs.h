@@ -155,7 +155,7 @@ namespace IttyBitty
 		friend class DbTable;
 
 
-		// [IDbTableDef] IHELPER METHODS
+		// [IDbTableDef] HELPER METHODS
 
 		VIRTUAL CBYTE TableNameLength() const = 0;
 

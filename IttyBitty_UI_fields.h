@@ -24,25 +24,25 @@ namespace IttyBitty
 		CSL(DEFAULT_T_ARGS), IUiField, IUIFIELD);
 
 	template DEFAULT_T_CLAUSE
-	class BaseUiFieldBase;
-	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
-		CSL(DEFAULT_T_ARGS), BaseUiFieldBase, BASEUIFIELDBASE);
-
-	template DEFAULT_T_CLAUSE
 	class UiFieldBase;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
 		CSL(DEFAULT_T_ARGS), UiFieldBase, UIFIELDBASE);
 
 	template DEFAULT_T_CLAUSE
-	class VarLengthUiFieldBase;
+	class UiField;
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
-		CSL(DEFAULT_T_ARGS), VarLengthUiFieldBase, VARLENGTHUIFIELDBASE);
+		CSL(DEFAULT_T_ARGS), UiField, UIFIELD);
+
+	template DEFAULT_T_CLAUSE
+	class VarLengthUiField;
+	TEMPLATE_CLASS_USING_ALIASES(CSL(DEFAULT_T_CLAUSE), \
+		CSL(DEFAULT_T_ARGS), VarLengthUiField, VARLENGTHUIFIELD);
 
 	class BooleanUiField;
 	TYPEDEF_CLASS_ALIASES(BooleanUiField, BOOLEANUIFIELD);
 
-	class AlphaUiFieldBase;
-	TYPEDEF_CLASS_ALIASES(AlphaUiFieldBase, ALPHAUIFIELDBASE);
+	class AlphaUiField;
+	TYPEDEF_CLASS_ALIASES(AlphaUiField, ALPHAUIFIELD);
 
 	class CharUiField;
 	TYPEDEF_CLASS_ALIASES(CharUiField, CHARUIFIELD);
@@ -65,7 +65,7 @@ namespace IttyBitty
 		CSL(DEFAULT_T_ARGS), NumericUiField, NUMERICUIFIELD);
 
 	class FloatUiField;
-	TYPEDEF_CLASS_ALIASES(UiField, UIFIELD);
+	TYPEDEF_CLASS_ALIASES(FloatUiField, FLOATUIFIELD);
 
 
 	template DEFAULT_T_CLAUSE
@@ -119,10 +119,10 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [BaseUiFieldBase] DEFINITION
+#pragma region [UiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS BaseUiFieldBase : public UiElementBase, public IUiField<T>
+	CLASS UiFieldBase : public UiElement//, public IUiField<T>
 	{
 	public:
 
@@ -143,10 +143,10 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiFieldBase] DEFINITION
+#pragma region [UiField] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS UiFieldBase : public BaseUiFieldBase<T>
+	CLASS UiField : public UiFieldBase<T>
 	{
 	public:
 
@@ -170,10 +170,10 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiFieldBase] DEFINITION
+#pragma region [UiField] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS VarLengthUiFieldBase : public BaseUiFieldBase<T>
+	CLASS VarLengthUiField : public UiFieldBase<T>
 	{
 	public:
 
@@ -199,7 +199,7 @@ namespace IttyBitty
 
 #pragma region [BooleanUiField] DEFINITION
 
-	CLASS BooleanUiField : public UiFieldBase<BOOL>
+	CLASS BooleanUiField : public UiField<BOOL>
 	{
 	public:
 
@@ -216,7 +216,7 @@ namespace IttyBitty
 
 #pragma region [AlphaUiField] DEFINITION
 
-	CLASS AlphaUiFieldBase : public VarLengthUiFieldBase<CHAR>
+	CLASS AlphaUiField : public VarLengthUiField<CHAR>
 	{
 	public:
 
@@ -236,7 +236,7 @@ namespace IttyBitty
 
 #pragma region [CharUiField] DEFINITION
 
-	CLASS CharUiField : public AlphaUiFieldBase
+	CLASS CharUiField : public AlphaUiField
 	{
 	public:
 
@@ -253,7 +253,7 @@ namespace IttyBitty
 
 #pragma region [StringUiField] DEFINITION
 
-	CLASS StringUiField : public AlphaUiFieldBase
+	CLASS StringUiField : public AlphaUiField
 	{
 	public:
 
@@ -322,7 +322,7 @@ namespace IttyBitty
 #pragma region [NumericUiField] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS NumericUiField : public UiFieldBase<T>
+	CLASS NumericUiField : public UiField<T>
 	{
 	public:
 
@@ -363,7 +363,7 @@ namespace IttyBitty
 #pragma region [ListUiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldBase : public UiFieldBase<T>, public UiContainerElementBase<ListUiFieldChoice<T>>
+	CLASS ListUiFieldBase : public UiField<T>, public UiContainerElement<ListUiFieldChoice<T>>
 	{
 	public:
 
@@ -386,12 +386,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Up(CUIACTIONSTATE = CLICK);
+		VOID Down(CUIACTIONSTATE = CLICK);
+		VOID Left(CUIACTIONSTATE = CLICK);
+		VOID Right(CUIACTIONSTATE = CLICK);
+		VOID Return(CUIACTIONSTATE = CLICK);
+		VOID Select(CUIACTIONSTATE = CLICK);
 
 
 	protected:
@@ -432,12 +432,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Up(CUIACTIONSTATE = CLICK);
+		VOID Down(CUIACTIONSTATE = CLICK);
+		VOID Left(CUIACTIONSTATE = CLICK);
+		VOID Right(CUIACTIONSTATE = CLICK);
+		VOID Return(CUIACTIONSTATE = CLICK);
+		VOID Select(CUIACTIONSTATE = CLICK);
 	};
 
 #pragma endregion
@@ -477,12 +477,12 @@ namespace IttyBitty
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VOID Up(CUIACTIONSTATE = CLICK);
+		VOID Down(CUIACTIONSTATE = CLICK);
+		VOID Left(CUIACTIONSTATE = CLICK);
+		VOID Right(CUIACTIONSTATE = CLICK);
+		VOID Return(CUIACTIONSTATE = CLICK);
+		VOID Select(CUIACTIONSTATE = CLICK);
 	};
 
 #pragma endregion
@@ -491,7 +491,7 @@ namespace IttyBitty
 #pragma region [UiFieldChoice] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldChoice : public UiFieldBase<T>, public IUiChoice<ListUiField<T>>
+	CLASS ListUiFieldChoice : public UiField<T>, public IUiChoice<ListUiField<T>>
 	{
 	public:
 

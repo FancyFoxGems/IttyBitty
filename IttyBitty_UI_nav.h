@@ -31,8 +31,11 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
 
 
-	class UiInputSourceBase;
-	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
+	class UiInputSource;
+	TYPEDEF_CLASS_ALIASES(UiInputSource, UIINPUTSOURCE);
+
+	interface IUiNavigationListener;
+	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
@@ -51,9 +54,12 @@ namespace IttyBitty
 		VIRTUAL ~IUiInputSource() { }
 
 
-		// INTERFACE METHODS
+		// ACCESSORS
 
 		VIRTUAL CBOOL IsAsynchronous() const = 0;
+
+
+		// INTERFACE METHODS
 
 		VIRTUAL VOID Poll() = 0;
 
@@ -79,12 +85,14 @@ namespace IttyBitty
 
 		// INTERFACE METHODS
 
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK) = 0;
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK) = 0;
+		VIRTUAL VOID Up(CUIACTIONSTATE = CLICK) = 0;
+		VIRTUAL VOID Down(CUIACTIONSTATE = CLICK) = 0;
+		VIRTUAL VOID Left(CUIACTIONSTATE = CLICK) = 0;
+		VIRTUAL VOID Right(CUIACTIONSTATE = CLICK) = 0;
+		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK) = 0;
+		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK) = 0;
+
+		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK) = 0;
 
 
 	protected:
@@ -97,7 +105,7 @@ namespace IttyBitty
 
 #pragma region [IUiNavigationController] DEFINITION
 
-	INTERFACE IUiNavigationController : public virtual IUiNavigationListener
+	INTERFACE IUiNavigationController
 	{
 	public:
 
@@ -134,21 +142,24 @@ namespace IttyBitty
 
 	protected:
 
+		// PROTECTED INTERFACE METHOD
+
+
 		IUiNavigationController() { }
 	};
 
 #pragma endregion
 
 
-#pragma region [UiInputSourceBase] DEFINITION
+#pragma region [UiInputSource] DEFINITION
 
-	CLASS UiInputSourceBase : public IUiInputSource
+	CLASS UiInputSource : public IUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		UiInputSourceBase(RIUINAVIGATIONCONTROLLER);
+		UiInputSource(RIUINAVIGATIONCONTROLLER);
 
 
 		// [IUiListener] IMPLEMENTATION
@@ -156,13 +167,14 @@ namespace IttyBitty
 		VIRTUAL CBOOL IsAsynchronous() const;
 
 		VIRTUAL VOID Poll();
+		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		RIUINAVIGATIONCONTROLLER _Navigation;
+		RIUINAVIGATIONCONTROLLER const _Navigation;
 	};
 
 #pragma endregion
@@ -170,7 +182,7 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiNavigationController, public IUiInputSource
+	class UiNavigationController : public IUiNavigationController, public IUiNavigationListener, public IUiInputSource
 	{
 	public:
 
@@ -218,15 +230,17 @@ namespace IttyBitty
 		VIRTUAL VOID AltOn();
 		VIRTUAL VOID AltOff();
 
+		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK);
+
 
 		// [IUiNavigationListener] IMPLEMENTATION
 
-		VIRTUAL VOID Up(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Down(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Left(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Right(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Return(CUIACTIONSTATE = UiActionState::CLICK);
-		VIRTUAL VOID Select(CUIACTIONSTATE = UiActionState::CLICK);
+		VIRTUAL VOID Up(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
 
 		// [IUiInputSource] IMPLEMENTATION
@@ -242,7 +256,7 @@ namespace IttyBitty
 
 		STRUCT __StateEntry
 		{
-			UIACTIONSTATE State = UiActionState::INACTION;
+			UIACTIONSTATE State = INACTION;
 			LONG Timestamp = 0;
 		};
 
@@ -264,9 +278,11 @@ namespace IttyBitty
 		STATEENTRY _PrevStates[MENUI_NUM_STATEFUL_ACTIONS];
 
 
-		// PROTECTED MEMBER FUNCTION DECLARATIONS
+		// PROTECTED INTERFACE METHOD
 
-		CUIACTIONSTATE UpdateState(CUIACTIONTYPE, CUIACTIONSTATE);
+
+		// PROTECTED HELPER MEMBER FUNCTION DECLARATIONS
+
 		CUIACTIONSTATE ApplyShiftAltFlags(CUIACTIONSTATE);
 	};
 

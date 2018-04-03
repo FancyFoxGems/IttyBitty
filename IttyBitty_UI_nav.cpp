@@ -17,18 +17,18 @@ using namespace IttyBitty;
 using namespace IttyBitty::MUI;
 
 
-#pragma region [UiInputSourceBase] IMPLEMENTATION
+#pragma region [UiInputSource] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-UiInputSourceBase::UiInputSourceBase(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
+UiInputSource::UiInputSource(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
 
 
 // [IUiListener] (NON-)IMPLEMENTATION
 
-CBOOL UiInputSourceBase::IsAsynchronous() const { return TRUE; }
+CBOOL UiInputSource::IsAsynchronous() const { return TRUE; }
 
-VOID UiInputSourceBase::Poll() { }
+VOID UiInputSource::Poll() { }
 
 #pragma endregion
 
@@ -215,6 +215,7 @@ VOID UiNavigationController::Up(CUIACTIONSTATE state)
 	if (resultState != INACTION)
 		_NavListener.Up(this->ApplyShiftAltFlags(resultState));
 }
+
 VOID UiNavigationController::Down(CUIACTIONSTATE state)
 {
 	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
@@ -324,9 +325,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 			if (i == actionType)
 				continue;
 
-			if (_PrevStates[i].State == HELD)
-				_PrevStates[i].Timestamp = now;
-			else if (_PrevStates[i].State != PRESSED)
+			if (_PrevStates[i].State != HELD && _PrevStates[i].State != PRESSED)
 				_PrevStates[i].State = INACTION;
 		}
 	}

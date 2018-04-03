@@ -64,7 +64,7 @@ namespace IttyBitty
 #pragma region [SerialUiInputSource] DEFINITION
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
-	CLASS DataBoundUiInputSource : public UiInputSourceBase
+	CLASS DataBoundUiInputSource : public UiInputSource
 	{
 	public:
 
@@ -83,6 +83,7 @@ namespace IttyBitty
 			if (_PrevValue + _Tolerance <= _Variable)
 			{
 				_PrevValue = _Variable;
+
 				this.DoAction();
 			}
 		}
@@ -102,34 +103,10 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VOID DoAction()
+		VIRTUAL VOID DoAction()
 		{
 			switch (_Action)
 			{
-			case UiAction::UP:
-				_Navigation.Up();
-				break;
-
-			case UiAction::DOWN:
-				_Navigation.Down();
-				break;
-
-			case UiAction::LEFT:
-				_Navigation.Left();
-				break;
-
-			case UiAction::RIGHT:
-				_Navigation.Right();
-				break;
-
-			case UiAction::RETURN:
-				_Navigation.Return();
-				break;
-
-			case UiAction::SELECT:
-				_Navigation.Select();
-				break;
-
 			case UiAction::SHIFT:
 				_Navigation.ToggleShift();
 				break;
@@ -139,6 +116,7 @@ namespace IttyBitty
 				break;
 
 			default:
+				_Navigation.FireAction(_Action);
 				break;
 			}
 		}
@@ -149,7 +127,7 @@ namespace IttyBitty
 
 #pragma region [SerialUiInputSource] DEFINITION
 
-	CLASS SerialUiInputSource : public UiInputSourceBase
+	CLASS SerialUiInputSource : public UiInputSource
 	{
 	public:
 
@@ -178,7 +156,7 @@ namespace IttyBitty
 
 #pragma region [DigitalPinUiInputSource] DEFINITION
 
-	CLASS DigitalPinUiInputSource : public UiInputSourceBase
+	CLASS DigitalPinUiInputSource : public UiInputSource
 	{
 	public:
 
