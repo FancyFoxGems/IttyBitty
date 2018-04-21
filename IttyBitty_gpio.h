@@ -45,25 +45,25 @@ namespace IttyBitty
 	ENUM PinMode : BYTE
 	{
 		// Input mode states
-		TriStateInput	= 0x0,	// 00b; PinModeBasic::Input OR HIGH_Z << PinModeBasic::Input
-		BinaryInput		= 0x2,	// 10b; PinModeBasic::Input OR INPUT_PULLUP << PinModeBasic::Input
+		Input			= 0x0,				// 00b; INPUT OR HIGH_Z SHL INPUT
+		FloatingInput	= Input,
+		TriStateInput	= Input,
+		OpenDrainFloat	= Input,
+		Pullup			= 0x2,				// 10b; INPUT OR INPUT_PULLUP SHL INPUT
+		PullupInput		= Pullup,
+		BinaryInput		= Pullup,
+		OpenDrainHigh	= Pullup,
 
 		// Output mode states
-		CurrentSink		= 0x1,	// 01b; PinModeBasic::Output OR LOW << PinModeBasic::Output
-		CurrentSource	= 0x3,	// 11b; PinModeBasic::Output OR HIGH << PinModeBasic::Output
+		OutputLow		= 0x1,				// 01b; OUTPUT OR LOW SHL OUTPUT
+		CurrentSink		= OutputLow,
+		OpenDrainLow	= Input,
+		Output			= OutputLow,
+		OutputHigh		= 0x3,				// 11b; OUTPUT OR HIGH SHL OUTPUT
+		CurrentSource	= OutputHigh
 	};
 
 	TYPEDEF_ENUM_ALIASES(PinMode, PINMODE);
-
-
-	ENUM PinModeBasic : BYTE
-	{
-		Input	= INPUT,
-		Output	= OUTPUT,
-		PullUp	= INPUT_PULLUP
-	};
-
-	TYPEDEF_ENUM_ALIASES(PinModeBasic, PINMODEBASIC);
 
 #pragma endregion
 }
@@ -194,7 +194,7 @@ namespace IttyBitty
 
 		VIRTUAL INLINE BIT operator[](PIN_NUMBER p) const ALWAYS_INLINE
 		{
-			return this->CheckPinSet(p);
+			return this->ReadPin(p);
 		}
 
 		VIRTUAL INLINE BITREF operator[](PIN_NUMBER p) ALWAYS_INLINE
@@ -207,40 +207,30 @@ namespace IttyBitty
 			return (CPINMODE)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 0b1);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODE mode = PinMode::CurrentSink)
+		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODE mode = PinMode::OutputLow)
 		{
 			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
 			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODEBASIC basicMode = PinModeBasic::Output)
-		{
-			this->SetPinMode(p, (PinMode)basicMode);
-		}
-
 		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode = OUTPUT)
 		{
-			this->SetPinMode(p, (PinModeBasic)arduinoMode);
+			this->SetPinMode(p, (CPINMODE)arduinoMode);
 		}
 
-		VIRTUAL CBIT CheckPinSet(PIN_NUMBER p) const
+		VIRTUAL CBIT ReadPin(PIN_NUMBER p) const
 		{
 			return _Registers->InputReg[p];
 		}
 
-		VIRTUAL INLINE CBIT ReadPin(PIN_NUMBER p) const ALWAYS_INLINE
+		VIRTUAL INLINE CBIT CheckPinSet(PIN_NUMBER p) const ALWAYS_INLINE
 		{
-			return this->CheckPinSet(p);
-		}
-
-		VIRTUAL INLINE CBIT CheckPin(PIN_NUMBER p) const ALWAYS_INLINE
-		{
-			return this->CheckPinSet(p);
+			return this->ReadPin(p);
 		}
 
 		VIRTUAL INLINE CBIT CheckPinUnset(PIN_NUMBER p) const ALWAYS_INLINE
 		{
-			return NOT this->CheckPinSet(p);
+			return NOT this->ReadPin(p);
 		}
 
 		VIRTUAL BITREF PinState(PIN_NUMBER p)
@@ -265,7 +255,7 @@ namespace IttyBitty
 
 		VIRTUAL VOID TogglePin(PIN_NUMBER p)
 		{
-			_Registers->InputReg[p] = !_Registers->InputReg[p];
+			_Registers->InputReg[p] = !_Registers->InputReg[p];	// TODO: Test - should always set to 1?  If so, reset?
 		}
 
 		VIRTUAL VOID ResetPin(PIN_NUMBER p)
@@ -306,23 +296,17 @@ namespace IttyBitty
 			PortPtr->SetPinMode(PinNum, mode);
 		}
 
-		STATIC VOID SetMode(CPINMODEBASIC basicMode)
-		{
-			PortPtr->SetPinMode(PinNum, basicMode);
-		}
-
 		STATIC VOID SetMode(CBYTE arduinoMode)
 		{
-			PortPtr->SetPinMode(PinNum, (CPINMODEBASIC)arduinoMode);
+			PortPtr->SetPinMode(PinNum, (CPINMODE)arduinoMode);
 		}
 
-		STATIC CBIT CheckSet()
+		STATIC CBIT Read()
 		{
-			return PortPtr->CheckPinSet(PinNum);
+			return PortPtr->ReadPin(PinNum);
 		}
 
-		STATIC CBIT Read() ALIAS(CheckSet);
-		STATIC CBIT Check() ALIAS(CheckSet);
+		STATIC CBIT CheckSet() ALIAS(Read);
 
 		STATIC CBIT CheckUnset()
 		{

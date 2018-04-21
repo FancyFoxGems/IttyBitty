@@ -88,23 +88,17 @@ VOID SetPinMode(PIN_NUMBER p, CPINMODE mode)
 	SET_ARDUINO_PIN_MODE(p, mode);
 }
 
-VOID SetPinMode(PIN_NUMBER p, CPINMODEBASIC basicMode)
-{
-	SET_ARDUINO_PIN_MODE(p, basicMode);
-}
-
 VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode)
 {
 	SET_ARDUINO_PIN_MODE(p, arduinoMode);
 }
 
-CBIT CheckPinSet(PIN_NUMBER p)
+CBIT ReadPin(PIN_NUMBER p)
 {
-	return CHECK_ARDUINO_PIN_SET(p);
+	return READ_ARDUINO_PIN(p);
 }
 
-CBIT (&ReadPin)(PIN_NUMBER) = CheckPinSet;
-CBIT (&CheckPin)(PIN_NUMBER) = CheckPinSet;
+CBIT (&CheckPinSet)(PIN_NUMBER) = ReadPin;
 
 CBIT CheckPinUnset(PIN_NUMBER p)
 {

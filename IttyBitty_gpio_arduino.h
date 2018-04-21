@@ -99,15 +99,12 @@ namespace IttyBitty
 #pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
 
 IttyBitty::CPINMODE GetPinMode(PIN_NUMBER);
-VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODE = IttyBitty::PinMode::CurrentSink);
-VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODEBASIC = IttyBitty::PinModeBasic::Output);
+VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODE = IttyBitty::PinMode::OutputLow);
 VOID SetPinMode(PIN_NUMBER, CBYTE = OUTPUT);
 
-CBIT CheckPinSet(PIN_NUMBER);
+CBIT ReadPin(PIN_NUMBER);
+EXTERN CBIT (&CheckPinSet)(PIN_NUMBER);
 CBIT CheckPinUnset(PIN_NUMBER);
-
-EXTERN CBIT (&ReadPin)(PIN_NUMBER);
-EXTERN CBIT (&CheckPin)(PIN_NUMBER);
 
 VOID WritePin(PIN_NUMBER, CBIT = HIGH);
 VOID SetPin(PIN_NUMBER);
@@ -125,15 +122,14 @@ VOID ResetPin(PIN_NUMBER);
 #define ARDUINO_PIN_OUT_REF(arduino_pin)		(*ARDUINO_PORT_TO_OUTPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 #define ARDUINO_PIN_IN_REF(arduino_pin)			(*ARDUINO_PORT_TO_INPUT[ARDUINO_PIN_TO_PORT[arduino_pin]])
 
-#define CHECK_ARDUINO_PIN_SET(arduino_pin)		CHECK_BITS_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define READ_ARDUINO_PIN(arduino_pin)			CHECK_ARDUINO_PIN_SET(arduino_pin)
-#define CHECK_ARDUINO_PIN(arduino_pin)			CHECK_ARDUINO_PIN_SET(arduino_pin)
+#define READ_ARDUINO_PIN(arduino_pin)			CHECK_BITS_SET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define CHECK_ARDUINO_PIN_SET(arduino_pin)		READ_ARDUINO_PIN(arduino_pin)
 #define CHECK_ARDUINO_PIN_UNSET(arduino_pin)	CHECK_BITS_UNSET(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
 #define WRITE_ARDUINO_PIN(arduino_pin, state)	(state ? SET_ARDUINO_PIN(arduino_pin) : CLEAR_ARDUINO_PIN(arduino_pin))
 #define SET_ARDUINO_PIN(arduino_pin)			SET_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 #define CLEAR_ARDUINO_PIN(arduino_pin)			CLEAR_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
+#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])	// TODO: Same?  Set?  Reset?
 
 #define RESET_ARDUINO_PIN(arduino_pin)  \
 	SET_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\

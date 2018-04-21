@@ -1333,7 +1333,6 @@ NEW_REG8
 
 # GPIO
 
-PinModeBasic
 PinMode
 
 
@@ -1508,11 +1507,19 @@ HIGH_Z
 DISCONNECTED
 
 Input
-Output
-PullUp
+FloatingInput
 TriStateInput
+OpenDrainFloat
+PullUp
+PullUpInput
 BinaryInput
+OpenDrainHigh
+PullupInput
+OutputLow
 CurrentSink
+OpenDrainLow
+Output
+OutputHigh
 CurrentSource
 
 
