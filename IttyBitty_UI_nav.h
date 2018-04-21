@@ -92,8 +92,6 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK) = 0;
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK) = 0;
 
-		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK) = 0;
-
 
 	protected:
 
@@ -139,6 +137,8 @@ namespace IttyBitty
 		VIRTUAL VOID AltOn() = 0;
 		VIRTUAL VOID AltOff() = 0;
 
+		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK) = 0;
+
 
 	protected:
 
@@ -169,7 +169,6 @@ namespace IttyBitty
 		VIRTUAL CBOOL IsAsynchronous() const;
 
 		VIRTUAL VOID Poll();
-		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK);
 
 
 	protected:
