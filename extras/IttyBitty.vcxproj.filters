@@ -12,7 +12,7 @@
       <UniqueIdentifier>{0be123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <UniqueIdentifier>{4fc737f1-c7a5-4376-a066-2a32d752a2ff}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Core\_micro-api-readonly">
@@ -65,51 +65,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\keywords.txt">
-      <Filter>_Metadata</Filter>
-    </None>
-    <None Include="..\library.properties">
-      <Filter>_Metadata</Filter>
-    </None>
-    <None Include="..\LICENSE">
-      <Filter>_Metadata</Filter>
-    </None>
-    <None Include="..\README.md">
-      <Filter>_Metadata</Filter>
-    </None>
     <None Include="IttyBitty.ino" />
+    <None Include="...\keywords.txt" />
+    <None Include="...\library.properties" />
+    <None Include="...\LICENSE" />
+    <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SD.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\FatStructs.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\Sd2Card.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\Sd2PinMap.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\SdFat.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\SdFatmainpage.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\SdFatUtil.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\SdInfo.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Wire.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\utility\twi.h">
-      <Filter>_Libs</Filter>
-    </ClInclude>
     <ClInclude Include="__vm\.IttyBitty.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
@@ -260,101 +222,14 @@
     <ClInclude Include="..\IttyBitty_util.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="..\Wire.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utility\twi.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
-      <Filter>Core\_micro-api-readonly\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SD.cpp">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\File.cpp">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\utility\Sd2Card.c">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\utility\Sd2File.c">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\utility\SdVolume.c">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Wire.cpp">
-      <Filter>_Libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\utility\twi.c">
-      <Filter>_Libs</Filter>
-    </ClCompile>
     <ClCompile Include="..\IttyBitty_bits.cpp">
       <Filter>Bits &amp; Bytes</Filter>
     </ClCompile>
@@ -465,6 +340,84 @@
     </ClCompile>
     <ClCompile Include="..\IttyBitty_print.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Wire.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\utility\twi.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
