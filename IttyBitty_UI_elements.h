@@ -379,15 +379,16 @@ namespace IttyBitty
 			return *this->operator[](i);
 		}
 
-		VIRTUAL TChild & AddChild(TChild &)
+		VIRTUAL TChild & AddChild(TChild & child)
 		{
+			return child;
 		}
 
 		VIRTUAL VOID RemoveChild(CBYTE)
 		{
 		}
 
-		VIRTUAL VOID RemoveChild(TChild &)
+		VIRTUAL VOID RemoveChild(TChild & child)
 		{
 		}
 

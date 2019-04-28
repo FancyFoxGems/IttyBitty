@@ -10,12 +10,52 @@
 #define _ITTYBITTY_UTIL_H
 
 
+/* COMPILER MACROS */
+
+#define ASM(expr)						__asm__ __volatile__(expr)
+
+#define NOP()							ASM("nop")
+
+#define COMPILER_BARRIER()				ASM("" : : : "memory")
+#define MEMORY_BARRIER()				COMPILER_BARRIER()
+#define BARRIER()						COMPILER_BARRIER()
+
+#define PREFETCH(addr, ARGS...)			VA_MACRO(PREFETCH, addr, ##ARGS)
+#define PREFETCH_1(addr)				__builtin_prefetch (addr)
+#define PREFETCH_2(addr, rw)			__builtin_prefetch (addr, rw)
+#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch (addr, rw, locality)
+
+#define EXPECT(expr, val)				__builtin_expect(expr, val)
+#define EXPECTED(expr)					EXPECT(expr, TRUE)
+#define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
+
+#define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
+#define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W"#gcc_warning)
+
+#define CODE_FILE_NAME()				_builtin_FILE()
+#define CODE_LINE_NUMBER()				_builtin_LINE()
+#define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
+#define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
+
+#define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
+#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
+#define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
+#define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
+
+#define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)
+#define PRINT_VAR(var)					PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
+
+#define PRINT_COMPILE_CONST(var)											\
+	std::overflow<TYPEOF(var), var> _PRINT_COMPILE_CONST_##var;				\
+	TYPEOF(var) __PRINT_COMPILE_CONST_##var = _PRINT_COMPILE_CONST_##var()
+
+
 /* GCC WARNING SUPPRESSIONS */
 
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+IGNORE_WARNING(unknown-pragmas)
+IGNORE_WARNING(unused-function)
+IGNORE_WARNING(unused-variable)
+IGNORE_WARNING(unused-but-set-variable)
 
 
 #include "IttyBitty_type_traits.h"
@@ -273,46 +313,6 @@
 #define OFFSETOF(type, member_var)	offsetof(type, member_var)
 
 #define SIZEOF(var)					sizeof(var)
-
-
-/* COMPILER MACROS */
-
-#define ASM(expr)						__asm__ __volatile__(expr)
-
-#define NOP()							ASM("nop")
-
-#define COMPILER_BARRIER()				ASM("" : : : "memory")
-#define MEMORY_BARRIER()				COMPILER_BARRIER()
-#define BARRIER()						COMPILER_BARRIER()
-
-#define PREFETCH(addr, ARGS...)			VA_MACRO(PREFETCH, addr, ##ARGS)
-#define PREFETCH_1(addr)				__builtin_prefetch (addr)
-#define PREFETCH_2(addr, rw)			__builtin_prefetch (addr, rw)
-#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch (addr, rw, locality)
-
-#define EXPECT(expr, val)				__builtin_expect(expr, val)
-#define EXPECTED(expr)					EXPECT(expr, TRUE)
-#define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
-
-#define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
-#define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W" #gcc_warning)
-
-#define CODE_FILE_NAME()				_builtin_FILE()
-#define CODE_LINE_NUMBER()				_builtin_LINE()
-#define CODE_FUNCTION_NAME()			_builtin_FUNCTION()
-#define CODE_FUNCTION_SIGNATURE()		__PRETTY_FUNCTION__
-
-#define CODE_FILE_NAME_P()				F(CODE_FILE_NAME())
-#define CODE_LINE_NUMBER_P()			F(CODE_LINE_NUMBER())
-#define CODE_FUNCTION_NAME_P()			F(CODE_FUNCTION_NAME())
-#define CODE_FUNCTION_SIGNATURE_P()		F(CODE_FUNCTION_SIGNATURE())
-
-#define VAR_NAME_VALUE(var)				#var " = " EXPAND_STR(var)
-#define PRINT_VAR(var)					PRAGMA_MACRO(message(#var " = " EXPAND_STR(var)))
-
-#define PRINT_COMPILE_CONST(var)											\
-	std::overflow<TYPEOF(var), var> _PRINT_COMPILE_CONST_##var;				\
-	TYPEOF(var) __PRINT_COMPILE_CONST_##var = _PRINT_COMPILE_CONST_##var()
 
 
 /* METAFUNCTION ALIASES */

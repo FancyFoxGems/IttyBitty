@@ -131,10 +131,9 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		VIRTUAL RISTORAGE GetStorage() const = 0;
-
 		VIRTUAL CSIZE RowSize() const = 0;
 
+		VIRTUAL RISTORAGE GetStorage() const = 0;
 		VIRTUAL CWORD GetAddrOffset() const = 0;
 		VIRTUAL PCCHAR GetTableName() const = 0;
 
@@ -142,10 +141,6 @@ namespace IttyBitty
 		// MUTATORS
 
 		VIRTUAL VOID SetStorage(RISTORAGE) = 0;
-
-
-		// MUTATORS
-
 		VIRTUAL VOID SetAddrOffset(CWORD) = 0;
 		VIRTUAL VOID SetTableName(PCCHAR) = 0;
 
@@ -201,23 +196,15 @@ namespace IttyBitty
 
 	public:
 
-		// ACCESSORS
-
-		VIRTUAL RISTORAGE GetStorage() const;
-
-
-		// MUTATORS
-
-		VIRTUAL VOID SetStorage(RISTORAGE);
-
-
 		// [IDbTableDef] IMPLEMENTATION
 
 		VIRTUAL CSIZE RowSize() const;
 
+		VIRTUAL RISTORAGE GetStorage() const;
 		VIRTUAL CWORD GetAddrOffset() const;
 		VIRTUAL PCCHAR GetTableName() const;
 
+		VIRTUAL VOID SetStorage(RISTORAGE);
 		VIRTUAL VOID SetAddrOffset(CWORD);
 		VIRTUAL VOID SetTableName(PCCHAR);
 

@@ -78,6 +78,17 @@ RISTORAGE DbTable::GetStorage() const
 	return _TableDef->GetStorage();
 }
 
+
+// MUTATORS
+
+VOID DbTable::SetStorage(RISTORAGE storage)
+{
+	_TableDef->SetStorage(storage);
+}
+
+
+// [IDbTable] IMPLEMENTATION
+
 RCIDBTABLEDEF DbTable::TableDef() const
 {
 	if (!_TableDef)
@@ -99,21 +110,10 @@ DWORD DbTable::GetDataAddrOffset() const
 	return _DataAddrOffset;
 }
 
-
-// MUTATORS
-
-VOID DbTable::SetStorage(RISTORAGE storage)
-{
-	return _TableDef->SetStorage(storage);
-}
-
 VOID DbTable::SetDataAddrOffset(RCDWORD dataAddrOffset)
 {
 	_DataAddrOffset = dataAddrOffset;
 }
-
-
-// [IDbTable] IMPLEMENTATION
 
 CDWORD DbTable::Size() const
 {

@@ -74,6 +74,9 @@ namespace IttyBitty
 
 		VIRTUAL DWORD GetDataAddrOffset() const = 0;
 
+
+		// MUTATORS
+
 		VIRTUAL VOID SetDataAddrOffset(RCDWORD) = 0;
 
 
@@ -205,20 +208,19 @@ namespace IttyBitty
 
 		VIRTUAL RISTORAGE GetStorage() const;
 
-		VIRTUAL RCIDBTABLEDEF TableDef() const;
-		VIRTUAL RIDBTABLEDEF TableDef();
-
-		VIRTUAL DWORD GetDataAddrOffset() const;
-
 
 		// MUTATORS
 
 		VIRTUAL VOID SetStorage(RISTORAGE);
 
-		VIRTUAL VOID SetDataAddrOffset(RCDWORD);
-
 
 		// [IDbTable] IMPLEMENTATION
+
+		VIRTUAL RCIDBTABLEDEF TableDef() const;
+		VIRTUAL RIDBTABLEDEF TableDef();
+
+		VIRTUAL DWORD GetDataAddrOffset() const;
+		VIRTUAL VOID SetDataAddrOffset(RCDWORD);
 
 		VIRTUAL CDWORD Size() const;
 		VIRTUAL CDWORD Capacity() const;
