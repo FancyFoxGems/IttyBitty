@@ -149,9 +149,9 @@ namespace IttyBitty
 			return _LCD->IsLineWrapEnabled();
 		}
 
-		VOID SetLineWrap(CBOOL wrapLines = TRUE)
+		VOID SetLineWrapEnabled(CBOOL lineWrapEnabled = TRUE)
 		{
-			_LCD->SetLineWrap(wrapLines);
+			_LCD->SetLineWrapEnabled(lineWrapEnabled);
 		}
 
 		VOID CursorOn()

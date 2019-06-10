@@ -165,6 +165,11 @@ VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 	_InputSources = newInputSources;
 }
 
+CBOOL UiNavigationController::IsShiftOn() const
+{
+	return _ShiftOn;
+}
+
 VOID UiNavigationController::ToggleShift()
 {
 	_ShiftOn = NOT _ShiftOn;
@@ -178,6 +183,11 @@ VOID UiNavigationController::ShiftOn()
 VOID UiNavigationController::ShiftOff()
 {
 	_ShiftOn = FALSE;
+}
+
+CBOOL UiNavigationController::IsAltOn() const
+{
+	return _AltOn;
 }
 
 VOID UiNavigationController::ToggleAlt()
@@ -197,16 +207,6 @@ VOID UiNavigationController::AltOff()
 
 
 // [IUiNavigationListener] IMPLEMENTATION
-
-CBOOL UiNavigationController::IsShiftOn() const
-{
-	return _ShiftOn;
-}
-
-CBOOL UiNavigationController::IsAltOn() const
-{
-	return _AltOn;
-}
 
 VOID UiNavigationController::Up(CUIACTIONSTATE state)
 {

@@ -38,6 +38,7 @@ FLASH_STRING UiElement::Label() const
 
 PCCHAR UiElement::LabelString() const
 {
+	// !TODO: Hold onto label data in object?
 	PGM_P pLabel = reinterpret_cast<PGM_P>(_Label);
 	PCHAR label = new char[strlen_P(pLabel)];
 

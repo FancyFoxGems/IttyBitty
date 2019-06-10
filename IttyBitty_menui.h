@@ -16,7 +16,7 @@
 #ifndef NO_ITTYBITTY_EXTENSIONS
 	#include "IttyBitty_LCD_I2C.h"
 #endif
-
+// !TODO: add --> set input and display
 
 namespace IttyBitty
 {
@@ -37,6 +37,11 @@ namespace IttyBitty
 	CLASS MenUI : public Menu, public IUiNavigationController, public IUiDisplayController
 	{
 	public:
+
+		// PUBLIC [UiOptions] MEMBER
+
+		RUIOPTIONS const Options = MUI::Options;
+
 
 		// CONSTRUCTORS/DESTRUCTOR
 
@@ -130,7 +135,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow() const;
 
 		VIRTUAL CBOOL IsLineWrapEnabled() const;
-		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
+		VIRTUAL VOID SetLineWrapEnabled(CBOOL = TRUE);
 
 		VIRTUAL VOID CursorOn();
 		VIRTUAL VOID CursorOff();
@@ -183,7 +188,7 @@ namespace IttyBitty
 		UINAVIGATIONCONTROLLER _Navigation;
 		UIDISPLAYCONTROLLER _Display;
 
-		WORD _TextShownMS = 0;
+		WORD _TextShownMs = 0;
 
 
 		// EVENT CALLBACKS

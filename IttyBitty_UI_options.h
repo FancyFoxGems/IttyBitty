@@ -12,7 +12,7 @@
 
 #include "IttyBitty_bits.h"
 #include "IttyBitty_LCD_chars.h"
-
+// !TODO: line wrap callback
 
 #pragma region MenUI OPTIONS/CONSTANTS
 
@@ -74,7 +74,7 @@
 
 // General renderer-specific default options
 
-#define MENUI_DEFAULT_WRAP_TEXT						FALSE
+#define MENUI_DEFAULT_WRAP_LINES					FALSE
 #define MENUI_DEFAULT_STYLED_LINE_MARGINS			1
 
 
@@ -376,7 +376,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiOptions] DEFINITION
+#pragma region [_UiOptions] DEFINITION
 
 	STRUCT _UiOptions final
 	{
@@ -463,7 +463,7 @@ namespace IttyBitty
 
 		// General renderer-specific options
 
-		BOOL WrapText				= MENUI_DEFAULT_WRAP_TEXT;
+		BOOL WrapLines				= MENUI_DEFAULT_WRAP_LINES;
 		BYTE StyledLineMargins		= MENUI_DEFAULT_STYLED_LINE_MARGINS;
 
 

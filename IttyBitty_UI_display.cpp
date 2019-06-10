@@ -41,8 +41,8 @@ UiRenderer::UiRenderer() : UiRenderer(MUI::DefaultRendererOptions()) { }
 
 UiRenderer::UiRenderer(RUIRENDEREROPTIONS options) : Options(options)
 {
-	if (Options.WrapText)
-		this->SetLineWrap();
+	if (Options.WrapLines)
+		this->SetLineWrapEnabled();
 }
 
 
@@ -58,7 +58,7 @@ CBYTE UiRenderer::CursorRow() const { return MAX_BYTE; }
 
 CBOOL UiRenderer::IsLineWrapEnabled() const { return FALSE; }
 
-VOID UiRenderer::SetLineWrap(CBOOL) { }
+VOID UiRenderer::SetLineWrapEnabled(CBOOL) { }
 
 VOID UiRenderer::CursorOff() { }
 
@@ -349,9 +349,9 @@ CBOOL UiDisplayController::IsLineWrapEnabled() const
 	return PtrAny(_RendererCount, _Renderers, &IUiRenderer::IsLineWrapEnabled);
 }
 
-VOID UiDisplayController::SetLineWrap(CBOOL wrapLines)
+VOID UiDisplayController::SetLineWrapEnabled(CBOOL lineWrapEnabled)
 {
-	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::SetLineWrap, wrapLines);
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::SetLineWrapEnabled, lineWrapEnabled);
 }
 
 VOID UiDisplayController::CursorOn()

@@ -64,7 +64,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow() const = 0;
 
 		VIRTUAL CBOOL IsLineWrapEnabled() const = 0;
-		VIRTUAL VOID SetLineWrap(CBOOL = TRUE) = 0;
+		VIRTUAL VOID SetLineWrapEnabled(CBOOL = TRUE) = 0;
 
 		VIRTUAL VOID CursorOn() = 0;
 		VIRTUAL VOID CursorOff() = 0;
@@ -174,7 +174,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow() const;
 
 		VIRTUAL CBOOL IsLineWrapEnabled() const;
-		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
+		VIRTUAL VOID SetLineWrapEnabled(CBOOL = TRUE);
 
 		VIRTUAL VOID CursorOn();
 		VIRTUAL VOID CursorOff();
@@ -268,7 +268,7 @@ namespace IttyBitty
 		VIRTUAL CBYTE CursorRow() const;
 
 		VIRTUAL CBOOL IsLineWrapEnabled() const;
-		VIRTUAL VOID SetLineWrap(CBOOL = TRUE);
+		VIRTUAL VOID SetLineWrapEnabled(CBOOL = TRUE);
 
 		VIRTUAL VOID CursorOn();
 		VIRTUAL VOID CursorOff();

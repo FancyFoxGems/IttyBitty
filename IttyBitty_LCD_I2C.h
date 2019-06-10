@@ -212,7 +212,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		BOOL _WrapLines = FALSE;
+		BOOL _LineWrapEnabled = FALSE;
 
 		BOOL _Use8BitInterface = FALSE;
 
@@ -288,7 +288,6 @@ namespace IttyBitty
 		{
 			if (_Use8BitInterface)
 			{
-				// ???
 				if (readData)
 					this->WriteI2C(LCD_8_BIT_SEND_DATA);
 				else
@@ -298,8 +297,7 @@ namespace IttyBitty
 			}
 			else
 			{
-				BYTE result = this->SendReadCommand(LCD_CMD_READ | (readData ? B(LCD_RS) : 0x0));
-				return result;
+				return this->SendReadCommand(LCD_CMD_READ | (readData ? B(LCD_RS) : 0x0));
 			}
 		}
 
@@ -471,11 +469,11 @@ namespace IttyBitty
 
 		// CONSTRUCTOR & INITIALIZATION/RESET FUNCTION
 
-		LCD_I2C(CBOOL wrapLines = FALSE, CBOOL use8BitInterface = FALSE
+		LCD_I2C(CBOOL lineWrapEnabled = FALSE, CBOOL use8BitInterface = FALSE
 		#ifndef NO_ITTYBITTY_LCD_RGB
 			, CBOOL isGroveRgbLcd = FALSE)
 		#endif
-			: _WrapLines(wrapLines), _Use8BitInterface(use8BitInterface)
+			: _LineWrapEnabled(lineWrapEnabled), _Use8BitInterface(use8BitInterface)
 		#ifndef NO_ITTYBITTY_LCD_RGB
 			, _IsGroveRgbLcd(isGroveRgbLcd)
 		#endif
@@ -548,12 +546,12 @@ namespace IttyBitty
 
 		CBOOL IsLineWrapEnabled()
 		{
-			return _WrapLines;
+			return _LineWrapEnabled;
 		}
 
-		VOID SetLineWrap(CBOOL wrapLines = TRUE)
+		VOID SetLineWrapEnabled(CBOOL lineWrapEnabled = TRUE)
 		{
-			_WrapLines = wrapLines;
+			_LineWrapEnabled = lineWrapEnabled;
 		}
 
 		CBOOL IsBacklightOn()
@@ -724,7 +722,7 @@ namespace IttyBitty
 			{
 				_CursorCol = Cols - 1;
 
-				if (_WrapLines AND --_CursorRow == MAX_BYTE)
+				if (_LineWrapEnabled AND --_CursorRow == MAX_BYTE)
 						_CursorRow = Rows - 1;
 
 				this->MoveCursor(_CursorCol, _CursorRow);
@@ -741,7 +739,7 @@ namespace IttyBitty
 			{
 				_CursorCol = 0;
 
-				if (_WrapLines AND ++_CursorRow >= Rows)
+				if (_LineWrapEnabled AND ++_CursorRow >= Rows)
 						_CursorRow = 0;
 
 				this->MoveCursor(_CursorCol, _CursorRow);
@@ -792,7 +790,7 @@ namespace IttyBitty
 		{
 			if (col >= Cols)
 			{
-				if (_WrapLines)
+				if (_LineWrapEnabled)
 				{
 					col = (col + 1) % Cols - 1;
 					row += col / Cols;

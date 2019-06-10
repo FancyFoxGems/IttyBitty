@@ -11,7 +11,7 @@
 
 
 #include "IttyBitty_UI_options.h"
-
+// !TODO: set position
 
 // SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING
 IGNORE_WARNING(reorder)
@@ -136,6 +136,9 @@ namespace IttyBitty
 		VIRTUAL VOID ToggleAlt() = 0;
 		VIRTUAL VOID AltOn() = 0;
 		VIRTUAL VOID AltOff() = 0;
+
+
+		// INTERFACE METHOD
 
 		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK) = 0;
 

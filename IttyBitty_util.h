@@ -119,9 +119,10 @@ IGNORE_WARNING(unused-but-set-variable)
 
 /* VARIABLE ATTRIBUTE ALIASES */
 
+#define FLASH_VAR					PROGMEM
+
 #define NOINIT_VAR					SECTION(noinit)
 #define EEPROM_VAR					SECTION(eeprom)
-#define FLASH_VAR					PROGMEM
 
 #define IO(addr)					__attribute__((io(addr)))
 #define IO_VAR(addr)				IO(addr)
@@ -143,7 +144,6 @@ IGNORE_WARNING(unused-but-set-variable)
 #define DEPRECATED_FUNC				DEPRECATED
 #define DEPRECATED_FUNC_MSG(msg)	DEPRECATED(msg)
 #define DEPRECATED_FUNC_1(msg)		DEPRECATED(msg)
-
 
 #define ERROR_FUNC(msg)				__attribute__((error(EXPAND_STR(msg))))
 #define WARNING_FUNC(msg)			__attribute__((warning(EXPAND_STR(msg))))
@@ -242,28 +242,29 @@ IGNORE_WARNING(unused-but-set-variable)
 #define FUNC_SECTION(section_name)	SECTION(section_name) INTERNAL_VISIBILIITY NAKED_FUNC USED
 
 #define INIT_SECTION(init_num)		FUNC_SECTION(init##init_num)
-#define INIT0						INIT_SECTION(0)
+#define INIT0						INIT_SECTION(0)					// NOTE: Used by LibC: weakly bound to __init
+#define RESET_FUNC					INIT0
 #define INIT1						INIT_SECTION(1)
-#define INIT2						INIT_SECTION(2)
+#define INIT2						INIT_SECTION(2)					// NOTE: Used by LibC: weakly bound to initialize r1 (zero register) and, for C, the stack
 #define INIT3						INIT_SECTION(3)
-#define INIT4						INIT_SECTION(4)
+#define INIT4						INIT_SECTION(4)					// NOTE: Used by LibC: weakly bound to initialize .bss section variables and, for >64 KB ROM, copy .data to SRAM
 #define INIT5						INIT_SECTION(5)
-#define INIT6						INIT_SECTION(6)
+#define INIT6						INIT_SECTION(6)					// NOTE: Used by GCC: C++ constructors
 #define INIT7						INIT_SECTION(7)
 #define INIT8						INIT_SECTION(8)
-#define INIT9						INIT_SECTION(9)
+#define INIT9						INIT_SECTION(9)					// NOTE: Used by LibC: weakly bound to main
 
 #define FINI_SECTION(fini_num)		FUNC_SECTION(fini##fini_num)
-#define FINI9						FINI_SECTION(9)
+#define FINI9						FINI_SECTION(9)					// NOTE: Used by LibC: weakly bound to _exit (exit)
 #define FINI8						FINI_SECTION(8)
 #define FINI7						FINI_SECTION(7)
-#define FINI6						FINI_SECTION(6)
+#define FINI6						FINI_SECTION(6)					// NOTE: Used by GCC: C++ destructors
 #define FINI5						FINI_SECTION(5)
 #define FINI4						FINI_SECTION(4)
 #define FINI3						FINI_SECTION(3)
 #define FINI2						FINI_SECTION(2)
 #define FINI1						FINI_SECTION(1)
-#define FINI0						FINI_SECTION(0)
+#define FINI0						FINI_SECTION(0)					// NOTE: Used by GCC: __stop_program loop
 
 
 /* DATA TYPE SIZES */
@@ -453,6 +454,13 @@ using std::forward;
 #define T_SIZE						SIZEOF(T)
 #define T_RANGE						RANGE(T)
 #define T_MAX						MAX_VALUE(T)
+
+
+/* SPECIAL FUNCTION REGISTER ADDRESSING MACROS */
+
+#define SFR_ADDR(sfr_addr)			_SFR_IO_ADDR(sfr_addr)
+#define IO_ADDR(sfr_addr)			SFR_ADDR(sfr_addr)
+#define SFR(sfr_addr)				SFR_ADDR(sfr_addr)
 
 
 /* FLASH DATA ADDRESSING MACROS */

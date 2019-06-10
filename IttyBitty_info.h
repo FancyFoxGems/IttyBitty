@@ -45,6 +45,7 @@
 
 #pragma endregion
 
+
 #pragma region MEMORY AREA/ALLOCATION VARIABLES (FROM AVR LibC & COMPILER, e.g. AVR-GCC)
 
 EXTERN PCHAR __data_start;
