@@ -97,10 +97,10 @@ namespace IttyBitty
 
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	#define _EEEPTR_T_CLAUSE_DEF	<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr>
+	#define _EEEPTR_T_CLAUSE_DEF	<CBYTE DeviceAddr, CBYTE PageAddrBits, CSIZE PageWriteBytes, typename TAddr, CBOOL IsFram>
 	#define _EEEPTR_T_CLAUSE		<CBYTE DeviceAddr = SERIAL_EEPROM_I2C_ADDRESS,	\
-		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE>
-	#define _EEEPTR_T_ARGS			<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr>
+		CBYTE PageAddrBits = 0, CSIZE PageWriteBytes = 8, typename TAddr = BYTE, CBOOL IsFram = FALSE>
+	#define _EEEPTR_T_ARGS			<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr, IsFram>
 
 	template _EEEPTR_T_CLAUSE
 	struct _EEEPtr;
@@ -116,9 +116,9 @@ namespace IttyBitty
 	TEMPLATE_STRUCT_USING_ALIASES(CSL(_EEEREF_T_CLAUSE), CSL(_EEEREF_T_ARGS), EEERef, eeeref, EEEREF);
 
 
-	#define EEPROMI2C_T_CLAUSE_DEF	<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum>
-	#define EEPROMI2C_T_CLAUSE		<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0>
-	#define EEPROMI2C_T_ARGS		<ChipType, DeviceNum>
+	#define EEPROMI2C_T_CLAUSE_DEF	<CSERIALEEPROMCHIPFAMILY ChipType, CBYTE DeviceNum, CBOOL IsFram>
+	#define EEPROMI2C_T_CLAUSE		<CSERIALEEPROMCHIPFAMILY ChipType = SerialEepromChipFamily::UNKNOWN_EEPROM_CHIP, CBYTE DeviceNum = 0x0, CBOOL IsFram = FALSE>
+	#define EEPROMI2C_T_ARGS		<ChipType, DeviceNum, IsFram>
 
 	template EEPROMI2C_T_CLAUSE
 	class EEPROM_I2C;
@@ -136,10 +136,10 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIAS
 
-		typedef _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
+		typedef _EEEPtr<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr, IsFram> TEEEPtr, TEEEPTR, & RTEEEPTR;
 		typedef const TEEEPtr CTEEEPTR, & RCTEEEPTR;
 
-		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF;
+		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr, IsFram> TEEERef, TEEEREF;
 
 		typedef TAddr TADDR;
 		typedef const TAddr & RCTADDR;
@@ -238,7 +238,7 @@ namespace IttyBitty
 
 		// META-TYPEDEF ALIAS
 
-		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr> TEEERef, TEEEREF, & RTEEEREF;
+		typedef _EEERef<DeviceAddr, PageAddrBits, PageWriteBytes, TAddr, IsFram> TEEERef, TEEEREF, & RTEEEREF;
 		typedef const TEEERef CTEEEREF, & RCTEEEREF;
 
 		typedef TAddr TADDR;
@@ -396,7 +396,9 @@ namespace IttyBitty
 				if (!errCode)
 					return 0;
 
-				delay(SERIAL_EEPROM_WAIT_DELAY_MS);
+				// Do not delay for FRAM
+				if (!IsFram)
+					delay(SERIAL_EEPROM_WAIT_DELAY_MS);
 			}
 
 			return MAX_BYTE;
@@ -614,10 +616,10 @@ namespace IttyBitty
 
 	protected:
 
-		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEEPtr, TEEEPTR, & RTEEEPTR;
+		typedef _EEEPtr<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr, IsFram> TEEEPtr, TEEEPTR, & RTEEEPTR;
 		typedef const TEEEPtr & RCTEEEPTR;
 
-		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr> TEEERef, TEEEREF;
+		typedef _EEERef<GetDeviceAddress(), PageAddressBits(), BytesPerPageWrite(), TAddr, IsFram> TEEERef, TEEEREF;
 		typedef const TEEERef CTEEEREF;
 
 

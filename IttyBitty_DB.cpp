@@ -594,12 +594,12 @@ CSTORAGERESULT Database::Load()
 
 CSTORAGERESULT Database::SaveAsBinary() const
 {
-	return this->GetStorage().Save(this->ToBinary(), this->BinarySize());
+	return _Storage.Save(this->ToBinary(), this->BinarySize());
 }
 
 CSTORAGERESULT Database::SaveAsString() const
 {
-	return this->GetStorage().Save(reinterpret_cast<PCBYTE>(this->ToString()), this->StringSize());
+	return _Storage.Save(reinterpret_cast<PCBYTE>(this->ToString()), this->StringSize());
 }
 
 CSTORAGERESULT Database::LoadFromBinary()
@@ -607,7 +607,7 @@ CSTORAGERESULT Database::LoadFromBinary()
 	SIZE size = this->BinarySize();
 	PBYTE buffer = new byte[size];
 
-	STORAGERESULT result = this->GetStorage().Load(buffer, size);
+	STORAGERESULT result = _Storage.Load(buffer, size);
 	if ((BYTE)result)
 		return result;
 
@@ -621,7 +621,7 @@ CSTORAGERESULT Database::LoadFromString()
 	SIZE size = this->StringSize();
 	PBYTE buffer = new byte[size];
 
-	STORAGERESULT result = this->GetStorage().Load(buffer, size);
+	STORAGERESULT result = _Storage.Load(buffer, size);
 	if ((BYTE)result)
 		return result;
 
@@ -728,7 +728,7 @@ VOID Database::FromBinary(PCBYTE data)
 
 	for (SIZE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr, this->GetStorage());
+		_Tables[i] = new DbTable(bufferPtr, _Storage);
 
 		bufferPtr += _Tables[i]->BinarySize();
 	}
@@ -749,7 +749,7 @@ VOID Database::FromString(PCCHAR data)
 
 	for (BYTE i = 0; i < _TableCount; i++)
 	{
-		_Tables[i] = new DbTable(bufferPtr, this->GetStorage());
+		_Tables[i] = new DbTable(bufferPtr, _Storage);
 
 		bufferPtr += _Tables[i]->StringSize() - 1;
 	}

@@ -223,9 +223,9 @@ CBOOL MenUI::IsLineWrapEnabled() const
 	return _Display.IsLineWrapEnabled();
 }
 
-VOID MenUI::SetLineWrap(CBOOL wrapLines)
+VOID MenUI::SetLineWrapEnabled(CBOOL lineWrapEnabled)
 {
-	_Display.SetLineWrap(wrapLines);
+	_Display.SetLineWrapEnabled(lineWrapEnabled);
 }
 
 VOID MenUI::CursorOn()

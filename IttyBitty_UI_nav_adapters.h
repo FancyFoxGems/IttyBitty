@@ -13,7 +13,7 @@
 #include "IttyBitty_GPIO.h"
 #include "IttyBitty_UI_nav.h"
 
-#include "HardwareSerial.h"
+#include "Stream.h"
 
 
 #pragma region NAVIGATION ADAPTER OPTIONS/CONSTANTS
@@ -70,8 +70,8 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		DataBoundUiInputSource(CUIACTION action, CONST TVar & variable, CONST TVar tolerance = TVar(1))
-			: _Action(action), _Variable(variable), _Tolerance(tolerance) { }
+		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CUIACTION action, CONST TVar & variable, CONST TVar tolerance = TVar(1))
+			: UiInputSource(navigation), _Action(action), _Variable(variable), _Tolerance(tolerance) { }
 
 
 		// [IUiListener] OVERRIDES
@@ -80,7 +80,7 @@ namespace IttyBitty
 
 		VOID Poll()
 		{
-			if (_PrevValue + _Tolerance <= _Variable)
+			if (_Variable > _PrevValue + _Tolerance || _Variable < _PrevValue - _Tolerance)
 			{
 				_PrevValue = _Variable;
 
@@ -125,16 +125,16 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [SerialUiInputSource] DEFINITION
+#pragma region [StreamUiInputSource] DEFINITION
 
-	CLASS SerialUiInputSource : public UiInputSource
+	CLASS StreamUiInputSource : public UiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		SerialUiInputSource();
-		SerialUiInputSource(HardwareSerial &);
+		StreamUiInputSource();
+		StreamUiInputSource(Stream &);
 
 
 		// [IUiListener] OVERRIDES
@@ -148,7 +148,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
+		Stream & _Stream = SERIAL_PORT_MONITOR;
 	};
 
 #pragma endregion

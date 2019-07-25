@@ -12,7 +12,7 @@
 
 #include "IttyBitty_storage_adapters.h"
 
-#include "SD.h"
+#include "SD/SD.h"
 
 
 namespace IttyBitty

@@ -137,6 +137,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
+		BOOL _ReadOnly = FALSE;
 		BOOL _ShowLabel = TRUE;
 	};
 
@@ -170,7 +171,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiField] DEFINITION
+#pragma region [VarLengthUiField] DEFINITION
 
 	template DEFAULT_T_CLAUSE
 	CLASS VarLengthUiField : public UiFieldBase<T>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="__vm">
@@ -15,19 +15,13 @@
       <UniqueIdentifier>{4fc737f1-c7a5-4376-a066-2a32d752a2ff}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;inc;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Core\_micro-api-readonly">
+    <Filter Include="Arduino">
       <UniqueIdentifier>{92c607cd-fe76-4cde-bfd9-a695cff3e61d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\_micro-api-readonly\core">
+    <Filter Include="Arduino\Core">
       <UniqueIdentifier>{be1d5718-d3e7-46a4-8a60-61c3e826066a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\_micro-api-readonly\variants">
-      <UniqueIdentifier>{ec45e1c1-2bc5-48fd-8556-80658ce03105}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\_micro-api-readonly\variants\eightanaloginputs">
-      <UniqueIdentifier>{427384a0-9e39-458c-a1d6-8df353ccd2ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\_micro-api-readonly\libraries">
+    <Filter Include="Arduino\Libraries">
       <UniqueIdentifier>{90bf7457-1d1e-4f3d-9200-6a00b9f14fab}</UniqueIdentifier>
     </Filter>
     <Filter Include="Communication">
@@ -63,6 +57,21 @@
     <Filter Include="Util">
       <UniqueIdentifier>{5ae123e6-224e-4082-b78f-27c859da2c2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arduino\Libraries\SD">
+      <UniqueIdentifier>{e661f611-2ee2-43e3-b33a-132e1e3d6354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arduino\Libraries\SD\utility">
+      <UniqueIdentifier>{ebe79067-e2f0-4dbb-ae3f-fc8f366dc8c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arduino\Libraries\Wire">
+      <UniqueIdentifier>{6162769c-d72d-4615-8314-34968133d939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arduino\Libraries\Wire\utility">
+      <UniqueIdentifier>{0c0130b9-e276-4c66-b9ae-094514a010b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Arduino\Libraries\EEPROM">
+      <UniqueIdentifier>{1b123405-e06a-4664-8edd-ac5b54a459c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="IttyBitty.ino" />
@@ -72,7 +81,7 @@
     <None Include="...\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.IttyBitty.vsarduino.h">
+    <ClInclude Include="__vm\.extras.vsarduino.h">
       <Filter>__vm</Filter>
     </ClInclude>
     <ClCompile Include="..\IttyBitty.h">
@@ -222,11 +231,41 @@
     <ClInclude Include="..\IttyBitty_util.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\Wire.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="..\SD\utility\FatStructs.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\utility\twi.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="..\SD\utility\Sd2Card.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\Sd2PinMap.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\SdFat.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\SdFatmainpage.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\SdFatUtil.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\SdInfo.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\SD.h">
+      <Filter>Arduino\Libraries\SD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SD\utility\SPI.h">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Wire\utility\twi.h">
+      <Filter>Arduino\Libraries\Wire\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Wire\Wire.h">
+      <Filter>Arduino\Libraries\Wire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EEPROM\src\EEPROM.h">
+      <Filter>Arduino\Libraries\EEPROM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,83 +380,98 @@
     <ClCompile Include="..\IttyBitty_print.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\Wire.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\utility\twi.c">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\abi.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\CDC.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial0.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial1.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial2.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial3.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\hooks.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\IPAddress.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\main.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\new.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\PluggableUSB.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Print.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Stream.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\Tone.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\USBCore.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WInterrupts.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_analog.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_digital.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_pulse.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\wiring_shift.c">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WMath.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
     </ClCompile>
     <ClCompile Include="C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\WString.cpp">
-      <Filter>Core</Filter>
+      <Filter>Arduino\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SD\SD.cpp">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SD\utility\Sd2Card.cpp">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SD\utility\SdFile.cpp">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SD\utility\SdVolume.cpp">
+      <Filter>Arduino\Libraries\SD\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SD\File.cpp">
+      <Filter>Arduino\Libraries\SD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Wire\utility\twi.c">
+      <Filter>Arduino\Libraries\Wire\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Wire\Wire.cpp">
+      <Filter>Arduino\Libraries\Wire</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -29,7 +29,7 @@
 /* TYPE TRAIT MACROS */
 
 #define IS_ABSTRACT(type)					__is_abstract(type)
-#define IS_BASE_OF(base_type, type)			__is_base_of (base_type, type)
+#define IS_BASE_OF(base_type, type)			__is_base_of(base_type, type)
 #define IS_CLASS(type)						__is_class(type)
 #define IS_EMPTY(type)						__is_empty(type)
 #define IS_ENUM(type)						__is_enum(type)
@@ -51,7 +51,7 @@
 #define HAS_TRIVIAL_DESTRUCTOR(type)		__has_trivial_destructor(type)
 #define HAS_VIRTUAL_DESTRUCTOR(type)		__has_virtual_destructor(type)
 
-#define TYPE_ARG_IS_SAME(T1, T2)			__is_same (T1, T2)
+#define TYPE_ARG_IS_SAME(T1, T2)			__is_same(T1, T2)
 
 
 namespace std

@@ -19,6 +19,12 @@ namespace IttyBitty
 {
 #pragma region SERIAL PRINT GLOBAL FUNCTION DEFINITIONS
 
+	VOID FlushAndDelay(HardwareSerial & printer)
+	{
+		printer.flush();
+		delay(SERIAL_PRINT_DELAY_MS);
+	}
+
 	VOID PrintBytes(PCBYTE buffer, CSIZE size, HardwareSerial & printer)
 	{
 		for (SIZE i = 0; i < size; i++)
@@ -30,7 +36,6 @@ namespace IttyBitty
 		PrintBytes(buffer, size);
 		FlushAndDelay();
 	}
-
 
 	VOID PrintBit(CBIT data, HardwareSerial & printer)
 	{
@@ -162,12 +167,6 @@ namespace IttyBitty
 	{
 		printer.println(data);
 		FlushAndDelay();
-	}
-
-	VOID FlushAndDelay(HardwareSerial & printer)
-	{
-		printer.flush();
-		delay(SERIAL_PRINT_DELAY_MS);
 	}
 
 #pragma endregion
