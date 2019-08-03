@@ -328,9 +328,11 @@ using std::remove_cv_t;
 using std::add_pointer_t;
 using std::remove_pointer_t;
 using std::add_rvalue_ref_t;
+using std::add_reference_t;
 using std::remove_rvalue_ref_t;
-using std::make_signed_t;
+using std::remove_reference_t;
 using std::make_unsigned_t;
+using std::make_signed_t;
 using std::enable_if_t;
 using std::conditional_t;
 using std::extent;
@@ -345,7 +347,10 @@ using std::forward;
 #define UNCONST_TYPEOF(var)				UNCONST_TYPE(TYPEOF(var))
 
 #define VOLATILE_TYPE(T)				add_volatile_t<T>
+#define VOLATILE_TYPEOF(var)			VOLATILE_TYPE(TYPEOF(var))
+
 #define UNVOLATILE_TYPE(T)				remove_volatile_t<T>
+#define UNVOLATILE_TYPEOF(var)			UNVOLATILE_TYPE(TYPEOF(var))
 
 #define CV_TYPE(T)						add_cv_t<T>
 #define CV_TYPEOF(var)					CV_TYPE(TYPEOF(var))
@@ -360,7 +365,7 @@ using std::forward;
 #define ONLY_VOLATILE_TYPEOF(var)		ONLY_VOLATILE_TYPE(TYPEOF(var))
 
 #define POINTER_TYPE(T)					add_pointer_t<T, FALSE>
-#define ONLY_VOLATILE_TYPEOF(var)		ONLY_VOLATILE_TYPE(TYPEOF(var))
+#define POINTER_TYPEOF(var)				POINTER_TYPE(TYPEOF(var))
 
 #define UNPOINTER_TYPE(T)				remove_pointer_t<T>
 #define UNPOINTER_TYPEOF(var)			UNPOINTER_TYPE(TYPEOF(var))
@@ -371,10 +376,10 @@ using std::forward;
 #define UNRVALUE_TYPE(T)				remove_rvalue_ref_t<T>
 #define UNRVALUE_TYPEOF(var)			UNRVALUE_TYPE(TYPEOF(var))
 
-#define REFERENCE_TYPE(T)				add_pointer_t<T>
+#define REFERENCE_TYPE(T)				add_reference_t<T>
 #define REFERENCE_TYPEOF(var)			REFERENCE_TYPE(TYPEOF(var))
 
-#define UNREFERENCE_TYPE(T)				remove_pointer_t<T>
+#define UNREFERENCE_TYPE(T)				remove_reference_t<T>
 #define UNREFERENCE_TYPEOF(var)			UNREFERENCE_TYPE(TYPEOF(var))
 
 #define UNSIGNED_TYPE(T)				make_unsigned_t<T>
@@ -389,7 +394,8 @@ using std::forward;
 #define ENABLE_IF(condition, T)			enable_if_t<condition, T>
 #define TYPE_IF(condition, T, F)		conditional_t<condition, T, F>
 
-#define CAPACITY(var)					extent<TYPEOF(var)>::value
+#define EXTENT(var)						extent<TYPEOF(var)>::value
+#define CAPACITY(var)					EXTENT(var)
 
 #define FORWARD(T, arg)					forward<T>(arg)
 

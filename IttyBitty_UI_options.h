@@ -151,7 +151,7 @@ namespace IttyBitty
 
 	#define MENUI_NUM_STATEFUL_ACTIONS		0x6
 
-	enum UiActionType : BYTE
+	ENUM UiActionType : BYTE
 	{
 		ACTION_UP		= 0x0,
 		ACTION_DOWN		= 0x1,
@@ -165,7 +165,7 @@ namespace IttyBitty
 
 	DECLARE_ENUM_AS_FLAGS(UiActionType, UIACTIONTYPE);
 
-	enum UiActionBehavior : BYTE
+	ENUM UiActionBehavior : BYTE
 	{
 		ACTION_LATCH		= 0x00,
 		ACTION_STATEFUL		= 0x10
@@ -173,7 +173,7 @@ namespace IttyBitty
 
 	DECLARE_ENUM_AS_FLAGS(UiActionBehavior, UIACTIONBEHAVIOR);
 
-	ENUM UiAction : BYTE
+	ENUM_CLASS UiAction : BYTE
 	{
 		UP		= ACTION_UP | ACTION_STATEFUL,
 		DOWN	= ACTION_DOWN | ACTION_STATEFUL,
@@ -198,7 +198,7 @@ namespace IttyBitty
 	}
 
 
-	enum UiActionState : BYTE
+	ENUM UiActionState : BYTE
 	{
 		INACTION		= 0x00,
 		PRESSED			= 0x01,
@@ -247,7 +247,7 @@ namespace IttyBitty
 
 #pragma region UI OPTION & LAYOUT ENUMS
 
-	enum UiOrientation : BYTE
+	ENUM UiOrientation : BYTE
 	{
 		VERTICAL	= 0x0,
 		HORIZONTAL	= 0x1
@@ -256,7 +256,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(UiOrientation, UIORIENTATION);
 
 
-	ENUM UiDirection : BYTE
+	ENUM_CLASS UiDirection : BYTE
 	{
 		TOP_TO_BOTTOM	= VERTICAL | 0x0,
 		BOTTOM_TO_TOP	= VERTICAL | 0x1,
@@ -280,7 +280,7 @@ namespace IttyBitty
 	}
 
 
-	enum UiLayoutCols : BYTE
+	ENUM UiLayoutCols : BYTE
 	{
 		COLS_AUTO		= 0x00,
 		COLS_CENTERED	= 0x02,
@@ -296,7 +296,7 @@ namespace IttyBitty
 
 	TYPEDEF_ENUM_ALIASES(UiLayoutCols, UILAYOUTCOLS);
 
-	ENUM UiLayout : BYTE
+	ENUM_CLASS UiLayout : BYTE
 	{
 		VERTICAL_AUTO			= VERTICAL | COLS_AUTO,
 		HORIZONTAL_AUTO			= HORIZONTAL | COLS_AUTO,
@@ -335,7 +335,7 @@ namespace IttyBitty
 	}
 
 
-	enum UiStatusFlags : BYTE
+	ENUM UiStatusFlags : BYTE
 	{
 		UI_STATUS_NONE				= 0x0,
 		UI_STATUS_SCROLLBAR			= 0x1,
@@ -347,7 +347,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(UiStatusFlags, UISTATUSFLAGS);
 
 
-	ENUM UiScrollBehavior : BYTE
+	ENUM_CLASS UiScrollBehavior : BYTE
 	{
 		NORMAL			= 0x0,
 		PAGED			= 0x1,
@@ -363,7 +363,7 @@ namespace IttyBitty
 
 #pragma region UI FIELD ENUMS
 
-	enum AllowedCharFlags : BYTE
+	ENUM AllowedCharFlags : BYTE
 	{
 		ALLOWED_CHARS_ALL		= 0x0,
 		ALLOWED_CHARS_NUMERIC	= 0x1,

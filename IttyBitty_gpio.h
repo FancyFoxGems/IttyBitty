@@ -42,7 +42,7 @@ namespace IttyBitty
 {
 #pragma region ENUMS
 
-	ENUM PinMode : BYTE
+	ENUM_CLASS PinMode : BYTE
 	{
 		// Input mode states
 		Input			= 0x0,				// 00b; INPUT OR HIGH_Z SHL INPUT

@@ -62,7 +62,7 @@ namespace IttyBitty
 
 #pragma region LCD SCROLLBAR ENUMS
 
-	enum LcdScrollBarIndicator : BYTE
+	ENUM LcdScrollBarIndicator : BYTE
 	{
 		LINE_INDICATOR = 0x00,
 		BLOCK_INDICATOR = 0x10
@@ -71,7 +71,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdScrollBarIndicator, LCDSCROLLBARINDICATOR);
 
 
-	enum LcdScrollBarPosition : BYTE
+	ENUM LcdScrollBarPosition : BYTE
 	{
 		RIGHT_POSITION = 0x0,
 		LEFT_POSITION = 0x1
@@ -80,7 +80,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdScrollBarPosition, LCDSCROLLBARPOSITION);
 
 
-	ENUM LcdScrollBarOptions : BYTE
+	ENUM_CLASS LcdScrollBarOptions : BYTE
 	{
 		LINE = LINE_INDICATOR | RIGHT_POSITION,
 		LINE_LEFT = LINE_INDICATOR | LEFT_POSITION,
@@ -109,7 +109,7 @@ namespace IttyBitty
 #pragma region LCD GRAPH ENUMS
 
 	// Also used for LCD Slider...
-	enum LcdSpaceStyle : BYTE
+	ENUM LcdSpaceStyle : BYTE
 	{
 		EMPTY_SPACE		= 0x0,
 		DASH_SPACE		= 0x1,
@@ -124,7 +124,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdSpaceStyle, LCDSPACETYLE);
 
 
-	enum LcdGraphCell : BYTE
+	ENUM LcdGraphCell : BYTE
 	{
 		BLOCK_CELL		= 0x00,
 		LINE_CELL		= 0x10,
@@ -138,7 +138,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdGraphCell, LCDGRAPHCELL);
 
 
-	enum LcdGraphPartialStyle : BYTE
+	ENUM LcdGraphPartialStyle : BYTE
 	{
 		NORMAL_PARTIAL		= 0x00,
 		SEMI_FILL_PARTIAL	= 0x80
@@ -147,7 +147,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdGraphPartialStyle, LCDGRAPHPARTIALSTYLE);
 
 
-	ENUM LcdGraphOptions : BYTE
+	ENUM_CLASS LcdGraphOptions : BYTE
 	{
 		BAR						= BLOCK_CELL | NORMAL_PARTIAL | EMPTY_SPACE,
 		BAR_DASH				= BLOCK_CELL | NORMAL_PARTIAL | DASH_SPACE,
@@ -315,7 +315,7 @@ namespace IttyBitty
 
 #pragma region LCD SLIDER ENUMS
 
-	enum LcdSliderMarker : BYTE
+	ENUM LcdSliderMarker : BYTE
 	{
 		CARET_MARKER	= 0x00,
 		LINE_MARKER		= 0x10,
@@ -330,7 +330,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdSliderMarker, LCDSLIDERMARKER);
 
 
-	enum LcdSliderEnds : BYTE
+	ENUM LcdSliderEnds : BYTE
 	{
 		NO_ENDS			= 0x00,
 		NORMAL_ENDS		= 0x80
@@ -339,7 +339,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(LcdSliderEnds, LCDSLIDERENDS);
 
 
-	ENUM LcdSliderOptions : BYTE
+	ENUM_CLASS LcdSliderOptions : BYTE
 	{
 		CARET					= CARET_MARKER | EMPTY_SPACE,
 		CARET_DASH				= CARET_MARKER | DASH_SPACE,

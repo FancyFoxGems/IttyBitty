@@ -57,7 +57,7 @@ namespace IttyBitty
 
 #pragma region ENUMS
 
-	ENUM SerialEepromChipFamily : WORD
+	ENUM_CLASS SerialEepromChipFamily : WORD
 	{
 		UNKNOWN_EEPROM_CHIP	= 0x0100,
 

@@ -80,7 +80,7 @@ namespace IttyBitty
 
 #pragma region ENUMS
 
-	enum ResetSource : NYBBLE
+	ENUM ResetSource : NYBBLE
 	{
 		POWER_ON		= 0x1,
 		EXTERNAL_RESET	= 0x2,
@@ -91,7 +91,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(ResetSource, RESETSOURCE);
 
 
-	enum WdtInterval : BYTE
+	ENUM WdtInterval : BYTE
 	{
 		WDT_15MS	= WDTO_15MS,
 		WDT_30MS	= WDTO_30MS,

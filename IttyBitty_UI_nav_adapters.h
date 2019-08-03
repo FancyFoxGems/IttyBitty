@@ -61,7 +61,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [SerialUiInputSource] DEFINITION
+#pragma region [DataBoundUiInputSource] DEFINITION
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
 	CLASS DataBoundUiInputSource : public UiInputSource

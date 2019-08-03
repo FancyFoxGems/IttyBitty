@@ -230,7 +230,7 @@ namespace IttyBitty
 
 	protected:
 
-		ENUM DisposalLevel : BYTE
+		ENUM_CLASS DisposalLevel : BYTE
 		{
 			None		= 0,
 			FieldPtrPtr = 1,

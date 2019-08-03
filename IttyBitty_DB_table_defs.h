@@ -58,7 +58,7 @@ namespace IttyBitty
 
 #pragma region ENUMS
 
-	ENUM DbResult : BYTE
+	ENUM_CLASS DbResult : BYTE
 	{
 		SUCCESS									= 0x00,
 

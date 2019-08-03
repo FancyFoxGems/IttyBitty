@@ -22,10 +22,9 @@
 	#include <inttypes.h>
 	#include <string.h>
 	#include <avr/pgmspace.h>
-	typedef decltype(nullptr) nullptr_t;
-#endif
 
-//using namespace std;
+	//using namespace std;
+#endif
 
 
 /* C++ KEYWORD/SPECIFIER/MODIFIER ALIASES */
@@ -74,7 +73,8 @@
 #define CONSTVOL 		const volatile
 #define cv				const volatile
 
-#define ENUM			enum class
+#define ENUM			enum
+#define ENUM_CLASS		enum class
 #define UNION			union
 #define STRUCT			struct
 #define CLASS			class
@@ -383,7 +383,7 @@ TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(float, FLOAT);
 TYPEDEF_ALIASES_WITH_VOLATILE_PP_AND_PROGMEM(double, DOUBLE);
 
 
-#ifndef nullptr_t
+#ifndef ARDUINO
 typedef decltype(nullptr) nullptr_t;
 #endif
 

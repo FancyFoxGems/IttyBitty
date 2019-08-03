@@ -65,7 +65,7 @@ namespace IttyBitty
 
 #pragma region ENUMS
 
-	enum DataSize : BYTE
+	ENUM DataSize : BYTE
 	{
 		VAR_LENGTH	= 0x00,
 		ONE_BYTE	= 0x10,
@@ -77,7 +77,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(DataSize, DATASIZE);
 
 
-	enum DataTypeFormat : BYTE
+	ENUM DataTypeFormat : BYTE
 	{
 		UNSIGNED_DATA_TYPE	= 0x0,
 		SIGNED_DATA_TYPE	= 0x1,
@@ -87,7 +87,7 @@ namespace IttyBitty
 	DECLARE_ENUM_AS_FLAGS(DataTypeFormat, DATATYPEFORMAT);
 
 
-	ENUM DataType : BYTE
+	ENUM_CLASS DataType : BYTE
 	{
 		BYTES_DATUM		= VAR_LENGTH | UNSIGNED_DATA_TYPE,
 		STRING_DATUM	= VAR_LENGTH | SIGNED_DATA_TYPE,

@@ -44,7 +44,7 @@ namespace IttyBitty
 
 #pragma region ENUMS
 
-	ENUM StorageResult : BYTE
+	ENUM_CLASS StorageResult : BYTE
 	{
 		SUCCESS									= 0x00,
 
