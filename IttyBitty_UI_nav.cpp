@@ -37,10 +37,8 @@ VOID UiInputSource::Poll() { }
 
 // CONSTRUCTOR/DESTRUCTOR
 
-UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, CDWORD valueEntryExpirationMs, 
-		CBOOL removeValueEntriesUponReading, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
-	: _NavListener(navListener), _ValueEntryExpirationMs(valueEntryExpirationMs), 
-		_RemoveValueEntriesUponReading(removeValueEntriesUponReading), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
+UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
+	: _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
 {
 	if (!_InputSources)
 		_DisposeInputSources = TRUE;
@@ -444,7 +442,7 @@ CCHAR UiNavigationController::ReadValueAsChar(CBYTE token)
 
 	CHAR value = buffer[0];
 
-	if (_RemoveValueEntriesUponReading)
+	if (Options.Input.RemoveValueEntriesUponReading)
 		delete buffer;
 
 	return value;
@@ -459,7 +457,7 @@ CWCHAR UiNavigationController::ReadValueAsWChar(CBYTE token)
 
 	WCHAR value = static_cast<CWCHAR>(*buffer);
 
-	if (_RemoveValueEntriesUponReading)
+	if (Options.Input.RemoveValueEntriesUponReading)
 		delete buffer;
 
 	return value;
@@ -479,7 +477,7 @@ CSHORT UiNavigationController::ReadValueAsShort(CBYTE token)
 
 	SHORT value = atoi(buffer);
 
-	if (_RemoveValueEntriesUponReading)
+	if (Options.Input.RemoveValueEntriesUponReading)
 		delete buffer;
 
 	return value;
@@ -499,7 +497,7 @@ CLONG UiNavigationController::ReadValueAsLong(CBYTE token)
 
 	LONG value = atol(buffer);
 
-	if (_RemoveValueEntriesUponReading)
+	if (Options.Input.RemoveValueEntriesUponReading)
 		delete buffer;
 
 	return value;
@@ -568,8 +566,8 @@ VOID UiNavigationController::Poll()
 		}
 	}
 
-	if (_ValueEntryExpirationMs)
-		this->ClearValueEntriesOlderThan(_ValueEntryExpirationMs);
+	if (Options.Input.ValueEntryExpirationMs)
+		this->ClearValueEntriesOlderThan(Options.Input.ValueEntryExpirationMs);
 }
 
 
@@ -795,7 +793,7 @@ PCCHAR UiNavigationController::GetValueBuffer(CBYTE token)
 
 	PCCHAR buffer = valueEntry->Buffer;
 
-	if (_RemoveValueEntriesUponReading)
+	if (Options.Input.RemoveValueEntriesUponReading)
 	{
 		this->DeleteValueEntry(index, FALSE);
 		this->CompressValueEntries();

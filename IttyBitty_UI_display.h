@@ -156,13 +156,13 @@ namespace IttyBitty
 
 		// PUBLIC [UiOptions] MEMBER
 
-		RUIRENDEREROPTIONS const Options;
+		RCUIRENDEREROPTIONS const Options;
 
 
 		// CONSTRUCTORS
 
 		UiRenderer();
-		UiRenderer(RUIRENDEREROPTIONS);
+		UiRenderer(RCUIRENDEREROPTIONS);
 
 
 		// [IUiRenderer] IMPLEMENTATION

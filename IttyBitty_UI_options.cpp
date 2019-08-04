@@ -20,14 +20,14 @@ using namespace IttyBitty;
 UIOPTIONS MUI::Options = UiOptions();
 
 
-RUIRENDEREROPTIONS MUI::DefaultRendererOptions()
+RCUIRENDEREROPTIONS MUI::DefaultRendererOptions()
 {
 	STATIC UIRENDEREROPTIONS rendererOptions;
 
 	return rendererOptions;
 }
 
-RUIRENDEREROPTIONS MUI::DefaultLcdRendererOptions()
+RCUIRENDEREROPTIONS MUI::DefaultLcdRendererOptions()
 {
 	STATIC UIRENDEREROPTIONS rendererOptions;
 

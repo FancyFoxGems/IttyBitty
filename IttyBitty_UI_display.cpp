@@ -39,7 +39,7 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 
 UiRenderer::UiRenderer() : UiRenderer(MUI::DefaultRendererOptions()) { }
 
-UiRenderer::UiRenderer(RUIRENDEREROPTIONS options) : Options(options)
+UiRenderer::UiRenderer(RCUIRENDEREROPTIONS options) : Options(options)
 {
 	if (Options.WrapLines)
 		this->SetLineWrapEnabled();

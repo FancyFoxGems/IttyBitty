@@ -309,6 +309,7 @@ IGNORE_WARNING(unused-but-set-variable)
 /* SPECIAL VALUES */
 
 #define NULL_CHARACTER		'\0'
+#define NULL_CHAR			NULL_CHARACTER
 #define CSTRING_TERMINATOR	NULL_CHARACTER
 
 #define CARRIAGE_RETURN		'\r'
@@ -316,6 +317,14 @@ IGNORE_WARNING(unused-but-set-variable)
 
 #define LINE_FEED			'\n'
 #define LINEFEED			LINE_FEED
+
+#define TAB_CHARACTER		'\t'
+#define TAB_CHAR			TAB_CHARACTER
+#define TAB					TAB_CHAR
+
+#define SPACE_CHARACTER		' '
+#define SPACE_CHAR			SPACE_CHARACTER
+#define SPACE				SPACE_CHAR
 
 #ifndef Print_h
 #define CR					CARRIAGE_RETURN

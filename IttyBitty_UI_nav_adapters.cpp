@@ -11,27 +11,68 @@
 #ifndef NO_ITTYBITTY_UI_NAV_ADAPTERS
 
 #include "IttyBitty_UI_nav_adapters.h"
-// VIRTUAL
-//
-
-//([A-Za-z_]*) ([A-Za-z_]*)[(]
-//$1 UiDisplayController::$2(
-
-// = [A-Za-z0-9_]*
-//
-
-// { }
-//\n{\n\n}
-
-	//class SerialUiInputSource;
-	//class DigitalPinUiInputSource;
-	//class AnalogPinUiInputSource;
-	//class SwitchUiInputSource;
-	//class ButtonUiInputSource;
-	//class RotaryUiInputSource;
-	//class ClickEncoderUiInputSource;
-	//class PotentiometerUiInputSource;
 
 using namespace IttyBitty;
+
+
+#pragma region [StreamUiInputSource] IMPLEMENTATION
+
+// CONSTRUCTOR
+
+StreamUiInputSource::StreamUiInputSource(RIUINAVIGATIONCONTROLLER navigation, Stream & stream, CSTREAMUIINPUTOPTIONS options)
+	: UiInputSource(navigation), 
+		_Stream(stream), _Options(options) { }
+
+
+// [IUiInputSource] OVERRIDES
+
+CBOOL StreamUiInputSource::IsAsynchronous() const
+{
+	return false;
+}
+
+VOID StreamUiInputSource::Poll()
+{
+	if (!_Stream.available())
+		return;
+
+	PCHAR buffer = new char[UI_INPUT_VALUE_BUFFER_SIZE];
+	BYTE bufferLength = 0;
+	CHAR c = NULL_CHARACTER;
+
+	while (_Stream.available())
+	{
+		c = _Stream.read();
+
+		switch (c)
+		{
+		case CR:
+			if (WITH_BITS(_Options, EXCLUDE_CARRIAGE_RETURN))
+				continue;
+			break;
+
+		case LF:
+			if (WITH_BITS(_Options, EXCLUDE_LINEFEED))
+				continue;
+			break;
+
+		case SPACE:
+			if (WITH_BITS(_Options, EXCLUDE_SPACE))
+				continue;
+			break;
+
+		case TAB:
+			if (WITH_BITS(_Options, EXCLUDE_TAB))
+				continue;
+			break;
+		}
+
+		buffer[bufferLength++] = c;
+	}
+
+	buffer[bufferLength] = NULL_CHARACTER;
+}
+
+#pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_UI_NAV_ADAPTERS

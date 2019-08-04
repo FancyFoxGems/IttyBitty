@@ -19,7 +19,7 @@ IGNORE_WARNING(reorder)
 
 #pragma region DEFINES
 
-#define UI_INPUT_VALUE_BUFFER_SIZE		256
+#define UI_INPUT_VALUE_BUFFER_SIZE		MAX_BYTE
 
 #pragma endregion
 
@@ -353,7 +353,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		UiNavigationController(RIUINAVIGATIONLISTENER, CDWORD = 0, CBOOL = TRUE, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
+		UiNavigationController(RIUINAVIGATIONLISTENER, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
 
 		VIRTUAL ~UiNavigationController();
 

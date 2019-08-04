@@ -20,13 +20,12 @@ using namespace IttyBitty::MUI;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-MenUI::MenUI(CDWORD valueEntryExpirationMs, CBOOL removeValueEntriesUponReading, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
-	: MenUI(0, NULL, 0, NULL, valueEntryExpirationMs, removeValueEntriesUponReading, mainTitle, initMenuCapacity) { }
+MenUI::MenUI(FLASH_STRING mainTitle, CBYTE initMenuCapacity)
+	: MenUI(0, NULL, 0, NULL, mainTitle, initMenuCapacity) { }
 
-MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE rendererCount, PPIUIRENDERER renderers,
-		CDWORD valueEntryExpirationMs, CBOOL removeValueEntriesUponReading, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
+MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE rendererCount, PPIUIRENDERER renderers, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
 	: Menu(mainTitle, this, initMenuCapacity),
-		_Navigation(UiNavigationController(*this, valueEntryExpirationMs, removeValueEntriesUponReading, inputSourceCount, inputSources)),
+		_Navigation(UiNavigationController(*this, inputSourceCount, inputSources)),
 		_Display(UiDisplayController(rendererCount, renderers)) { }
 
 

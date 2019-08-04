@@ -61,6 +61,24 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region ENUMS
+
+	ENUM StreamUiInputOptions : BYTE
+	{
+		EXCLUDE_CARRIAGE_RETURN	= 0x1,
+		EXCLUDE_LINEFEED		= 0x2,
+		EXCLUDE_CR_AND_LF		= EXCLUDE_CARRIAGE_RETURN | EXCLUDE_LINEFEED,
+
+		EXCLUDE_SPACE			= 0x4,
+		EXCLUDE_TAB				= 0x8,
+		EXCLUDE_WHITESPACE		= EXCLUDE_SPACE | EXCLUDE_TAB | EXCLUDE_CR_AND_LF
+	};
+
+	DECLARE_ENUM_AS_FLAGS(StreamUiInputOptions, STREAMUIINPUTOPTIONS);
+
+#pragma endregion
+
+
 #pragma region [DataBoundUiInputSource] DEFINITION
 
 	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
@@ -96,7 +114,7 @@ namespace IttyBitty
 		UIACTION _Action = UiAction::SELECT;
 
 		CONST TVar & _Variable;
-		CONST TVar _Tolerance = TVar(0);
+		TVar _Tolerance = TVar(0);
 
 		TVar _PrevValue = 0;
 
@@ -118,9 +136,9 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTORS
+		// CONSTRUCTOR
 
-		StreamUiInputSource(Stream & = SERIAL_PORT_MONITOR);
+		StreamUiInputSource(RIUINAVIGATIONCONTROLLER navigation, Stream & = SERIAL_PORT_MONITOR, CSTREAMUIINPUTOPTIONS = EXCLUDE_CR_AND_LF);
 
 
 		// [IUiInputSource] OVERRIDES
@@ -132,9 +150,14 @@ namespace IttyBitty
 
 	protected:
 
+		typedef Stream & RSTREAM;
+
+
 		// INSTANCE VARIABLES
 
-		Stream & _Stream = SERIAL_PORT_MONITOR;
+		RSTREAM const _Stream;
+
+		STREAMUIINPUTOPTIONS _Options;
 	};
 
 #pragma endregion
@@ -148,7 +171,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		DigitalPinUiInputSource(CBYTE, CUIACTION);
+		DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CBYTE, CUIACTION);
 
 
 		// [IUiInputSource] OVERRIDES
