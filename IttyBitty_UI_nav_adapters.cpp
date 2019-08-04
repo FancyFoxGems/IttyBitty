@@ -71,6 +71,8 @@ VOID StreamUiInputSource::Poll()
 	}
 
 	buffer[bufferLength] = NULL_CHARACTER;
+
+	_Navigation.SendValue(buffer);
 }
 
 #pragma endregion
