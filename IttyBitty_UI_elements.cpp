@@ -77,7 +77,7 @@ VOID UiElement::Return(CUIACTIONSTATE state) { }
 
 VOID UiElement::Select(CUIACTIONSTATE state) { }
 
-VOID UiElement::Value(CBYTE token) { }
+VOID UiElement::Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController) { }
 
 #pragma endregion
 

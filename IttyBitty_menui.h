@@ -89,7 +89,7 @@ namespace IttyBitty
 		VOID Return(CUIACTIONSTATE = CLICK);
 		VOID Select(CUIACTIONSTATE = CLICK);
 
-		VOID Value(CBYTE);
+		VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER);
 
 
 		// [IUiNavigationController] IMPLEMENTATION

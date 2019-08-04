@@ -24,7 +24,7 @@ using namespace IttyBitty::MUI;
 UiInputSource::UiInputSource(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
 
 
-// [IUiListener] (NON-)IMPLEMENTATION
+// [IUiInputSource] (NON-)IMPLEMENTATION
 
 CBOOL UiInputSource::IsAsynchronous() const { return TRUE; }
 
@@ -168,61 +168,6 @@ VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 	_InputSources = newInputSources;
 }
 
-CBYTE UiNavigationController::ValueEntryCount() const
-{
-	return _ValueEntryCount;
-}
-
-VOID UiNavigationController::RemoveValueEntry(CBYTE token)
-{
-	PVALUEENTRY valueEntry = NULL;
-	BYTE index = this->FindValueEntry(token, &valueEntry);
-
-	if (!valueEntry)
-		return;
-
-	this->DeleteValueEntry(index);
-	this->CompressValueEntries();
-}
-
-VOID UiNavigationController::ClearValueEntriesOlderThan(CDWORD expirationMs)
-{
-	DWORD now = millis();
-	BOOL anyDeleted = FALSE;
-
-	for (BYTE i = 0; i < _ValueEntryCount; i++)
-	{
-		if (now - _ValueEntries[i]->Timestamp >= expirationMs)
-		{
-			this->DeleteValueEntry(i);
-			anyDeleted = TRUE;
-		}
-	}
-	
-	if (anyDeleted)
-		this->CompressValueEntries();
-}
-
-VOID UiNavigationController::ClearValueEntries()
-{
-	if (!_ValueEntries)
-		return;
-
-	for (BYTE i = 0; i < _ValueEntryCount; i++)
-	{
-		if (!_ValueEntries[i])
-			continue;
-
-		this->DeleteValueEntry(i);
-	}
-
-	delete[] _ValueEntries;
-	_ValueEntries = NULL;
-
-	_ValueEntryCount = 0;
-	_NextValueEntryToken = 0;
-}
-
 CBOOL UiNavigationController::IsShiftOn() const
 {
 	return _ShiftOn;
@@ -330,6 +275,122 @@ VOID UiNavigationController::SendValue(PCCHAR buffer)
 	_ValueEntries = newValueEntries;
 
 	++_ValueEntryCount;
+
+	this->Value(newValueEntry->Token, *this);
+}
+
+
+// [IUiNavigationListener] IMPLEMENTATION
+
+VOID UiNavigationController::Up(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_UP, state);
+
+	if (resultState != INACTION)
+		_NavListener.Up(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Down(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Down(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Left(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_LEFT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Left(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Right(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RIGHT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Right(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Return(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_RETURN, state);
+
+	if (resultState != INACTION)
+		_NavListener.Return(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Select(CUIACTIONSTATE state)
+{
+	UIACTIONSTATE resultState = this->UpdateState(ACTION_SELECT, state);
+
+	if (resultState != INACTION)
+		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController)
+{
+	_NavListener.Value(token, inputValueController);
+}
+
+
+// [IUiInputValueController] IMPLEMENTATION
+
+CBYTE UiNavigationController::ValueEntryCount() const
+{
+	return _ValueEntryCount;
+}
+
+VOID UiNavigationController::RemoveValueEntry(CBYTE token)
+{
+	PVALUEENTRY valueEntry = NULL;
+	BYTE index = this->FindValueEntry(token, &valueEntry);
+
+	if (!valueEntry)
+		return;
+
+	this->DeleteValueEntry(index);
+	this->CompressValueEntries();
+}
+
+VOID UiNavigationController::ClearValueEntriesOlderThan(CDWORD expirationMs)
+{
+	DWORD now = millis();
+	BOOL anyDeleted = FALSE;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (now - _ValueEntries[i]->Timestamp >= expirationMs)
+		{
+			this->DeleteValueEntry(i);
+			anyDeleted = TRUE;
+		}
+	}
+
+	if (anyDeleted)
+		this->CompressValueEntries();
+}
+
+VOID UiNavigationController::ClearValueEntries()
+{
+	if (!_ValueEntries)
+		return;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (!_ValueEntries[i])
+			continue;
+
+		this->DeleteValueEntry(i);
+	}
+
+	delete[] _ValueEntries;
+	_ValueEntries = NULL;
+
+	_ValueEntryCount = 0;
+	_NextValueEntryToken = 0;
 }
 
 CBOOL UiNavigationController::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS flags)
@@ -452,62 +513,6 @@ PCBYTE UiNavigationController::ReadValueAsBinary(CBYTE token)
 PCCHAR UiNavigationController::ReadValueAsString(CBYTE token)
 {
 	return this->GetValueBuffer(token);
-}
-
-
-// [IUiNavigationListener] IMPLEMENTATION
-
-VOID UiNavigationController::Up(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_UP, state);
-
-	if (resultState != INACTION)
-		_NavListener.Up(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Down(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_DOWN, state);
-
-	if (resultState != INACTION)
-		_NavListener.Down(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Left(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_LEFT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Left(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Right(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_RIGHT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Right(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Return(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_RETURN, state);
-
-	if (resultState != INACTION)
-		_NavListener.Return(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Select(CUIACTIONSTATE state)
-{
-	UIACTIONSTATE resultState = this->UpdateState(ACTION_SELECT, state);
-
-	if (resultState != INACTION)
-		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
-}
-
-VOID UiNavigationController::Value(CBYTE token)
-{
-	_NavListener.Value(token);
 }
 
 

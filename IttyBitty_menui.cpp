@@ -90,7 +90,7 @@ VOID MenUI::Select(CUIACTIONSTATE state)
 {
 }
 
-VOID MenUI::Value(CBYTE token)
+VOID MenUI::Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController)
 {
 }
 

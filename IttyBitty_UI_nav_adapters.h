@@ -74,7 +74,7 @@ namespace IttyBitty
 			: UiInputSource(navigation), _Action(action), _Variable(variable), _Tolerance(tolerance) { }
 
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		CBOOL IsAsynchronous() const { return FALSE; }
 
@@ -123,7 +123,7 @@ namespace IttyBitty
 		StreamUiInputSource(Stream & = SERIAL_PORT_MONITOR);
 
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		CBOOL IsAsynchronous() const;
 
@@ -151,7 +151,7 @@ namespace IttyBitty
 		DigitalPinUiInputSource(CBYTE, CUIACTION);
 
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		CBOOL IsAsynchronous() const;
 
@@ -176,7 +176,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		VOID Poll();
 
@@ -227,7 +227,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		VOID Poll();
 
@@ -248,7 +248,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		VOID Poll();
 
@@ -269,7 +269,7 @@ namespace IttyBitty
 	{
 	public:
 
-		// [IUiListener] OVERRIDES
+		// [IUiInputSource] OVERRIDES
 
 		VOID Poll();
 

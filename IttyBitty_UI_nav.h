@@ -34,15 +34,15 @@ namespace IttyBitty
 	interface IUiNavigationListener;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
+	interface IUiInputValueController;
+	TYPEDEF_CLASS_ALIASES(IUiInputValueController, IUIINPUTVALUECONTROLLER);
+
 	interface IUiNavigationController;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
 
 
 	class UiInputSource;
 	TYPEDEF_CLASS_ALIASES(UiInputSource, UIINPUTSOURCE);
-
-	interface IUiNavigationListener;
-	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
@@ -188,6 +188,51 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region [IUiInputValueController] DEFINITION
+
+	INTERFACE IUiInputValueController
+	{
+	public:
+
+		// DESTRUCTOR
+
+		VIRTUAL ~IUiInputValueController() { }
+
+
+		// ACCESSORS/MUTATORS
+
+		VIRTUAL CBYTE ValueEntryCount() const = 0;
+
+		VIRTUAL VOID RemoveValueEntry(CBYTE) = 0;
+		VIRTUAL VOID ClearValueEntriesOlderThan(CDWORD) = 0;
+		VIRTUAL VOID ClearValueEntries() = 0;
+
+
+		// INTERFACE METHODS
+
+		// TODO: Separate below methods into separate interface?
+		// TODO: Type erasure to templated?
+		VIRTUAL CBOOL ReadValueAsBool(CBYTE, CUIBOOLVALUEFLAGS = BOOL_VALUE_T_F) = 0;
+		VIRTUAL CBYTE ReadValueAsByte(CBYTE) = 0;
+		VIRTUAL CCHAR ReadValueAsChar(CBYTE) = 0;
+		VIRTUAL CWCHAR ReadValueAsWChar(CBYTE) = 0;
+		VIRTUAL CWORD ReadValueAsWord(CBYTE) = 0;
+		VIRTUAL CSHORT ReadValueAsShort(CBYTE) = 0;
+		VIRTUAL CDWORD ReadValueAsDWord(CBYTE) = 0;
+		VIRTUAL CLONG ReadValueAsLong(CBYTE) = 0;
+		VIRTUAL PCBYTE ReadValueAsBinary(CBYTE) = 0;
+		VIRTUAL PCCHAR ReadValueAsString(CBYTE) = 0;
+
+
+	protected:
+
+
+		IUiInputValueController() { }
+	};
+
+#pragma endregion
+
+
 #pragma region [IUiNavigationListener] DEFINITION
 
 	INTERFACE IUiNavigationListener
@@ -208,7 +253,7 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK) = 0;
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK) = 0;
 
-		VIRTUAL VOID Value(CBYTE) = 0;
+		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER) = 0;
 
 
 	protected:
@@ -221,7 +266,7 @@ namespace IttyBitty
 
 #pragma region [IUiNavigationController] DEFINITION
 
-	INTERFACE IUiNavigationController
+	INTERFACE IUiNavigationController : public virtual IUiInputValueController
 	{
 	public:
 
@@ -242,12 +287,6 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveInputSource(CBYTE) = 0;
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE) = 0;
 
-		VIRTUAL CBYTE ValueEntryCount() const = 0;
-
-		VIRTUAL VOID RemoveValueEntry(CBYTE) = 0;
-		VIRTUAL VOID ClearValueEntriesOlderThan(CDWORD) = 0;
-		VIRTUAL VOID ClearValueEntries() = 0;
-
 		VIRTUAL CBOOL IsShiftOn() const = 0;
 		VIRTUAL VOID ToggleShift() = 0;
 		VIRTUAL VOID ShiftOn() = 0;
@@ -263,19 +302,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK) = 0;
 		VIRTUAL VOID SendValue(PCCHAR) = 0;
-
-		// TODO: Separate below methods into separate interface?
-		// TODO: Type erasure to templated?
-		VIRTUAL CBOOL ReadValueAsBool(CBYTE, CUIBOOLVALUEFLAGS = BOOL_VALUE_T_F) = 0;
-		VIRTUAL CBYTE ReadValueAsByte(CBYTE) = 0;
-		VIRTUAL CCHAR ReadValueAsChar(CBYTE) = 0;
-		VIRTUAL CWCHAR ReadValueAsWChar(CBYTE) = 0;
-		VIRTUAL CWORD ReadValueAsWord(CBYTE) = 0;
-		VIRTUAL CSHORT ReadValueAsShort(CBYTE) = 0;
-		VIRTUAL CDWORD ReadValueAsDWord(CBYTE) = 0;
-		VIRTUAL CLONG ReadValueAsLong(CBYTE) = 0;
-		VIRTUAL PCBYTE ReadValueAsBinary(CBYTE) = 0;
-		VIRTUAL PCCHAR ReadValueAsString(CBYTE) = 0;
 
 
 	protected:
@@ -302,7 +328,7 @@ namespace IttyBitty
 		UiInputSource(RIUINAVIGATIONCONTROLLER);
 
 
-		// [IUiListener] IMPLEMENTATION
+		// [IUiInputSource] IMPLEMENTATION
 
 		VIRTUAL CBOOL IsAsynchronous() const;
 
@@ -359,12 +385,6 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveInputSource(CBYTE);
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
 
-		VIRTUAL CBYTE ValueEntryCount() const;
-
-		VIRTUAL VOID RemoveValueEntry(CBYTE);
-		VIRTUAL VOID ClearValueEntriesOlderThan(CDWORD);
-		VIRTUAL VOID ClearValueEntries();
-
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
 		VIRTUAL VOID ShiftOn();
@@ -378,17 +398,6 @@ namespace IttyBitty
 		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID SendValue(PCCHAR);
 
-		VIRTUAL CBOOL ReadValueAsBool(CBYTE, CUIBOOLVALUEFLAGS = BOOL_VALUE_T_F);
-		VIRTUAL CBYTE ReadValueAsByte(CBYTE);
-		VIRTUAL CCHAR ReadValueAsChar(CBYTE);
-		VIRTUAL CWCHAR ReadValueAsWChar(CBYTE);
-		VIRTUAL CWORD ReadValueAsWord(CBYTE);
-		VIRTUAL CSHORT ReadValueAsShort(CBYTE);
-		VIRTUAL CDWORD ReadValueAsDWord(CBYTE);
-		VIRTUAL CLONG ReadValueAsLong(CBYTE);
-		VIRTUAL PCBYTE ReadValueAsBinary(CBYTE);
-		VIRTUAL PCCHAR ReadValueAsString(CBYTE);
-
 
 		// [IUiNavigationListener] IMPLEMENTATION
 
@@ -399,7 +408,27 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
-		VIRTUAL VOID Value(CBYTE);
+		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER);
+
+
+		// [IUiInputValueController] IMPLEMENTATION
+
+		VIRTUAL CBYTE ValueEntryCount() const;
+
+		VIRTUAL VOID RemoveValueEntry(CBYTE);
+		VIRTUAL VOID ClearValueEntriesOlderThan(CDWORD);
+		VIRTUAL VOID ClearValueEntries();
+
+		VIRTUAL CBOOL ReadValueAsBool(CBYTE, CUIBOOLVALUEFLAGS = BOOL_VALUE_T_F);
+		VIRTUAL CBYTE ReadValueAsByte(CBYTE);
+		VIRTUAL CCHAR ReadValueAsChar(CBYTE);
+		VIRTUAL CWCHAR ReadValueAsWChar(CBYTE);
+		VIRTUAL CWORD ReadValueAsWord(CBYTE);
+		VIRTUAL CSHORT ReadValueAsShort(CBYTE);
+		VIRTUAL CDWORD ReadValueAsDWord(CBYTE);
+		VIRTUAL CLONG ReadValueAsLong(CBYTE);
+		VIRTUAL PCBYTE ReadValueAsBinary(CBYTE);
+		VIRTUAL PCCHAR ReadValueAsString(CBYTE);
 
 
 		// [IUiInputSource] IMPLEMENTATION
