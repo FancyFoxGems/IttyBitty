@@ -80,6 +80,7 @@
 #define CLASS			class
 #define interface		class
 #define INTERFACE		class
+#define ABSTRACT_CLASS	class
 
 #define TEMPLATE(T_clause, structure_type) TEMPLATE_##structure_type(T_clause)
 #define TEMPLATE_STRUCT(T_clause)		template T_clause STRUCT

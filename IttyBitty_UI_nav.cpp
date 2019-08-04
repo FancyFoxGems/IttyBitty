@@ -37,9 +37,10 @@ VOID UiInputSource::Poll() { }
 
 // CONSTRUCTOR/DESTRUCTOR
 
-UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener,
-		DWORD valueEntryExpirationMs, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
-	: _NavListener(navListener), _ValueEntryExpirationMs(valueEntryExpirationMs), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
+UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, CDWORD valueEntryExpirationMs, 
+		CBOOL removeValueEntriesUponReading, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
+	: _NavListener(navListener), _ValueEntryExpirationMs(valueEntryExpirationMs), 
+		_RemoveValueEntriesUponReading(removeValueEntriesUponReading), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
 {
 	if (!_InputSources)
 		_DisposeInputSources = TRUE;
@@ -175,7 +176,7 @@ CBYTE UiNavigationController::ValueEntryCount() const
 VOID UiNavigationController::RemoveValueEntry(CBYTE token)
 {
 	PVALUEENTRY valueEntry = NULL;
-	CBYTE index = this->FindValueEntry(token, &valueEntry);
+	BYTE index = this->FindValueEntry(token, &valueEntry);
 
 	if (!valueEntry)
 		return;
@@ -380,7 +381,12 @@ CCHAR UiNavigationController::ReadValueAsChar(CBYTE token)
 	if (!buffer)
 		return 0;
 
-	return buffer[0];
+	CHAR value = buffer[0];
+
+	if (_RemoveValueEntriesUponReading)
+		delete buffer;
+
+	return value;
 }
 
 CWCHAR UiNavigationController::ReadValueAsWChar(CBYTE token)
@@ -390,7 +396,12 @@ CWCHAR UiNavigationController::ReadValueAsWChar(CBYTE token)
 	if (!buffer)
 		return 0;
 
-	return static_cast<CWCHAR>(*buffer);
+	WCHAR value = static_cast<CWCHAR>(*buffer);
+
+	if (_RemoveValueEntriesUponReading)
+		delete buffer;
+
+	return value;
 }
 
 CWORD UiNavigationController::ReadValueAsWord(CBYTE token)
@@ -405,7 +416,12 @@ CSHORT UiNavigationController::ReadValueAsShort(CBYTE token)
 	if (!buffer)
 		return 0;
 
-	return atoi(buffer);
+	SHORT value = atoi(buffer);
+
+	if (_RemoveValueEntriesUponReading)
+		delete buffer;
+
+	return value;
 }
 
 CDWORD UiNavigationController::ReadValueAsDWord(CBYTE token)
@@ -420,7 +436,12 @@ CLONG UiNavigationController::ReadValueAsLong(CBYTE token)
 	if (!buffer)
 		return 0;
 
-	return atol(buffer);
+	LONG value = atol(buffer);
+
+	if (_RemoveValueEntriesUponReading)
+		delete buffer;
+
+	return value;
 }
 
 PCBYTE UiNavigationController::ReadValueAsBinary(CBYTE token)
@@ -430,13 +451,7 @@ PCBYTE UiNavigationController::ReadValueAsBinary(CBYTE token)
 
 PCCHAR UiNavigationController::ReadValueAsString(CBYTE token)
 {
-	PVALUEENTRY valueEntry = NULL;
-	this->FindValueEntry(token, &valueEntry);
-
-	if (!valueEntry)
-		return NULL;
-
-	return valueEntry->Buffer;
+	return this->GetValueBuffer(token);
 }
 
 
@@ -553,7 +568,7 @@ VOID UiNavigationController::Poll()
 }
 
 
-// PROTECTED MEMBER FUNCTION DEFINITIONS
+// PROTECTED INTERFACE METHOD
 
 CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUIACTIONSTATE newState)
 {
@@ -686,6 +701,14 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 	return newState;
 }
 
+
+// PROTECTED HELPER MEMBER FUNCTIONS
+
+CUIACTIONSTATE UiNavigationController::ApplyShiftAltFlags(CUIACTIONSTATE state)
+{
+	return static_cast<CUIACTIONSTATE>(WITH_BITS(state, (_ShiftOn ? SHIFT_ON : 0x0) OR(_AltOn ? ALT_ON : 0x0)));
+}
+
 CBYTE UiNavigationController::FindValueEntry(CBYTE token, PPVALUEENTRY resultPtr)
 {
 	if (!_ValueEntries)
@@ -710,11 +733,11 @@ CBYTE UiNavigationController::FindValueEntry(CBYTE token, PPVALUEENTRY resultPtr
 	return 0;
 }
 
-VOID UiNavigationController::DeleteValueEntry(CBYTE index)
+VOID UiNavigationController::DeleteValueEntry(CBYTE index, CBOOL destroyBuffer)
 {
 	PVALUEENTRY valueEntry = _ValueEntries[index];
 	
-	if (valueEntry->Buffer)
+	if (destroyBuffer && valueEntry->Buffer)
 	{
 		delete valueEntry->Buffer;
 		valueEntry->Buffer = NULL;
@@ -757,9 +780,23 @@ VOID UiNavigationController::CompressValueEntries()
 	_NextValueEntryToken = maxToken + 1;
 }
 
-CUIACTIONSTATE UiNavigationController::ApplyShiftAltFlags(CUIACTIONSTATE state)
+PCCHAR UiNavigationController::GetValueBuffer(CBYTE token)
 {
-	return static_cast<CUIACTIONSTATE>(WITH_BITS(state, (_ShiftOn ? SHIFT_ON : 0x0) OR (_AltOn ? ALT_ON : 0x0)));
+	PVALUEENTRY valueEntry = NULL;
+	BYTE index = this->FindValueEntry(token, &valueEntry);
+
+	if (!valueEntry)
+		return NULL;
+
+	PCCHAR buffer = valueEntry->Buffer;
+
+	if (_RemoveValueEntriesUponReading)
+	{
+		this->DeleteValueEntry(index, FALSE);
+		this->CompressValueEntries();
+	}
+
+	return buffer;
 }
 
 #pragma endregion

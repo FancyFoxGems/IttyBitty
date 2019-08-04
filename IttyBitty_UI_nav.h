@@ -327,7 +327,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR/DESTRUCTOR
 
-		UiNavigationController(RIUINAVIGATIONLISTENER, DWORD = 0, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
+		UiNavigationController(RIUINAVIGATIONLISTENER, CDWORD = 0, CBOOL = TRUE, CBYTE = 0, PPIUIINPUTSOURCE = NULL);
 
 		VIRTUAL ~UiNavigationController();
 
@@ -447,6 +447,7 @@ namespace IttyBitty
 		RIUINAVIGATIONLISTENER const _NavListener;
 
 		DWORD _ValueEntryExpirationMs = 0;
+		BOOL _RemoveValueEntriesUponReading = TRUE;
 
 		PPIUIINPUTSOURCE _InputSources = NULL;
 		BYTE _InputSourceCount = 0;
@@ -466,13 +467,14 @@ namespace IttyBitty
 		CUIACTIONSTATE UpdateState(CUIACTIONTYPE, CUIACTIONSTATE);
 
 
-		// PROTECTED HELPER MEMBER FUNCTION DECLARATIONS
-
-		CBYTE FindValueEntry(CBYTE, PPVALUEENTRY);
-		VOID DeleteValueEntry(CBYTE);
-		VOID CompressValueEntries();
+		// PROTECTED HELPER MEMBER FUNCTIONS
 
 		CUIACTIONSTATE ApplyShiftAltFlags(CUIACTIONSTATE);
+
+		CBYTE FindValueEntry(CBYTE, PPVALUEENTRY);
+		VOID DeleteValueEntry(CBYTE, CBOOL = TRUE);
+		VOID CompressValueEntries();
+		PCCHAR GetValueBuffer(CBYTE);
 	};
 
 #pragma endregion

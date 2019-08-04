@@ -108,6 +108,7 @@ namespace IttyBitty
 
 #pragma region [IUiContainerElement] DEFINITION
 
+	// TODO: Inherit from IUiElement
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
 	INTERFACE IUiContainerElement //: public IUiElement
 	{
@@ -256,6 +257,7 @@ namespace IttyBitty
 
 #pragma region [UiElement] DEFINITION
 
+	// TODO: Inherit from IUiElement
 	CLASS UiElement : public virtual IUiNavigationListener //: public virtual IUiElement
 	{
 	public:

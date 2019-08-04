@@ -93,7 +93,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		CUIACTION _Action = UiAction::SELECT;
+		UIACTION _Action = UiAction::SELECT;
 
 		CONST TVar & _Variable;
 		CONST TVar _Tolerance = TVar(0);
@@ -118,10 +118,9 @@ namespace IttyBitty
 	{
 	public:
 
-		// CONSTRUCTOR
+		// CONSTRUCTORS
 
-		StreamUiInputSource();
-		StreamUiInputSource(Stream &);
+		StreamUiInputSource(Stream & = SERIAL_PORT_MONITOR);
 
 
 		// [IUiListener] OVERRIDES
@@ -163,8 +162,9 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		BOOL _IsAsynchronous = FALSE;
+		UIACTION _Action = UiAction::SELECT;
 		BYTE _PinNum = 0;
+		BOOL _IsAsynchronous = FALSE;
 	};
 
 #pragma endregion

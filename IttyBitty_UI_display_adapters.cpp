@@ -19,14 +19,10 @@ using namespace IttyBitty;
 
 // CONSTRUCTORS
 
-SerialUiRenderer::SerialUiRenderer() : UiRenderer() { }
-
-SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial) : UiRenderer(), _Serial(serial) { }
-
-SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options) : UiRenderer(options) { }
+SerialUiRenderer::SerialUiRenderer(Stream & serial) : UiRenderer(), _Serial(serial) { }
 
 SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options,
-	HardwareSerial & serial) : UiRenderer(options), _Serial(serial) { }
+	Stream & serial) : UiRenderer(options), _Serial(serial) { }
 
 
 // [Print] IMPLEMENTATION
@@ -41,7 +37,8 @@ SIZE SerialUiRenderer::write(BYTE value)
 
 CBOOL SerialUiRenderer::Available()
 {
-	return _Serial.availableForWrite();
+	// TODO: Works without HardwareSerial reference?
+	return TRUE;	/// return _Serial.availableForWrite();
 }
 
 VOID SerialUiRenderer::Flush()

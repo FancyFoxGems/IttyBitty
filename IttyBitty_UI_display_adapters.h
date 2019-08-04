@@ -16,7 +16,7 @@
 	#include "IttyBitty_LCD_I2C.h"
 #endif
 
-#include "HardwareSerial.h"
+#include "Stream.h"
 
 
 // SUPRESS COMPILER WARNINGS RELATED TO NON-VIRTUAL DESTRUCTORS
@@ -56,10 +56,8 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		SerialUiRenderer();
-		SerialUiRenderer(HardwareSerial &);
-		SerialUiRenderer(RUIRENDEREROPTIONS);
-		SerialUiRenderer(RUIRENDEREROPTIONS, HardwareSerial & );
+		SerialUiRenderer(Stream & = SERIAL_PORT_MONITOR);
+		SerialUiRenderer(RUIRENDEREROPTIONS, Stream & = SERIAL_PORT_MONITOR);
 
 
 		// [Print] IMPLEMENTATION
@@ -79,7 +77,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
+		Stream & _Serial = SERIAL_PORT_MONITOR;
 	};
 
 #pragma endregion
