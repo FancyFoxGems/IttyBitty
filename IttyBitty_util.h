@@ -306,6 +306,24 @@ IGNORE_WARNING(unused-but-set-variable)
 #define MEGABYTE			MEGABYTE_BITS
 
 
+/* SPECIAL VALUES */
+
+#define NULL_CHARACTER		'\0'
+#define CSTRING_TERMINATOR	NULL_CHARACTER
+
+#define CARRIAGE_RETURN		'\r'
+#define CARRIAGERETURN		CARRIAGE_RETURN
+
+#define LINE_FEED			'\n'
+#define LINEFEED			LINE_FEED
+
+#ifndef Print_h
+#define CR					CARRIAGE_RETURN
+#define LF					LINE_FEED
+#define CRLF				"\r\n"
+#endif
+
+
 /* TYPE INFO ALIASES */
 
 #define typeof(var)					decltype(var)
@@ -472,8 +490,8 @@ using std::forward;
 /* FLASH DATA ADDRESSING MACROS */
 
 #ifndef F
-	class __FlashStringHelper;
-	#define F(string_literal)					(reinterpret_cast<const __FlashStringHelper *>(PSTR(string_literal)))
+class __FlashStringHelper;
+#define F(string_literal)						(reinterpret_cast<const __FlashStringHelper *>(PSTR(string_literal)))
 #endif
 
 #define FLASH_STRING_ADDRESS(string_addr)		((PCCHAR)(string_addr))
@@ -492,19 +510,8 @@ using std::forward;
 #define forever		for ever
 
 #define FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)	(constructor_expr)
+#define FORCE_ANONYMOUS(constructor_expr)				FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
 #define _CONSTRUCT(constructor_expr)					FORCE_ANONYMOUS_CONSTRUCTION(constructor_expr)
-
-
-/* MISCELLANEOUS AVR-SPECIFIC MACROS */
-
-#define SOFT_RESET()			\
-	do							\
-	{							\
-		wdt_enable(WDTO_15MS);	\
-		for (;;)				\
-		{						\
-		}						\
-	} while(0)					\
 
 
 /* PLACEMENT NEW IMPLEMENTATION */

@@ -105,20 +105,7 @@ namespace IttyBitty
 
 		VIRTUAL VOID DoAction()
 		{
-			switch (_Action)
-			{
-			case UiAction::SHIFT:
-				_Navigation.ToggleShift();
-				break;
-
-			case UiAction::ALT:
-				_Navigation.ToggleAlt();
-				break;
-
-			default:
-				_Navigation.FireAction(_Action);
-				break;
-			}
+			_Navigation.FireAction(_Action);
 		}
 	};
 

@@ -147,105 +147,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region UI NAVIGATION ENUMS
-
-	#define MENUI_NUM_STATEFUL_ACTIONS		0x6
-
-	ENUM UiActionType : BYTE
-	{
-		ACTION_UP		= 0x0,
-		ACTION_DOWN		= 0x1,
-		ACTION_LEFT		= 0x2,
-		ACTION_RIGHT	= 0x3,
-		ACTION_RETURN	= 0x4,
-		ACTION_SELECT	= 0x5,
-		ACTION_SHIFT	= 0x6,
-		ACTION_ALT		= 0x7
-	};
-
-	DECLARE_ENUM_AS_FLAGS(UiActionType, UIACTIONTYPE);
-
-	ENUM UiActionBehavior : BYTE
-	{
-		ACTION_LATCH		= 0x00,
-		ACTION_STATEFUL		= 0x10
-	};
-
-	DECLARE_ENUM_AS_FLAGS(UiActionBehavior, UIACTIONBEHAVIOR);
-
-	ENUM_CLASS UiAction : BYTE
-	{
-		UP		= ACTION_UP | ACTION_STATEFUL,
-		DOWN	= ACTION_DOWN | ACTION_STATEFUL,
-		LEFT	= ACTION_LEFT | ACTION_STATEFUL,
-		RIGHT	= ACTION_RIGHT | ACTION_STATEFUL,
-		RETURN	= ACTION_RETURN | ACTION_STATEFUL,
-		SELECT	= ACTION_SELECT | ACTION_STATEFUL,
-		SHIFT	= ACTION_SHIFT | ACTION_LATCH,
-		ALT		= ACTION_ALT | ACTION_LATCH
-	};
-
-	TYPEDEF_ENUM_ALIASES(UiAction, UIACTION);
-
-	INLINE CBOOL UiActionIsStateful(CUIACTION action)
-	{
-		return static_cast<CBOOL>(HIGH_NYBBLE((CBYTE)action));
-	}
-
-	INLINE CUIACTIONTYPE UiActionToActionType(CUIACTION action)
-	{
-		return static_cast<CUIACTIONTYPE>(LOW_NYBBLE((CBYTE)action));
-	}
-
-
-	ENUM UiActionState : BYTE
-	{
-		INACTION		= 0x00,
-		PRESSED			= 0x01,
-		RELEASED		= 0x02,
-		CLICK			= 0x04 | RELEASED,
-		DOUBLE_CLICK	= 0x08 | CLICK,
-		HELD			= 0x10 | PRESSED,
-		SHIFT_ON		= 0x20,
-		ALT_ON			= 0x40,
-
-		SHIFT_CLICK			= CLICK | SHIFT_ON,
-		ALT_CLICK			= CLICK | ALT_ON,
-		SHIFT_ALT_CLICK		= CLICK | SHIFT_ON | ALT_ON,
-		SHIFT_DOUBLE		= DOUBLE_CLICK | SHIFT_ON,
-		ALT_DOUBLE			= DOUBLE_CLICK | ALT_ON,
-		SHIFT_ALT_DOUBLE	= DOUBLE_CLICK | SHIFT_ON | ALT_ON,
-		SHIFT_HELD			= HELD | SHIFT_ON,
-		ALT_HELD			= HELD | ALT_ON,
-		SHIFT_ALT_HELD		= HELD | SHIFT_ON | ALT_ON
-	};
-
-	DECLARE_ENUM_AS_FLAGS(UiActionState, UIACTIONSTATE);
-
-	INLINE CBOOL UiActionStateIsPressed(CUIACTIONSTATE state)
-	{
-		return UiActionStateHas(state, PRESSED);
-	}
-
-	INLINE CBOOL UiActionStateIsShiftOn(CUIACTIONSTATE state)
-	{
-		return UiActionStateHas(state, SHIFT_ON);
-	}
-
-	INLINE CBOOL UiActionStateIsAltOn(CUIACTIONSTATE state)
-	{
-		return UiActionStateHas(state, ALT_ON);
-	}
-
-	INLINE CBOOL UiActionStateIsShiftAltOn(CUIACTIONSTATE state)
-	{
-		return UiActionStateHas(state, static_cast<CUIACTIONSTATE>(BOR(SHIFT_ON, ALT_ON)));
-	}
-
-#pragma endregion
-
-
-#pragma region UI OPTION & LAYOUT ENUMS
+#pragma region ENUMS
 
 	ENUM UiOrientation : BYTE
 	{
@@ -357,21 +259,6 @@ namespace IttyBitty
 	};
 
 	TYPEDEF_ENUM_ALIASES(UiScrollBehavior, UISCROLLBEHAVIOR);
-
-#pragma endregion
-
-
-#pragma region UI FIELD ENUMS
-
-	ENUM AllowedCharFlags : BYTE
-	{
-		ALLOWED_CHARS_ALL		= 0x0,
-		ALLOWED_CHARS_NUMERIC	= 0x1,
-		ALLOWED_CHARS_UPPER		= 0x2,
-		ALLOWED_CHARS_LOWER		= 0x4
-	};
-
-	DECLARE_ENUM_AS_FLAGS(AllowedCharFlags, ALLOWEDCHARFLAGS);
 
 #pragma endregion
 

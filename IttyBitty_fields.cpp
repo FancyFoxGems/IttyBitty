@@ -41,7 +41,7 @@ PCCHAR FieldBase::ToString() const
 	this->FreeBuffer();
 
 	__datum_buffer = new byte[size];
-	__datum_buffer[size - 1] = '\0';
+	__datum_buffer[size - 1] = NULL_CHARACTER;
 
 	this->MetadataToString();
 

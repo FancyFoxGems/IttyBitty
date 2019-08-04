@@ -119,7 +119,7 @@ namespace IttyBitty
 
 		CSIZE bufferSize = msgSize - 2 * SIZEOF(CSIZE);
 		__message_buffer = new byte[bufferSize];
-		__message_buffer[bufferSize - 1] = '\0';
+		__message_buffer[bufferSize - 1] = NULL_CHARACTER;
 
 	#ifdef DEBUG_MESSAGES
 		PrintVal(bufferSize);
@@ -420,7 +420,7 @@ PCCHAR Message::ToString() const
 	this->FreeBuffer();
 
 	__message_buffer = new byte[size];
-	__message_buffer[size - 1] = '\0';
+	__message_buffer[size - 1] = NULL_CHARACTER;
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__message_buffer);
 

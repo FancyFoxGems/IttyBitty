@@ -367,7 +367,7 @@ PCCHAR DbTable::ToString() const
 	this->FreeBuffer();
 
 	__db_table_buffer = new byte[size];
-	__db_table_buffer[size - 1] = '\0';
+	__db_table_buffer[size - 1] = NULL_CHARACTER;
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__db_table_buffer);
 
@@ -861,7 +861,7 @@ CSTORAGERESULT DbTable::LoadRow(CSIZE rowIdx, PBYTE & resultRow, PSIZE rowSize)
 PCCHAR DbTable::RowToString(PCBYTE data, CSIZE rowSize) const
 {
 	PCHAR rowData = new char[rowSize];
-	rowData[rowSize - 1] = '\0';
+	rowData[rowSize - 1] = NULL_CHARACTER;
 
 	PCHAR bufferPtr = rowData;
 
@@ -874,7 +874,7 @@ PCCHAR DbTable::RowToString(PCBYTE data, CSIZE rowSize) const
 PBYTE DbTable::RowsFromString(PCCHAR buffer, RCDWORD rowsSize, CSIZE rowSize)
 {
 	PBYTE rowsBuffer = new byte[rowsSize];
-	rowsBuffer[rowsSize - 1] = '\0';
+	rowsBuffer[rowsSize - 1] = NULL_CHARACTER;
 
 	PCCHAR bufferPtr = buffer;
 
@@ -890,7 +890,7 @@ PBYTE DbTable::RowsFromString(PCCHAR buffer, RCDWORD rowsSize, CSIZE rowSize)
 PBYTE DbTable::RowFromString(PCCHAR buffer, CSIZE rowSize)
 {
 	PBYTE rowBuffer = new byte[rowSize];
-	rowBuffer[rowSize - 1] = '\0';
+	rowBuffer[rowSize - 1] = NULL_CHARACTER;
 
 	PCCHAR bufferPtr = buffer;
 

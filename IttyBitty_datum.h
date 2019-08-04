@@ -214,7 +214,7 @@ namespace IttyBitty
 	{
 		CHAR valStr[2 * T_SIZE + 1];
 
-		valStr[2 * T_SIZE] = '\0';
+		valStr[2 * T_SIZE] = NULL_CHARACTER;
 
 		itoa(value, valStr, 0x10);
 
@@ -235,10 +235,10 @@ namespace IttyBitty
 	{
 		CHAR valStr[2 * T_SIZE + 1];
 
-		valStr[2 * T_SIZE] = '\0';
+		valStr[2 * T_SIZE] = NULL_CHARACTER;
 
 		memcpy(valStr, data, 2 * T_SIZE);
-		valStr[2 * T_SIZE] = '\0';
+		valStr[2 * T_SIZE] = NULL_CHARACTER;
 
 		value = static_cast<T>(strtol(valStr, NULL, 0x10));
 

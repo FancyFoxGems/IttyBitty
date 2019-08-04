@@ -85,8 +85,6 @@
 #define LCD_D7		0x7		// Pin 7 bit (D7 pin)
 #define LCD_BF		0x7		// Busy Flag bit (D7 pin); LOW: AVAILABLE / HIGH: BUSY (executing write command)
 
-//#define LCD_
-
 
 // COMMAND BYTE MASKS
 
@@ -620,7 +618,7 @@ namespace IttyBitty
 
 			this->MoveCursor(currCol, currRow);
 
-			resultStr[length - 1] = '\0';
+			resultStr[length - 1] = NULL_CHARACTER;
 
 			return length;
 		}
@@ -881,7 +879,7 @@ namespace IttyBitty
 
 			BYTE charsPrinted = 0;
 
-			while (*str != '\0')
+			while (*str != NULL_CHARACTER)
 				charsPrinted += (this->*writeCallback)((BYTE)*str++, col + charsPrinted, row);
 
 			return charsPrinted;
@@ -904,7 +902,7 @@ namespace IttyBitty
 			PCCHAR strAddr = reinterpret_cast<PCCHAR>(flashStr);
 			BYTE c = pgm_read_byte_near(strAddr++);
 
-			while (c != '\0')
+			while (c != NULL_CHARACTER)
 			{
 				charsPrinted += (this->*writeCallback)(c, col + charsPrinted, row);
 

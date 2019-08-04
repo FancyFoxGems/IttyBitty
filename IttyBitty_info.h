@@ -43,6 +43,14 @@
 
 #define WDR()		ASM("wdr")
 
+#define SOFT_RESET()			\
+	do							\
+	{							\
+		wdt_enable(WDTO_15MS);	\
+		forever;				\
+	}							\
+	while(0)					\
+
 #pragma endregion
 
 

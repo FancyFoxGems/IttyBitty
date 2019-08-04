@@ -219,7 +219,7 @@ PCCHAR DbTableDef::ToString() const
 	this->FreeBuffer();
 
 	__db_table_def_buffer = new byte[size];
-	__db_table_def_buffer[size - 1] = '\0';
+	__db_table_def_buffer[size - 1] = NULL_CHARACTER;
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__db_table_def_buffer);
 
@@ -254,7 +254,7 @@ VOID DbTableDef::FromBinary(PCBYTE data)
 	if (tableNameLength > 0)
 	{
 		PCHAR tableName = new char[tableNameLength + 1];
-		tableName[tableNameLength] = '\0';
+		tableName[tableNameLength] = NULL_CHARACTER;
 
 		memcpy(tableName, bufferPtr, tableNameLength);
 
@@ -281,7 +281,7 @@ VOID DbTableDef::FromString(PCCHAR data)
 	if (tableNameLength > 0)
 	{
 		PCHAR tableName = new char[tableNameLength + 1];
-		tableName[tableNameLength] = '\0';
+		tableName[tableNameLength] = NULL_CHARACTER;
 
 		memcpy(tableName, bufferPtr, tableNameLength);
 

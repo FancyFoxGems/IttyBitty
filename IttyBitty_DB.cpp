@@ -686,7 +686,7 @@ PCCHAR Database::ToString() const
 	this->FreeBuffer();
 
 	__database_buffer = new byte[size];
-	__database_buffer[size - 1] = '\0';
+	__database_buffer[size - 1] = NULL_CHARACTER;
 
 	PCHAR bufferPtr = reinterpret_cast<PCHAR>(__database_buffer);
 

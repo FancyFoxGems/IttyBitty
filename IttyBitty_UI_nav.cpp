@@ -38,11 +38,11 @@ VOID UiInputSource::Poll() { }
 // CONSTRUCTOR/DESTRUCTOR
 
 UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener,
-		CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
-	: _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
+		DWORD valueEntryExpirationMs, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
+	: _NavListener(navListener), _ValueEntryExpirationMs(valueEntryExpirationMs), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
 {
 	if (!_InputSources)
-		_Dispose = TRUE;
+		_DisposeInputSources = TRUE;
 }
 
 UiNavigationController::~UiNavigationController()
@@ -55,18 +55,20 @@ UiNavigationController::~UiNavigationController()
 
 VOID UiNavigationController::Dispose()
 {
+	this->ClearValueEntries();
+
 	if (!_InputSources)
 		return;
 
-	if (_Dispose)
+	if (_DisposeInputSources)
 	{
 		for (BYTE i = 0; i < _InputSourceCount; i++)
 		{
-			if (_InputSources[i])
-			{
-				delete _InputSources[i];
-				_InputSources[i] = NULL;
-			}
+			if (!_InputSources[i])
+				continue;
+
+			delete _InputSources[i];
+			_InputSources[i] = NULL;
 		}
 	}
 
@@ -113,7 +115,7 @@ RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 
 CBOOL UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
 {
-	if (!_Dispose)
+	if (!_DisposeInputSources)
 		return FALSE;
 
 	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[++_InputSourceCount];
@@ -165,6 +167,61 @@ VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 	_InputSources = newInputSources;
 }
 
+CBYTE UiNavigationController::ValueEntryCount() const
+{
+	return _ValueEntryCount;
+}
+
+VOID UiNavigationController::RemoveValueEntry(CBYTE token)
+{
+	PVALUEENTRY valueEntry = NULL;
+	CBYTE index = this->FindValueEntry(token, &valueEntry);
+
+	if (!valueEntry)
+		return;
+
+	this->DeleteValueEntry(index);
+	this->CompressValueEntries();
+}
+
+VOID UiNavigationController::ClearValueEntriesOlderThan(CDWORD expirationMs)
+{
+	DWORD now = millis();
+	BOOL anyDeleted = FALSE;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (now - _ValueEntries[i]->Timestamp >= expirationMs)
+		{
+			this->DeleteValueEntry(i);
+			anyDeleted = TRUE;
+		}
+	}
+	
+	if (anyDeleted)
+		this->CompressValueEntries();
+}
+
+VOID UiNavigationController::ClearValueEntries()
+{
+	if (!_ValueEntries)
+		return;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (!_ValueEntries[i])
+			continue;
+
+		this->DeleteValueEntry(i);
+	}
+
+	delete[] _ValueEntries;
+	_ValueEntries = NULL;
+
+	_ValueEntryCount = 0;
+	_NextValueEntryToken = 0;
+}
+
 CBOOL UiNavigationController::IsShiftOn() const
 {
 	return _ShiftOn;
@@ -203,6 +260,183 @@ VOID UiNavigationController::AltOn()
 VOID UiNavigationController::AltOff()
 {
 	_AltOn = FALSE;
+}
+
+VOID UiNavigationController::FireAction(CUIACTION action, CUIACTIONSTATE state)
+{
+	CUIACTIONTYPE actionType = UiActionToActionType(action);
+
+	switch (actionType)
+	{
+	case ACTION_UP:
+		this->Up(state);
+		break;
+
+	case ACTION_DOWN:
+		this->Down(state);
+		break;
+
+	case ACTION_LEFT:
+		this->Left(state);
+		break;
+
+	case ACTION_RIGHT:
+		this->Right(state);
+		break;
+
+	case ACTION_SELECT:
+		this->Select(state);
+		break;
+
+	case ACTION_RETURN:
+		this->Return(state);
+		break;
+
+	case ACTION_SHIFT:
+		this->ToggleShift();
+		break;
+
+	case ACTION_ALT:
+		this->ToggleAlt();
+		break;
+	}
+}
+
+VOID UiNavigationController::SendValue(PCCHAR buffer)
+{
+	PVALUEENTRY newValueEntry = new __ValueEntry;
+	newValueEntry->Timestamp = millis();
+	newValueEntry->Buffer = buffer;
+
+	PVALUEENTRY findEntry = NULL;
+	do
+	{
+		this->FindValueEntry(_NextValueEntryToken++, &findEntry);
+	}
+	while (findEntry != NULL);
+
+	newValueEntry->Token = _NextValueEntryToken - 1;
+	
+	PPVALUEENTRY newValueEntries = new PVALUEENTRY[_ValueEntryCount + 1];
+	newValueEntries[_ValueEntryCount] = newValueEntry;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		newValueEntries[i] = _ValueEntries[i];
+	}
+	
+	delete[] _ValueEntries;
+	_ValueEntries = newValueEntries;
+
+	++_ValueEntryCount;
+}
+
+CBOOL UiNavigationController::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS flags)
+{
+	CCHAR charValue = this->ReadValueAsChar(token);
+
+	if (!charValue)
+		return FALSE;
+
+	if (WITH_BITS(flags, BOOL_VALUE_NONEMPTY))
+		return TRUE;
+
+	if (WITH_BITS(flags, BOOL_VALUE_0_1))
+	{
+		if (charValue == '0')
+			return FALSE;
+		if (charValue == '1')
+			return TRUE;
+	}
+
+	if (WITH_BITS(flags, BOOL_VALUE_T_F))
+	{
+		if (charValue == 'f' || charValue == 'F')
+			return FALSE;
+		if (charValue == 't' || charValue == 'T')
+			return TRUE;
+	}
+
+	if (WITH_BITS(flags, BOOL_VALUE_Y_N))
+	{
+		if (charValue == 'n' || charValue == 'N')
+			return FALSE;
+		if (charValue == 'y' || charValue == 'Y')
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+CBYTE UiNavigationController::ReadValueAsByte(CBYTE token)
+{
+	return static_cast<CBYTE>(this->ReadValueAsShort(token));
+}
+
+CCHAR UiNavigationController::ReadValueAsChar(CBYTE token)
+{
+	PCCHAR buffer = this->ReadValueAsString(token);
+
+	if (!buffer)
+		return 0;
+
+	return buffer[0];
+}
+
+CWCHAR UiNavigationController::ReadValueAsWChar(CBYTE token)
+{
+	PCCHAR buffer = this->ReadValueAsString(token);
+
+	if (!buffer)
+		return 0;
+
+	return static_cast<CWCHAR>(*buffer);
+}
+
+CWORD UiNavigationController::ReadValueAsWord(CBYTE token)
+{
+	return static_cast<CWORD>(this->ReadValueAsShort(token));
+}
+
+CSHORT UiNavigationController::ReadValueAsShort(CBYTE token)
+{
+	PCCHAR buffer = this->ReadValueAsString(token);
+
+	if (!buffer)
+		return 0;
+
+	return atoi(buffer);
+}
+
+CDWORD UiNavigationController::ReadValueAsDWord(CBYTE token)
+{
+	return static_cast<CDWORD>(this->ReadValueAsLong(token));
+}
+
+CLONG UiNavigationController::ReadValueAsLong(CBYTE token)
+{
+	PCCHAR buffer = this->ReadValueAsString(token);
+
+	if (!buffer)
+		return 0;
+
+	return atol(buffer);
+}
+
+PCBYTE UiNavigationController::ReadValueAsBinary(CBYTE token)
+{
+	return (PCBYTE)this->ReadValueAsString(token);
+}
+
+PCCHAR UiNavigationController::ReadValueAsString(CBYTE token)
+{
+	PVALUEENTRY valueEntry = NULL;
+	this->FindValueEntry(token, &valueEntry);
+
+	if (!valueEntry)
+		return NULL;
+
+	return valueEntry->Buffer;
 }
 
 
@@ -254,6 +488,11 @@ VOID UiNavigationController::Select(CUIACTIONSTATE state)
 
 	if (resultState != INACTION)
 		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
+}
+
+VOID UiNavigationController::Value(CBYTE token)
+{
+	_NavListener.Value(token);
 }
 
 
@@ -308,6 +547,9 @@ VOID UiNavigationController::Poll()
 			}
 		}
 	}
+
+	if (_ValueEntryExpirationMs)
+		this->ClearValueEntriesOlderThan(_ValueEntryExpirationMs);
 }
 
 
@@ -316,7 +558,7 @@ VOID UiNavigationController::Poll()
 CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUIACTIONSTATE newState)
 {
 	RSTATEENTRY entry = _PrevStates[actionType];
-	LONG now = millis();
+	DWORD now = millis();
 
 	if (newState != INACTION)
 	{
@@ -442,6 +684,77 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 	}
 
 	return newState;
+}
+
+CBYTE UiNavigationController::FindValueEntry(CBYTE token, PPVALUEENTRY resultPtr)
+{
+	if (!_ValueEntries)
+	{
+		*resultPtr = NULL;
+		return 0;
+	}
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (!_ValueEntries[i])
+			continue;
+
+		if (_ValueEntries[i]->Token == token)
+		{
+			*resultPtr = _ValueEntries[i];
+			return i;
+		}
+	}
+
+	*resultPtr = NULL;
+	return 0;
+}
+
+VOID UiNavigationController::DeleteValueEntry(CBYTE index)
+{
+	PVALUEENTRY valueEntry = _ValueEntries[index];
+	
+	if (valueEntry->Buffer)
+	{
+		delete valueEntry->Buffer;
+		valueEntry->Buffer = NULL;
+	}
+
+	delete valueEntry;
+	_ValueEntries[index] = NULL;
+}
+
+VOID UiNavigationController::CompressValueEntries()
+{
+	if (!_ValueEntries)
+		return;
+
+	BYTE removedValueEntries = 0;
+	BYTE maxToken = 0;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (!_ValueEntries[i])
+			++removedValueEntries;
+		else if (_ValueEntries[i]->Token > maxToken)
+			maxToken = _ValueEntries[i]->Token;
+	}
+
+	BYTE newValueEntryCount = _ValueEntryCount - removedValueEntries;
+	PPVALUEENTRY newValueEntries = new PVALUEENTRY[newValueEntryCount];
+	BYTE j = 0;
+
+	for (BYTE i = 0; i < _ValueEntryCount; i++)
+	{
+		if (_ValueEntries[i])
+			newValueEntries[j++] = _ValueEntries[i];
+	}
+
+	delete[] _ValueEntries;
+	_ValueEntries = newValueEntries;
+
+	_ValueEntryCount = newValueEntryCount;
+	_NextValueEntryToken = maxToken + 1;
 }
 
 CUIACTIONSTATE UiNavigationController::ApplyShiftAltFlags(CUIACTIONSTATE state)

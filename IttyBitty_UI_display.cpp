@@ -118,7 +118,7 @@ CBYTE UiRenderer::PrintStyledLine(PCCHAR str, BYTE row)
 
 	CHAR glyphs[rightGlyphNum + 1];
 	memset(glyphs, Options.StyledLineLeftGlyph, leftGlyphNum);
-	glyphs[leftGlyphNum] = '\0';
+	glyphs[leftGlyphNum] = NULL_CHARACTER;
 
 	BYTE charsWritten = this->print(glyphs);
 
@@ -131,7 +131,7 @@ CBYTE UiRenderer::PrintStyledLine(PCCHAR str, BYTE row)
 		charsWritten += this->print(' ');
 
 	memset(glyphs, Options.StyledLineRightGlyph, rightGlyphNum);
-	glyphs[rightGlyphNum] = '\0';
+	glyphs[rightGlyphNum] = NULL_CHARACTER;
 
 	charsWritten += this->print(glyphs);
 
@@ -145,7 +145,7 @@ CBYTE UiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 	PCCHAR strAddr = reinterpret_cast<PCCHAR>(flashStr);
 	BYTE c = pgm_read_byte_near(strAddr++);
 
-	while (c != '\0')
+	while (c != NULL_CHARACTER)
 	{
 		++strLen;
 
@@ -158,7 +158,7 @@ CBYTE UiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 	for (BYTE i = 0; i < strLen; i++)
 		str[i] = (CHAR)pgm_read_byte_near(strAddr++);
 
-	str[strLen] = '\0';
+	str[strLen] = NULL_CHARACTER;
 
 	return this->PrintStyledLine(str, row);
 }

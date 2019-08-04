@@ -20,13 +20,13 @@ using namespace IttyBitty::MUI;
 
 // CONSTRUCTORS/DESTRUCTOR
 
-MenUI::MenUI(FLASH_STRING mainTitle, CBYTE initMenuCapacity)
-	: MenUI(0, NULL, 0, NULL, mainTitle, initMenuCapacity) { }
+MenUI::MenUI(DWORD valueEntryExpirationMs, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
+	: MenUI(0, NULL, 0, NULL, valueEntryExpirationMs, mainTitle, initMenuCapacity) { }
 
 MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE rendererCount, PPIUIRENDERER renderers,
-		FLASH_STRING mainTitle, CBYTE initMenuCapacity)
+	DWORD valueEntryExpirationMs, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
 	: Menu(mainTitle, this, initMenuCapacity),
-		_Navigation(UiNavigationController(*this, inputSourceCount, inputSources)),
+		_Navigation(UiNavigationController(*this, valueEntryExpirationMs, inputSourceCount, inputSources)),
 		_Display(UiDisplayController(rendererCount, renderers)) { }
 
 
@@ -90,6 +90,10 @@ VOID MenUI::Select(CUIACTIONSTATE state)
 {
 }
 
+VOID MenUI::Value(CBYTE token)
+{
+}
+
 
 // [IUiNavigationController] IMPLEMENTATION
 
@@ -115,12 +119,32 @@ CBOOL MenUI::AddInputSource(RIUIINPUTSOURCE inputSource)
 
 VOID MenUI::RemoveInputSource(CBYTE inputSourceIdx)
 {
-	return _Navigation.RemoveInputSource(inputSourceIdx);
+	_Navigation.RemoveInputSource(inputSourceIdx);
 }
 
 VOID MenUI::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 {
-	return _Navigation.RemoveInputSource(inputSource);
+	_Navigation.RemoveInputSource(inputSource);
+}
+
+CBYTE MenUI::ValueEntryCount() const
+{
+	return _Navigation.ValueEntryCount();
+}
+
+VOID MenUI::RemoveValueEntry(CBYTE token)
+{
+	_Navigation.RemoveValueEntry(token);
+}
+
+VOID MenUI::ClearValueEntriesOlderThan(CDWORD expirationMs)
+{
+	_Navigation.ClearValueEntriesOlderThan(expirationMs);
+}
+
+VOID MenUI::ClearValueEntries()
+{
+	_Navigation.ClearValueEntries();
 }
 
 CBOOL MenUI::IsShiftOn() const
@@ -160,6 +184,66 @@ VOID MenUI::AltOn()
 VOID MenUI::AltOff()
 {
 	_Navigation.AltOff();
+}
+
+VOID MenUI::FireAction(CUIACTION action, CUIACTIONSTATE state)
+{
+	return _Navigation.FireAction(action, state);
+}
+
+VOID MenUI::SendValue(PCCHAR buffer)
+{
+	_Navigation.SendValue(buffer);
+}
+
+CBOOL MenUI::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS flags)
+{
+	return _Navigation.ReadValueAsBool(token, flags);
+}
+
+CBYTE MenUI::ReadValueAsByte(CBYTE token)
+{
+	return _Navigation.ReadValueAsByte(token);
+}
+
+CCHAR MenUI::ReadValueAsChar(CBYTE token)
+{
+	return _Navigation.ReadValueAsChar(token);
+}
+
+CWCHAR MenUI::ReadValueAsWChar(CBYTE token)
+{
+	return _Navigation.ReadValueAsWChar(token);
+}
+
+CWORD MenUI::ReadValueAsWord(CBYTE token)
+{
+	return _Navigation.ReadValueAsWord(token);
+}
+
+CSHORT MenUI::ReadValueAsShort(CBYTE token)
+{
+	return _Navigation.ReadValueAsShort(token);
+}
+
+CDWORD MenUI::ReadValueAsDWord(CBYTE token)
+{
+	return _Navigation.ReadValueAsDWord(token);
+}
+
+CLONG MenUI::ReadValueAsLong(CBYTE token)
+{
+	return _Navigation.ReadValueAsLong(token);
+}
+
+PCBYTE MenUI::ReadValueAsBinary(CBYTE token)
+{
+	return _Navigation.ReadValueAsBinary(token);
+}
+
+PCCHAR MenUI::ReadValueAsString(CBYTE token)
+{
+	return _Navigation.ReadValueAsString(token);
 }
 
 

@@ -77,6 +77,8 @@ VOID UiElement::Return(CUIACTIONSTATE state) { }
 
 VOID UiElement::Select(CUIACTIONSTATE state) { }
 
+VOID UiElement::Value(CBYTE token) { }
+
 #pragma endregion
 
 #endif	// #ifndef NO_ITTYBITTY_MENUI

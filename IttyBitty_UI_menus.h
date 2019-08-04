@@ -218,6 +218,10 @@ namespace IttyBitty
 		VOID Select(CUIACTIONSTATE = CLICK)
 		{
 		}
+		
+		VOID Value(CBYTE token)
+		{
+		}
 
 
 		// [IUiElement] IMPLEMENTATION

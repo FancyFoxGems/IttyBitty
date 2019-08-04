@@ -287,6 +287,8 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
+		VIRTUAL VOID Value(CBYTE);
+
 
 	protected:
 

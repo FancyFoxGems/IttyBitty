@@ -91,6 +91,21 @@ namespace IttyBitty
 #pragma endregion
 
 
+#pragma region ENUMS
+
+	ENUM AllowedCharFlags : BYTE
+	{
+		ALLOWED_CHARS_ALL		= 0x0,
+		ALLOWED_CHARS_NUMERIC	= 0x1,
+		ALLOWED_CHARS_UPPER		= 0x2,
+		ALLOWED_CHARS_LOWER		= 0x4
+	};
+
+	DECLARE_ENUM_AS_FLAGS(AllowedCharFlags, ALLOWEDCHARFLAGS);
+
+#pragma endregion
+
+
 #pragma region [IUiField] DEFINITION
 
 	template DEFAULT_T_CLAUSE
