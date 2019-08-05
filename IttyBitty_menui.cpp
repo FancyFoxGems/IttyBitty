@@ -89,7 +89,7 @@ VOID MenUI::Select(CUIACTIONSTATE state)
 {
 }
 
-VOID MenUI::Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController)
+VOID MenUI::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
 {
 }
 
@@ -124,26 +124,6 @@ VOID MenUI::RemoveInputSource(CBYTE inputSourceIdx)
 VOID MenUI::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 {
 	_Navigation.RemoveInputSource(inputSource);
-}
-
-CBYTE MenUI::ValueEntryCount() const
-{
-	return _Navigation.ValueEntryCount();
-}
-
-VOID MenUI::RemoveValueEntry(CBYTE token)
-{
-	_Navigation.RemoveValueEntry(token);
-}
-
-VOID MenUI::ClearValueEntriesOlderThan(CDWORD expirationMs)
-{
-	_Navigation.ClearValueEntriesOlderThan(expirationMs);
-}
-
-VOID MenUI::ClearValueEntries()
-{
-	_Navigation.ClearValueEntries();
 }
 
 CBOOL MenUI::IsShiftOn() const
@@ -193,56 +173,6 @@ VOID MenUI::FireAction(CUIACTION action, CUIACTIONSTATE state)
 VOID MenUI::SendValue(PCCHAR buffer)
 {
 	_Navigation.SendValue(buffer);
-}
-
-CBOOL MenUI::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS flags)
-{
-	return _Navigation.ReadValueAsBool(token, flags);
-}
-
-CBYTE MenUI::ReadValueAsByte(CBYTE token)
-{
-	return _Navigation.ReadValueAsByte(token);
-}
-
-CCHAR MenUI::ReadValueAsChar(CBYTE token)
-{
-	return _Navigation.ReadValueAsChar(token);
-}
-
-CWCHAR MenUI::ReadValueAsWChar(CBYTE token)
-{
-	return _Navigation.ReadValueAsWChar(token);
-}
-
-CWORD MenUI::ReadValueAsWord(CBYTE token)
-{
-	return _Navigation.ReadValueAsWord(token);
-}
-
-CSHORT MenUI::ReadValueAsShort(CBYTE token)
-{
-	return _Navigation.ReadValueAsShort(token);
-}
-
-CDWORD MenUI::ReadValueAsDWord(CBYTE token)
-{
-	return _Navigation.ReadValueAsDWord(token);
-}
-
-CLONG MenUI::ReadValueAsLong(CBYTE token)
-{
-	return _Navigation.ReadValueAsLong(token);
-}
-
-PCBYTE MenUI::ReadValueAsBinary(CBYTE token)
-{
-	return _Navigation.ReadValueAsBinary(token);
-}
-
-PCCHAR MenUI::ReadValueAsString(CBYTE token)
-{
-	return _Navigation.ReadValueAsString(token);
 }
 
 

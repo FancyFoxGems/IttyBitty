@@ -89,7 +89,7 @@ namespace IttyBitty
 		VOID Return(CUIACTIONSTATE = CLICK);
 		VOID Select(CUIACTIONSTATE = CLICK);
 
-		VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER);
+		VOID Value(CBYTE, RIUIINPUTVALUERESOLVER);
 
 
 		// [IUiNavigationController] IMPLEMENTATION
@@ -104,12 +104,6 @@ namespace IttyBitty
 		VIRTUAL VOID RemoveInputSource(CBYTE);
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
 
-		VIRTUAL CBYTE ValueEntryCount() const;
-
-		VIRTUAL VOID RemoveValueEntry(CBYTE);
-		VIRTUAL VOID ClearValueEntriesOlderThan(CDWORD);
-		VIRTUAL VOID ClearValueEntries();
-
 		VIRTUAL CBOOL IsShiftOn() const;
 		VIRTUAL VOID ToggleShift();
 		VIRTUAL VOID ShiftOn();
@@ -122,17 +116,6 @@ namespace IttyBitty
 
 		VIRTUAL VOID FireAction(CUIACTION, CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID SendValue(PCCHAR);
-
-		VIRTUAL CBOOL ReadValueAsBool(CBYTE, CUIBOOLVALUEFLAGS = BOOL_VALUE_T_F);
-		VIRTUAL CBYTE ReadValueAsByte(CBYTE);
-		VIRTUAL CCHAR ReadValueAsChar(CBYTE);
-		VIRTUAL CWCHAR ReadValueAsWChar(CBYTE);
-		VIRTUAL CWORD ReadValueAsWord(CBYTE);
-		VIRTUAL CSHORT ReadValueAsShort(CBYTE);
-		VIRTUAL CDWORD ReadValueAsDWord(CBYTE);
-		VIRTUAL CLONG ReadValueAsLong(CBYTE);
-		VIRTUAL PCBYTE ReadValueAsBinary(CBYTE);
-		VIRTUAL PCCHAR ReadValueAsString(CBYTE);
 
 
 		// [IUiDisplayController] IMPLEMENTATION

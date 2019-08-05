@@ -34,8 +34,8 @@ namespace IttyBitty
 	interface IUiNavigationListener;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationListener, IUINAVIGATIONLISTENER);
 
-	interface IUiInputValueController;
-	TYPEDEF_CLASS_ALIASES(IUiInputValueController, IUIINPUTVALUECONTROLLER);
+	interface IUiInputValueResolver;
+	TYPEDEF_CLASS_ALIASES(IUiInputValueResolver, IUIINPUTVALUERESOLVER);
 
 	interface IUiNavigationController;
 	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
@@ -188,15 +188,15 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [IUiInputValueController] DEFINITION
+#pragma region [IUiInputValueResolver] DEFINITION
 
-	INTERFACE IUiInputValueController
+	INTERFACE IUiInputValueResolver
 	{
 	public:
 
 		// DESTRUCTOR
 
-		VIRTUAL ~IUiInputValueController() { }
+		VIRTUAL ~IUiInputValueResolver() { }
 
 
 		// ACCESSORS/MUTATORS
@@ -227,7 +227,7 @@ namespace IttyBitty
 	protected:
 
 
-		IUiInputValueController() { }
+		IUiInputValueResolver() { }
 	};
 
 #pragma endregion
@@ -253,7 +253,7 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK) = 0;
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK) = 0;
 
-		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER) = 0;
+		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUERESOLVER) = 0;
 
 
 	protected:
@@ -266,7 +266,7 @@ namespace IttyBitty
 
 #pragma region [IUiNavigationController] DEFINITION
 
-	INTERFACE IUiNavigationController : public virtual IUiInputValueController
+	INTERFACE IUiNavigationController
 	{
 	public:
 
@@ -347,7 +347,7 @@ namespace IttyBitty
 
 #pragma region [UiNavigationController] DEFINITION
 
-	class UiNavigationController : public IUiNavigationController, public IUiNavigationListener, public IUiInputSource
+	class UiNavigationController : public IUiNavigationController, public IUiNavigationListener, public IUiInputValueResolver, public IUiInputSource
 	{
 	public:
 
@@ -408,10 +408,10 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
-		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUECONTROLLER);
+		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUERESOLVER);
 
 
-		// [IUiInputValueController] IMPLEMENTATION
+		// [IUiInputValueResolver] IMPLEMENTATION
 
 		VIRTUAL CBYTE ValueEntryCount() const;
 

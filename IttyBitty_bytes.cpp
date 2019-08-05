@@ -85,20 +85,20 @@ ByteField::ByteField()
 }
 
 ByteField::ByteField(RCBYTE byteVal)
-	: _pByte(new byte(byteVal)), _DisposeByte(false) { }
+	: _pByte(new byte(byteVal)), _DisposeByte(FALSE) { }
 
 ByteField::ByteField(RVBYTE byteRef)
-	: _pByte(&byteRef), _DisposeByte(false) { }
+	: _pByte(&byteRef), _DisposeByte(FALSE) { }
 
 ByteField::ByteField(PVBYTE pByte)
-	: _pByte(pByte), _DisposeByte(false) { }
+	: _pByte(pByte), _DisposeByte(FALSE) { }
 
 ByteField::ByteField(RRBYTEFIELD other)
 {
 	this->~ByteField();
 	new (this) ByteField((RVBYTE)other);
 
-	other._DisposeByte = false;
+	other._DisposeByte = FALSE;
 }
 
 ByteField::ByteField(RCBYTEFIELD other)

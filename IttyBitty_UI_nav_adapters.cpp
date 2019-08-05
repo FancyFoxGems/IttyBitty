@@ -15,6 +15,35 @@
 using namespace IttyBitty;
 
 
+#pragma region [SimpleUiInputSource] IMPLEMENTATION
+
+// CONSTRUCTOR
+
+SimpleUiInputSource::SimpleUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CUIACTION action)
+	: UiInputSource(navigation),
+	_Action(action) { }
+
+
+// [IUiInputSource] OVERRIDES
+
+CBOOL SimpleUiInputSource::IsAsynchronous() const
+{
+	return TRUE;
+}
+
+VOID SimpleUiInputSource::Poll() { }
+
+
+// USER METHODS
+
+VOID SimpleUiInputSource::Fire(CUIACTIONSTATE state)
+{
+	_Navigation.FireAction(_Action, state);
+}
+
+#pragma endregion
+
+
 #pragma region [StreamUiInputSource] IMPLEMENTATION
 
 // CONSTRUCTOR
@@ -28,7 +57,7 @@ StreamUiInputSource::StreamUiInputSource(RIUINAVIGATIONCONTROLLER navigation, St
 
 CBOOL StreamUiInputSource::IsAsynchronous() const
 {
-	return false;
+	return FALSE;
 }
 
 VOID StreamUiInputSource::Poll()

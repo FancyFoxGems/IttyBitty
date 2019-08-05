@@ -328,13 +328,13 @@ VOID UiNavigationController::Select(CUIACTIONSTATE state)
 		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
 }
 
-VOID UiNavigationController::Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController)
+VOID UiNavigationController::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
 {
 	_NavListener.Value(token, inputValueController);
 }
 
 
-// [IUiInputValueController] IMPLEMENTATION
+// [IUiInputValueResolver] IMPLEMENTATION
 
 CBYTE UiNavigationController::ValueEntryCount() const
 {

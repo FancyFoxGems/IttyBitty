@@ -219,7 +219,7 @@ namespace IttyBitty
 		{
 		}
 		
-		VOID Value(CBYTE token, RIUIINPUTVALUECONTROLLER inputValueController)
+		VOID Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
 		{
 		}
 
