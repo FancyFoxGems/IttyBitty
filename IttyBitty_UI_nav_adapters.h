@@ -70,8 +70,8 @@ namespace IttyBitty
 	class AnalogPinUiInputSource;
 	TYPEDEF_CLASS_ALIASES(AnalogPinUiInputSource, ANALOGPINUIINPUTSOURCE);
 
-	class PotentiometerUiInputSource;
-	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputSource, POTENTIOMETERUIINPUTSOURCE);
+	class AnalogValueUiInputSource;
+	TYPEDEF_CLASS_ALIASES(AnalogValueUiInputSource, ANALOGVALUEUIINPUTSOURCE);
 
 #endif // #ifdef ARDUINO
 
@@ -239,7 +239,7 @@ namespace IttyBitty
 
 		// CONSTRUCTORS
 
-		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CONST TVar & variable, CONST TVar threshold = TVar(1), 
+		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CONST TVar & variable, UNSIGNED_TYPE(CONST TVar) threshold = TVar(0),
 				CUIACTION action = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR behavior = PRESS_RELEASE | RELATIVE_CHANGE)
 			: StatefulUiInputSource(navigation, action, behavior),
 				_Variable(variable), _Threshold(threshold) { }
@@ -254,7 +254,7 @@ namespace IttyBitty
 
 		VIRTUAL VOID Poll()
 		{
-			if (WITH_BITS(_Behavior, ABSOLUTE_COMPARE))
+			if (CHECK_BITS(_Behavior, ABSOLUTE_COMPARE))
 			{
 				if (_Variable > _Threshold)
 					this->FireUpAction();
@@ -310,7 +310,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SELECT, CUIINPUTSOURCEBEHAVIOR = CLICK_ON_UP);
+		DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CUIACTION = UiAction::SELECT, CUIINPUTSOURCEBEHAVIOR = CLICK_ON_UP);
 
 
 		// [IUiInputSource] OVERRIDES
@@ -328,7 +328,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		SIZE _PinNum = 0;
+		PINNUM _PinNum = 0;
 
 		BIT _PrevPinState = LOW;
 	};
@@ -344,7 +344,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		ButtonUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SELECT, CBOOL = TRUE);
+		ButtonUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CUIACTION = UiAction::SELECT, CBOOL = TRUE);
 	};
 
 #pragma endregion
@@ -358,7 +358,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		LatchUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SHIFT, CBOOL = TRUE);
+		LatchUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CUIACTION = UiAction::SHIFT, CBOOL = TRUE);
 	};
 
 #pragma endregion
@@ -372,7 +372,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		SwitchUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SHIFT, CUIACTION = UiAction::ALT);
+		SwitchUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CUIACTION = UiAction::SHIFT, CUIACTION = UiAction::ALT);
 
 
 		// [StatefulUiInputSource] OVERRIDES
@@ -399,7 +399,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		RotaryUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, PIN_NUMBER, CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN);
+		RotaryUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CPINNUM, CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN);
 
 
 		// [IUiInputSource] OVERRIDES
@@ -417,7 +417,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		SIZE _PinNum2 = 0;
+		PINNUM _PinNum2 = 0;
 	};
 
 #pragma endregion
@@ -431,7 +431,7 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		ButtonEncoderUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, PIN_NUMBER, PIN_NUMBER,
+		ButtonEncoderUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CPINNUM, CPINNUM,
 			CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN, CUIACTION = UiAction::SELECT, CBOOL = TRUE);
 
 
@@ -463,8 +463,8 @@ namespace IttyBitty
 
 		// CONSTRUCTOR
 
-		AnalogPinUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CWORD = 1,
-			CUIACTION = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR = PRESS_RELEASE | RELATIVE_CHANGE);
+		AnalogPinUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CWORD = 0,
+			CUIACTION = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR = PRESS_RELEASE | ABSOLUTE_COMPARE);
 
 
 		// [IUiInputSource] OVERRIDES
@@ -481,7 +481,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		SIZE _PinNum = 0;
+		PINNUM _PinNum = 0;
 		WORD _PinState = 0;
 		DataBoundUiInputSource<WORD> _PinStateInputSource;
 	};
@@ -491,27 +491,23 @@ namespace IttyBitty
 
 #pragma region [PotentiometerUiInputSource] DEFINITION
 
-	CLASS PotentiometerUiInputSource : public AnalogPinUiInputSource
+	CLASS AnalogValueUiInputSource : public BaseUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		PotentiometerUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CWORD = 1, CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN);
+		AnalogValueUiInputSource(RIUINAVIGATIONCONTROLLER, CPINNUM, CWORD = 0);
 
 
-		// [IUiInputSource] OVERRIDES
+		// [IUiInputSource] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const;
 
 		VIRTUAL VOID Poll();
 
 
-		// [StatefulUiInputSource] OVERRIDES
-
-		VIRTUAL VOID FireUpAction();
-		VIRTUAL VOID FireDownAction();
-
-
-		//  [AnalogPinUiInputSource] OVERRIDE
+		// USER METHOD
 
 		VIRTUAL VOID Initialize();
 
@@ -520,7 +516,10 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		DataBoundUiInputSource<WORD> _DownPinStateInputSource;
+		PINNUM _PinNum = 0;
+		WORD _Threshold = 0;
+
+		WORD _PrevPinState = 0;
 	};
 
 #pragma endregion

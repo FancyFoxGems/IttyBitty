@@ -47,22 +47,22 @@ VOID StreamUiInputSource::Poll()
 		switch (c)
 		{
 		case CR:
-			if (WITH_BITS(_Options, EXCLUDE_CARRIAGE_RETURN))
+			if (CHECK_BITS(_Options, EXCLUDE_CARRIAGE_RETURN))
 				continue;
 			break;
 
 		case LF:
-			if (WITH_BITS(_Options, EXCLUDE_LINEFEED))
+			if (CHECK_BITS(_Options, EXCLUDE_LINEFEED))
 				continue;
 			break;
 
 		case SPACE:
-			if (WITH_BITS(_Options, EXCLUDE_SPACE))
+			if (CHECK_BITS(_Options, EXCLUDE_SPACE))
 				continue;
 			break;
 
 		case TAB:
-			if (WITH_BITS(_Options, EXCLUDE_TAB))
+			if (CHECK_BITS(_Options, EXCLUDE_TAB))
 				continue;
 			break;
 		}
@@ -128,16 +128,16 @@ CBOOL StatefulUiInputSource::IsAsynchronous() const
 
 VOID StatefulUiInputSource::FireUpAction()
 {
-	if (WITH_BITS(_Behavior, ACTION_ON_DOWN_ONLY) && !WITH_BITS(_Behavior, PRESS_RELEASE))
+	if (CHECK_BITS(_Behavior, ACTION_ON_DOWN_ONLY) && !CHECK_BITS(_Behavior, PRESS_RELEASE))
 		return;
 
 	UIACTIONSTATE state = UiInputSourceBehaviorToActionState(_Behavior);
 
-	if (WITH_BITS(_Behavior, SIMPLE_DOUBLE_CLICK))
+	if (CHECK_BITS(_Behavior, SIMPLE_DOUBLE_CLICK))
 		state |= DOUBLE_CLICK;
-	else if (WITH_BITS(_Behavior, PRESS_RELEASE))
+	else if (CHECK_BITS(_Behavior, PRESS_RELEASE))
 		state |= PRESSED;
-	else if (WITH_BITS(_Behavior, INVERSE_PRESS_RELEASE))
+	else if (CHECK_BITS(_Behavior, INVERSE_PRESS_RELEASE))
 		state |= RELEASED;
 	else
 		state |= CLICK;
@@ -147,16 +147,16 @@ VOID StatefulUiInputSource::FireUpAction()
 
 VOID StatefulUiInputSource::FireDownAction()
 {
-	if (WITH_BITS(_Behavior, ACTION_ON_UP_ONLY) && !WITH_BITS(_Behavior, PRESS_RELEASE))
+	if (CHECK_BITS(_Behavior, ACTION_ON_UP_ONLY) && !CHECK_BITS(_Behavior, PRESS_RELEASE))
 		return;
 
 	UIACTIONSTATE state = UiInputSourceBehaviorToActionState(_Behavior);
 
-	if (WITH_BITS(_Behavior, SIMPLE_DOUBLE_CLICK))
+	if (CHECK_BITS(_Behavior, SIMPLE_DOUBLE_CLICK))
 		state |= DOUBLE_CLICK;
-	else if (WITH_BITS(_Behavior, PRESS_RELEASE))
+	else if (CHECK_BITS(_Behavior, PRESS_RELEASE))
 		state |= PRESSED;
-	else if (WITH_BITS(_Behavior, INVERSE_PRESS_RELEASE))
+	else if (CHECK_BITS(_Behavior, INVERSE_PRESS_RELEASE))
 		state |= RELEASED;
 	else
 		state |= CLICK;
@@ -174,7 +174,7 @@ VOID StatefulUiInputSource::FireDownAction()
 // CONSTRUCTOR
 
 DigitalPinUiInputSource::DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER navigation, 
-		PIN_NUMBER pinNum, CUIACTION action, CUIINPUTSOURCEBEHAVIOR behavior)
+		CPINNUM pinNum, CUIACTION action, CUIINPUTSOURCEBEHAVIOR behavior)
 	: StatefulUiInputSource(navigation, action, behavior),
 	_PinNum(pinNum) { }
 
@@ -216,7 +216,7 @@ VOID DigitalPinUiInputSource::Initialize()
 
 // CONSTRUCTOR
 
-ButtonUiInputSource::ButtonUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PIN_NUMBER pinNum, CUIACTION action, CBOOL actionOnDown)
+ButtonUiInputSource::ButtonUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum, CUIACTION action, CBOOL actionOnDown)
 	: DigitalPinUiInputSource(navigation, pinNum, action, actionOnDown ? CLICK_ON_DOWN : CLICK_ON_UP) { }
 
 #pragma endregion
@@ -226,7 +226,7 @@ ButtonUiInputSource::ButtonUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PI
 
 // CONSTRUCTOR
 
-LatchUiInputSource::LatchUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PIN_NUMBER pinNum, CUIACTION action, CBOOL pressOnDown)
+LatchUiInputSource::LatchUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum, CUIACTION action, CBOOL pressOnDown)
 	: DigitalPinUiInputSource(navigation, pinNum, action, pressOnDown ? PRESS_RELEASE : INVERSE_PRESS_RELEASE) { }
 
 #pragma endregion
@@ -236,7 +236,7 @@ LatchUiInputSource::LatchUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PIN_
 
 // CONSTRUCTOR
 
-SwitchUiInputSource::SwitchUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PIN_NUMBER pinNum, CUIACTION upAction, CUIACTION downAction)
+SwitchUiInputSource::SwitchUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum, CUIACTION upAction, CUIACTION downAction)
 	: DigitalPinUiInputSource(navigation, pinNum, upAction),
 	_DownAction(downAction) { }
 
@@ -263,7 +263,7 @@ VOID SwitchUiInputSource::FireDownAction()
 // CONSTRUCTOR
 
 RotaryUiInputSource::RotaryUiInputSource(RIUINAVIGATIONCONTROLLER navigation,
-		PIN_NUMBER pinNum1, PIN_NUMBER pinNum2, CUIACTION incrementAction, CUIACTION decrementAction)
+		CPINNUM pinNum1, CPINNUM pinNum2, CUIACTION incrementAction, CUIACTION decrementAction)
 	: SwitchUiInputSource(navigation, pinNum1, incrementAction, decrementAction),
 	_PinNum2(pinNum2) { }
 
@@ -307,8 +307,8 @@ VOID RotaryUiInputSource::FireDownAction()
 
 // CONSTRUCTOR
 
-ButtonEncoderUiInputSource::ButtonEncoderUiInputSource(RIUINAVIGATIONCONTROLLER navigation, PIN_NUMBER pinNum1, PIN_NUMBER pinNum2, 
-		PIN_NUMBER buttonPinNum, CUIACTION incrementAction, CUIACTION decrementAction, CUIACTION buttonAction, CBOOL actionOnDown)
+ButtonEncoderUiInputSource::ButtonEncoderUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum1, CPINNUM pinNum2, 
+		CPINNUM buttonPinNum, CUIACTION incrementAction, CUIACTION decrementAction, CUIACTION buttonAction, CBOOL actionOnDown)
 	: RotaryUiInputSource(navigation, pinNum1, pinNum2, incrementAction, decrementAction),
 	_ButtonInputSource(navigation, buttonPinNum, buttonAction, actionOnDown) { }
 
@@ -340,7 +340,7 @@ VOID ButtonEncoderUiInputSource::Initialize()
 // CONSTRUCTOR
 
 AnalogPinUiInputSource::AnalogPinUiInputSource(RIUINAVIGATIONCONTROLLER navigation,
-	PIN_NUMBER pinNum, CWORD threshold, CUIACTION action, CUIINPUTSOURCEBEHAVIOR behavior)
+		CPINNUM pinNum, CWORD threshold, CUIACTION action, CUIINPUTSOURCEBEHAVIOR behavior)
 	: StatefulUiInputSource(navigation, action, behavior),
 	_PinNum(pinNum), _PinStateInputSource(navigation, _PinState, threshold, action, behavior) { }
 
@@ -367,46 +367,43 @@ VOID AnalogPinUiInputSource::Initialize()
 #pragma endregion
 
 
-#pragma region [PotentiometerUiInputSource] IMPLEMENTATION
+#pragma region [AnalogValueUiInputSource] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-PotentiometerUiInputSource::PotentiometerUiInputSource(RIUINAVIGATIONCONTROLLER navigation,
-		PIN_NUMBER pinNum, CWORD threshold, CUIACTION incrementAction, CUIACTION decrementAction)
-	: AnalogPinUiInputSource(navigation, pinNum, threshold, incrementAction, CLICK_ON_UP | RELATIVE_CHANGE),
-	_DownPinStateInputSource(navigation, _PinState, threshold, decrementAction, CLICK_ON_DOWN | RELATIVE_CHANGE) { }
+AnalogValueUiInputSource::AnalogValueUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum, CWORD threshold)
+	: BaseUiInputSource(navigation),
+	_PinNum(pinNum), _Threshold(threshold) { }
 
 
-// [IUiInputSource] OVERRIDES
+// [IUiInputSource] IMPLEMENTATION
 
-VOID PotentiometerUiInputSource::Poll()
+CBOOL AnalogValueUiInputSource::IsAsynchronous() const
 {
-	AnalogPinUiInputSource::Poll();
-
-	_DownPinStateInputSource.Poll();
+	return FALSE;
 }
 
 
-// [StatefulUiInputSource] OVERRIDES
-
-VOID PotentiometerUiInputSource::FireUpAction()
+VOID AnalogValueUiInputSource::Poll()
 {
-	AnalogPinUiInputSource::FireUpAction();
+	WORD pinState = analogRead(_PinNum);
+
+	if (pinState > _PrevPinState + _Threshold OR pinState < _PrevPinState - _Threshold)
+	{
+		_PrevPinState = pinState;
+
+		PCHAR buffer = new char[UI_INPUT_VALUE_BUFFER_SIZE];
+
+		_Navigation.SendValue(itoa(pinState, buffer, 10));
+	}
 }
 
-VOID PotentiometerUiInputSource::FireDownAction()
+
+// USER METHOD
+
+VOID AnalogValueUiInputSource::Initialize()
 {
-	_DownPinStateInputSource.FireDownAction();
-}
-
-
-//  [AnalogPinUiInputSource] OVERRIDE
-
-VOID PotentiometerUiInputSource::Initialize()
-{
-	AnalogPinUiInputSource::Initialize();
-
-	_DownPinStateInputSource.Initialize();
+	_PrevPinState = analogRead(_PinNum);
 }
 
 #pragma endregion

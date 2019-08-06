@@ -78,56 +78,56 @@ namespace IttyBitty
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
 
-CPINMODE GetPinMode(PIN_NUMBER p)
+CPINMODE GetPinMode(CPINNUM pinNum)
 {
-	return GET_ARDUINO_PIN_MODE(p);
+	return GET_ARDUINO_PIN_MODE(pinNum);
 }
 
-VOID SetPinMode(PIN_NUMBER p, CPINMODE mode)
+VOID SetPinMode(CPINNUM pinNum, CPINMODE mode)
 {
-	SET_ARDUINO_PIN_MODE(p, mode);
+	SET_ARDUINO_PIN_MODE(pinNum, mode);
 }
 
-VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode)
+VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode)
 {
-	SET_ARDUINO_PIN_MODE(p, arduinoMode);
+	SET_ARDUINO_PIN_MODE(pinNum, arduinoMode);
 }
 
-CBIT ReadPin(PIN_NUMBER p)
+CBIT ReadPin(CPINNUM pinNum)
 {
-	return READ_ARDUINO_PIN(p);
+	return READ_ARDUINO_PIN(pinNum);
 }
 
-CBIT (&CheckPinSet)(PIN_NUMBER) = ReadPin;
+CBIT (&CheckPinSet)(CPINNUM) = ReadPin;
 
-CBIT CheckPinUnset(PIN_NUMBER p)
+CBIT CheckPinUnset(CPINNUM pinNum)
 {
-	return CHECK_ARDUINO_PIN_UNSET(p);
+	return CHECK_ARDUINO_PIN_UNSET(pinNum);
 }
 
-VOID WritePin(PIN_NUMBER p, CBIT state)
+VOID WritePin(CPINNUM pinNum, CBIT state)
 {
-	WRITE_ARDUINO_PIN(p, state);
+	WRITE_ARDUINO_PIN(pinNum, state);
 }
 
-VOID SetPin(PIN_NUMBER p)
+VOID SetPin(CPINNUM pinNum)
 {
-	SET_ARDUINO_PIN(p);
+	SET_ARDUINO_PIN(pinNum);
 }
 
-VOID ClearPin(PIN_NUMBER p)
+VOID ClearPin(CPINNUM pinNum)
 {
-	CLEAR_ARDUINO_PIN(p);
+	CLEAR_ARDUINO_PIN(pinNum);
 }
 
-VOID TogglePin(PIN_NUMBER p)
+VOID TogglePin(CPINNUM pinNum)
 {
-	TOGGLE_ARDUINO_PIN(p);
+	TOGGLE_ARDUINO_PIN(pinNum);
 }
 
-VOID ResetPin(PIN_NUMBER p)
+VOID ResetPin(CPINNUM pinNum)
 {
-	RESET_ARDUINO_PIN(p);
+	RESET_ARDUINO_PIN(pinNum);
 }
 
 #pragma endregion

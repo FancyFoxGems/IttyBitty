@@ -15,19 +15,19 @@
 using namespace IttyBitty;
 
 
-#pragma region [SerialUiRenderer] IMPLEMENTATION
+#pragma region [StreamUiRenderer] IMPLEMENTATION
 
 // CONSTRUCTORS
 
-SerialUiRenderer::SerialUiRenderer(Stream & serial) : UiRenderer(), _Serial(serial) { }
+StreamUiRenderer::StreamUiRenderer(Stream & serial) : UiRenderer(), _Serial(serial) { }
 
-SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options,
+StreamUiRenderer::StreamUiRenderer(RUIRENDEREROPTIONS options,
 	Stream & serial) : UiRenderer(options), _Serial(serial) { }
 
 
 // [Print] IMPLEMENTATION
 
-SIZE SerialUiRenderer::write(BYTE value)
+SIZE StreamUiRenderer::write(BYTE value)
 {
 	return _Serial.write(value);
 }
@@ -35,13 +35,13 @@ SIZE SerialUiRenderer::write(BYTE value)
 
 // [IUiRenderer] OVERRIDES
 
-CBOOL SerialUiRenderer::Available()
+CBOOL StreamUiRenderer::Available()
 {
 	// TODO: Works without HardwareSerial reference?
 	return TRUE;	/// return _Serial.availableForWrite();
 }
 
-VOID SerialUiRenderer::Flush()
+VOID StreamUiRenderer::Flush()
 {
 	return _Serial.flush();
 }

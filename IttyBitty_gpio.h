@@ -33,7 +33,8 @@
 
 #pragma region GLOBAL TYPEDEFS
 
-typedef CSIZE PIN_NUMBER;
+typedef SIZE PINNUM, PINNUMBER, PIN_NUM, PIN_NUMBER;
+typedef CSIZE CPINNUM, CPINNUMBER, CPIN_NUM, CPIN_NUMBER;
 
 #pragma endregion
 
@@ -86,8 +87,8 @@ namespace IttyBitty
 	TYPEDEF_SINGLETON_STRUCT_ALIASES(GPIO, GPIO);
 
 
-	#define _PIN_T_CLAUSE_DEF	<PIN_NUMBER PinNum, PPORT PortPtr>
-	#define _PIN_T_CLAUSE		<PIN_NUMBER PinNum = 0x0, PPORT PortPtr = NULL>
+	#define _PIN_T_CLAUSE_DEF	<CPINNUM PinNum, PPORT PortPtr>
+	#define _PIN_T_CLAUSE		<CPINNUM PinNum = 0x0, PPORT PortPtr = NULL>
 	#define _PIN_T_ARGS			<PinNum, PortPtr>
 
 	template _PIN_T_CLAUSE
@@ -192,78 +193,78 @@ namespace IttyBitty
 			return *this;
 		}
 
-		VIRTUAL INLINE BIT operator[](PIN_NUMBER p) const ALWAYS_INLINE
+		VIRTUAL INLINE BIT operator[](CPINNUM pinNum) const ALWAYS_INLINE
 		{
-			return this->ReadPin(p);
+			return this->ReadPin(pinNum);
 		}
 
-		VIRTUAL INLINE BITREF operator[](PIN_NUMBER p) ALWAYS_INLINE
+		VIRTUAL INLINE BITREF operator[](CPINNUM pinNum) ALWAYS_INLINE
 		{
-			return this->PinState(p);
+			return this->PinState(pinNum);
 		}
 
-		VIRTUAL CPINMODE GetPinMode(PIN_NUMBER p) const
+		VIRTUAL CPINMODE GetPinMode(CPINNUM pinNum) const
 		{
-			return (CPINMODE)((BIT)_Registers->DirectionReg[p] OR (BIT)_Registers->OutputReg[p] SHL 0b1);
+			return (CPINMODE)((BIT)_Registers->DirectionReg[pinNum] OR (BIT)_Registers->OutputReg[pinNum] SHL 0b1);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CPINMODE mode = PinMode::OutputLow)
+		VIRTUAL VOID SetPinMode(CPINNUM pinNum, CPINMODE mode = PinMode::OutputLow)
 		{
-			_Registers->DirectionReg[p]	= MASK((BYTE)mode, OUTPUT);
-			_Registers->OutputReg[p]	= MASK((BYTE)mode, INPUT_PULLUP);
+			_Registers->DirectionReg[pinNum]	= MASK((BYTE)mode, OUTPUT);
+			_Registers->OutputReg[pinNum]		= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
-		VIRTUAL VOID SetPinMode(PIN_NUMBER p, CBYTE arduinoMode = OUTPUT)
+		VIRTUAL VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode = OUTPUT)
 		{
-			this->SetPinMode(p, (CPINMODE)arduinoMode);
+			this->SetPinMode(pinNum, (CPINMODE)arduinoMode);
 		}
 
-		VIRTUAL CBIT ReadPin(PIN_NUMBER p) const
+		VIRTUAL CBIT ReadPin(CPINNUM pinNum) const
 		{
-			return _Registers->InputReg[p];
+			return _Registers->InputReg[pinNum];
 		}
 
-		VIRTUAL INLINE CBIT CheckPinSet(PIN_NUMBER p) const ALWAYS_INLINE
+		VIRTUAL INLINE CBIT CheckPinSet(CPINNUM pinNum) const ALWAYS_INLINE
 		{
-			return this->ReadPin(p);
+			return this->ReadPin(pinNum);
 		}
 
-		VIRTUAL INLINE CBIT CheckPinUnset(PIN_NUMBER p) const ALWAYS_INLINE
+		VIRTUAL INLINE CBIT CheckPinUnset(CPINNUM pinNum) const ALWAYS_INLINE
 		{
-			return NOT this->ReadPin(p);
+			return NOT this->ReadPin(pinNum);
 		}
 
-		VIRTUAL BITREF PinState(PIN_NUMBER p)
+		VIRTUAL BITREF PinState(CPINNUM pinNum)
 		{
-			return _Registers->OutputReg[p];
+			return _Registers->OutputReg[pinNum];
 		}
 
-		VIRTUAL VOID WritePin(PIN_NUMBER p, CBIT state = HIGH)
+		VIRTUAL VOID WritePin(CPINNUM pinNum, CBIT state = HIGH)
 		{
-			_Registers->OutputReg[p] = state;
+			_Registers->OutputReg[pinNum] = state;
 		}
 
-		VIRTUAL INLINE VOID SetPin(PIN_NUMBER p) ALWAYS_INLINE
+		VIRTUAL INLINE VOID SetPin(CPINNUM pinNum) ALWAYS_INLINE
 		{
-			this->WritePin(p, HIGH);
+			this->WritePin(pinNum, HIGH);
 		}
 
-		VIRTUAL INLINE VOID ClearPin(PIN_NUMBER p) ALWAYS_INLINE
+		VIRTUAL INLINE VOID ClearPin(CPINNUM pinNum) ALWAYS_INLINE
 		{
-			this->WritePin(p, LOW);
+			this->WritePin(pinNum, LOW);
 		}
 
-		VIRTUAL VOID TogglePin(PIN_NUMBER p)
+		VIRTUAL VOID TogglePin(CPINNUM pinNum)
 		{
-			_Registers->InputReg[p] = !_Registers->InputReg[p];	// TODO: Test - should always set to 1?  If so, reset?
+			_Registers->InputReg[pinNum] = !_Registers->InputReg[pinNum];	// TODO: Test - should always set to 1?  If so, reset?
 		}
 
-		VIRTUAL VOID ResetPin(PIN_NUMBER p)
+		VIRTUAL VOID ResetPin(CPINNUM pinNum)
 		{
-			_Registers->OutputReg[p]	= 1;
-			_Registers->DirectionReg[p]	= 1;
-			_Registers->OutputReg[p]	= 0;
-			_Registers->DirectionReg[p]	= 0;
+			_Registers->OutputReg[pinNum]		= 1;
+			_Registers->DirectionReg[pinNum]	= 1;
+			_Registers->OutputReg[pinNum]		= 0;
+			_Registers->DirectionReg[pinNum]	= 0;
 		}
 
 

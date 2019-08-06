@@ -391,10 +391,10 @@ CBOOL UiNavigationController::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS fla
 	if (!charValue)
 		return FALSE;
 
-	if (WITH_BITS(flags, BOOL_VALUE_NONEMPTY))
+	if (CHECK_BITS(flags, BOOL_VALUE_NONEMPTY))
 		return TRUE;
 
-	if (WITH_BITS(flags, BOOL_VALUE_0_1))
+	if (CHECK_BITS(flags, BOOL_VALUE_0_1))
 	{
 		if (charValue == '0')
 			return FALSE;
@@ -402,7 +402,7 @@ CBOOL UiNavigationController::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS fla
 			return TRUE;
 	}
 
-	if (WITH_BITS(flags, BOOL_VALUE_T_F))
+	if (CHECK_BITS(flags, BOOL_VALUE_T_F))
 	{
 		if (charValue == 'f' || charValue == 'F')
 			return FALSE;
@@ -410,7 +410,7 @@ CBOOL UiNavigationController::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS fla
 			return TRUE;
 	}
 
-	if (WITH_BITS(flags, BOOL_VALUE_Y_N))
+	if (CHECK_BITS(flags, BOOL_VALUE_Y_N))
 	{
 		if (charValue == 'n' || charValue == 'N')
 			return FALSE;
@@ -702,7 +702,7 @@ CUIACTIONSTATE UiNavigationController::UpdateState(CUIACTIONTYPE actionType, CUI
 
 CUIACTIONSTATE UiNavigationController::ApplyShiftAltFlags(CUIACTIONSTATE state)
 {
-	return static_cast<CUIACTIONSTATE>(WITH_BITS(state, (_ShiftOn ? SHIFT_ON : 0x0) OR(_AltOn ? ALT_ON : 0x0)));
+	return static_cast<CUIACTIONSTATE>(WITH_BITS(state, (_ShiftOn ? SHIFT_ON : 0x0) OR (_AltOn ? ALT_ON : 0x0)));
 }
 
 CBYTE UiNavigationController::FindValueEntry(CBYTE token, PPVALUEENTRY resultPtr)

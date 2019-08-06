@@ -189,6 +189,7 @@
 #define BITSCOPYFROM(ref, mask, from_ref)		((ref) = BITSWITHOUT(ref, mask) | MASK(from_ref, mask))
 #define COPY_BITS_FROM(ref, mask, from_ref)		BITSCOPYFROM(ref, mask, from_ref)
 
+
 // CORRESPONDING EXPANSION MACROS...
 
 #define BITSCHKP(ref_mask_pair)					BITSCHK(ref_mask_pair)
@@ -484,6 +485,9 @@
 #define SET_BYTE(ref, byte_offset)						SET_BITS(ref, BYTE_MASK(byte_offset))
 
 #define CLEAR_BYTE(ref, byte_offset)					CLEAR_BITS(ref, BYTE_MASK(byte_offset))
+
+#define BYTE_RANGE(ref, bit_offset, bit_size)			ref SHL (BIT_SIZE(BYTE) - bit_size - bit_offset)	SHR bit_offset
+#define GET_BITS_FROM_BYTE(ref, bit_offset, bit_size)	BYTE_RANGE(ref, bit_offset, bit_size)
 
 #define COPY_BYTE_FROM(ref, byte_offset, from_ref)		COPY_BITS_FROM(ref, BYTE_MASK(byte_offset), from_ref)
 

@@ -391,7 +391,7 @@ namespace IttyBitty
 		}
 
 
-		//  [Param] OVERRIDES
+		// [Param] OVERRIDES
 
 		CSIZE ByteWidth() const override
 		{

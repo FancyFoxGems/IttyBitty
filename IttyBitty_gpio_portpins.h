@@ -33,7 +33,7 @@
 
 #define PIN_OUT_SET(port_letter, pin_number)		SET_BIT(PORT##port_letter, pin_number)
 #define PIN_OUT_CLEAR(port_letter, pin_number)		CLEAR_BIT(PORT##port_letter, pin_number)
-#define PIN_OUT_TOGGLE(port_letter, pin_number)		TOGGLE_BIT(PIN##port_letter, pin_number)	// TODO: Same?  Set?  Reset?
+#define PIN_OUT_TOGGLE(port_letter, pin_number)		TOGGLE_BIT(PIN##port_letter, pin_number)
 
 #define PIN_RESET(port_letter, pin_number)		\
 	SET_PIN(PORT##port_letter, pin_number);		\

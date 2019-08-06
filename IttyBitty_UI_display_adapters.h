@@ -27,8 +27,8 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class SerialUiRenderer;
-	TYPEDEF_CLASS_ALIASES(SerialUiRenderer, SERIALUIRENDERER);
+	class StreamUiRenderer;
+	TYPEDEF_CLASS_ALIASES(StreamUiRenderer, STREAMUIRENDERER);
 
 
 #ifndef NO_ITTYBITTY_LCD
@@ -48,16 +48,16 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [SerialUiRenderer] DEFINITION
+#pragma region [StreamUiRenderer] DEFINITION
 
-	CLASS SerialUiRenderer : public UiRenderer
+	CLASS StreamUiRenderer : public UiRenderer
 	{
 	public:
 
 		// CONSTRUCTORS
 
-		SerialUiRenderer(Stream & = SERIAL_PORT_MONITOR);
-		SerialUiRenderer(RUIRENDEREROPTIONS, Stream & = SERIAL_PORT_MONITOR);
+		StreamUiRenderer(Stream & = SERIAL_PORT_MONITOR);
+		StreamUiRenderer(RUIRENDEREROPTIONS, Stream & = SERIAL_PORT_MONITOR);
 
 
 		// [Print] IMPLEMENTATION

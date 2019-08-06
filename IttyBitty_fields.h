@@ -456,7 +456,7 @@ namespace IttyBitty
 		}
 
 
-		//  [Field] OVERRIDES
+		// [Field] OVERRIDES
 
 		CSIZE ByteWidth() const override
 		{

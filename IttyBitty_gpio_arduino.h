@@ -98,20 +98,20 @@ namespace IttyBitty
 
 #pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
 
-IttyBitty::CPINMODE GetPinMode(PIN_NUMBER);
-VOID SetPinMode(PIN_NUMBER, IttyBitty::CPINMODE = IttyBitty::PinMode::OutputLow);
-VOID SetPinMode(PIN_NUMBER, CBYTE = OUTPUT);
+IttyBitty::CPINMODE GetPinMode(CPINNUM);
+VOID SetPinMode(CPINNUM, IttyBitty::CPINMODE = IttyBitty::PinMode::OutputLow);
+VOID SetPinMode(CPINNUM, CBYTE = OUTPUT);
 
-CBIT ReadPin(PIN_NUMBER);
-EXTERN CBIT (&CheckPinSet)(PIN_NUMBER);
-CBIT CheckPinUnset(PIN_NUMBER);
+CBIT ReadPin(CPINNUM);
+EXTERN CBIT (&CheckPinSet)(CPINNUM);
+CBIT CheckPinUnset(CPINNUM);
 
-VOID WritePin(PIN_NUMBER, CBIT = HIGH);
-VOID SetPin(PIN_NUMBER);
-VOID ClearPin(PIN_NUMBER);
-VOID TogglePin(PIN_NUMBER);
+VOID WritePin(CPINNUM, CBIT = HIGH);
+VOID SetPin(CPINNUM);
+VOID ClearPin(CPINNUM);
+VOID TogglePin(CPINNUM);
 
-VOID ResetPin(PIN_NUMBER);
+VOID ResetPin(CPINNUM);
 
 #pragma endregion
 
@@ -129,7 +129,7 @@ VOID ResetPin(PIN_NUMBER);
 #define WRITE_ARDUINO_PIN(arduino_pin, state)	(state ? SET_ARDUINO_PIN(arduino_pin) : CLEAR_ARDUINO_PIN(arduino_pin))
 #define SET_ARDUINO_PIN(arduino_pin)			SET_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 #define CLEAR_ARDUINO_PIN(arduino_pin)			CLEAR_BITS(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
-#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])	// TODO: Same?  Set?  Reset?
+#define TOGGLE_ARDUINO_PIN(arduino_pin)			TOGGLE_BITS(ARDUINO_PIN_IN_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin])
 
 #define RESET_ARDUINO_PIN(arduino_pin)  \
 	SET_BIT(ARDUINO_PIN_OUT_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\

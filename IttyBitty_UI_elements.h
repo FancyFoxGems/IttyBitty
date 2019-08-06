@@ -108,9 +108,8 @@ namespace IttyBitty
 
 #pragma region [IUiContainerElement] DEFINITION
 
-	// TODO: Inherit from IUiElement
 	template UI_CONTAINER_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiContainerElement //: public IUiElement
+	INTERFACE IUiContainerElement : public IUiElement
 	{
 	public:
 
@@ -208,7 +207,7 @@ namespace IttyBitty
 #pragma region [IUiChildElement] DEFINITION
 
 	template UI_CHILD_ELEMENT_T_CLAUSE_DEF
-	INTERFACE IUiChildElement : public virtual IUiElement
+	INTERFACE IUiChildElement : public IUiElement
 	{
 	public:
 
@@ -219,8 +218,8 @@ namespace IttyBitty
 
 		// ACCESSORS
 
-		//VIRTUAL TParent * Parent() const = 0;
-		//VIRTUAL VOID SetParent(TParent *) = 0;
+		VIRTUAL TParent * Parent() const = 0;
+		VIRTUAL VOID SetParent(TParent *) = 0;
 
 
 	protected:
@@ -257,8 +256,7 @@ namespace IttyBitty
 
 #pragma region [UiElement] DEFINITION
 
-	// TODO: Inherit from IUiElement
-	CLASS UiElement : public virtual IUiNavigationListener //: public virtual IUiElement
+	CLASS UiElement : public IUiElement
 	{
 	public:
 
