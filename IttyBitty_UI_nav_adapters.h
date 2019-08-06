@@ -10,7 +10,10 @@
 #define _ITTYBITTY_UI_NAV_ADAPTERS_H
 
 
+#ifdef ARDUINO
 #include "IttyBitty_GPIO.h"
+#endif // #ifdef ARDUINO
+
 #include "IttyBitty_UI_nav.h"
 
 #include "Stream.h"
@@ -25,11 +28,14 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
+	class StreamUiInputSource;
+	TYPEDEF_CLASS_ALIASES(StreamUiInputSource, STREAMUIINPUTSOURCE);
+
 	class SimpleUiInputSource;
 	TYPEDEF_CLASS_ALIASES(SimpleUiInputSource, SIMPLEUIINPUTSOURCE);
 
-	class SerialUiInputSource;
-	TYPEDEF_CLASS_ALIASES(SerialUiInputSource, SERIALUIINPUTSOURCE);
+	class StatefulUiInputSource;
+	TYPEDEF_CLASS_ALIASES(StatefulUiInputSource, STATEFULUIINPUTSOURCE);
 
 	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF	<typename TVar>
 	#define DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE		<typename TVar>
@@ -40,20 +46,26 @@ namespace IttyBitty
 	TEMPLATE_CLASS_USING_ALIASES(CSL(DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE), \
 		CSL(DATA_BOUND_UI_INPUT_LISTENER_T_ARGS), DataBoundUiInputSource, DATABOUNDUIINPUTSOURCE);
 
+
+#ifdef ARDUINO
+
 	class DigitalPinUiInputSource;
 	TYPEDEF_CLASS_ALIASES(DigitalPinUiInputSource, DIGITALPINUIINPUTSOURCE);
-
-	class SwitchUiInputSource;
-	TYPEDEF_CLASS_ALIASES(SwitchUiInputSource, SWITCHUIINPUTSOURCE);
 
 	class ButtonUiInputSource;
 	TYPEDEF_CLASS_ALIASES(ButtonUiInputSource, BUTTONUIINPUTSOURCE);
 
+	class LatchUiInputSource;
+	TYPEDEF_CLASS_ALIASES(LatchUiInputSource, LATCHUIINPUTSOURCE);
+
+	class SwitchUiInputSource;
+	TYPEDEF_CLASS_ALIASES(SwitchUiInputSource, SWITCHUIINPUTSOURCE);
+
 	class RotaryUiInputSource;
 	TYPEDEF_CLASS_ALIASES(RotaryUiInputSource, ROTARYUIINPUTSOURCE);
 
-	class ClickEncoderUiInputSource;
-	TYPEDEF_CLASS_ALIASES(ClickEncoderUiInputSource, CLICKENCODERUIINPUTSOURCE);
+	class ButtonEncoderUiInputSource;
+	TYPEDEF_CLASS_ALIASES(ButtonEncoderUiInputSource, BUTTONENCODERUIINPUTSOURCE);
 
 	class AnalogPinUiInputSource;
 	TYPEDEF_CLASS_ALIASES(AnalogPinUiInputSource, ANALOGPINUIINPUTSOURCE);
@@ -61,32 +73,12 @@ namespace IttyBitty
 	class PotentiometerUiInputSource;
 	TYPEDEF_CLASS_ALIASES(PotentiometerUiInputSource, POTENTIOMETERUIINPUTSOURCE);
 
+#endif // #ifdef ARDUINO
+
 #pragma endregion
 
 
 #pragma region ENUMS
-
-	ENUM UiInputSourceBehavior : BYTE
-	{
-		CLICK_ONLY				= 0x0,
-		PRESS_RELEASE			= 0x1,
-		INVERSE_PRESS_RELEASE	= 0x2,
-
-		RELATIVE_CHANGE			= 0x0,
-		ABSOLUTE_COMPARE		= 0x4,
-
-		WITH_SHIFT				= SHIFT_ON,
-		WITH_ALT				= ALT_ON,
-		WITH_SHIFT_ALT			= WITH_SHIFT | WITH_ALT
-	};
-
-	DECLARE_ENUM_AS_FLAGS(UiInputSourceBehavior, UIINPUTSOURCEBEHAVIOR);
-
-	INLINE CUIACTIONSTATE UiInputSourceBehaviorToActionState(CUIINPUTSOURCEBEHAVIOR behavior)
-	{
-		return static_cast<CUIACTIONSTATE>(HIGH_NYBBLE((CBYTE)behavior));
-	}
-
 
 	ENUM StreamUiInputOptions : BYTE
 	{
@@ -101,58 +93,60 @@ namespace IttyBitty
 
 	DECLARE_ENUM_AS_FLAGS(StreamUiInputOptions, STREAMUIINPUTOPTIONS);
 
-#pragma endregion
 
-
-#pragma region [SimpleUiInputSource] DEFINITION
-
-	CLASS SimpleUiInputSource : public UiInputSource
+	ENUM UiInputSourceBehavior : BYTE
 	{
-	public:
+		SIMPLE_CLICK				= 0x00,
+		SIMPLE_DOUBLE_CLICK			= 0x01,
+		PRESS_RELEASE				= 0x02,
 
-		// CONSTRUCTOR
+		ACTION_ON_ANY_CHANGE		= 0x00,
+		ACTION_ON_UP_ONLY			= 0x04,
+		ACTION_ON_DOWN_ONLY			= 0x08,
+		INVERSE_ACTION				= ACTION_ON_DOWN_ONLY,
 
-		SimpleUiInputSource(RIUINAVIGATIONCONTROLLER, CUIACTION);
+		CLICK_ON_ANY_CHANGE			= SIMPLE_CLICK | ACTION_ON_ANY_CHANGE,
+		CLICK_ON_UP					= SIMPLE_CLICK | ACTION_ON_UP_ONLY,
+		CLICK_ON_DOWN				= SIMPLE_CLICK | ACTION_ON_DOWN_ONLY,
+		DOUBLE_CLICK_ON_ANY_CHANGE	= SIMPLE_DOUBLE_CLICK | ACTION_ON_ANY_CHANGE,
+		DOUBLE_CLICK_ON_UP			= SIMPLE_DOUBLE_CLICK | ACTION_ON_UP_ONLY,
+		DOUBLE_CLICK_ON_DOWN		= SIMPLE_DOUBLE_CLICK | ACTION_ON_DOWN_ONLY,
+		INVERSE_PRESS_RELEASE		= INVERSE_ACTION | PRESS_RELEASE,
 
+		RELATIVE_CHANGE				= 0x00,
+		ABSOLUTE_COMPARE			= 0x10,
 
-		// [IUiInputSource] OVERRIDES
-
-		CBOOL IsAsynchronous() const;
-
-		VOID Poll();
-
-
-		// USER METHODS
-
-		VOID Fire(CUIACTIONSTATE = CLICK);
-
-
-	protected:
-
-		// INSTANCE VARIABLES
-
-		UIACTION _Action = UiAction::SELECT;
+		WITH_SHIFT					= SHIFT_ON,
+		WITH_ALT					= ALT_ON,
+		WITH_SHIFT_ALT				= WITH_SHIFT | WITH_ALT,
 	};
+
+	DECLARE_ENUM_AS_FLAGS(UiInputSourceBehavior, UIINPUTSOURCEBEHAVIOR);
+
+	INLINE CUIACTIONSTATE UiInputSourceBehaviorToActionState(CUIINPUTSOURCEBEHAVIOR behavior)
+	{
+		return static_cast<CUIACTIONSTATE>(MASK((CBYTE)behavior, SHIFT_ON | ALT_ON));
+	}
 
 #pragma endregion
 
 
 #pragma region [StreamUiInputSource] DEFINITION
 
-	CLASS StreamUiInputSource : public UiInputSource
+	CLASS StreamUiInputSource : public BaseUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		StreamUiInputSource(RIUINAVIGATIONCONTROLLER navigation, Stream & = SERIAL_PORT_MONITOR, CSTREAMUIINPUTOPTIONS = EXCLUDE_CR_AND_LF);
+		StreamUiInputSource(RIUINAVIGATIONCONTROLLER, Stream & = SERIAL_PORT_MONITOR, CSTREAMUIINPUTOPTIONS = EXCLUDE_CR_AND_LF);
 
 
-		// [IUiInputSource] OVERRIDES
+		// [IUiInputSource] IMPLEMENTATION
 
-		CBOOL IsAsynchronous() const;
+		VIRTUAL CBOOL IsAsynchronous() const;
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
 
 
 	protected:
@@ -170,77 +164,117 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [DataBoundUiInputSource] DEFINITION
+#pragma region [SimpleUiInputSource] DEFINITION
 
-	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
-	CLASS DataBoundUiInputSource : public SimpleUiInputSource
+	CLASS SimpleUiInputSource : public BaseUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CUIACTION action, CONST TVar & variable, 
-				CONST TVar tolerance = TVar(1), CUIINPUTSOURCEBEHAVIOR behavior = CLICK_ONLY)
-			: SimpleUiInputSource(navigation, action), 
-				_Variable(variable), _Tolerance(tolerance), _Behavior(behavior) { }
+		SimpleUiInputSource(RIUINAVIGATIONCONTROLLER, CUIACTION);
+
+
+		// [IUiInputSource] IMPLEMENTATION
+
+		VIRTUAL CBOOL IsAsynchronous() const;
+
+		VIRTUAL VOID Poll();
+
+
+		// USER METHODS
+
+		VOID Fire(CUIACTIONSTATE = CLICK);
+
+
+	protected:
+
+		// INSTANCE VARIABLES
+
+		UIACTION _Action = UiAction::SELECT;
+	};
+
+#pragma endregion
+
+
+#pragma region [StatefulUiInputSource] DEFINITION
+
+	CLASS StatefulUiInputSource : public SimpleUiInputSource
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		StatefulUiInputSource(RIUINAVIGATIONCONTROLLER, CUIACTION = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR = PRESS_RELEASE);
 
 
 		// [IUiInputSource] OVERRIDES
 
-		CBOOL IsAsynchronous() const { return FALSE; }
+		VIRTUAL CBOOL IsAsynchronous() const;
 
-		VOID Poll()
+
+		// USER METHODS
+
+		VIRTUAL VOID FireUpAction();
+		VIRTUAL VOID FireDownAction();
+
+
+	protected:
+
+
+		// INSTANCE VARIABLES
+
+		UIINPUTSOURCEBEHAVIOR _Behavior = SIMPLE_CLICK;
+	};
+
+#pragma endregion
+
+
+#pragma region [DataBoundUiInputSource] DEFINITION
+
+	template DATA_BOUND_UI_INPUT_LISTENER_T_CLAUSE_DEF
+	CLASS DataBoundUiInputSource : public StatefulUiInputSource
+	{
+	public:
+
+		// CONSTRUCTORS
+
+		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CONST TVar & variable, CONST TVar threshold = TVar(1), 
+				CUIACTION action = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR behavior = PRESS_RELEASE | RELATIVE_CHANGE)
+			: SimpleUiInputSource(navigation, action, behavior), 
+				_Variable(variable), _Threshold(threshold) { }
+
+
+		// [IUiInputSource] OVERRIDES
+
+		VIRTUAL CBOOL IsAsynchronous() const
 		{
-			BOOL fireGreaterThanAction = FALSE;
-			BOOL fireLessThanAction = FALSE;
+			return FALSE;
+		}
 
+		VIRTUAL VOID Poll()
+		{
 			if (WITH_BITS(_Behavior, ABSOLUTE_COMPARE))
 			{
-				if (_Variable > _Tolerance)
-					fireGreaterThanAction = TRUE;
-				else if (_Variable < _Tolerance)
-					fireLessThanAction = TRUE;
+				if (_Variable > _Threshold)
+					this->FireUpAction();
+				else if (_Variable < _Threshold)
+					this->FireDownAction();
 			}
 			else
 			{
-				if (_Variable > _PrevValue + _Tolerance)
+				if (_Variable > _PrevValue + _Threshold)
 				{
-					fireGreaterThanAction = TRUE;
-
 					_PrevValue = _Variable;
-				}
-				else if (_Variable < _PrevValue - _Tolerance)
-				{
-					fireLessThanAction = TRUE;
 
+					this->FireUpAction();
+				}
+				else if (_Variable < _PrevValue - _Threshold)
+				{
 					_PrevValue = _Variable;
-				}
-			}
 
-			if (fireGreaterThanAction OR fireLessThanAction)
-			{
-				UIACTIONSTATE state = UiInputSourceBehaviorToActionState(_Behavior);
-
-				if (fireGreaterThanAction)
-				{
-					if (WITH_BITS(_Behavior, PRESS_RELEASE))
-						state |= PRESSED;
-					else if (WITH_BITS(_Behavior, INVERSE_PRESS_RELEASE))
-						state |= RELEASED;
-					else
-						state |= CLICK;
+					this->FireDownAction();
 				}
-				else if (fireLessThanAction)
-				{
-					if (WITH_BITS(_Behavior, PRESS_RELEASE))
-						state |= PRESSED;
-					else if (WITH_BITS(_Behavior, INVERSE_PRESS_RELEASE))
-						state |= RELEASED;
-					else
-						state |= CLICK;
-				}
-
-				this.Fire(state);
 			}
 		}
 
@@ -249,10 +283,8 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		UIINPUTSOURCEBEHAVIOR _Behavior = CLICK_ONLY;
-
 		CONST TVar & _Variable;
-		TVar _Tolerance = TVar(0);
+		TVar _Threshold = TVar(0);
 
 		TVar _PrevValue = 0;
 	};
@@ -260,30 +292,65 @@ namespace IttyBitty
 #pragma endregion
 
 
+#ifdef ARDUINO
+
 #pragma region [DigitalPinUiInputSource] DEFINITION
 
-	CLASS DigitalPinUiInputSource : public SimpleUiInputSource
+	CLASS DigitalPinUiInputSource : public StatefulUiInputSource
 	{
 	public:
 
 		// CONSTRUCTOR
 
-		DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CBYTE, CUIACTION);
+		DigitalPinUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SELECT, CUIINPUTSOURCEBEHAVIOR = CLICK_ON_UP);
 
 
 		// [IUiInputSource] OVERRIDES
 
-		CBOOL IsAsynchronous() const;
+		VIRTUAL CBOOL IsAsynchronous() const;
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
 
+
+		// USER METHOD
+
+		VIRTUAL VOID Initialize();
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		BYTE _PinNum = 0;
-		BOOL _IsAsynchronous = FALSE;
+		SIZE _PinNum = 0;
+
+		BIT _PrevPinState = LOW;
+	};
+
+#pragma endregion
+
+
+#pragma region [ButtonUiInputSource] DEFINITION
+
+	CLASS ButtonUiInputSource : public DigitalPinUiInputSource
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		ButtonUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SELECT, CBOOL = TRUE);
+	};
+
+#pragma endregion
+
+
+#pragma region [LatchUiInputSource] DEFINITION
+
+	CLASS LatchUiInputSource : public DigitalPinUiInputSource
+	{
+	public:
+
+		// CONSTRUCTOR
+
+		LatchUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SHIFT, CBOOL = TRUE);
 	};
 
 #pragma endregion
@@ -295,27 +362,22 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR
 
-	protected:
-
-		// INSTANCE VARIABLES
-	};
-
-#pragma endregion
+		SwitchUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CUIACTION = UiAction::SHIFT, CUIACTION = UiAction::ALT);
 
 
-#pragma region [ButtonUiInputSource] DEFINITION
+		// [StatefulUiInputSource] OVERRIDES
 
-	CLASS ButtonUiInputSource : public SwitchUiInputSource
-	{
-	public:
+		VIRTUAL VOID FireUpAction();
+		VIRTUAL VOID FireDownAction();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		UIACTION _DownAction = UiAction::ALT;
 	};
 
 #pragma endregion
@@ -323,41 +385,63 @@ namespace IttyBitty
 
 #pragma region [RotaryUiInputSource] DEFINITION
 
-	CLASS RotaryUiInputSource : public DigitalPinUiInputSource
+	CLASS RotaryUiInputSource : public SwitchUiInputSource
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		RotaryUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, PIN_NUMBER, CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN);
+
+
 		// [IUiInputSource] OVERRIDES
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
+
+
+		// [StatefulUiInputSource] OVERRIDES
+
+		VIRTUAL VOID FireUpAction();
+		VIRTUAL VOID FireDownAction();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		SIZE _PinNum2 = 0;
 	};
 
 #pragma endregion
 
 
-#pragma region [ClickEncoderUiInputSource] DEFINITION
+#pragma region [ButtonEncoderUiInputSource] DEFINITION
 
-	CLASS ClickEncoderUiInputSource : public RotaryUiInputSource
+	CLASS ButtonEncoderUiInputSource : public RotaryUiInputSource
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		ButtonEncoderUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, PIN_NUMBER, PIN_NUMBER,
+			CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN, CUIACTION = UiAction::SELECT, CBOOL = TRUE);
+
+
 		// [IUiInputSource] OVERRIDES
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
+
+
+		// [DigitalPinUiInputSource] OVERRIDE
+
+		VIRTUAL VOID Initialize();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		BUTTONUIINPUTSOURCE _ButtonInputSource;
 	};
 
 #pragma endregion
@@ -365,18 +449,26 @@ namespace IttyBitty
 
 #pragma region [AnalogPinUiInputSource] DEFINITION
 
-	CLASS AnalogPinUiInputSource : public DigitalPinUiInputSource
+	CLASS AnalogPinUiInputSource : public DataBoundUiInputSource<WORD>
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		AnalogPinUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CWORD = 1,
+			CUIACTION = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR = PRESS_RELEASE | RELATIVE_CHANGE);
+
+
 		// [IUiInputSource] OVERRIDES
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
+
+		SIZE _PinNum = 0;
 	};
 
 #pragma endregion
@@ -388,19 +480,32 @@ namespace IttyBitty
 	{
 	public:
 
+		// CONSTRUCTOR
+
+		PotentiometerUiInputSource(RIUINAVIGATIONCONTROLLER, PIN_NUMBER, CWORD = 1, CUIACTION = UiAction::UP, CUIACTION = UiAction::DOWN);
+
+
 		// [IUiInputSource] OVERRIDES
 
-		VOID Poll();
+		VIRTUAL VOID Poll();
+
+
+		// [StatefulUiInputSource] OVERRIDES
+
+		VIRTUAL VOID FireUpAction();
+		VIRTUAL VOID FireDownAction();
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-
+		UIACTION _DownAction = UiAction::DOWN;
 	};
 
 #pragma endregion
+
+#endif // #ifdef ARDUINO
 
 #pragma endregion
 };

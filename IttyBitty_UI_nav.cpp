@@ -17,18 +17,11 @@ using namespace IttyBitty;
 using namespace IttyBitty::MUI;
 
 
-#pragma region [UiInputSource] IMPLEMENTATION
+#pragma region [BaseUiInputSource] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-UiInputSource::UiInputSource(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
-
-
-// [IUiInputSource] (NON-)IMPLEMENTATION
-
-CBOOL UiInputSource::IsAsynchronous() const { return TRUE; }
-
-VOID UiInputSource::Poll() { }
+BaseUiInputSource::BaseUiInputSource(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
 
 #pragma endregion
 

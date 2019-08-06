@@ -317,25 +317,16 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiInputSource] DEFINITION
+#pragma region [BaseUiInputSource] DEFINITION
 
-	CLASS UiInputSource : public IUiInputSource
+	ABSTRACT_CLASS BaseUiInputSource : public IUiInputSource
 	{
-	public:
+	protected:
 
 		// CONSTRUCTOR
 
-		UiInputSource(RIUINAVIGATIONCONTROLLER);
+		BaseUiInputSource(RIUINAVIGATIONCONTROLLER);
 
-
-		// [IUiInputSource] IMPLEMENTATION
-
-		VIRTUAL CBOOL IsAsynchronous() const;
-
-		VIRTUAL VOID Poll();
-
-
-	protected:
 
 		// INSTANCE VARIABLES
 

@@ -28,8 +28,6 @@ namespace IttyBitty
 	EXTERN CWORD SERIAL_DEFAULT_TIMEOUT_MS;
 #endif
 
-	EXTERN CBYTE DATA_SIZE_MASK;
-
 	// ToBinary() / ToString() BUFFER POINTER
 	EXTERN PBYTE __datum_buffer;
 
