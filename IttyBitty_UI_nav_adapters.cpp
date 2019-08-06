@@ -335,6 +335,38 @@ VOID ButtonEncoderUiInputSource::Initialize()
 #pragma endregion
 
 
+#pragma region [AnalogPinUiInputSource] IMPLEMENTATION
+
+// CONSTRUCTOR
+
+AnalogPinUiInputSource::AnalogPinUiInputSource(RIUINAVIGATIONCONTROLLER navigation,
+	PIN_NUMBER pinNum, CWORD threshold, CUIACTION action, CUIINPUTSOURCEBEHAVIOR behavior)
+	: StatefulUiInputSource(navigation, action, behavior),
+	_PinNum(pinNum), _PinStateInputSource(navigation, _PinState, threshold, action, behavior) { }
+
+
+// [IUiInputSource] OVERRIDES
+
+VOID AnalogPinUiInputSource::Poll()
+{
+	_PinState = analogRead(_PinNum);
+
+	_PinStateInputSource.Poll();
+}
+
+
+// USER METHOD
+
+VOID AnalogPinUiInputSource::Initialize()
+{
+	_PinState = analogRead(_PinNum);
+
+	_PinStateInputSource.Initialize();
+}
+
+#pragma endregion
+
+
 #pragma region [PotentiometerUiInputSource] IMPLEMENTATION
 
 // CONSTRUCTOR
@@ -342,7 +374,40 @@ VOID ButtonEncoderUiInputSource::Initialize()
 PotentiometerUiInputSource::PotentiometerUiInputSource(RIUINAVIGATIONCONTROLLER navigation,
 		PIN_NUMBER pinNum, CWORD threshold, CUIACTION incrementAction, CUIACTION decrementAction)
 	: AnalogPinUiInputSource(navigation, pinNum, threshold, incrementAction, CLICK_ON_UP | RELATIVE_CHANGE),
-		_DownAction(decrementAction) { }
+	_DownPinStateInputSource(navigation, _PinState, threshold, decrementAction, CLICK_ON_DOWN | RELATIVE_CHANGE) { }
+
+
+// [IUiInputSource] OVERRIDES
+
+VOID PotentiometerUiInputSource::Poll()
+{
+	AnalogPinUiInputSource::Poll();
+
+	_DownPinStateInputSource.Poll();
+}
+
+
+// [StatefulUiInputSource] OVERRIDES
+
+VOID PotentiometerUiInputSource::FireUpAction()
+{
+	AnalogPinUiInputSource::FireUpAction();
+}
+
+VOID PotentiometerUiInputSource::FireDownAction()
+{
+	_DownPinStateInputSource.FireDownAction();
+}
+
+
+//  [AnalogPinUiInputSource] OVERRIDE
+
+VOID PotentiometerUiInputSource::Initialize()
+{
+	AnalogPinUiInputSource::Initialize();
+
+	_DownPinStateInputSource.Initialize();
+}
 
 #pragma endregion
 

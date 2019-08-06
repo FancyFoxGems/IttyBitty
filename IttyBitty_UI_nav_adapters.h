@@ -241,7 +241,7 @@ namespace IttyBitty
 
 		DataBoundUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CONST TVar & variable, CONST TVar threshold = TVar(1), 
 				CUIACTION action = UiAction::SHIFT, CUIINPUTSOURCEBEHAVIOR behavior = PRESS_RELEASE | RELATIVE_CHANGE)
-			: SimpleUiInputSource(navigation, action, behavior), 
+			: StatefulUiInputSource(navigation, action, behavior),
 				_Variable(variable), _Threshold(threshold) { }
 
 
@@ -277,6 +277,14 @@ namespace IttyBitty
 				}
 			}
 		}
+
+
+		// USER METHOD
+
+		VIRTUAL VOID Initialize()
+		{
+			_PrevValue = _Variable;
+}
 
 
 	protected:
@@ -449,7 +457,7 @@ namespace IttyBitty
 
 #pragma region [AnalogPinUiInputSource] DEFINITION
 
-	CLASS AnalogPinUiInputSource : public DataBoundUiInputSource<WORD>
+	CLASS AnalogPinUiInputSource : public StatefulUiInputSource
 	{
 	public:
 
@@ -464,11 +472,18 @@ namespace IttyBitty
 		VIRTUAL VOID Poll();
 
 
+		// USER METHOD
+
+		VIRTUAL VOID Initialize();
+
+
 	protected:
 
 		// INSTANCE VARIABLES
 
 		SIZE _PinNum = 0;
+		WORD _PinState = 0;
+		DataBoundUiInputSource<WORD> _PinStateInputSource;
 	};
 
 #pragma endregion
@@ -496,11 +511,16 @@ namespace IttyBitty
 		VIRTUAL VOID FireDownAction();
 
 
+		//  [AnalogPinUiInputSource] OVERRIDE
+
+		VIRTUAL VOID Initialize();
+
+
 	protected:
 
 		// INSTANCE VARIABLES
 
-		UIACTION _DownAction = UiAction::DOWN;
+		DataBoundUiInputSource<WORD> _DownPinStateInputSource;
 	};
 
 #pragma endregion
