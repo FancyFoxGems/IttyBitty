@@ -41,8 +41,8 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(IUiNavigationController, IUINAVIGATIONCONTROLLER);
 
 
-	class UiInputSource;
-	TYPEDEF_CLASS_ALIASES(UiInputSource, UIINPUTSOURCE);
+	class UiInputSourceBase;
+	TYPEDEF_CLASS_ALIASES(UiInputSourceBase, UIINPUTSOURCEBASE);
 
 	class UiNavigationController;
 	TYPEDEF_CLASS_ALIASES(UiNavigationController, UINAVIGATIONCONTROLLER);
@@ -317,15 +317,15 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [BaseUiInputSource] DEFINITION
+#pragma region [UiInputSourceBase] DEFINITION
 
-	ABSTRACT_CLASS BaseUiInputSource : public IUiInputSource
+	ABSTRACT_CLASS UiInputSourceBase : public IUiInputSource
 	{
 	protected:
 
 		// CONSTRUCTOR
 
-		BaseUiInputSource(RIUINAVIGATIONCONTROLLER);
+		UiInputSourceBase(RIUINAVIGATIONCONTROLLER);
 
 
 		// INSTANCE VARIABLES

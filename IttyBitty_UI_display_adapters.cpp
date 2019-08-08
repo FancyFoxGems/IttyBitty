@@ -15,19 +15,22 @@
 using namespace IttyBitty;
 
 
-#pragma region [StreamUiRenderer] IMPLEMENTATION
+#pragma region [SerialUiRenderer] IMPLEMENTATION
 
 // CONSTRUCTORS
 
-StreamUiRenderer::StreamUiRenderer(Stream & serial) : UiRenderer(), _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial, CUILISTITEMNUMBERINGFORMAT numberingFormat)
+	: UiRendererBase(), 
+	_Serial(serial), _NumberingFormat(numberingFormat) { }
 
-StreamUiRenderer::StreamUiRenderer(RUIRENDEREROPTIONS options,
-	Stream & serial) : UiRenderer(options), _Serial(serial) { }
+SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options, HardwareSerial & serial, CUILISTITEMNUMBERINGFORMAT numberingFormat)
+	: UiRendererBase(options), 
+	_Serial(serial), _NumberingFormat(numberingFormat) { }
 
 
-// [Print] IMPLEMENTATION
+// [Print] OVERRIDE
 
-SIZE StreamUiRenderer::write(BYTE value)
+SIZE SerialUiRenderer::write(BYTE value)
 {
 	return _Serial.write(value);
 }
@@ -35,15 +38,63 @@ SIZE StreamUiRenderer::write(BYTE value)
 
 // [IUiRenderer] OVERRIDES
 
-CBOOL StreamUiRenderer::Available()
+CBOOL SerialUiRenderer::Available()
 {
-	// TODO: Works without HardwareSerial reference?
-	return TRUE;	/// return _Serial.availableForWrite();
+	return _Serial.availableForWrite();
 }
 
-VOID StreamUiRenderer::Flush()
+VOID SerialUiRenderer::Flush()
 {
 	return _Serial.flush();
+}
+
+VOID SerialUiRenderer::BeginListItem(BYTE itemNumber)
+{
+	char afterChar = NULL_CHARACTER;
+
+	switch (_NumberingFormat)
+	{
+	case UiListItemNumberingFormat::NONE:
+		break;
+
+	case UiListItemNumberingFormat::NUMBER_DASH:
+		afterChar = '-';
+		break;
+
+	case UiListItemNumberingFormat::NUMBER_DOT:
+		afterChar = '.';
+		break;
+
+	case UiListItemNumberingFormat::PAREN_NUMBER_PAREN:
+		_Serial.print('(');
+	case UiListItemNumberingFormat::NUMBER_PAREN:
+		afterChar = ')';
+		break;
+
+	case UiListItemNumberingFormat::BRACKETED_NUMBER:
+		_Serial.print('[');
+		afterChar = ']';
+		break;
+	}
+
+	_Serial.print(itemNumber);
+
+	if (afterChar)
+		_Serial.print(afterChar);
+
+	_Serial.print(' ');
+}
+
+VOID SerialUiRenderer::EndListItem(CHAR inputTag)
+{
+	if (inputTag)
+	{
+		_Serial.print(" [");
+		_Serial.print(inputTag);
+		_Serial.print(']');
+	}
+
+	_Serial.println();
 }
 
 #pragma endregion

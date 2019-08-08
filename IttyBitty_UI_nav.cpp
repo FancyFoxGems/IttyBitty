@@ -17,11 +17,11 @@ using namespace IttyBitty;
 using namespace IttyBitty::MUI;
 
 
-#pragma region [BaseUiInputSource] IMPLEMENTATION
+#pragma region [UiInputSourceBase] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-BaseUiInputSource::BaseUiInputSource(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
+UiInputSourceBase::UiInputSourceBase(RIUINAVIGATIONCONTROLLER navigation) : _Navigation(navigation) { }
 
 #pragma endregion
 

@@ -133,7 +133,7 @@ namespace IttyBitty
 
 #pragma region [StreamUiInputSource] DEFINITION
 
-	CLASS StreamUiInputSource : public BaseUiInputSource
+	CLASS StreamUiInputSource : public UiInputSourceBase
 	{
 	public:
 
@@ -166,7 +166,7 @@ namespace IttyBitty
 
 #pragma region [SimpleUiInputSource] DEFINITION
 
-	CLASS SimpleUiInputSource : public BaseUiInputSource
+	CLASS SimpleUiInputSource : public UiInputSourceBase
 	{
 	public:
 
@@ -491,7 +491,7 @@ namespace IttyBitty
 
 #pragma region [PotentiometerUiInputSource] DEFINITION
 
-	CLASS AnalogValueUiInputSource : public BaseUiInputSource
+	CLASS AnalogValueUiInputSource : public UiInputSourceBase
 	{
 	public:
 

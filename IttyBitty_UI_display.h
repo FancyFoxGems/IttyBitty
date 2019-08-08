@@ -35,8 +35,8 @@ namespace IttyBitty
 	TYPEDEF_CLASS_ALIASES(IUiDisplayController, IUIDISPLAYCONTROLLER);
 
 
-	class UiRenderer;
-	TYPEDEF_CLASS_ALIASES(UiRenderer, UIRENDERER);
+	class UiRendererBase;
+	TYPEDEF_CLASS_ALIASES(UiRendererBase, UIRENDERERBASE);
 
 	class UiDisplayController;
 	TYPEDEF_CLASS_ALIASES(UiDisplayController, UIDISPLAYCONTROLLER);
@@ -101,6 +101,9 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE) = 0;
 		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE) = 0;
 
+		VIRTUAL VOID BeginListItem(BYTE) = 0;
+		VIRTUAL VOID EndListItem(CHAR = NULL_CHARACTER) = 0;
+
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) = 0;
 		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) = 0;
@@ -148,21 +151,15 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [UiRenderer] DEFINITION
+#pragma region [UiRendererBase] DEFINITION
 
-	CLASS UiRenderer : public IUiRenderer
+	ABSTRACT_CLASS UiRendererBase : public IUiRenderer
 	{
 	public:
 
 		// PUBLIC [UiOptions] MEMBER
 
 		RCUIRENDEREROPTIONS const Options;
-
-
-		// CONSTRUCTORS
-
-		UiRenderer();
-		UiRenderer(RCUIRENDEREROPTIONS);
 
 
 		// [IUiRenderer] IMPLEMENTATION
@@ -208,11 +205,22 @@ namespace IttyBitty
 		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
 		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
 
+		VIRTUAL VOID BeginListItem(BYTE);
+		VIRTUAL VOID EndListItem(CHAR = NULL_CHARACTER);
+
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);
 		VIRTUAL VOID DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS);
 		VIRTUAL VOID DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL = FALSE);
 	#endif
+
+
+	protected:
+
+		// CONSTRUCTOR
+
+		UiRendererBase();
+		UiRendererBase(RCUIRENDEREROPTIONS);
 	};
 
 #pragma endregion
@@ -301,6 +309,9 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE);
 		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE);
+
+		VIRTUAL VOID BeginListItem(BYTE);
+		VIRTUAL VOID EndListItem(CHAR = NULL_CHARACTER);
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 		VIRTUAL VOID DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS);

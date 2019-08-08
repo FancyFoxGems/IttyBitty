@@ -33,13 +33,13 @@ STATIC TResult __ResultFromCallResults(TResult * results,
 #pragma endregion
 
 
-#pragma region [UiRenderer] IMPLEMENTATION
+#pragma region [UiRendererBase] IMPLEMENTATION
 
 // CONSTRUCTORS
 
-UiRenderer::UiRenderer() : UiRenderer(MUI::DefaultRendererOptions()) { }
+UiRendererBase::UiRendererBase() : UiRendererBase(MUI::DefaultRendererOptions()) { }
 
-UiRenderer::UiRenderer(RCUIRENDEREROPTIONS options) : Options(options)
+UiRendererBase::UiRendererBase(RCUIRENDEREROPTIONS options) : Options(options)
 {
 	if (Options.WrapLines)
 		this->SetLineWrapEnabled();
@@ -48,66 +48,66 @@ UiRenderer::UiRenderer(RCUIRENDEREROPTIONS options) : Options(options)
 
 // [IUiRenderer] (NON-)IMPLEMENTATION
 
-CBYTE UiRenderer::Cols() const { return MAX_BYTE; }
+CBYTE UiRendererBase::Cols() const { return MAX_BYTE; }
 
-CBYTE UiRenderer::Rows() const { return MAX_BYTE; }
+CBYTE UiRendererBase::Rows() const { return MAX_BYTE; }
 
-CBYTE UiRenderer::CursorCol() const { return MAX_BYTE; }
+CBYTE UiRendererBase::CursorCol() const { return MAX_BYTE; }
 
-CBYTE UiRenderer::CursorRow() const { return MAX_BYTE; }
+CBYTE UiRendererBase::CursorRow() const { return MAX_BYTE; }
 
-CBOOL UiRenderer::IsLineWrapEnabled() const { return FALSE; }
+CBOOL UiRendererBase::IsLineWrapEnabled() const { return FALSE; }
 
-VOID UiRenderer::SetLineWrapEnabled(CBOOL) { }
+VOID UiRendererBase::SetLineWrapEnabled(CBOOL) { }
 
-VOID UiRenderer::CursorOff() { }
+VOID UiRendererBase::CursorOff() { }
 
-VOID UiRenderer::CursorBlinkOn() { }
+VOID UiRendererBase::CursorBlinkOn() { }
 
-VOID UiRenderer::CursorBlinkOff() { }
+VOID UiRendererBase::CursorBlinkOff() { }
 
-CBOOL UiRenderer::Available() { return TRUE; }
+CBOOL UiRendererBase::Available() { return TRUE; }
 
-VOID UiRenderer::Flush() { }
+VOID UiRendererBase::Flush() { }
 
-VOID UiRenderer::Clear() { }
+VOID UiRendererBase::Clear() { }
 
-VOID UiRenderer::ClearCol(CBYTE) { }
+VOID UiRendererBase::ClearCol(CBYTE) { }
 
-VOID UiRenderer::ClearRow(CBYTE) { }
+VOID UiRendererBase::ClearRow(CBYTE) { }
 
-VOID UiRenderer::ScrollLeft() { }
+VOID UiRendererBase::ScrollLeft() { }
 
-VOID UiRenderer::ScrollRight() { }
+VOID UiRendererBase::ScrollRight() { }
 
-VOID UiRenderer::Home() { }
+VOID UiRendererBase::Home() { }
 
-VOID UiRenderer::CursorPrev() { }
+VOID UiRendererBase::CursorPrev() { }
 
-VOID UiRenderer::CursorNext() { }
+VOID UiRendererBase::CursorNext() { }
 
-VOID UiRenderer::MoveCursor(CBYTE, CBYTE) { }
+VOID UiRendererBase::MoveCursor(CBYTE, CBYTE) { }
 
-VOID UiRenderer::LoadCustomChar(BYTE charIndex, PCBYTE charData) { }
+VOID UiRendererBase::LoadCustomChar(BYTE charIndex, PCBYTE charData) { }
 
-VOID UiRenderer::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
+VOID UiRendererBase::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr) { }
 
-CBYTE UiRenderer::WriteAt(CBYTE value, CBYTE col, CBYTE row)
+CBYTE UiRendererBase::WriteAt(CBYTE value, CBYTE col, CBYTE row)
 {
 	return (BYTE)this->write(value);
 }
 
-CBYTE UiRenderer::PrintString(PCCHAR str, BYTE col, BYTE row)
+CBYTE UiRendererBase::PrintString(PCCHAR str, BYTE col, BYTE row)
 {
 	return this->print(str);
 }
 
-CBYTE UiRenderer::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
+CBYTE UiRendererBase::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
 	return this->print(flashStr);
 }
 
-CBYTE UiRenderer::PrintStyledLine(PCCHAR str, BYTE row)
+CBYTE UiRendererBase::PrintStyledLine(PCCHAR str, BYTE row)
 {
 	this->ClearRow(row);
 	this->MoveCursor(0, row);
@@ -138,7 +138,7 @@ CBYTE UiRenderer::PrintStyledLine(PCCHAR str, BYTE row)
 	return charsWritten;
 }
 
-CBYTE UiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
+CBYTE UiRendererBase::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 {
 	BYTE strLen = 0;
 
@@ -163,14 +163,18 @@ CBYTE UiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 	return this->PrintStyledLine(str, row);
 }
 
+VOID UiRendererBase::BeginListItem(BYTE itemNumber) { }
+
+VOID UiRendererBase::EndListItem(CHAR inputTag) { }
+
 
 #ifndef NO_ITTYBITTY_EXTENSIONS
 
-VOID UiRenderer::DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) { }
+VOID UiRendererBase::DrawScrollBar(BYTE, CLCDSCROLLBAROPTIONS) { }
 
-VOID UiRenderer::DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) { }
+VOID UiRendererBase::DrawGraph(BYTE, BYTE, BYTE, BYTE, CLCDGRAPHOPTIONS) { }
 
-VOID UiRenderer::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL) { }
+VOID UiRendererBase::DrawSlider(BYTE, BYTE, BYTE, BYTE, CLCDSLIDEROPTIONS, BOOL) { }
 
 #endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
 
@@ -482,6 +486,16 @@ CBYTE UiDisplayController::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
 	PtrCallAll(_RendererCount, _Renderers, results, &IUiRenderer::PrintStyledLine_P, flashStr, row);
 
 	return __ResultFromCallResults(results, _RendererCount, MAX_BYTE);
+}
+
+VOID UiDisplayController::BeginListItem(BYTE itemNumber)
+{
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::BeginListItem, itemNumber);
+}
+
+VOID UiDisplayController::EndListItem(CHAR inputTag)
+{
+	PtrApplyAll(_RendererCount, _Renderers, &IUiRenderer::EndListItem, inputTag);
 }
 
 

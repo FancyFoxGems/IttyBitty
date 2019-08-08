@@ -20,7 +20,7 @@ using namespace IttyBitty;
 // CONSTRUCTOR
 
 StreamUiInputSource::StreamUiInputSource(RIUINAVIGATIONCONTROLLER navigation, Stream & stream, CSTREAMUIINPUTOPTIONS options)
-	: BaseUiInputSource(navigation),
+	: UiInputSourceBase(navigation),
 	_Stream(stream), _Options(options) { }
 
 
@@ -83,7 +83,7 @@ VOID StreamUiInputSource::Poll()
 // CONSTRUCTOR
 
 SimpleUiInputSource::SimpleUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CUIACTION action)
-	: BaseUiInputSource(navigation),
+	: UiInputSourceBase(navigation),
 	_Action(action) { }
 
 
@@ -372,7 +372,7 @@ VOID AnalogPinUiInputSource::Initialize()
 // CONSTRUCTOR
 
 AnalogValueUiInputSource::AnalogValueUiInputSource(RIUINAVIGATIONCONTROLLER navigation, CPINNUM pinNum, CWORD threshold)
-	: BaseUiInputSource(navigation),
+	: UiInputSourceBase(navigation),
 	_PinNum(pinNum), _Threshold(threshold) { }
 
 

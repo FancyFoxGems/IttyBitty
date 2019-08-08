@@ -27,8 +27,8 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	class StreamUiRenderer;
-	TYPEDEF_CLASS_ALIASES(StreamUiRenderer, STREAMUIRENDERER);
+	class SerialUiRenderer;
+	TYPEDEF_CLASS_ALIASES(SerialUiRenderer, SERIALUIRENDERER);
 
 
 #ifndef NO_ITTYBITTY_LCD
@@ -48,36 +48,55 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region [StreamUiRenderer] DEFINITION
+#pragma region ENUMS
 
-	CLASS StreamUiRenderer : public UiRenderer
+	ENUM_CLASS UiListItemNumberingFormat : BYTE
+	{
+		NONE				= 0x0,
+		NUMBER_DASH			= 0x1,
+		NUMBER_DOT			= 0x2,
+		NUMBER_PAREN		= 0x3,
+		PAREN_NUMBER_PAREN	= 0x4,
+		BRACKETED_NUMBER	= 0x5
+	};
+
+	TYPEDEF_ENUM_ALIASES(UiListItemNumberingFormat, UILISTITEMNUMBERINGFORMAT);
+
+#pragma endregion
+
+
+#pragma region [SerialUiRenderer] DEFINITION
+
+	CLASS SerialUiRenderer : public UiRendererBase
 	{
 	public:
 
 		// CONSTRUCTORS
 
-		StreamUiRenderer(Stream & = SERIAL_PORT_MONITOR);
-		StreamUiRenderer(RUIRENDEREROPTIONS, Stream & = SERIAL_PORT_MONITOR);
+		SerialUiRenderer(HardwareSerial & = SERIAL_PORT_MONITOR, CUILISTITEMNUMBERINGFORMAT = UiListItemNumberingFormat::NUMBER_DASH);
+		SerialUiRenderer(RUIRENDEREROPTIONS, HardwareSerial & = SERIAL_PORT_MONITOR, CUILISTITEMNUMBERINGFORMAT = UiListItemNumberingFormat::NUMBER_DASH);
 
 
-		// [Print] IMPLEMENTATION
+		// [Print] OVERRIDE
 
 		VIRTUAL SIZE write(BYTE);
-
-		using Print::write;
 
 
 		// [IUiRenderer] OVERRIDES
 
-		CBOOL Available();
-		VOID Flush();
+		VIRTUAL CBOOL Available();
+		VIRTUAL VOID Flush();
+
+		VIRTUAL VOID BeginListItem(BYTE);
+		VIRTUAL VOID EndListItem(CHAR = NULL_CHARACTER);
 
 
 	protected:
 
 		// INSTANCE VARIABLES
 
-		Stream & _Serial = SERIAL_PORT_MONITOR;
+		HardwareSerial & _Serial = SERIAL_PORT_MONITOR;
+		UILISTITEMNUMBERINGFORMAT _NumberingFormat = UiListItemNumberingFormat::NUMBER_DASH;
 	};
 
 #pragma endregion
@@ -88,17 +107,19 @@ namespace IttyBitty
 #pragma region [LcdI2CUiRenderer] DEFINITION
 
 	template LCDI2C_UI_RENDERER_T_CLAUSE_DEF
-	CLASS LcdI2CUiRenderer : public UiRenderer
+	CLASS LcdI2CUiRenderer : public UiRendererBase
 	{
 	public:
 
 		// CONSTRUCTOR/DESTRUCTOR
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd)
-			: UiRenderer(MUI::DefaultLcdRendererOptions()), _LCD(lcd) { }
+			: UiRendererBase(MUI::DefaultLcdRendererOptions()),
+			_LCD(lcd) { }
 
 		LcdI2CUiRenderer(PLCDI2C LCDI2C_UI_RENDERER_T_ARGS lcd, RUIRENDEREROPTIONS options)
-			: UiRenderer(options), _LCD(lcd) { }
+			: UiRendererBase(options),
+			_LCD(lcd) { }
 
 		VIRTUAL ~LcdI2CUiRenderer()
 		{
@@ -110,134 +131,132 @@ namespace IttyBitty
 		}
 
 
-		// [Print] IMPLEMENTATION
+		// [Print] OVERRIDE
 
 		VIRTUAL SIZE write(BYTE value)
 		{
 			return _LCD->write(value);
 		}
 
-		using Print::write;
-
 
 		// [IUiRenderer] OVERRIDES
 
-		CBYTE Cols() const
+		VIRTUAL CBYTE Cols() const
 		{
 			return LineChars;
 		}
 
-		CBYTE Rows() const
+		VIRTUAL CBYTE Rows() const
 		{
 			return Lines;
 		}
 
-		CBYTE CursorCol()
+		VIRTUAL CBYTE CursorCol()
 		{
 			return _LCD->CursorCol();
 		}
 
-		CBYTE CursorRow()
+		VIRTUAL CBYTE CursorRow()
 		{
 			return _LCD->CursorRow();
 		}
 
-		CBOOL IsLineWrapEnabled() const
+		VIRTUAL CBOOL IsLineWrapEnabled() const
 		{
 			return _LCD->IsLineWrapEnabled();
 		}
 
-		VOID SetLineWrapEnabled(CBOOL lineWrapEnabled = TRUE)
+		VIRTUAL VOID SetLineWrapEnabled(CBOOL lineWrapEnabled = TRUE)
 		{
 			_LCD->SetLineWrapEnabled(lineWrapEnabled);
 		}
 
-		VOID CursorOn()
+		VIRTUAL VOID CursorOn()
 		{
 			_LCD->CursorOn();
 		}
 
-		VOID CursorOff()
+		VIRTUAL VOID CursorOff()
 		{
 			_LCD->CursorOff();
 		}
 
-		VOID CursorBlinkOn()
+		VIRTUAL VOID CursorBlinkOn()
 		{
 			_LCD->CursorBlinkOn();
 		}
 
-		VOID CursorBlinkOff()
+		VIRTUAL VOID CursorBlinkOff()
 		{
 			_LCD->CursorBlinkOff();
 		}
 
-		VOID Clear()
+		VIRTUAL VOID Clear()
 		{
 			_LCD->Clear();
 		}
 
-		VOID ClearCol(CBYTE col = MAX_BYTE)
+		VIRTUAL VOID ClearCol(CBYTE col = MAX_BYTE)
 		{
 			_LCD->ClearRow(col);
 		}
 
-		VOID ClearRow(CBYTE row = MAX_BYTE)
+		VIRTUAL VOID ClearRow(CBYTE row = MAX_BYTE)
 		{
 			_LCD->ClearRow(row);
 		}
 
-		VOID ScrollLeft()
+		VIRTUAL VOID ScrollLeft()
 		{
 			_LCD->ScrollLeft();
 		}
 
-		VOID ScrollRight()
+		VIRTUAL VOID ScrollRight()
 		{
 			_LCD->ScrollRight();
 		}
 
-		VOID Home()
+		VIRTUAL VOID Home()
 		{
 			_LCD->Home();
 		}
 
-		VOID CursorPrev()
+		VIRTUAL VOID CursorPrev()
 		{
 			_LCD->CursorPrev();
 		}
 
-		VOID CursorNext()
+		VIRTUAL VOID CursorNext()
 		{
 			_LCD->CursorNext();
 		}
 
-		VOID MoveCursor(CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		VIRTUAL VOID MoveCursor(CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
 		{
 			_LCD->MoveCursor(col, row);
 		}
 
-		VOID LoadCustomChar(BYTE charIndex, PCBYTE charData)
+		VIRTUAL VOID LoadCustomChar(BYTE charIndex, PCBYTE charData)
 		{
 			_LCD->LoadCustomChar(charIndex, charData);
 		}
 
-		VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
+		VIRTUAL VOID LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 		{
 			_LCD->LoadCustomChar_P(charIndex, charDataAddr);
 		}
 
-		CBYTE WriteAt(CBYTE value, CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
 		{
 			return _LCD->WriteAt(value, col, row);
 		}
 
-		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
 			return _LCD->PrintString(str, col, row);
 		}
 
-		CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
+		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
 			return _LCD->PrintString_P(flashStr, col, row);
 		}
@@ -245,18 +264,18 @@ namespace IttyBitty
 
 	#ifndef NO_ITTYBITTY_EXTENSIONS
 
-		VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
+		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
 		{
 			_LCD->DrawScrollBar(percentage, options);
 		}
 
-		VOID DrawGraph(BYTE startCol, BYTE row,
+		VIRTUAL VOID DrawGraph(BYTE startCol, BYTE row,
 			BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 		{
 			_LCD->DrawGraph(startCol, row, widthChars, percentage, options);
 		}
 
-		VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
+		VIRTUAL VOID DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
 			BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw = FALSE)
 		{
 			_LCD->DrawSlider(startCol, row, widthChars, percentage, options, redraw);
