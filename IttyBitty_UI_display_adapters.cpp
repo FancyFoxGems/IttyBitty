@@ -20,12 +20,10 @@ using namespace IttyBitty;
 // CONSTRUCTORS
 
 SerialUiRenderer::SerialUiRenderer(HardwareSerial & serial, CUILISTITEMNUMBERINGFORMAT numberingFormat)
-	: UiRendererBase(), 
-	_Serial(serial), _NumberingFormat(numberingFormat) { }
+	: UiRendererBase(), _Serial(serial), _NumberingFormat(numberingFormat) { }
 
 SerialUiRenderer::SerialUiRenderer(RUIRENDEREROPTIONS options, HardwareSerial & serial, CUILISTITEMNUMBERINGFORMAT numberingFormat)
-	: UiRendererBase(options), 
-	_Serial(serial), _NumberingFormat(numberingFormat) { }
+	: UiRendererBase(options), _Serial(serial), _NumberingFormat(numberingFormat) { }
 
 
 // [Print] OVERRIDE
@@ -46,6 +44,22 @@ CBOOL SerialUiRenderer::Available()
 VOID SerialUiRenderer::Flush()
 {
 	return _Serial.flush();
+}
+
+VOID SerialUiRenderer::Clear()
+{
+	for (BYTE i = 0; i < MENUI_SERIAL_CLEAR_LINES; i++)
+		_Serial.println();
+}
+
+CBYTE SerialUiRenderer::PrintStyledLine(PCCHAR str, BYTE col, BYTE row, BYTE cols)
+{
+	return UiRendererBase::PrintStyledLine(str, col, row, cols > 0 ? cols : MENUI_SERIAL_STYLED_LINE_COLS);
+}
+
+CBYTE SerialUiRenderer::PrintStyledLine_P(FLASH_STRING flashStr, BYTE col, BYTE row, BYTE cols)
+{
+	return UiRendererBase::PrintStyledLine_P(flashStr, col, row, cols > 0 ? cols : MENUI_SERIAL_STYLED_LINE_COLS);
 }
 
 VOID SerialUiRenderer::BeginListItem(BYTE itemNumber)
@@ -85,7 +99,7 @@ VOID SerialUiRenderer::BeginListItem(BYTE itemNumber)
 	_Serial.print(' ');
 }
 
-VOID SerialUiRenderer::EndListItem(CHAR inputTag)
+VOID SerialUiRenderer::EndListItem(CCHAR inputTag)
 {
 	if (inputTag)
 	{

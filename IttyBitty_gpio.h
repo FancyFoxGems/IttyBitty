@@ -129,7 +129,7 @@ namespace IttyBitty
 			new (this) _PortRegisters((RREG8)other.DirectionReg, (RREG8)other.OutputReg, (RREG8)other.InputReg);
 		}
 
-		VIRTUAL ~_PortRegisters() { }
+		~_PortRegisters() { }
 
 		STATIC RPORTREG NULL_OBJECT()
 		{
@@ -137,7 +137,7 @@ namespace IttyBitty
 			return NULL_PORTREG;
 		}
 
-		VIRTUAL RPORTREG operator=(RCPORTREG other)
+		RPORTREG operator=(RCPORTREG other)
 		{
 			*this = _PortRegisters(other);
 			return *this;
@@ -176,7 +176,7 @@ namespace IttyBitty
 			_Registers = new PortReg(*other._Registers);
 		}
 
-		VIRTUAL ~_Port()
+		~_Port()
 		{
 			delete _Registers;
 		}
@@ -187,79 +187,79 @@ namespace IttyBitty
 			return NULL_PORT;
 		}
 
-		VIRTUAL RPORT operator=(RCPORT other)
+		RPORT operator=(RCPORT other)
 		{
 			*this = _Port(other);
 			return *this;
 		}
 
-		VIRTUAL INLINE BIT operator[](CPINNUM pinNum) const ALWAYS_INLINE
+		INLINE BIT operator[](CPINNUM pinNum) const ALWAYS_INLINE
 		{
 			return this->ReadPin(pinNum);
 		}
 
-		VIRTUAL INLINE BITREF operator[](CPINNUM pinNum) ALWAYS_INLINE
+		INLINE BITREF operator[](CPINNUM pinNum) ALWAYS_INLINE
 		{
 			return this->PinState(pinNum);
 		}
 
-		VIRTUAL CPINMODE GetPinMode(CPINNUM pinNum) const
+		CPINMODE GetPinMode(CPINNUM pinNum) const
 		{
 			return (CPINMODE)((BIT)_Registers->DirectionReg[pinNum] OR (BIT)_Registers->OutputReg[pinNum] SHL 0b1);
 		}
 
-		VIRTUAL VOID SetPinMode(CPINNUM pinNum, CPINMODE mode = PinMode::OutputLow)
+		VOID SetPinMode(CPINNUM pinNum, CPINMODE mode = PinMode::OutputLow)
 		{
 			_Registers->DirectionReg[pinNum]	= MASK((BYTE)mode, OUTPUT);
 			_Registers->OutputReg[pinNum]		= MASK((BYTE)mode, INPUT_PULLUP);
 		}
 
-		VIRTUAL VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode = OUTPUT)
+		VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode = OUTPUT)
 		{
 			this->SetPinMode(pinNum, (CPINMODE)arduinoMode);
 		}
 
-		VIRTUAL CBIT ReadPin(CPINNUM pinNum) const
+		CBIT ReadPin(CPINNUM pinNum) const
 		{
 			return _Registers->InputReg[pinNum];
 		}
 
-		VIRTUAL INLINE CBIT CheckPinSet(CPINNUM pinNum) const ALWAYS_INLINE
+		INLINE CBIT CheckPinSet(CPINNUM pinNum) const ALWAYS_INLINE
 		{
 			return this->ReadPin(pinNum);
 		}
 
-		VIRTUAL INLINE CBIT CheckPinUnset(CPINNUM pinNum) const ALWAYS_INLINE
+		INLINE CBIT CheckPinUnset(CPINNUM pinNum) const ALWAYS_INLINE
 		{
 			return NOT this->ReadPin(pinNum);
 		}
 
-		VIRTUAL BITREF PinState(CPINNUM pinNum)
+		BITREF PinState(CPINNUM pinNum)
 		{
 			return _Registers->OutputReg[pinNum];
 		}
 
-		VIRTUAL VOID WritePin(CPINNUM pinNum, CBIT state = HIGH)
+		VOID WritePin(CPINNUM pinNum, CBIT state = HIGH)
 		{
 			_Registers->OutputReg[pinNum] = state;
 		}
 
-		VIRTUAL INLINE VOID SetPin(CPINNUM pinNum) ALWAYS_INLINE
+		INLINE VOID SetPin(CPINNUM pinNum) ALWAYS_INLINE
 		{
 			this->WritePin(pinNum, HIGH);
 		}
 
-		VIRTUAL INLINE VOID ClearPin(CPINNUM pinNum) ALWAYS_INLINE
+		INLINE VOID ClearPin(CPINNUM pinNum) ALWAYS_INLINE
 		{
 			this->WritePin(pinNum, LOW);
 		}
 
-		VIRTUAL VOID TogglePin(CPINNUM pinNum)
+		VOID TogglePin(CPINNUM pinNum)
 		{
 			_Registers->InputReg[pinNum] = !_Registers->InputReg[pinNum];	// TODO: Test - should always set to 1?  If so, reset?
 		}
 
-		VIRTUAL VOID ResetPin(CPINNUM pinNum)
+		VOID ResetPin(CPINNUM pinNum)
 		{
 			_Registers->OutputReg[pinNum]		= 1;
 			_Registers->DirectionReg[pinNum]	= 1;
@@ -285,7 +285,7 @@ namespace IttyBitty
 
 		_Pin() { }
 
-		VIRTUAL ~_Pin() { }
+		~_Pin() { }
 
 		STATIC CPINMODE GetMode()
 		{

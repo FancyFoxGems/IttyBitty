@@ -191,7 +191,7 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:
@@ -254,7 +254,7 @@ namespace IttyBitty
 		WORD _AddrOffset = 0;
 
 
-		// [IDbTableDef] IHELPER METHODS
+		// [IDbTableDef] HELPER METHODS
 
 		VIRTUAL CBYTE TableNameLength() const;
 	};

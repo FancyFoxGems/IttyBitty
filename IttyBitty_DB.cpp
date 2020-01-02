@@ -81,7 +81,7 @@ VOID Database::Dispose(CBOOL forceDispose)
 	if (!_Tables)
 		return;
 
-	if (_Dispose OR forceDispose)
+	if (_DisposeTables OR forceDispose)
 	{
 		for (BYTE i = 0; i < _TableCount; i++)
 		{
@@ -212,6 +212,8 @@ CDBRESULT Database::DropAllTables()
 		return result;
 
 	this->Dispose(TRUE);
+
+	_TableCount = 0;
 
 	return (CDBRESULT)this->Save();
 }
@@ -368,6 +370,7 @@ CDBRESULT Database::CreateTable(CSIZE rowSize, PCCHAR tableName, CSIZE dataAlloc
 
 	this->Dispose();
 
+	_DisposeTables = TRUE;	// TODO: Why track this at all?
 	_Tables = newTables;
 
 	return (CDBRESULT)this->Save();
@@ -724,7 +727,7 @@ VOID Database::FromBinary(PCBYTE data)
 	if (_TableCount > 0)
 		_Tables = new PIDBTABLE[_TableCount];
 
-	_Dispose = TRUE;
+	_DisposeTables = TRUE;
 
 	for (SIZE i = 0; i < _TableCount; i++)
 	{
@@ -745,7 +748,7 @@ VOID Database::FromString(PCCHAR data)
 	if (_TableCount > 0)
 		_Tables = new PIDBTABLE[_TableCount];
 
-	_Dispose = TRUE;
+	_DisposeTables = TRUE;
 
 	for (BYTE i = 0; i < _TableCount; i++)
 	{

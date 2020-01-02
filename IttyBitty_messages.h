@@ -163,7 +163,7 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:

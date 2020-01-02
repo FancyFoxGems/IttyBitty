@@ -11,7 +11,7 @@
 
 
 #include "IttyBitty_UI_options.h"
-// !TODO: set position
+
 
 // SUPRESS COMPILER WARNINGS RELATED TO PARAM REORDERING
 IGNORE_WARNING(reorder)
@@ -253,7 +253,7 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK) = 0;
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK) = 0;
 
-		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUERESOLVER) = 0;
+		VIRTUAL VOID Value(RIUIINPUTVALUERESOLVER, CBYTE) = 0;
 
 
 	protected:
@@ -283,6 +283,8 @@ namespace IttyBitty
 		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0) = 0;
 
 		VIRTUAL CBOOL AddInputSource(RIUIINPUTSOURCE) = 0;
+
+		VIRTUAL VOID ClearInputSources() = 0;
 
 		VIRTUAL VOID RemoveInputSource(CBYTE) = 0;
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE) = 0;
@@ -353,15 +355,15 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:
 
 		// OPERATORS
 
-		VIRTUAL PCIUIINPUTSOURCE operator[](CBYTE) const;
-		VIRTUAL PIUIINPUTSOURCE operator[](CBYTE);
+		PCIUIINPUTSOURCE operator[](CBYTE) const;
+		PIUIINPUTSOURCE operator[](CBYTE);
 
 
 		// [IUiNavigationController] IMPLEMENTATION
@@ -372,6 +374,8 @@ namespace IttyBitty
 		VIRTUAL RIUIINPUTSOURCE InputSource(CBYTE = 0);
 
 		VIRTUAL CBOOL AddInputSource(RIUIINPUTSOURCE);
+
+		VIRTUAL VOID ClearInputSources();
 
 		VIRTUAL VOID RemoveInputSource(CBYTE);
 		VIRTUAL VOID RemoveInputSource(RIUIINPUTSOURCE);
@@ -399,7 +403,7 @@ namespace IttyBitty
 		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
 		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
-		VIRTUAL VOID Value(CBYTE, RIUIINPUTVALUERESOLVER);
+		VIRTUAL VOID Value(RIUIINPUTVALUERESOLVER, CBYTE);
 
 
 		// [IUiInputValueResolver] IMPLEMENTATION
@@ -465,9 +469,6 @@ namespace IttyBitty
 		BOOL _DisposeInputSources = FALSE;
 
 		RIUINAVIGATIONLISTENER const _NavListener;
-
-		DWORD _ValueEntryExpirationMs = 0;
-		BOOL _RemoveValueEntriesUponReading = TRUE;
 
 		PPIUIINPUTSOURCE _InputSources = NULL;
 		BYTE _InputSourceCount = 0;

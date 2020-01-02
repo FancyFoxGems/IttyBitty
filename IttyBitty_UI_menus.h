@@ -71,7 +71,7 @@ namespace IttyBitty
 
 #pragma region [IMenuItem] DEFINITION
 
-	INTERFACE IMenuItem : public IUiChildElement<Menu>
+	INTERFACE IMenuItem : public IUiChildElement
 	{
 	public:
 
@@ -90,19 +90,22 @@ namespace IttyBitty
 
 #pragma region [MenuItem] DEFINITION
 
-	CLASS MenuItem : public UiElement//, public IMenuItem
+	CLASS MenuItem : public UiElementBase//, public IMenuItem
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
-		MenuItem(FLASH_STRING label, PMENU parent) : UiElement(label) { }
+		MenuItem(FLASH_STRING label, PMENU parent) : UiElementBase(label) { }
 
 
 		// [IUiChildElement] IMPLEMENTATION
 
-		//VIRTUAL PMENU Parent() const;
-		//VIRTUAL VOID SetParent(PMENU);
+		//VIRTUAL PPIUICONTAINERELEMENT<IUICHILDELEMENT> GetParent() const;
+		//VIRTUAL VOID SetParent(PIUICONTAINERELEMENT<IUICHILDELEMENT>);
+
+		//VIRTUAL CCHAR GetInputTag() const;
+		//VIRTUAL VOID SetInputTag(CCHAR);
 
 
 		// [IMenuItem] IMPLEMENTATION
@@ -181,45 +184,45 @@ namespace IttyBitty
 #pragma region [MenuBase] DEFINITION
 
 	template MENU_BASE_T_CLAUSE_DEF
-	CLASS MenuBase : public MenuItem, public UiContainerElement<TMenuItem>
+	CLASS MenuBase : public MenuItem, public UiContainerElementBase<TMenuItem>
 	{
 	public:
 
 		// CONSTRUCTORS/DESTRUCTOR
 
 		MenuBase(FLASH_STRING label, PMENU parent, CBYTE childCount = 0, PPMENUITEM children = NULL)
-			: MenuItem(label, parent), UiContainerElement<TMenuItem>(label, childCount, children) { }
+			: MenuItem(label, parent), UiContainerElementBase<TMenuItem>(label, childCount, children) { }
 
 
 	public:
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Up(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Down(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Down(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Left(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Left(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Right(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Right(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Return(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK)
 		{
 		}
 
-		VOID Select(CUIACTIONSTATE = CLICK)
+		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK)
 		{
 		}
 		
-		VOID Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
+		VIRTUAL VOID Value(RIUIINPUTVALUERESOLVER inputValueController, CBYTE token)
 		{
 		}
 
@@ -228,34 +231,34 @@ namespace IttyBitty
 
 	/*	VIRTUAL CBOOL operator >(RCIUIELEMENT other) const
 		{
-			return UiContainerElement<TMenuItem>::operator >(other);
+			return UiContainerElementBase<TMenuItem>::operator >(other);
 
 		}
 
 		VIRTUAL FLASH_STRING Label() const
 		{
-			return UiContainerElement<TMenuItem>::Label();
+			return UiContainerElementBase<TMenuItem>::Label();
 
 		}
 
 		VIRTUAL PCCHAR LabelString() const
 		{
-			return UiContainerElement<TMenuItem>::LabelString();
+			return UiContainerElementBase<TMenuItem>::LabelString();
 		}
 
 		VIRTUAL CBYTE Width() const
 		{
-			return UiContainerElement<TMenuItem>::Width();
+			return UiContainerElementBase<TMenuItem>::Width();
 
 		}
 		VIRTUAL CBYTE Height() const
 		{
-			return UiContainerElement<TMenuItem>::Height();
+			return UiContainerElementBase<TMenuItem>::Height();
 		}
 
 		VIRTUAL VOID Render(RIUIRENDERER renderer, CBYTE col = 0, CBYTE row = 0)
 		{
-			UiContainerElement<TMenuItem>::Render(renderer, col, row);
+			UiContainerElementBase<TMenuItem>::Render(renderer, col, row);
 		}*/
 	};
 
@@ -315,7 +318,10 @@ namespace IttyBitty
 
 		// [IUiListElement] IMPLEMENTATION
 
-		VIRTUAL RCLISTMENUCHOICE GetSelectedItem() const;
+		VIRTUAL CBYTE GetSelectedNumber() const;
+		VIRTUAL VOID SetSelectedNumber(CBYTE);
+
+		VIRTUAL RLISTMENUCHOICE GetSelectedItem() const;
 		VIRTUAL VOID SetSelectedItem(RCLISTMENUCHOICE);
 	};
 
@@ -340,15 +346,18 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE NumSelected() const;
 
-		VIRTUAL PCLISTMENUCHOICE GetSelectedItems() const;
-		VIRTUAL VOID SetSelectedItems(PCLISTMENUCHOICE &, CBYTE);
+		VIRTUAL PLISTMENUCHOICE GetSelectedItems() const;
+		VIRTUAL VOID SetSelectedItems(CBYTE, PCLISTMENUCHOICE);
+
+		VIRTUAL PCBYTE GetSelectedNumbers() const;
+		VIRTUAL VOID SetSelectedNumbers(CBYTE, PCBYTE);
 	};
 
 #pragma endregion
 
 #pragma region [ListMenuChoice] DEFINITION
 
-	CLASS ListMenuChoice : public MenuItem, public IUiChoice<ListMenu>
+	CLASS ListMenuChoice : public MenuItem, public IUiChoice
 	{
 	public:
 
@@ -375,10 +384,10 @@ namespace IttyBitty
 
 #pragma region [IUiDialog] DEFINITION
 
+	// TODO: Template for result type?
 	INTERFACE IUiDialog : public IUiElement
 	{
 	public:
-
 
 		// ACCESSORS/MUTATORS
 
@@ -400,7 +409,7 @@ namespace IttyBitty
 
 #pragma region [UiDialog] DEFINITION
 
-	CLASS UiDialog : public UiElement, public IUiDialog
+	CLASS UiDialog : public UiElementBase, public IUiDialog
 	{
 	public:
 

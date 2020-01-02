@@ -901,7 +901,7 @@ PBYTE DbTable::RowFromString(PCCHAR buffer, CSIZE rowSize)
 }
 
 
-// [IDbTableDef] IHELPER METHODS
+// [IDbTableDef] HELPER METHODS
 
 CBYTE DbTable::TableNameLength() const
 {

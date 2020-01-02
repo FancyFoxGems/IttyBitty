@@ -5,10 +5,10 @@
 ***********************************************************************************************/
 
 #if !defined(ARDUINO) || defined(ITTYBITTY_BASE) || defined(NO_ITTYBITTY_LCD) || defined(NO_ITTYBITTY_LCD_I2C)
-	#define NO_ITTYBITTY_EXTENSIONS
+	#define NO_ITTYBITTY_LCD_EXTENSIONS
 #endif
 
-#ifndef NO_ITTYBITTY_EXTENSIONS
+#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 
 
 #include "IttyBitty_LCD_I2C.h"
@@ -36,4 +36,4 @@ namespace IttyBitty
 #pragma endregion
 };
 
-#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
+#endif	// #ifndef NO_ITTYBITTY_LCD_EXTENSIONS

@@ -180,9 +180,9 @@ namespace IttyBitty
 {
 #pragma region FORWARD DECLARATIONS & TYPE ALIASES
 
-	#define LCDI2C_T_CLAUSE_DEF	<CBYTE Cols, CBYTE Rows, CBYTE I2CAddr, BOOL Use5x10Chars>
+	#define LCDI2C_T_CLAUSE_DEF	<CBYTE Cols, CBYTE Rows, CBYTE I2CAddr, CBOOL Use5x10Chars>
 	#define LCDI2C_T_CLAUSE		<CBYTE Cols = LCD_DEFAULT_COLS, CBYTE Rows = LCD_DEFAULT_ROWS, \
-		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, BOOL Use5x10Chars = FALSE>
+		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, CBOOL Use5x10Chars = FALSE>
 	#define LCDI2C_T_ARGS		<Cols, Rows, I2CAddr, Use5x10Chars>
 
 	template LCDI2C_T_CLAUSE
@@ -236,13 +236,13 @@ namespace IttyBitty
 
 		// HELPER METHODS
 
-		VOID PulseEnRising(CBYTE data)
+		VOID PulseEnRising(BYTE data)
 		{
 			this->WriteI2C(WITH_BIT(data, LCD_En));
 			delayMicroseconds(LCD_WAIT_STROBE_EN_PULSE_uS);
 		}
 
-		VOID PulseEnFalling(CBYTE data)
+		VOID PulseEnFalling(BYTE data)
 		{
 			this->WriteI2C(WITHOUT_BIT(data, LCD_En));
 			delayMicroseconds(LCD_WAIT_STROBE_EN_PULSE_uS);
@@ -255,7 +255,7 @@ namespace IttyBitty
 			return (CBYTE)WIRE_READ();
 		}
 
-		CBYTE ClockInRead(CBYTE data)
+		CBYTE ClockInRead(BYTE data)
 		{
 			this->WriteI2C(data);
 			this->PulseEnRising(data);
@@ -277,7 +277,7 @@ namespace IttyBitty
 			return result;
 		}
 
-		CBYTE SendReadCommand(CBYTE data)
+		CBYTE SendReadCommand(BYTE data)
 		{
 			return this->ClockInRead(WITH_BIT(data, LCD_RW));
 		}
@@ -304,7 +304,7 @@ namespace IttyBitty
 			return CHECK_BIT(this->Receive(), LCD_BF);
 		}
 
-		VOID WriteI2C(CBYTE data)
+		VOID WriteI2C(BYTE data)
 		{
 			Wire.beginTransmission(I2CAddr);
 
@@ -316,7 +316,7 @@ namespace IttyBitty
 			Wire.endTransmission();
 		}
 
-		VOID ClockInWrite(CBYTE data)
+		VOID ClockInWrite(BYTE data)
 		{
 			this->WriteI2C(data);
 			this->PulseEnRising(data);
@@ -325,7 +325,7 @@ namespace IttyBitty
 			delayMicroseconds(LCD_WAIT_CMD_EXECUTE_uS);
 		}
 
-		VOID SendWriteCommand(CBYTE data)
+		VOID SendWriteCommand(BYTE data)
 		{
 			this->ClockInWrite(data);
 		}
@@ -381,23 +381,23 @@ namespace IttyBitty
 			this->Send(LCD_CMD_ENTRY_MODE_SET | _EntryMode);
 		}
 
-		VOID ShiftCursorOrDisplay(CBYTE shiftOptions = 0x0)
+		VOID ShiftCursorOrDisplay(BYTE shiftOptions = 0x0)
 		{
 			this->Send(LCD_CMD_CURSOR_DISPLAY_SHIFT | shiftOptions);
 		}
 
-		VOID SetDdramAddr(CBYTE ddramAddr)
+		VOID SetDdramAddr(BYTE ddramAddr)
 		{
 			this->Send(LCD_CMD_SET_DDRAM_ADDR | ddramAddr);
 		}
 
-		VOID SetDdramAddrByColAndRow(CBYTE col, CBYTE row)
+		VOID SetDdramAddrByColAndRow(BYTE col, BYTE row)
 		{
 			this->SetDdramAddr(col + ((ROW_ADDR_OFFSETS())[row] |
 				(_Use8BitInterface ? LCD_8_BIT_ADDR_OFFSET : 0x0)));
 		}
 
-		VOID SetCgramAddr(CBYTE cgramAddr)
+		VOID SetCgramAddr(BYTE cgramAddr)
 		{
 			this->Send(LCD_CMD_SET_CGRAM_ADDR | cgramAddr);
 		}
@@ -427,7 +427,7 @@ namespace IttyBitty
 
 		// GROVE RGB LCD HELPER METHODS
 
-		VOID SetRgbReg(CBYTE regAddr, CBYTE data)
+		VOID SetRgbReg(BYTE regAddr, BYTE data)
 		{
 			Wire.beginTransmission(LCD_RGB_BACKLIGHT_ADDRESS);
 
@@ -786,7 +786,7 @@ namespace IttyBitty
 
 		VOID MoveCursor(BYTE col, BYTE row)
 		{
-			if (col >= Cols)
+			if (col != MAX_BYTE && col >= Cols)
 			{
 				if (_LineWrapEnabled)
 				{
@@ -799,11 +799,14 @@ namespace IttyBitty
 				}
 			}
 
-			if (row >= Rows)
+			if (row != MAX_BYTE && row >= Rows)
 				row = Rows - 1;
 
-			_CursorCol = col;
-			_CursorRow = row;
+			if (col != MAX_BYTE)
+				_CursorCol = col;
+
+			if (row != MAX_BYTE)
+				_CursorRow = row;
 
 			this->SetDdramAddrByColAndRow(col, row);
 		}
@@ -837,7 +840,7 @@ namespace IttyBitty
 			return 1;
 		}
 
-		CBYTE WriteAt(CBYTE value, CBYTE col, CBYTE row)
+		CBYTE WriteAt(BYTE value, BYTE col, BYTE row)
 		{
 		#ifndef NO_ITTYBITTY_LCD_BIG
 			_BigFontLoaded = FALSE;
@@ -847,7 +850,7 @@ namespace IttyBitty
 			return (CBYTE)this->write(value);
 		}
 
-		VOID ClearCol(CBYTE col = MAX_BYTE)
+		VOID ClearCol(BYTE col = MAX_BYTE)
 		{
 			if (col == MAX_BYTE)
 				col = _CursorCol;
@@ -856,7 +859,7 @@ namespace IttyBitty
 				this->WriteAt(LCD_SYMBOL_BLANK, col, i);
 		}
 
-		VOID ClearRow(CBYTE row = MAX_BYTE)
+		VOID ClearRow(BYTE row = MAX_BYTE)
 		{
 			if (row == MAX_BYTE)
 				row = _CursorRow;
@@ -865,9 +868,34 @@ namespace IttyBitty
 				this->WriteAt(LCD_SYMBOL_BLANK, i, row);
 		}
 
+		VIRTUAL VOID ClearSection(BYTE col, BYTE row, BYTE cols, BYTE rows)
+		{
+			BYTE startCol = col;
+
+			BYTE endCol = col + cols;
+			if (endCol > Cols)
+				endCol = Cols;
+
+			BYTE endRow = row + rows;
+			if (endRow > Rows)
+				endRow = Rows;
+
+			do
+			{
+				this->MoveCursor(startCol, row);
+
+				do
+				{
+					this->write(LCD_SYMBOL_BLANK);
+				}
+				while (col++ < endCol);
+			}
+			while (row++ < endRow);
+		}
+
 		CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
 		#ifndef NO_ITTYBITTY_LCD_BIG
-			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
+			, CBYTE (LCD_I2C::*writeCallback)(BYTE, BYTE, BYTE) = &LCD_I2C::WriteAt
 		#endif
 		)
 		{
@@ -887,7 +915,7 @@ namespace IttyBitty
 
 		CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE
 		#ifndef NO_ITTYBITTY_LCD_BIG
-			, CBYTE (LCD_I2C::*writeCallback)(CBYTE, CBYTE, CBYTE) = &LCD_I2C::WriteAt
+			, CBYTE (LCD_I2C::*writeCallback)(BYTE, BYTE, BYTE) = &LCD_I2C::WriteAt
 		#endif
 		)
 		{
@@ -926,14 +954,14 @@ namespace IttyBitty
 			this->SetRgbBacklightColorWhite();
 		}
 
-		VOID SetRgbBacklightColor(CBYTE r, CBYTE g, CBYTE b)
+		VOID SetRgbBacklightColor(BYTE r, BYTE g, BYTE b)
 		{
 			this->SetRgbReg(LCD_RGB_REG_RED, r);
 			this->SetRgbReg(LCD_RGB_REG_GREEN, g);
 			this->SetRgbReg(LCD_RGB_REG_BLUE, b);
 		}
 
-		VOID SetRgbBacklightColorWhite(CBYTE brightness = MAX_BYTE)
+		VOID SetRgbBacklightColorWhite(BYTE brightness = MAX_BYTE)
 		{
 			this->SetRgbBacklightColor(
 				(BYTE)((WORD)brightness * (WORD)MAX_BYTE / 100),
@@ -941,7 +969,7 @@ namespace IttyBitty
 				(BYTE)((WORD)brightness * (WORD)MAX_BYTE / 100));
 		}
 
-		VOID RgbBlinkOn(CBYTE period = LCD_RGB_LED_BLINK_PERIOD_OFF, CBYTE ratio = LCD_RGB_LED_BLINK_RATIO_HALF)
+		VOID RgbBlinkOn(BYTE period = LCD_RGB_LED_BLINK_PERIOD_OFF, BYTE ratio = LCD_RGB_LED_BLINK_RATIO_HALF)
 		{
 			// Period (s) = (period + 1) / 24
 			this->SetRgbReg(LCD_RGB_REG_LED_BLINK_PERIOD, period);

@@ -25,8 +25,40 @@ MenUI::MenUI(FLASH_STRING mainTitle, CBYTE initMenuCapacity)
 
 MenUI::MenUI(CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources, CBYTE rendererCount, PPIUIRENDERER renderers, FLASH_STRING mainTitle, CBYTE initMenuCapacity)
 	: Menu(mainTitle, this, initMenuCapacity),
-		_Navigation(UiNavigationController(*this, inputSourceCount, inputSources)),
-		_Display(UiDisplayController(rendererCount, renderers)) { }
+		_DisposeNavigationPtr(TRUE),
+		_NavigationPtr(new UiNavigationController(*this, inputSourceCount, inputSources)),
+		_DisplayPtr(new UiDisplayController(rendererCount, renderers)) { }
+
+MenUI::~MenUI()
+{
+	this->DisposeNavigationPtr();
+	this->DisposeDisplayPtr();
+}
+
+
+// PROTECTED DISPOSAL METHODS
+
+VOID MenUI::DisposeNavigationPtr()
+{
+	if (_NavigationPtr && _DisposeNavigationPtr)
+	{
+		delete _NavigationPtr;
+		_NavigationPtr = NULL;
+
+		_DisposeNavigationPtr = FALSE;
+	}
+}
+
+VOID MenUI::DisposeDisplayPtr()
+{
+	if (_DisplayPtr && _DisposeDisplayPtr)
+	{
+		delete _DisplayPtr;
+		_DisplayPtr = NULL;
+
+		_DisposeDisplayPtr = FALSE;
+	}
+}
 
 
 // ACCESSORS/MUTATORS
@@ -41,20 +73,48 @@ VOID MenUI::SetIdleHandler(PUICALLBACK onIdleHandler)
 	_OnIdleHandler = onIdleHandler;
 }
 
+RUINAVIGATIONCONTROLLER MenUI::GetNavigationController() const
+{
+	return *_NavigationPtr;
+}
+
+VOID MenUI::SetNavigationController(RUINAVIGATIONCONTROLLER navigation)
+{
+	this->DisposeNavigationPtr();
+
+	_NavigationPtr = &navigation;
+}
+
+RUIDISPLAYCONTROLLER MenUI::GetDisplayController() const
+{
+	return *_DisplayPtr;
+}
+
+VOID MenUI::SetDisplayController(RUIDISPLAYCONTROLLER display)
+{
+	this->DisposeDisplayPtr();
+
+	_DisplayPtr = &display;
+}
+
 
 
 // USER METHODS
 
+VOID MenUI::Initialize()
+{
+}
+
 VOID MenUI::Update()
 {
-	_Navigation.Poll();
+	_NavigationPtr->Poll();
 }
 
-VOID MenUI::ShowText(PCCHAR str, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
+VOID MenUI::ShowMessage(PCCHAR str, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
 {
 }
 
-VOID MenUI::ShowText_P(FLASH_STRING flashStr, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
+VOID MenUI::ShowMessage_P(FLASH_STRING flashStr, CWORD timeoutMS, CBOOL allowEscape, CBOOL anyActionReturns)
 {
 }
 
@@ -89,7 +149,7 @@ VOID MenUI::Select(CUIACTIONSTATE state)
 {
 }
 
-VOID MenUI::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
+VOID MenUI::Value(RIUIINPUTVALUERESOLVER inputValueController, CBYTE token)
 {
 }
 
@@ -98,81 +158,172 @@ VOID MenUI::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
 
 CBYTE MenUI::InputSourceCount() const
 {
-	return _Navigation.InputSourceCount();
+	return _NavigationPtr->InputSourceCount();
 }
 
 RCIUIINPUTSOURCE MenUI::InputSource(CBYTE i) const
 {
-	return _Navigation.InputSource(i);
+	return _NavigationPtr->InputSource(i);
 }
 
 RIUIINPUTSOURCE MenUI::InputSource(CBYTE i)
 {
-	return _Navigation.InputSource(i);
+	return _NavigationPtr->InputSource(i);
 }
 
 CBOOL MenUI::AddInputSource(RIUIINPUTSOURCE inputSource)
 {
-	return _Navigation.AddInputSource(inputSource);
+	return _NavigationPtr->AddInputSource(inputSource);
+}
+
+VOID MenUI::ClearInputSources()
+{
+	_NavigationPtr->ClearInputSources();
 }
 
 VOID MenUI::RemoveInputSource(CBYTE inputSourceIdx)
 {
-	_Navigation.RemoveInputSource(inputSourceIdx);
+	_NavigationPtr->RemoveInputSource(inputSourceIdx);
 }
 
 VOID MenUI::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 {
-	_Navigation.RemoveInputSource(inputSource);
+	_NavigationPtr->RemoveInputSource(inputSource);
 }
 
 CBOOL MenUI::IsShiftOn() const
 {
-	return _Navigation.IsShiftOn();
+	return _NavigationPtr->IsShiftOn();
 }
 
 VOID MenUI::ToggleShift()
 {
-	_Navigation.ToggleShift();
+	_NavigationPtr->ToggleShift();
 }
 VOID MenUI::ShiftOn()
 {
-	_Navigation.ShiftOn();
+	_NavigationPtr->ShiftOn();
 }
 
 VOID MenUI::ShiftOff()
 {
-	_Navigation.ShiftOff();
+	_NavigationPtr->ShiftOff();
 }
 
 CBOOL MenUI::IsAltOn() const
 {
-	return _Navigation.IsAltOn();
+	return _NavigationPtr->IsAltOn();
 }
 
 VOID MenUI::ToggleAlt()
 {
-	_Navigation.ToggleAlt();
+	_NavigationPtr->ToggleAlt();
 }
 
 VOID MenUI::AltOn()
 {
-	_Navigation.AltOn();
+	_NavigationPtr->AltOn();
 }
 
 VOID MenUI::AltOff()
 {
-	_Navigation.AltOff();
+	_NavigationPtr->AltOff();
 }
 
 VOID MenUI::FireAction(CUIACTION action, CUIACTIONSTATE state)
 {
-	return _Navigation.FireAction(action, state);
+	return _NavigationPtr->FireAction(action, state);
 }
 
 VOID MenUI::SendValue(PCCHAR buffer)
 {
-	_Navigation.SendValue(buffer);
+	_NavigationPtr->SendValue(buffer);
+}
+
+
+// [IUiInputValueResolver] IMPLEMENTATION
+
+CBYTE MenUI::ValueEntryCount() const
+{
+	return _NavigationPtr->ValueEntryCount();
+}
+
+VOID MenUI::RemoveValueEntry(CBYTE token)
+{
+	_NavigationPtr->RemoveValueEntry(token);
+}
+
+VOID MenUI::ClearValueEntriesOlderThan(CDWORD expirationMS)
+{
+	_NavigationPtr->ClearValueEntriesOlderThan(expirationMS);
+}
+
+VOID MenUI::ClearValueEntries()
+{
+	_NavigationPtr->ClearValueEntries();
+}
+
+CBOOL MenUI::ReadValueAsBool(CBYTE token, CUIBOOLVALUEFLAGS flags)
+{
+	return _NavigationPtr->ReadValueAsBool(token, flags);
+}
+
+CBYTE MenUI::ReadValueAsByte(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsByte(token);
+}
+
+CCHAR MenUI::ReadValueAsChar(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsChar(token);
+}
+
+CWCHAR MenUI::ReadValueAsWChar(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsWChar(token);
+}
+
+CWORD MenUI::ReadValueAsWord(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsWord(token);
+}
+
+CSHORT MenUI::ReadValueAsShort(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsShort(token);
+}
+
+CDWORD MenUI::ReadValueAsDWord(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsDWord(token);
+}
+
+CLONG MenUI::ReadValueAsLong(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsLong(token);
+}
+
+PCBYTE MenUI::ReadValueAsBinary(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsBinary(token);
+}
+
+PCCHAR MenUI::ReadValueAsString(CBYTE token)
+{
+	return _NavigationPtr->ReadValueAsString(token);
+}
+
+
+// [IUiInputSource] IMPLEMENTATION
+
+CBOOL MenUI::IsAsynchronous() const
+{
+	return _NavigationPtr->IsAsynchronous();
+}
+
+VOID MenUI::Poll()
+{
+	_NavigationPtr->Poll();
 }
 
 
@@ -180,32 +331,37 @@ VOID MenUI::SendValue(PCCHAR buffer)
 
 CBYTE MenUI::RendererCount() const
 {
-	return _Display.RendererCount();
+	return _DisplayPtr->RendererCount();
 }
 
 RCIUIRENDERER MenUI::Renderer(CBYTE i) const
 {
-	return _Display.Renderer(i);
+	return _DisplayPtr->Renderer(i);
 }
 
 RIUIRENDERER MenUI::Renderer(CBYTE i)
 {
-	return _Display.Renderer(i);
+	return _DisplayPtr->Renderer(i);
 }
 
 CBOOL MenUI::AddRenderer(RIUIRENDERER renderer)
 {
-	return _Display.AddRenderer(renderer);
+	return _DisplayPtr->AddRenderer(renderer);
+}
+
+VOID MenUI::ClearRenderers()
+{
+	_DisplayPtr->ClearRenderers();
 }
 
 VOID MenUI::RemoveRenderer(CBYTE rendererIdx)
 {
-	return _Display.RemoveRenderer(rendererIdx);
+	_DisplayPtr->RemoveRenderer(rendererIdx);
 }
 
 VOID MenUI::RemoveRenderer(RIUIRENDERER renderer)
 {
-	return _Display.RemoveRenderer(renderer);
+	_DisplayPtr->RemoveRenderer(renderer);
 }
 
 
@@ -213,172 +369,207 @@ VOID MenUI::RemoveRenderer(RIUIRENDERER renderer)
 
 CBYTE MenUI::Cols() const
 {
-	return _Display.Cols();
+	return _DisplayPtr->Cols();
 }
 
 CBYTE MenUI::Rows() const
 {
-	return _Display.Rows();
+	return _DisplayPtr->Rows();
 }
 
 CBYTE MenUI::CursorCol() const
 {
-	return _Display.CursorCol();
+	return _DisplayPtr->CursorCol();
 }
 
 CBYTE MenUI::CursorRow() const
 {
-	return _Display.CursorRow();
+	return _DisplayPtr->CursorRow();
 }
 
 CBOOL MenUI::IsLineWrapEnabled() const
 {
-	return _Display.IsLineWrapEnabled();
+	return _DisplayPtr->IsLineWrapEnabled();
 }
 
 VOID MenUI::SetLineWrapEnabled(CBOOL lineWrapEnabled)
 {
-	_Display.SetLineWrapEnabled(lineWrapEnabled);
+	_DisplayPtr->SetLineWrapEnabled(lineWrapEnabled);
 }
 
 VOID MenUI::CursorOn()
 {
-	_Display.CursorOn();
+	_DisplayPtr->CursorOn();
 }
 
 VOID MenUI::CursorOff()
 {
-	_Display.CursorOn();
+	_DisplayPtr->CursorOn();
 }
 
 VOID MenUI::CursorBlinkOn()
 {
-	_Display.CursorOn();
+	_DisplayPtr->CursorOn();
 }
 
 VOID MenUI::CursorBlinkOff()
 {
-	_Display.CursorOn();
+	_DisplayPtr->CursorOn();
 }
 
 CBOOL MenUI::Available()
 {
-	return _Display.Available();
+	return _DisplayPtr->Available();
 }
 
 VOID MenUI::Flush()
 {
-	_Display.Flush();
+	_DisplayPtr->Flush();
 }
 
 VOID MenUI::Clear()
 {
-	_Display.Clear();
+	_DisplayPtr->Clear();
 }
 
-VOID MenUI::ClearCol(CBYTE col)
+VOID MenUI::ClearCol(BYTE col)
 {
-	_Display.ClearCol(col);
+	_DisplayPtr->ClearCol(col);
 }
 
-VOID MenUI::ClearRow(CBYTE row)
+VOID MenUI::ClearRow(BYTE row)
 {
-	_Display.ClearRow(row);
+	_DisplayPtr->ClearRow(row);
+}
+
+VOID MenUI::ClearArea(BYTE col, BYTE row, BYTE cols, BYTE rows)
+{
+	_DisplayPtr->ClearArea(col, row, cols, rows);
 }
 
 VOID MenUI::ScrollLeft()
 {
-	_Display.ScrollLeft();
+	_DisplayPtr->ScrollLeft();
 }
 
 VOID MenUI::ScrollRight()
 {
-	_Display.ScrollRight();
+	_DisplayPtr->ScrollRight();
 }
 
 VOID MenUI::Home()
 {
-	_Display.Home();
+	_DisplayPtr->Home();
 }
 
 VOID MenUI::CursorPrev()
 {
-	_Display.CursorPrev();
+	_DisplayPtr->CursorPrev();
 }
 
 VOID MenUI::CursorNext()
 {
-	_Display.CursorNext();
+	_DisplayPtr->CursorNext();
 }
 
-VOID MenUI::MoveCursor(CBYTE col, CBYTE row)
+VOID MenUI::MoveCursor(BYTE col, BYTE row)
 {
-	_Display.MoveCursor(col, row);
+	_DisplayPtr->MoveCursor(col, row);
 }
 
 VOID MenUI::LoadCustomChar(BYTE charIndex, PCBYTE charData)
 {
-	_Display.LoadCustomChar(charIndex, charData);
+	_DisplayPtr->LoadCustomChar(charIndex, charData);
 }
 
 VOID MenUI::LoadCustomChar_P(BYTE charIndex, PCBYTE charDataAddr)
 {
-	_Display.LoadCustomChar_P(charIndex, charDataAddr);
+	_DisplayPtr->LoadCustomChar_P(charIndex, charDataAddr);
 }
 
-CBYTE MenUI::WriteAt(CBYTE value, CBYTE col, CBYTE row)
+CBYTE MenUI::WriteAt(BYTE value, BYTE col, BYTE row)
 {
-	return _Display.WriteAt(value, col, row);
+	return _DisplayPtr->WriteAt(value, col, row);
+}
+
+CBYTE MenUI::UpdateAt(BYTE value, BYTE col, BYTE row)
+{
+	return _DisplayPtr->UpdateAt(value, col, row);
 }
 
 CBYTE MenUI::PrintString(PCCHAR str, BYTE col, BYTE row)
 {
-	return _Display.PrintString(str, col, row);
+	return _DisplayPtr->PrintString(str, col, row);
+}
+
+CBYTE MenUI::UpdateString(PCCHAR str, BYTE col, BYTE row)
+{
+	return _DisplayPtr->UpdateString(str, col, row);
 }
 
 CBYTE MenUI::PrintString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
-	return _Display.PrintString_P(flashStr, col, row);
+	return _DisplayPtr->PrintString_P(flashStr, col, row);
 }
 
-CBYTE MenUI::PrintStyledLine(PCCHAR str, BYTE row)
+CBYTE MenUI::UpdateString_P(FLASH_STRING flashStr, BYTE col, BYTE row)
 {
-	return _Display.PrintStyledLine(str, row);
+	return _DisplayPtr->UpdateString_P(flashStr, col, row);
 }
 
-CBYTE MenUI::PrintStyledLine_P(FLASH_STRING flashStr, BYTE row)
+CBYTE MenUI::PrintStyledLine(PCCHAR str, BYTE col, BYTE row, BYTE cols)
 {
-	return _Display.PrintStyledLine_P(flashStr, row);
+	return _DisplayPtr->PrintStyledLine(str, col, row, cols);
+}
+
+CBYTE MenUI::PrintStyledLine_P(FLASH_STRING flashStr, BYTE col, BYTE row, BYTE cols)
+{
+	return _DisplayPtr->PrintStyledLine_P(flashStr, col, row, cols);
+}
+
+CBYTE MenUI::PrintGlyph(BYTE glyph, BYTE col, BYTE row)
+{
+	return _DisplayPtr->PrintGlyph(glyph, col, row);
+}
+
+VOID MenUI::BeginListItem(BYTE itemNumber)
+{
+	return _DisplayPtr->BeginListItem(itemNumber);
+}
+
+VOID MenUI::EndListItem(CCHAR inputTag)
+{
+	return _DisplayPtr->EndListItem(inputTag);
 }
 
 
-#ifndef NO_ITTYBITTY_EXTENSIONS
+#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 
 VOID MenUI::DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
 {
-	_Display.DrawScrollBar(percentage, options);
+	_DisplayPtr->DrawScrollBar(percentage, options);
 }
 
 VOID MenUI::DrawGraph(BYTE startCol, BYTE row,
 	BYTE widthChars, BYTE percentage, CLCDGRAPHOPTIONS options)
 {
-	_Display.DrawGraph(startCol, row, widthChars, percentage, options);
+	_DisplayPtr->DrawGraph(startCol, row, widthChars, percentage, options);
 }
 
 VOID MenUI::DrawSlider(BYTE startCol, BYTE row, BYTE widthChars,
 	BYTE percentage, CLCDSLIDEROPTIONS options, BOOL redraw)
 {
-	_Display.DrawSlider(startCol, row, widthChars, percentage, options, redraw);
+	_DisplayPtr->DrawSlider(startCol, row, widthChars, percentage, options, redraw);
 }
 
-#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
+#endif	// #ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 
 
 // [Print] IMPLEMENTATION
 
 SIZE MenUI::write(BYTE value)
 {
-	return _Display.write(value);
+	return _DisplayPtr->write(value);
 }
 
 #pragma endregion

@@ -95,14 +95,15 @@
 ************************************************************************************************/
 
 #ifndef __AVR__
-	#define _ITTYBITTY_H	"OH NO! ; ("	// NOTE: AVR architecture compatibility only!
+	#define _ITTYBITTY_H
 #endif
 
 #ifndef _ITTYBITTY_H
-#define _ITTYBITTY_H		"FTW"
+#define _ITTYBITTY_H
 
 
 // Disable modules depending on the Arduino framework
+// TODO: Remove non-include directive blocks.
 #ifndef ARDUINO
 	#define NO_ITTYBITTY_PRINT
 	#define NO_ITTYBITTY_INFO

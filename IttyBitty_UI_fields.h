@@ -115,8 +115,8 @@ namespace IttyBitty
 
 		// ACCESSORS/MUTATORS
 
-		VIRTUAL CONST T & Value() const = 0;
-		VIRTUAL T & Value() = 0;
+		VIRTUAL CONST T & GetValue() const = 0;
+		VIRTUAL VOID SetValue(T &) = 0;
 
 		VIRTUAL CBOOL ShowLabel() const = 0;
 
@@ -137,7 +137,7 @@ namespace IttyBitty
 #pragma region [UiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS UiFieldBase : public UiElement//, public IUiField<T>
+	CLASS UiFieldBase : public UiElementBase//, public IUiField<T>
 	{
 	public:
 
@@ -168,8 +168,8 @@ namespace IttyBitty
 
 		// [IUiField] IMPLEMENTATION
 
-		VIRTUAL CONST T & Value() const;
-		VIRTUAL T & Value();
+		VIRTUAL CONST T & GetValue() const;
+		VIRTUAL VOID SetValue(T &);
 
 		VIRTUAL CBOOL ShowLabel() const;
 
@@ -195,8 +195,8 @@ namespace IttyBitty
 
 		// [IUiField] IMPLEMENTATION
 
-		VIRTUAL CONST T & Value() const;
-		VIRTUAL T & Value();
+		VIRTUAL CONST T & GetValue() const;
+		VIRTUAL VOID SetValue(T &);
 
 		VIRTUAL CBOOL ShowLabel() const;
 
@@ -379,7 +379,7 @@ namespace IttyBitty
 #pragma region [ListUiFieldBase] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldBase : public UiField<T>, public UiContainerElement<ListUiFieldChoice<T>>
+	CLASS ListUiFieldBase : public UiField<T>, public UiContainerElementBase<ListUiFieldChoice<T>>
 	{
 	public:
 
@@ -395,19 +395,19 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:
 
 		// [IUiNavigationListener] OVERRIDES
 
-		VOID Up(CUIACTIONSTATE = CLICK);
-		VOID Down(CUIACTIONSTATE = CLICK);
-		VOID Left(CUIACTIONSTATE = CLICK);
-		VOID Right(CUIACTIONSTATE = CLICK);
-		VOID Return(CUIACTIONSTATE = CLICK);
-		VOID Select(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Up(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Down(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Left(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Right(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Return(CUIACTIONSTATE = CLICK);
+		VIRTUAL VOID Select(CUIACTIONSTATE = CLICK);
 
 
 	protected:
@@ -435,12 +435,15 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:
 
 		// [IUiListElement] IMPLEMENTATION
+
+		VIRTUAL CBYTE GetSelectedNumber() const;
+		VIRTUAL VOID SetSelectedNumber(CBYTE);
 
 		VIRTUAL CONST T & GetSelectedItem() const;
 		VIRTUAL VOID SetSelectedItem(CONST T &);
@@ -478,7 +481,7 @@ namespace IttyBitty
 
 		// PROTECTED DISPOSAL METHOD
 
-		VIRTUAL VOID Dispose();
+		VOID Dispose();
 
 
 	public:
@@ -487,8 +490,11 @@ namespace IttyBitty
 
 		VIRTUAL CBYTE NumSelected() const;
 
-		VIRTUAL CONST T * GetSelectedItems() const;
-		VIRTUAL VOID SetSelectedItems(CONST T * &, CBYTE);
+		VIRTUAL PCBYTE GetSelectedNumbers() const;
+		VIRTUAL VOID SetSelectedNumbers(CBYTE, PCBYTE);
+
+		VIRTUAL T * GetSelectedItems() const;
+		VIRTUAL VOID SetSelectedItems(CBYTE, CONST T *);
 
 
 		// [IUiNavigationListener] OVERRIDES
@@ -507,14 +513,17 @@ namespace IttyBitty
 #pragma region [UiFieldChoice] DEFINITION
 
 	template DEFAULT_T_CLAUSE
-	CLASS ListUiFieldChoice : public UiField<T>, public IUiChoice<ListUiField<T>>
+	CLASS ListUiFieldChoice : public UiField<T>, public IUiChoice
 	{
 	public:
 
 		// [IUiChildElement] IMPLEMENTATION
 
-		VIRTUAL PLISTUIFIELD<T> Parent() const;
-		VIRTUAL VOID SetParent(PLISTUIFIELD<T>);
+		VIRTUAL PPIUICONTAINERELEMENT<IUICHILDELEMENT> GetParent() const;
+		VIRTUAL VOID SetParent(PIUICONTAINERELEMENT<IUICHILDELEMENT>);
+
+		VIRTUAL CCHAR GetInputTag() const;
+		VIRTUAL VOID SetInputTag(CCHAR);
 
 
 		// [IUiChoice] IMPLEMENTATION

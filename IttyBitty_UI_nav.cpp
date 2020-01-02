@@ -33,7 +33,7 @@ UiInputSourceBase::UiInputSourceBase(RIUINAVIGATIONCONTROLLER navigation) : _Nav
 UiNavigationController::UiNavigationController(RIUINAVIGATIONLISTENER navListener, CBYTE inputSourceCount, PPIUIINPUTSOURCE inputSources)
 	: _NavListener(navListener), _InputSourceCount(inputSourceCount), _InputSources(inputSources)
 {
-	if (!_InputSources)
+	if (_InputSources)
 		_DisposeInputSources = TRUE;
 }
 
@@ -62,6 +62,8 @@ VOID UiNavigationController::Dispose()
 			delete _InputSources[i];
 			_InputSources[i] = NULL;
 		}
+
+		_DisposeInputSources = FALSE;
 	}
 
 	delete _InputSources;
@@ -107,7 +109,7 @@ RIUIINPUTSOURCE UiNavigationController::InputSource(CBYTE i)
 
 CBOOL UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
 {
-	if (!_DisposeInputSources)
+	if (_DisposeInputSources)
 		return FALSE;
 
 	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[++_InputSourceCount];
@@ -117,16 +119,25 @@ CBOOL UiNavigationController::AddInputSource(RIUIINPUTSOURCE inputSource)
 
 	newInputSources[_InputSourceCount - 1] = &inputSource;
 
-	if (_InputSources)
-		delete[] _InputSources;
+	this->Dispose();
 
 	_InputSources = newInputSources;
 
 	return TRUE;
 }
 
+VOID UiNavigationController::ClearInputSources()
+{
+	this->Dispose();
+
+	_InputSourceCount = 0;
+}
+
 VOID UiNavigationController::RemoveInputSource(CBYTE inputSourceIdx)
 {
+	if (!inputSourceIdx >= _InputSourceCount)
+		return;
+
 	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[--_InputSourceCount];
 	BYTE currIdx = 0;
 
@@ -136,27 +147,30 @@ VOID UiNavigationController::RemoveInputSource(CBYTE inputSourceIdx)
 			newInputSources[currIdx++] = _InputSources[i];
 	}
 
-	if (_InputSources)
-		delete[] _InputSources;
+	if (_DisposeInputSources)
+	{
+		delete _InputSources[inputSourceIdx];
+		_InputSources[inputSourceIdx] = NULL;
+	}
+
+	delete[] _InputSources;
 
 	_InputSources = newInputSources;
 }
 
 VOID UiNavigationController::RemoveInputSource(RIUIINPUTSOURCE inputSource)
 {
-	PPIUIINPUTSOURCE newInputSources = new PIUIINPUTSOURCE[--_InputSourceCount];
-	BYTE currIdx = 0;
+	if (!_InputSources)
+		return;
 
 	for (BYTE i = 0; i < _InputSourceCount; i++)
 	{
-		if (_InputSources[i] != &inputSource)
-			newInputSources[currIdx++] = _InputSources[i];
+		if (_InputSources[i] == &inputSource)
+		{
+			this->RemoveInputSource(i);
+			break;
+		}
 	}
-
-	if (_InputSources)
-		delete[] _InputSources;
-
-	_InputSources = newInputSources;
 }
 
 CBOOL UiNavigationController::IsShiftOn() const
@@ -267,7 +281,7 @@ VOID UiNavigationController::SendValue(PCCHAR buffer)
 
 	++_ValueEntryCount;
 
-	this->Value(newValueEntry->Token, *this);
+	this->Value(*this, newValueEntry->Token);
 }
 
 
@@ -321,9 +335,9 @@ VOID UiNavigationController::Select(CUIACTIONSTATE state)
 		_NavListener.Select(this->ApplyShiftAltFlags(resultState));
 }
 
-VOID UiNavigationController::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController)
+VOID UiNavigationController::Value(RIUIINPUTVALUERESOLVER inputValueController, CBYTE token)
 {
-	_NavListener.Value(token, inputValueController);
+	_NavListener.Value(inputValueController, token);
 }
 
 
@@ -346,14 +360,14 @@ VOID UiNavigationController::RemoveValueEntry(CBYTE token)
 	this->CompressValueEntries();
 }
 
-VOID UiNavigationController::ClearValueEntriesOlderThan(CDWORD expirationMs)
+VOID UiNavigationController::ClearValueEntriesOlderThan(CDWORD expirationMS)
 {
 	DWORD now = millis();
 	BOOL anyDeleted = FALSE;
 
 	for (BYTE i = 0; i < _ValueEntryCount; i++)
 	{
-		if (now - _ValueEntries[i]->Timestamp >= expirationMs)
+		if (now - _ValueEntries[i]->Timestamp >= expirationMS)
 		{
 			this->DeleteValueEntry(i);
 			anyDeleted = TRUE;
@@ -559,8 +573,8 @@ VOID UiNavigationController::Poll()
 		}
 	}
 
-	if (Options.Input.ValueEntryExpirationMs)
-		this->ClearValueEntriesOlderThan(Options.Input.ValueEntryExpirationMs);
+	if (Options.Input.ValueEntryExpirationMS)
+		this->ClearValueEntriesOlderThan(Options.Input.ValueEntryExpirationMS);
 }
 
 

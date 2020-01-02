@@ -28,7 +28,7 @@
 #define TOGGLE_PIN(port_ref, pin_number)			TOGGLE_BIT(port_ref, pin_number)
 
 #define PIN_IN_READ(port_letter, pin_number)		CHECK_SET(PIN##port_letter, pin_number)
-#define PIN_IN_SET(port_letter, pin_number)			PIN_IN_READ(PIN##port_letter, pin_number)
+#define PIN_IN_SET(port_letter, pin_number)			PIN_IN_READ(port_letter, pin_number)
 #define PIN_IN_UNSET(port_letter, pin_number)		CHECK_UNSET(PIN##port_letter, pin_number)
 
 #define PIN_OUT_SET(port_letter, pin_number)		SET_BIT(PORT##port_letter, pin_number)

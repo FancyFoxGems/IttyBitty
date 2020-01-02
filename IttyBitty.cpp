@@ -6,6 +6,7 @@
 
 #ifndef __AVR__
 	#define _ITTYBITTY_		"OH NO! ; ("	// NOTE: AVR architecture compatibility only!
+	#error "COMPATIBILITY ERROR: IttyBitty is only supported on AVR architecture platforms."
 #endif
 
 #ifndef _ITTYBITTY_
@@ -15,7 +16,7 @@
 // Disable modules depending on the Arduino framework
 #ifndef ARDUINO
 	#define NO_ITTYBITTY_PRINT
-	#define NO_ITTYBITTY_INFO
+	#define NO_ITTYBITTY_INFO					// TODO: Why exclude this?
 	#define NO_ITTYBITTY_STORAGE_ADAPTER_SD
 	#define NO_ITTYBITTY_EEPROM_I2C
 	#define NO_ITTYBITTY_LCD_I2C

@@ -129,6 +129,8 @@ namespace IttyBitty
 		VIRTUAL CDBRESULT SelectAllFrom(CBYTE, PBYTE &, RSIZE, PSIZE);
 		VIRTUAL CDBRESULT SelectAllFrom(PCCHAR, PBYTE &, RSIZE, PSIZE);
 
+		// TODO: Add SELECT and WHERE clause support.
+
 		VIRTUAL CDBRESULT FindFrom(CBYTE, CSIZE, PBYTE &, PSIZE);
 		VIRTUAL CDBRESULT FindFrom(PCCHAR, CSIZE, PBYTE &, PSIZE);
 
@@ -180,7 +182,7 @@ namespace IttyBitty
 
 		// INSTANCE VARIABLES
 
-		BOOL _Dispose = FALSE;
+		BOOL _DisposeTables = FALSE;
 
 		RISTORAGE _Storage = IttyBitty::NULL_STORAGE();
 

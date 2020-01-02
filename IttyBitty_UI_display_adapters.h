@@ -12,15 +12,19 @@
 
 #include "IttyBitty_UI_display.h"
 
-#ifndef NO_ITTYBITTY_LCD
-	#include "IttyBitty_LCD_I2C.h"
-#endif
-
 #include "Stream.h"
 
 
 // SUPRESS COMPILER WARNINGS RELATED TO NON-VIRTUAL DESTRUCTORS
 IGNORE_WARNING(delete-non-virtual-dtor);
+
+
+#pragma region MenUI OPTIONS/CONSTANTS
+
+#define MENUI_SERIAL_STYLED_LINE_COLS	80
+#define MENUI_SERIAL_CLEAR_LINES		3
+
+#pragma endregion
 
 
 namespace IttyBitty
@@ -33,9 +37,9 @@ namespace IttyBitty
 
 #ifndef NO_ITTYBITTY_LCD
 
-	#define LCDI2C_UI_RENDERER_T_CLAUSE_DEF	<CBYTE LineChars, CBYTE Lines, CBYTE I2CAddr, BOOL Use5x10Chars>
+	#define LCDI2C_UI_RENDERER_T_CLAUSE_DEF	<CBYTE LineChars, CBYTE Lines, CBYTE I2CAddr, CBOOL Use5x10Chars>
 	#define LCDI2C_UI_RENDERER_T_CLAUSE		<CBYTE LineChars = LCD_DEFAULT_COLS, CBYTE Lines = LCD_DEFAULT_ROWS, \
-		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, BOOL Use5x10Chars = FALSE>
+		CBYTE I2CAddr = LCD_DEFAULT_I2C_ADDRESS, CBOOL Use5x10Chars = FALSE>
 	#define LCDI2C_UI_RENDERER_T_ARGS		<LineChars, Lines, I2CAddr, Use5x10Chars>
 
 	template LCDI2C_UI_RENDERER_T_CLAUSE
@@ -87,8 +91,13 @@ namespace IttyBitty
 		VIRTUAL CBOOL Available();
 		VIRTUAL VOID Flush();
 
+		VIRTUAL VOID Clear();
+
+		VIRTUAL CBYTE PrintStyledLine(PCCHAR, BYTE = MAX_BYTE, BYTE = MAX_BYTE, BYTE = 0);
+		VIRTUAL CBYTE PrintStyledLine_P(FLASH_STRING, BYTE = MAX_BYTE, BYTE = MAX_BYTE, BYTE = 0);
+
 		VIRTUAL VOID BeginListItem(BYTE);
-		VIRTUAL VOID EndListItem(CHAR = NULL_CHARACTER);
+		VIRTUAL VOID EndListItem(CCHAR = NULL_CHARACTER);
 
 
 	protected:
@@ -196,14 +205,19 @@ namespace IttyBitty
 			_LCD->Clear();
 		}
 
-		VIRTUAL VOID ClearCol(CBYTE col = MAX_BYTE)
+		VIRTUAL VOID ClearCol(BYTE col = MAX_BYTE)
 		{
-			_LCD->ClearRow(col);
+			_LCD->ClearCol(col);
 		}
 
-		VIRTUAL VOID ClearRow(CBYTE row = MAX_BYTE)
+		VIRTUAL VOID ClearRow(BYTE row = MAX_BYTE)
 		{
 			_LCD->ClearRow(row);
+		}
+
+		VIRTUAL VOID ClearSection(BYTE col, BYTE row, BYTE cols, BYTE rows)
+		{
+			_LCD->ClearSection(col, row, cols, rows);
 		}
 
 		VIRTUAL VOID ScrollLeft()
@@ -231,7 +245,7 @@ namespace IttyBitty
 			_LCD->CursorNext();
 		}
 
-		VIRTUAL VOID MoveCursor(CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		VIRTUAL VOID MoveCursor(BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
 			_LCD->MoveCursor(col, row);
 		}
@@ -246,23 +260,31 @@ namespace IttyBitty
 			_LCD->LoadCustomChar_P(charIndex, charDataAddr);
 		}
 
-		VIRTUAL CBYTE WriteAt(CBYTE value, CBYTE col = MAX_BYTE, CBYTE row = MAX_BYTE)
+		VIRTUAL CBYTE WriteAt(BYTE value, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
-			return _LCD->WriteAt(value, col, row);
+			return _LCD>WriteAt(value, col, row);
 		}
+
+		VIRTUAL CBYTE UpdateAt(BYTE value, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)  ALIAS(WriteAt);
 
 		VIRTUAL CBYTE PrintString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
 			return _LCD->PrintString(str, col, row);
 		}
 
+		VIRTUAL CBYTE UpdateString(PCCHAR str, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) ALIAS(PrintString);
+
 		VIRTUAL CBYTE PrintString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE)
 		{
 			return _LCD->PrintString_P(flashStr, col, row);
 		}
 
+		VIRTUAL CBYTE UpdateString_P(FLASH_STRING flashStr, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) ALIAS(PrintString_P);
 
-	#ifndef NO_ITTYBITTY_EXTENSIONS
+		VIRTUAL CBYTE PrintGlyph(BYTE glyph, BYTE col = MAX_BYTE, BYTE row = MAX_BYTE) ALIAS(WriteAt);
+
+
+	#ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 
 		VIRTUAL VOID DrawScrollBar(BYTE percentage, CLCDSCROLLBAROPTIONS options)
 		{
@@ -281,7 +303,7 @@ namespace IttyBitty
 			_LCD->DrawSlider(startCol, row, widthChars, percentage, options, redraw);
 		}
 
-	#endif	// #ifndef NO_ITTYBITTY_EXTENSIONS
+	#endif	// #ifndef NO_ITTYBITTY_LCD_EXTENSIONS
 
 
 	protected:

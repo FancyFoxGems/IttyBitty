@@ -1,9 +1,7 @@
 /**********************************************************************************************
 * This file is part of the Itty Bitty Arduino library.                                        *
 * Copyright © 2016 Thomas J. Biuso III  ALL RIGHTS RESERVED...WHATEVER THAT MEANS.            *
-* RELEASED UNDER THE GPL v3.0 LICENSE
-{
-} SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
+* RELEASED UNDER THE GPL v3.0 LICENSE; SEE <LICENSE> FILE WITHIN DISTRIBUTION ROOT FOR TERMS. *
 ***********************************************************************************************/
 
 #ifdef ITTYBITTY_BASE
@@ -17,28 +15,27 @@
 using namespace IttyBitty;
 
 
-#pragma region [UiElement] IMPLEMENTATION
+#pragma region [UiElementBase] IMPLEMENTATION
 
 // CONSTRUCTOR
 
-UiElement::UiElement(FLASH_STRING label) : _Label(label) { }
+UiElementBase::UiElementBase(FLASH_STRING label) : _Label(label) { }
 
 
 // [IUiElement] IMPLEMENTATION
 
-CBOOL UiElement::operator >(RCUIELEMENT other) const
+CBOOL UiElementBase::operator >(RCIUIELEMENT other) const
 {
 	return this->Width() > other.Width();
 }
 
-FLASH_STRING UiElement::Label() const
+FLASH_STRING UiElementBase::Label() const
 {
 	return _Label;
 }
 
-PCCHAR UiElement::LabelString() const
+PCCHAR UiElementBase::LabelString() const
 {
-	// !TODO: Hold onto label data in object?
 	PGM_P pLabel = reinterpret_cast<PGM_P>(_Label);
 	PCHAR label = new char[strlen_P(pLabel)];
 
@@ -47,17 +44,17 @@ PCCHAR UiElement::LabelString() const
 	return label;
 }
 
-CBYTE UiElement::Width() const
+CBYTE UiElementBase::Width() const
 {
 	return strlen_P(reinterpret_cast<PGM_P>(_Label));
 }
 
-CBYTE UiElement::Height() const
+CBYTE UiElementBase::Height() const
 {
 	return 1;
 }
 
-VOID UiElement::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
+VOID UiElementBase::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
 {
 	renderer.PrintString_P(_Label, col, row);
 }
@@ -65,19 +62,41 @@ VOID UiElement::Render(RIUIRENDERER renderer, CBYTE col, CBYTE row)
 
 // [IUiNavigationListener] IMPLEMENTATION
 
-VOID UiElement::Up(CUIACTIONSTATE state) { }
+VOID UiElementBase::Up(CUIACTIONSTATE state) { }
 
-VOID UiElement::Down(CUIACTIONSTATE state) { }
+VOID UiElementBase::Down(CUIACTIONSTATE state) { }
 
-VOID UiElement::Left(CUIACTIONSTATE state) { }
+VOID UiElementBase::Left(CUIACTIONSTATE state) { }
 
-VOID UiElement::Right(CUIACTIONSTATE state) { }
+VOID UiElementBase::Right(CUIACTIONSTATE state) { }
 
-VOID UiElement::Return(CUIACTIONSTATE state) { }
+VOID UiElementBase::Return(CUIACTIONSTATE state) { }
 
-VOID UiElement::Select(CUIACTIONSTATE state) { }
+VOID UiElementBase::Select(CUIACTIONSTATE state) { }
 
-VOID UiElement::Value(CBYTE token, RIUIINPUTVALUERESOLVER inputValueController) { }
+VOID UiElementBase::Value(RIUIINPUTVALUERESOLVER inputValueController, CBYTE token) { }
+
+#pragma endregion
+
+
+#pragma region [UiScreenElementBase] IMPLEMENTATION
+
+// CONSTRUCTOR
+
+UiScreenElementBase::UiScreenElementBase(FLASH_STRING label) : UiElementBase(label) { }
+
+
+// [IUiScreenElement] IMPLEMENTATION
+
+CBOOL UiScreenElementBase::IsActive() const
+{
+	return _Active;
+}
+
+VOID UiScreenElementBase::SetActive(BOOL active)
+{
+	_Active = active;
+}
 
 #pragma endregion
 

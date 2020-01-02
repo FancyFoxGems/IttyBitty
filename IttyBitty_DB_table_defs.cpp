@@ -325,7 +325,7 @@ SIZE DbTableDef::printTo(Print & printer) const
 #endif
 
 
-// [IDbTableDef] IHELPER METHODS
+// [IDbTableDef] HELPER METHODS
 
 CBYTE DbTableDef::TableNameLength() const
 {

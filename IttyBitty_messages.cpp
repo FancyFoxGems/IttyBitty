@@ -186,8 +186,6 @@ Message::Message(RCMESSAGE other)
 {
 	this->~Message();
 
-	_Dispose = FALSE;
-
 	_MessageCode = other._MessageCode;
 	_ParamCount = other._ParamCount;
 	_Params = other._Params;
@@ -252,6 +250,8 @@ VOID Message::Dispose()
 				_Params[i] = NULL;
 			}
 		}
+
+		_Dispose = FALSE;
 	}
 
 	delete[] _Params;
@@ -448,7 +448,6 @@ PCCHAR Message::ToString() const
 
 		bufferPtr += paramSize;
 	}
-
 
 	return reinterpret_cast<PCCHAR>(__message_buffer);
 }
