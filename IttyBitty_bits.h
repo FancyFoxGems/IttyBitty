@@ -77,11 +77,14 @@
 #define NOT							!
 #define AND							&&
 #define OR							||
+
 #define XOR(val1, val2)				(NOT (NOT (val1) ^ NOT (val2)))
 #define NAND(val1, val2)			(NOT ((val1) AND (val2)))
 #define NOR(val1, val2)				(NOT ((val1) OR (val2)))
 #define NXOR(val1, val2)			(NOT (val1) ^ NOT (val2))
 #define XNOR(val1, val2)			NXOR(val1, val2)
+
+#define TOGGLE(ref)					((ref) = NOT (ref))
 
 
 /* BITWISE OPERATOR ALIASES */
@@ -109,11 +112,21 @@
 #define BSHL						BIT_SHIFT_LEFT
 #define SHL							BIT_SHIFT_LEFT
 
+#define POWER_OF_TWO(power)			1 SHL (power)
+
 #define MASK(ref, mask)				BAND(ref, mask)
 #define NOT_MASK(ref, mask)			BAND(~ref, mask)
 #define WITH_MASK(ref, mask)		BOR(ref, mask)
 #define WITHOUT_MASK(ref, mask)		BAND(ref, ~mask)
 #define INVERSE_MASK(ref, mask)		INV MASK(ref, mask)
+
+#ifdef __BUILTIN_AVR_INSERT_BITS
+	#define BREV(byte)				__builtin_avr_insert_bits(0x01234567, byte, 0)
+#else
+	#define BREV(byte)				(BYTE)(((byte * 0x0802LU & 0x22110LU) | (byte * 0x8020LU & 0x88440LU)) * 0x10101LU >> 16)
+#endif
+
+#define REVERSE_BYTE(byte)			BREV(byte)
 
 
 /* MASK GENERATOR MACROS */
@@ -168,6 +181,11 @@
 #define CHOOSE_BITS(ref, mask)					BITSCHOOSE(ref, mask)
 #define MASK_BITS(ref, mask)					BITSCHOOSE(ref, mask)
 
+#define BITSCLEAR(ref)							((ref) &= ~(ref))
+#define RESET_ALL_BITS(ref)						BITSCLEAR(ref)
+#define UNSET_ALL_BITS(ref)						BITSCLEAR(ref)
+#define CLEAR_ALL_BITS(ref)						BITSCLEAR(ref)
+
 #define BITSRST(ref, mask)						((ref) &= ~(mask))
 #define RESET_BITS(ref, mask)					BITSRST(ref, mask)
 #define UNSET_BITS(ref, mask)					BITSRST(ref, mask)
@@ -188,6 +206,7 @@
 
 #define BITSCOPYFROM(ref, mask, from_ref)		((ref) = BITSWITHOUT(ref, mask) | MASK(from_ref, mask))
 #define COPY_BITS_FROM(ref, mask, from_ref)		BITSCOPYFROM(ref, mask, from_ref)
+#define COPY_BITS(ref, mask, from_ref)			BITSCOPYFROM(ref, mask, from_ref)
 
 
 // CORRESPONDING EXPANSION MACROS...
@@ -238,6 +257,7 @@
 #define CLEAR_BITS_FROM_PAIR(ref_mask_pair, from_ref)		BITSCLEARFROM(ref_mask_pair, from_ref)
 
 #define BITSCOPYFROMP(ref_mask_pair, from_ref)				BITSCOPYFROM(ref_mask_pair, from_ref)
+#define COPY_BITS__FROMPAIR(ref_mask_pair, from_ref)		BITSCOPYFROM(ref_mask_pair, from_ref)
 #define COPY_BITS_PAIR(ref_mask_pair, from_ref)				BITSCOPYFROM(ref_mask_pair, from_ref)
 
 #define BITSSETFROMT(ref_mask_from_ref_tuple)				BITSSETFROM(ref_mask_from_ref_tuple)
@@ -247,6 +267,7 @@
 #define CLEAR_BITS_FROM_TUPLE(ref_mask_from_ref_tuple)		BITSCLEARFROM(ref_mask_from_ref_tuple)
 
 #define BITSCOPYFROMT(ref_mask_from_ref_tuple)				BITSCOPYFROM(ref_mask_from_ref_tuple)
+#define COPY_BITS_FROM_TUPLE(ref_mask_from_ref_tuple)		BITSCOPYFROM(ref_mask_from_ref_tuple)
 #define COPY_BITS_TUPLE(ref_mask_from_ref_tuple)			BITSCOPYFROM(ref_mask_from_ref_tuple)
 
 
@@ -297,7 +318,7 @@
 #define FLIP_BIT_GOOD(ref, bit_offset)				BFLP(ref, bit_offset)		// [heh...]
 
 #define BSETTO(ref, bit_offset, value)				((ref) = BWITHOUT(ref, bit_offset) | (value) SHL (bit_offset))
-#define SET_BIT_TO(ref, bit_offset, value)			BSETTO(ref, bit_offset, from_ref)
+#define SET_BIT_TO(ref, bit_offset, value)			BSETTO(ref, bit_offset, value)
 
 #define BSETFROM(ref, bit_offset, from_ref)			BITSSETFROM(ref, B(bit_offset), from_ref)
 #define SET_BIT_FROM(ref, bit_offset, from_ref)		BSETFROM(ref, bit_offset, from_ref)
@@ -307,6 +328,7 @@
 
 #define BCOPYFROM(ref, bit_offset, from_ref)		BITSCOPYFROM(ref, B(bit_offset), from_ref)
 #define COPY_BIT_FROM(ref, bit_offset, from_ref)	BCOPYFROM(ref, bit_offset, from_ref)
+#define COPY_BIT(ref, bit_offset, from_ref)			BCOPYFROM(ref, bit_offset, from_ref)
 
 // CORRESPONDING EXPANSION MACROS...
 
@@ -321,11 +343,14 @@
 
 #define BWITHP(ref_bit_offset_pair)					BWITH(ref_bit_offset_pair)
 #define WITH_BIT_PAIR(ref_bit_offset_pair)			BWITH(ref_bit_offset_pair)
+#define WITH_BIT_SET_PAIR(ref_bit_offset_pair)		BWITH(ref_bit_offset_pair)
+
+#define BWITHOUTP(ref_bit_offset_pair)				BITSWITHOUT(ref_bit_offset_pair)
+#define WITHOUT_BIT_PAIR(ref_bit_offset_pair)		BITSWITHOUT(ref_bit_offset_pair)
+#define WITHOUT_BIT_SET_PAIR(ref_bit_offset_pair)	BITSWITHOUT(ref_bit_offset_pair)
 
 #define BNOTP(ref_bit_offset_pair)					BNOT(ref_bit_offset_pair)
 #define NOT_BIT_PAIR(ref_bit_offset_pair)			BNOT(ref_bit_offset_pair)
-#define BWITHOUTP(ref_bit_offset_pair)				BNOT(ref_bit_offset_pair)
-#define WITHOUT_BIT_PAIR(ref_bit_offset_pair)		BNOT(ref_bit_offset_pair)
 
 #define BSETP(ref_bit_offset_pair)					BSET(ref_bit_offset_pair)
 #define SET_BIT_PAIR(ref_bit_offset_pair)			BSET(ref_bit_offset_pair)
@@ -338,6 +363,9 @@
 #define UNSET_BIT_PAIR(ref_bit_offset_pair)			BRST(ref_bit_offset_pair)
 #define RESET_BIT_PAIR(ref_bit_offset_pair)			BRST(ref_bit_offset_pair)
 #define CLEAR_BIT_PAIR(ref_bit_offset_pair)			BRST(ref_bit_offset_pair)
+
+#define BSETINVP(ref_bit_offset_pair)				BSETINV(ref_bit_offset_pair)
+#define SET_OTHER_BITS_PAIR(ref_bit_offset_pair)	BSETINV(ref_bit_offset_pair)
 
 #define BFLPP(ref_bit_offset_pair)					BFLP(ref_bit_offset_pair)
 #define FLIP_BIT_PAIR(ref_bit_offset_pair)			BFLP(ref_bit_offset_pair)
@@ -429,7 +457,8 @@
 
 /* NYBBLE MANIPULATION MACROS */
 
-#define NYBBLES_TO_BYTE(nybble1, nybble2)				WITH_MASK(byte1) SHL BITS_PER_NYBBLE, byte2))
+#define NYBBLES_TO_BYTE(nybble1, nybble2)				WITH_MASK(BYTE(nybble1) SHL BITS_PER_NYBBLE, BYTE(nybble2))
+#define MAKE_BYTE(nybble1, nybble2)						NYBBLES_TO_BYTE(nybble1, nybble2)
 
 #define LOW_NYBBLE_MASK									NYBBLE_MASK(0)
 #define HIGH_NYBBLE_MASK								NYBBLE_MASK(1)
@@ -456,11 +485,17 @@
 #define CLEAR_NYBBLE(ref, nybble_offset)				CLEAR_BITS(ref, NYBBLE_MASK(nybble_offset))
 
 #define COPY_NYBBLE_FROM(ref, nybble_offset, from_ref)	COPY_BITS_FROM(ref, NYBBLE_MASK(nybble_offset), from_ref)
+#define COPY_FROM(ref, nybble_offset, from_ref)			COPY_NYBBLE_FROM(ref, nybble_offset, from_ref)
 
 
 /* BYTE MANIPULATION MACROS */
 
 #define BYTES_TO_WORD(byte1, byte2)						WITH_MASK(WORD(byte1) SHL BITS_PER_BYTE, WORD(byte2))
+#define MAKE_WORD(byte1, byte2)							BYTES_TO_WORD(byte1, byte2)
+
+#define NYBBLES_TO_WORD(nybble1, nybble2, nybble3, nybble4)	\
+	MAKE_WORD(MAKE_BYTE(nybble1, nybble2), MAKE_BYTE(nybble3, nybble4))
+#define MAKE_WORD_N(nybble1, nybble2, nybble3, nybble4)	NYBBLES_TO_WORD(nybble1, nybble2, nybble3, nybble4)
 
 #define LOW_BYTE_MASK									BYTE_MASK(0)
 #define HIGH_BYTE_MASK									BYTE_MASK(1)
@@ -490,11 +525,21 @@
 #define GET_BITS_FROM_BYTE(ref, bit_offset, bit_size)	BYTE_RANGE(ref, bit_offset, bit_size)
 
 #define COPY_BYTE_FROM(ref, byte_offset, from_ref)		COPY_BITS_FROM(ref, BYTE_MASK(byte_offset), from_ref)
+#define COPY_BYTE(ref, byte_offset, from_ref)			COPY_BYTE_FROM(ref, byte_offset, from_ref)
 
 
 /* WORD MANIPULATION MACROS */
 
-#define WORDS_TO_DWORD(byte1, byte2)					WITH_MASK(DWORD(byte1) SHL BITS_PER_BYTE, DWORD(byte2))
+#define WORDS_TO_DWORD(word1, byte2)					WITH_MASK(DWORD(word1) SHL BITS_PER_BYTE, DWORD(word2))
+#define MAKE_DWORD(word1, word2)						WORDS_TO_DWORD(word1, word2)
+
+#define BYTES_TO_DWORD(byte1, byte2, byte3, byte4)		MAKE_DWORD(MAKE_WORD(byte1, byte2), MAKE_WORD(byte3, byte4))
+#define MAKE_DWORD_B(byte1, byte2, byte3, byte4)		BYTES_TO_DWORD(byte1, byte2, byte3, byte4)
+
+#define NYBBLES_TO_DWORD(nybble1, nybble2, nybble3, nybble4, nybble5, nybble6, nybble7, nybble8)	\
+	MAKE_DWORD(MAKE_WORD(nybble1, nybble2, nybble3, nybble4), MAKE_WORD(nybble5, nybble6, nybble7, nybble8))
+#define MAKE_DWORD_N(nybble1, nybble2, nybble3, nybble4, nybble5, nybble6, nybble7, nybble8)		\
+	NYBBLES_TO_DWORD(nybble1, nybble2, nybble3, nybble4, nybble5, nybble6, nybble7, nybble8)
 
 #define LOW_WORD_MASK									WORD_MASK(0)
 #define HIGH_WORD_MASK									WORD_MASK(1)
@@ -521,6 +566,7 @@
 #define CLEAR_WORD(ref, word_offset)					CLEAR_BITS(ref, WORD_MASK(word_offset))
 
 #define COPY_WORD_FROM(ref, word_offset, from_ref)		COPY_BITS_FROM(ref, WORD_MASK(word_offset), from_ref)
+#define COPY_WORD(ref, word_offset, from_ref)			COPY_WORD_FROM(ref, word_offset, from_ref)
 
 
 /* SUPRESS COMPILER WARNINGS RELATED TO BITFIELD ALIASING */

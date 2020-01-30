@@ -127,7 +127,7 @@ namespace IttyBitty
 #pragma endregion
 
 
-#pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DECLARATIONS
+#pragma region GENERAL CPU & ARDUINO INFO GLOBAL FUNCTION DEFINITIONS
 
 	CONSTEXPR PCCHAR CPUType()
 	{
@@ -259,6 +259,13 @@ namespace IttyBitty
 	CDWORD SketchSpaceFree();
 
 	EXTERN CDWORD (&SketchSize)();
+
+#pragma endregion
+
+
+#pragma region TEMPERATURE SENSOR GLOBAL FUNCTION DECLARATIONS
+
+	// TODO: Add temp sensor support
 
 #pragma endregion
 }

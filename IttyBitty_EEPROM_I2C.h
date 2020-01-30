@@ -16,7 +16,7 @@
 using namespace IttyBitty;
 
 #include "Wire.h"
-#include "EEPROM.h"
+#include "EEPROM.h"	// TODO: Why reference EEPROM library here?
 
 
 #pragma region DEFINES
@@ -652,7 +652,7 @@ namespace IttyBitty
 			Wire.begin();
 
 			if (use400KHz)
-				TWBR = (CBYTE)((F_CPU / 400 * kilo) - 16) / 2;
+				TWBR = (CBYTE)((F_CPU / 400 * KILOHERTZ) - 16) / 2;
 		}
 
 

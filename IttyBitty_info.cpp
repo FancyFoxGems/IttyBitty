@@ -312,6 +312,13 @@ namespace IttyBitty
 	CDWORD (&SketchSize)() = SketchSpaceUsed;
 
 #pragma endregion
+
+
+#pragma region TEMPERATURE SENSOR GLOBAL FUNCTION DEFINITIONS
+
+	// TODO: Add temp sensor support
+
+#pragma endregion
 }
 
 #endif	// #ifndef NO_ITTYBITTY_INFO

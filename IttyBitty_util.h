@@ -12,7 +12,14 @@
 
 /* COMPILER MACROS */
 
-#define ASM(expr)						__asm__ __volatile__(expr)
+#define ALT_KEYWORD(keyword)			__ ## keyword ## __
+#define EXTENSION(expr)					\
+	__extension__(						\
+	{									\
+		expr							\
+	})
+
+#define ASM(expr)						EXTENSION(__asm__ __volatile__(expr);)
 
 #define NOP()							ASM("nop")
 
@@ -21,9 +28,9 @@
 #define BARRIER()						COMPILER_BARRIER()
 
 #define PREFETCH(addr, ARGS...)			VA_MACRO(PREFETCH, addr, ##ARGS)
-#define PREFETCH_1(addr)				__builtin_prefetch (addr)
-#define PREFETCH_2(addr, rw)			__builtin_prefetch (addr, rw)
-#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch (addr, rw, locality)
+#define PREFETCH_1(addr)				__builtin_prefetch(addr)
+#define PREFETCH_2(addr, rw)			__builtin_prefetch(addr, rw)
+#define PREFETCH_3(addr, rw, locality)	__builtin_prefetch(addr, rw, locality)
 
 #define EXPECT(expr, val)				__builtin_expect(expr, val)
 #define EXPECTED(expr)					EXPECT(expr, TRUE)
@@ -267,7 +274,7 @@ IGNORE_WARNING(unused-but-set-variable)
 #define FINI0						FINI_SECTION(0)					// NOTE: Used by GCC: __stop_program loop
 
 
-/* DATA TYPE SIZES */
+/* DIGITS & DATA TYPE SIZES */
 
 #define BITS_PER_NYBBLE		4
 #define NYBBLE_BITS			BITS_PER_NYBBLE
@@ -285,25 +292,48 @@ IGNORE_WARNING(unused-but-set-variable)
 #define QWORD_BITWIDTH		BITS_PER_QWORD
 #define QWORD_BITS			BITS_PER_QWORD
 
-#define kilo				1000
-#define kilobit_BITS		kilo
-#define kilobit				kilobit_BITS
+#define THOUSAND			1000
+#define MILLION				THOUSAND * THOUSAND
+#define BILLION				THOUSAND * THOUSAND * THOUSAND
+
+#define kilo				THOUSAND
+#define kilobit				kilo
+#define kilobits			kilo
+#define kilohertz			kilo
+#define KILOHERTZ			kilo
 
 #define KILO				1024
-#define KILObit_BITS		KILO
-#define KILObit				KILObit_BITS
+#define KILObit				KILO
+#define KILObits			KILO
+#define KILOBIT				KILO
+#define KILOBITS			KILO
 #define KILOBYTE_BITS		KILO * BITS_PER_BYTE
-#define KILOBYTE			KILOBYTE_BITS
 
-#define mega				kilo * kilo
-#define megabit_BITS		mega
-#define megabit				megabit_BITS
+#define mega				MILLION
+#define megabit				mega
+#define megabits			mega
+#define megahertz			mega
+#define MEGAHERTZ			mega
 
 #define MEGA				KILO * KILO
-#define MEGAbit_BITS		MEGA
-#define MEGAbit				MEGAbit_BITS
+#define MEGAbit				MEGA
+#define MEGAbits			MEGA
+#define MEGABIT				MEGA
+#define MEGABITS			MEGA
 #define MEGABYTE_BITS		MEGA * BITS_PER_BYTE
-#define MEGABYTE			MEGABYTE_BITS
+
+#define giga				BILLION
+#define gigabit				giga
+#define gigabits			giga
+#define gigahertz			giga
+#define GIGAHERTZ			giga
+
+#define GIGA				KILO * KILO * KILO
+#define GIGAbit				GIGA
+#define GIGAbits			GIGA
+#define GIGABIT				GIGA
+#define GIGABITS			GIGA
+#define GIGABYTE_BITS		GIGA * BITS_PER_BYTE
 
 
 /* SPECIAL VALUES */
@@ -341,6 +371,9 @@ IGNORE_WARNING(unused-but-set-variable)
 #define OFFSETOF(type, member_var)	offsetof(type, member_var)
 
 #define SIZEOF(var)					sizeof(var)
+
+#define IS_COMPILE_TIME_CONSTANT(var)	__builtin_constant_p(var)
+#define IS_CONSTANT(var)				IS_COMPILE_TIME_CONSTANT(var)
 
 
 /* METAFUNCTION ALIASES */
@@ -430,6 +463,7 @@ using std::forward;
 /* CASTING MACROS */
 
 #define MAKE_CONST(var)				const_cast<ONLY_CONST_TYPEOF(var)>(var)
+#define CONST_THIS					MAKE_CONST(this)
 #define MAKE_CONST_2D(var)			((ONLY_CONST_TYPEOF((var)[0][0])(*)[CAPACITY((var)[0])])(var))
 #define MAKE_CONST_PP(var)			((ONLY_CONST_TYPE(UNPOINTER_TYPE(UNPOINTER_TYPE(TYPEOF(var)))) **)(var))
 
@@ -525,7 +559,7 @@ class __FlashStringHelper;
 
 /* PLACEMENT NEW IMPLEMENTATION */
 
-#if !defined(ARDUINO) || ARDUINO < 20000 // NOTE: Assume Arduino 2.0+ will define placement new??
+#if !defined(ARDUINO) || ARDUINO < 20000	// NOTE: Assume Arduino 2.0+ will define placement new??
 
 INLINE PTR operator new(SIZE size, PTR ptr)
 {
