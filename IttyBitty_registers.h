@@ -95,25 +95,29 @@ namespace IttyBitty
 
 #endif	// #ifndef NO_ITTYBITTY_BYTES
 
-#define REG_FIELD(reg_addr)			(*(reinterpret_cast<PVREG8>(reg_addr))
-#define SFR_FIELD(sfr)				REG_FIELD(_SFR_MEM_ADDR(sfr))
-#define IO_REG_FIELD(io_reg)		SFR_FIELD(io_reg))
+#define REG_FIELD(mem_addr)				(*(reinterpret_cast<PVREG8>(mem_addr))
+#define SFR_FIELD(sfr)					REG_FIELD(_SFR_MEM_ADDR(sfr))
+#define IO_REG_FIELD(io_reg)			SFR_FIELD(io_reg))
+#define EXT_IO_REG_FIELD(ext_io_reg)	SFR_FIELD(ext_io_reg)
 
-#define NEW_REG8(reg_addr)			(new REG8(reinterpret_cast<PVBYTE>(reg_addr)))
-#define NEW_SFR(sfr)				NEW_REG8(_SFR_MEM_ADDR(sfr))
-#define NEW_IO_REG8(io_reg)			NEW_SFR(io_reg)
+#define NEW_REG8(mem_addr)				(new REG8(reinterpret_cast<PVBYTE>(mem_addr)))
+#define NEW_SFR_REG8(sfr)				NEW_REG8(_SFR_MEM_ADDR(sfr))
+#define NEW_IO_REG8(io_reg)				NEW_SFR_REG8(io_reg)
+#define NEW_EXT_IO_REG8(ext_io_reg)		NEW_SFR_REG8(ext_io_reg)
 
 #ifndef NO_ITTYBITTY_BYTES
 
-#define REG_BIT(reg_addr, bit)		REG_FIELD(reg_addr)[bit]
-#define SFR_BIT(sfr, bit)			SFR_FIELD(sfr)[bit]
-#define IO_REG_BIT(io_reg, bit)		IO_REG_FIELD(io_reg)[bit]
+#define REG_BIT(mem_addr, bit)			REG_FIELD(mem_addr)[bit]
+#define SFR_BIT(sfr, bit)				SFR_FIELD(sfr)[bit]
+#define IO_REG_BIT(io_reg, bit)			SFR_BIT(sfr, bit)
+#define EXT_IO_REG_BIT(ext_io_reg, bit)	SFR_BIT(sfr, bit)
 
 #else	// #ifndef NO_ITTYBITTY_BYTES
 
-#define REG_BIT(reg_addr, bit)		REG_FIELD(reg_addr).b ## bit
-#define SFR_BIT(sfr, bit)			SFR_FIELD(sfr).b ## bit
-#define IO_REG_BIT(io_reg, bit)		IO_REG_FIELD(io_reg).b ## bit
+#define REG_BIT(mem_addr, bit)			REG_FIELD(mem_addr).b ## bit
+#define SFR_BIT(sfr, bit)				SFR_FIELD(sfr).b ## bit
+#define IO_REG_BIT(io_reg, bit)			SFR_BIT(io_reg, bit)
+#define EXT_IO_REG_BIT(ext_io_reg, bit)	SFR_BIT(ext_io_reg, bit)
 
 #endif	// #ifndef NO_ITTYBITTY_BYTES
 
