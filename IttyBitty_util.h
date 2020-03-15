@@ -372,6 +372,9 @@ IGNORE_WARNING(unused-but-set-variable)
 
 #define SIZEOF(var)					sizeof(var)
 
+#define bitsizeof(var)				(BITS_PER_BYTE * sizeof(var))
+#define BITSIZEOF(var)				bitsizeof(var)
+
 #define IS_COMPILE_TIME_CONSTANT(var)	__builtin_constant_p(var)
 #define IS_CONSTANT(var)				IS_COMPILE_TIME_CONSTANT(var)
 

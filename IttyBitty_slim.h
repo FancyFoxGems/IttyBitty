@@ -41,9 +41,10 @@
 
 #define ITTYBITTY_SLIM
 
-#define NO_ITTYBITTY_INFO
 #define NO_ITTYBITTY_BYTES
+#define NO_ITTYBITTY_INFO
 #define NO_ITTYBITTY_LED
+#define NO_ITTYBITTY_PRINT
 #define NO_ITTYBITTY_VALUES
 
 #include "IttyBitty_base.h"

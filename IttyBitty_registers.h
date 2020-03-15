@@ -90,7 +90,7 @@ namespace IttyBitty
 
 namespace IttyBitty
 {
-	TYPEDEF_CLASS_ALIASES(IttyBitty::BitPack, REG8);
+	TYPEDEF_CLASS_ALIASES(_BitPack, REG8);
 }
 
 #endif	// #ifndef NO_ITTYBITTY_BYTES

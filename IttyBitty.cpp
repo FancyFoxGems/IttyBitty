@@ -27,11 +27,15 @@
 
 // Slim build of library
 #ifdef ITTYBITTY_SLIM
-	#define NO_ITTYBITTY_PRINT
+
 	#define NO_ITTYBITTY_BYTES
 	#define NO_ITTYBITTY_INFO
 	#define NO_ITTYBITTY_LED
+	#define NO_ITTYBITTY_PRINT
 	#define NO_ITTYBITTY_VALUES
+
+	#define ITTYBITTY_BASE
+
 #endif
 
 
