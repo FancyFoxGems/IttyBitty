@@ -110,7 +110,7 @@ namespace IttyBitty
 			return NULL;
 
 	#ifdef DEBUG_MESSAGES
-		PrintVal(msgSize);
+		PrintValue(msgSize);
 		PrintLine("].");
 	#endif
 
@@ -122,7 +122,7 @@ namespace IttyBitty
 		__message_buffer[bufferSize - 1] = NULL_CHARACTER;
 
 	#ifdef DEBUG_MESSAGES
-		PrintVal(bufferSize);
+		PrintValue(bufferSize);
 		PrintLine(F(" BYTES ALLOCATED.  READING DATA..."));
 	#endif
 

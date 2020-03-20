@@ -96,26 +96,6 @@ namespace IttyBitty
 };
 
 
-#pragma region ARDUINO PIN GLOBAL FUNCTION DECLARATIONS
-
-IttyBitty::CPINMODE GetPinMode(CPINNUM);
-VOID SetPinMode(CPINNUM, IttyBitty::CPINMODE = IttyBitty::PinMode::OutputLow);
-VOID SetPinMode(CPINNUM, CBYTE = OUTPUT);
-
-CBIT ReadPin(CPINNUM);
-EXTERN CBIT (&CheckPinSet)(CPINNUM);
-CBIT CheckPinUnset(CPINNUM);
-
-VOID WritePin(CPINNUM, CBIT = HIGH);
-VOID SetPin(CPINNUM);
-VOID ClearPin(CPINNUM);
-VOID TogglePin(CPINNUM);
-
-VOID ResetPin(CPINNUM);
-
-#pragma endregion
-
-
 #pragma region ARDUINO PIN MANIPULATION MACROS
 
 #define ARDUINO_PIN_MODE_REF(arduino_pin)		(*ARDUINO_PORT_TO_MODE[ARDUINO_PIN_TO_PORT[arduino_pin]])
@@ -145,6 +125,62 @@ VOID ResetPin(CPINNUM);
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, OUTPUT)) SET_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);	\
 		else CLEAR_PIN(ARDUINO_PIN_MODE_REF(arduino_pin), ARDUINO_PIN_TO_MASK[arduino_pin]);										\
 	if (MASK((BYTE)(IttyBitty::PinMode)mode, INPUT_PULLUP)) SET_ARDUINO_PIN(arduino_pin); else CLEAR_ARDUINO_PIN(arduino_pin)
+
+#pragma endregion
+
+
+#pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
+
+INLINE CPINMODE GetPinMode(CPINNUM pinNum)
+{
+	return GET_ARDUINO_PIN_MODE(pinNum);
+}
+
+INLINE VOID SetPinMode(CPINNUM pinNum, CPINMODE mode)
+{
+	SET_ARDUINO_PIN_MODE(pinNum, mode);
+}
+
+INLINE VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode)
+{
+	SET_ARDUINO_PIN_MODE(pinNum, arduinoMode);
+}
+
+INLINE CBIT ReadPin(CPINNUM pinNum)
+{
+	return READ_ARDUINO_PIN(pinNum);
+}
+
+EXTERN CBIT(&CheckPinSet)(CPINNUM);
+INLINE CBIT CheckPinUnset(CPINNUM pinNum)
+{
+	return CHECK_ARDUINO_PIN_UNSET(pinNum);
+}
+
+INLINE VOID WritePin(CPINNUM pinNum, CBIT state)
+{
+	WRITE_ARDUINO_PIN(pinNum, state);
+}
+
+INLINE VOID SetPin(CPINNUM pinNum)
+{
+	SET_ARDUINO_PIN(pinNum);
+}
+
+INLINE VOID ClearPin(CPINNUM pinNum)
+{
+	CLEAR_ARDUINO_PIN(pinNum);
+}
+
+INLINE VOID TogglePin(CPINNUM pinNum)
+{
+	TOGGLE_ARDUINO_PIN(pinNum);
+}
+
+INLINE VOID ResetPin(CPINNUM pinNum)
+{
+	RESET_ARDUINO_PIN(pinNum);
+}
 
 #pragma endregion
 

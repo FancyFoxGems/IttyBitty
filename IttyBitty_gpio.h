@@ -576,10 +576,10 @@ namespace IttyBitty
 #endif	// #ifndef NO_ITTYBITTY_BYTES
 
 
-#include "IttyBitty_GPIO_arduino.h"
-
-
 #include "IttyBitty_GPIO_portpins.h"
+
+
+#include "IttyBitty_GPIO_arduino.h"
 
 
 #endif

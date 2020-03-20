@@ -76,59 +76,9 @@ namespace IttyBitty
 };
 
 
-#pragma region ARDUINO PIN GLOBAL FUNCTION DEFINITIONS
-
-CPINMODE GetPinMode(CPINNUM pinNum)
-{
-	return GET_ARDUINO_PIN_MODE(pinNum);
-}
-
-VOID SetPinMode(CPINNUM pinNum, CPINMODE mode)
-{
-	SET_ARDUINO_PIN_MODE(pinNum, mode);
-}
-
-VOID SetPinMode(CPINNUM pinNum, CBYTE arduinoMode)
-{
-	SET_ARDUINO_PIN_MODE(pinNum, arduinoMode);
-}
-
-CBIT ReadPin(CPINNUM pinNum)
-{
-	return READ_ARDUINO_PIN(pinNum);
-}
+#pragma region ARDUINO PIN GLOBAL FUNCTION ALIAS DEFINITION;
 
 CBIT (&CheckPinSet)(CPINNUM) = ReadPin;
-
-CBIT CheckPinUnset(CPINNUM pinNum)
-{
-	return CHECK_ARDUINO_PIN_UNSET(pinNum);
-}
-
-VOID WritePin(CPINNUM pinNum, CBIT state)
-{
-	WRITE_ARDUINO_PIN(pinNum, state);
-}
-
-VOID SetPin(CPINNUM pinNum)
-{
-	SET_ARDUINO_PIN(pinNum);
-}
-
-VOID ClearPin(CPINNUM pinNum)
-{
-	CLEAR_ARDUINO_PIN(pinNum);
-}
-
-VOID TogglePin(CPINNUM pinNum)
-{
-	TOGGLE_ARDUINO_PIN(pinNum);
-}
-
-VOID ResetPin(CPINNUM pinNum)
-{
-	RESET_ARDUINO_PIN(pinNum);
-}
 
 #pragma endregion
 

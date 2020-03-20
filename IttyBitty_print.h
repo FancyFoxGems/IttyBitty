@@ -53,48 +53,199 @@
 
 namespace IttyBitty
 {
-#pragma region SERIAL PRINT GLOBAL FUNCTION DECLARATIONS
+#pragma region SERIAL PRINT GLOBAL FUNCTION DEFINITIONS
 
-	VOID FlushAndDelay(HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE VOID FlushAndDelay(HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		printer.flush();
+		delay(SERIAL_PRINT_DELAY_MS);
+	}
 
-	VOID PrintBytes(PCBYTE, CSIZE size, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintBytesAndFlush(PCBYTE, CSIZE size, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintBytes(PCBYTE buffer, CSIZE size, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = 0;
+		for (SIZE i = 0; i < size; i++)
+			result += printer.write(buffer[i]);
 
-	VOID PrintBit(CBIT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintBitLine(CBIT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+		return result;
+	}
 
-	VOID PrintVal(CBOOL, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CBOOL, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintBytesAndFlush(PCBYTE buffer, CSIZE size, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintBytes(buffer, size);
+		FlushAndDelay();
 
-	VOID PrintVal(CCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+		return result;
+	}
 
-	VOID PrintVal(CBYTE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CBYTE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintBit(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data ? ON_STRING : OFF_STRING);
+	}
 
-	VOID PrintVal(CSHORT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CSHORT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data ? ON_STRING : OFF_STRING);
+		FlushAndDelay();
 
-	VOID PrintVal(CWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+		return result;
+	}
 
-	VOID PrintVal(CSIZE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CSIZE, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintValue(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data ? TRUE_STRING : FALSE_STRING);
+	}
 
-	VOID PrintVal(CLONG, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(CLONG, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintLine(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data ? TRUE_STRING : FALSE_STRING);
+		FlushAndDelay();
 
-	VOID PrintVal(RCDWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(RCDWORD, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+		return result;
+	}
 
-	VOID PrintVal(RCFLOAT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(RCFLOAT, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintValue(CCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
 
-	VOID PrintString(PCCHAR, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(PCCHAR = "", HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+	INLINE CSIZE PrintLine(CCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
 
-	VOID PrintString(FLASH_STRING, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
-	VOID PrintLine(FLASH_STRING, HardwareSerial & = SERIAL_PRINT_DEFAULT_PORT);
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CBYTE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CBYTE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CSHORT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CSHORT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CLONG data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CLONG data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(RCDWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(RCDWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CSIZE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CSIZE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(CINT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(CINT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintValue(RCFLOAT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(RCFLOAT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintString(PCCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(PCCHAR data = "", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
+
+	INLINE CSIZE PrintString(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data);
+	}
+
+	INLINE CSIZE PrintLine(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println(data);
+		FlushAndDelay();
+
+		return result;
+	}
 
 #pragma endregion
 }

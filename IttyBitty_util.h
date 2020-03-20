@@ -12,7 +12,7 @@
 
 /* COMPILER MACROS */
 
-#define ALT_KEYWORD(keyword)			__ ## keyword ## __
+#define ALT_KEYWORD(keyword)			__##keyword##__
 #define EXTENSION(expr)					\
 	__extension__(						\
 	{									\

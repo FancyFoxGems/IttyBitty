@@ -95,6 +95,8 @@
 #define B(bit_offset)				_BV(bit_offset)
 #define NB(bit_offset)				INV B(bit_offset)
 
+#define POWER_OF_TWO(power)			(1 SHL (power))
+
 #define BAND(val1, val2)			((val1) & (val2))
 #define BOR(val1, val2)				((val1) | (val2))
 #define BXOR(val1, val2)			((val1) ^ (val2))
@@ -111,8 +113,6 @@
 #define SHIFT_LEFT					BIT_SHIFT_LEFT
 #define BSHL						BIT_SHIFT_LEFT
 #define SHL							BIT_SHIFT_LEFT
-
-#define POWER_OF_TWO(power)			1 SHL (power)
 
 #define MASK(ref, mask)				BAND(ref, mask)
 #define NOT_MASK(ref, mask)			BAND(~ref, mask)
