@@ -85,7 +85,7 @@ namespace IttyBitty
 
 	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = printer.println(data ? ON_STRING : OFF_STRING);
+		SIZE result = PrintBit(data);
 		FlushAndDelay();
 
 		return result;
@@ -98,127 +98,82 @@ namespace IttyBitty
 
 	INLINE CSIZE PrintLine(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = printer.println(data ? TRUE_STRING : FALSE_STRING);
-		FlushAndDelay();
+		SIZE result = PrintValue(data, printer);
+		FlushAndDelay(printer);
 
 		return result;
 	}
 
-	INLINE CSIZE PrintValue(CCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintValue(CBYTE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(CSHORT data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(CWORD data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(CLONG data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(RCDWORD data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(CSIZE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(CINT data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, base);
+	}
+
+	INLINE CSIZE PrintValue(RCFLOAT data, CINT digits = 2, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return printer.print(data, 2);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintLine(T data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintValue(data, base, printer);
+		FlushAndDelay(printer);
+
+		return result;
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintBits(T data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintValue(data, BIN, printer);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintOctal(T data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintValue(data, OCT, printer);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintHex(T data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintValue(data, HEX, printer);
+	}
+
+	INLINE CSIZE PrintChar(CCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CBYTE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CBYTE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CSHORT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CSHORT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CLONG data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CLONG data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(RCDWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(RCDWORD data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CSIZE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CSIZE data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CINT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(CINT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(RCFLOAT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return printer.print(data);
-	}
-
-	INLINE CSIZE PrintLine(RCFLOAT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
-
-		return result;
 	}
 
 	INLINE CSIZE PrintString(PCCHAR data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
@@ -228,8 +183,8 @@ namespace IttyBitty
 
 	INLINE CSIZE PrintLine(PCCHAR data = "", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
+		SIZE result = PrintString(data, printer);
+		FlushAndDelay(printer);
 
 		return result;
 	}
@@ -241,8 +196,8 @@ namespace IttyBitty
 
 	INLINE CSIZE PrintLine(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = printer.println(data);
-		FlushAndDelay();
+		SIZE result = PrintString(data, printer);
+		FlushAndDelay(printer);
 
 		return result;
 	}
