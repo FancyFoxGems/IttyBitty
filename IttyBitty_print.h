@@ -147,7 +147,8 @@ namespace IttyBitty
 	template<typename T>
 	INLINE CSIZE PrintLine(T data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = PrintValue(data, base, printer);
+		SIZE result = PrintValue(data, base);
+		result += printer.println();
 		FlushAndDelay(printer);
 
 		return result;
@@ -184,6 +185,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintLine(PCCHAR data = "", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = PrintString(data, printer);
+		result += printer.println();
 		FlushAndDelay(printer);
 
 		return result;
@@ -197,6 +199,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintLine(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = PrintString(data, printer);
+		result += printer.println();
 		FlushAndDelay(printer);
 
 		return result;
