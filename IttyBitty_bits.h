@@ -41,35 +41,35 @@
 
 /* MISCELLANOUS BUILT-IN BIT OPERATION ALIASES */
 
-#define REDUNDANT_LEADING_BITS_16(int_val)				__builtin_clrs(int_val)
-#define REDUNDANT_LEADING_BITS_32(long_val)				__builtin_clrsl(long_val)
-#define REDUNDANT_LEADING_BITS_64(long_long_val)		__builtin_clrsll(long_long_val)
-#define REDUNDANT_LEADING_BITS(val)						REDUNDANT_LEADING_BITS_16(val)
+#define REDUNDANT_LEADING_BITS_16(word_val)			__builtin_clrs(word_val)
+#define REDUNDANT_LEADING_BITS_32(dword_val)		__builtin_clrsl(dword_val)
+#define REDUNDANT_LEADING_BITS_64(qword_val)		__builtin_clrsll(qword_val)
+#define REDUNDANT_LEADING_BITS(val)					REDUNDANT_LEADING_BITS_16(val)
 
-#define LEAST_SIGNIFICANT_ONE_BIT_16(int_val)			__builtin_ffs(int_val)
-#define LEAST_SIGNIFICANT_ONE_BIT_32(long_val)			__builtin_ffsl(long_val)
-#define LEAST_SIGNIFICANT_ONE_BIT_64(long_long_val)		__builtin_ffsll(long_long_val)
-#define LEAST_SIGNIFICANT_ONE_BIT(val)					LEAST_SIGNIFICANT_ONE_BIT_16(val)
+#define LEAST_SIGNIFICANT_ONE_BIT_16(word_val)		__builtin_ffs(word_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_32(dword_val)		__builtin_ffsl(dword_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_64(qword_val)		__builtin_ffsll(qword_val)
+#define LEAST_SIGNIFICANT_ONE_BIT(val)				LEAST_SIGNIFICANT_ONE_BIT_16(val)
 
-#define ONE_BITS_16(int_val)							__builtin_popcount(int_val)
-#define ONE_BITS_32(long_val)							__builtin_popcountl(long_val)
-#define ONE_BITS_64(long_long_val)						__builtin_popcountll(long_long_val)
-#define ONE_BITS(val)									ONE_BITS_16(val)
+#define ONE_BITS_16(word_val)						__builtin_popcount(word_val)
+#define ONE_BITS_32(dword_val)						__builtin_popcountl(dword_val)
+#define ONE_BITS_64(qword_val)						__builtin_popcountll(qword_val)
+#define ONE_BITS(val)								ONE_BITS_16(val)
 
-#define LEADING_ZERO_BITS_16(int_val)					__builtin_clz(int_val)
-#define LEADING_ZERO_BITS_32(long_val)					__builtin_clzl(long_val)
-#define LEADING_ZERO_BITS_64(long_long_val)				__builtin_clzll(long_long_val)
-#define LEADING_ZERO_BITS(val)							LEADING_ZERO_BITS_16(val)
+#define LEADING_ZERO_BITS_16(word_val)				__builtin_clz(word_val)
+#define LEADING_ZERO_BITS_32(dword_val)				__builtin_clzl(dword_val)
+#define LEADING_ZERO_BITS_64(qword_val)				__builtin_clzll(qword_val)
+#define LEADING_ZERO_BITS(val)						LEADING_ZERO_BITS_16(val)
 
-#define TRAILING_ZERO_BITS_16(int_val)					__builtin_ctz(int_val)
-#define TRAILING_ZERO_BITS_32(long_val)					__builtin_ctzl(long_val)
-#define TRAILING_ZERO_BITS_64(long_long_val)			__builtin_ctzll(long_long_val)
-#define TRAILING_ZERO_BITS(val)							TRAILING_ZERO_BITS_16(val)
+#define TRAILING_ZERO_BITS_16(word_val)				__builtin_ctz(word_val)
+#define TRAILING_ZERO_BITS_32(dword_val)			__builtin_ctzl(dword_val)
+#define TRAILING_ZERO_BITS_64(qword_val)			__builtin_ctzll(qword_val)
+#define TRAILING_ZERO_BITS(val)						TRAILING_ZERO_BITS_16(val)
 
-#define BIT_PARITY_16(int_val)							__builtin_parity(int_val)
-#define BIT_PARITY_32(long_val)							__builtin_parityl(long_val)
-#define BIT_PARITY_64(long_long_val)					__builtin_parityll(long_long_val)
-#define BIT_PARITY(val)									BIT_PARITY_16(val)
+#define BIT_PARITY_16(word_val)						__builtin_parity(word_val)
+#define BIT_PARITY_32(dword_val)					__builtin_parityl(dword_val)
+#define BIT_PARITY_64(qword_val)					__builtin_parityll(qword_val)
+#define BIT_PARITY(val)								BIT_PARITY_16(val)
 
 
 /* LOGICAL (BOOLEAN) OPERATOR ALIASES */
@@ -154,12 +154,12 @@
 
 /* BITMASK MACROS (FOR MULTI-BIT MANIPULATION OPERATIONS) */
 
-#define BITSCHK(ref, mask)						MASK(ref, mask)
+#define BITSCHK(ref, mask)						(MASK(ref, mask) > 0)
 #define BITS_SET(ref, mask)						BITSCHK(ref, mask)
 #define CHECK_BITS(ref, mask)					BITSCHK(ref, mask)
 #define CHECK_BITS_SET(ref, mask)				BITSCHK(ref, mask)
 
-#define BITSSNT(ref, mask)						NOT_MASK(ref, mask)
+#define BITSSNT(ref, mask)						(NOT_MASK(ref, mask) > 0)
 #define BITS_UNSET(ref, mask)					BITSSNT(ref, mask)
 #define CHECK_BITS_UNSET(ref, mask)				BITSSNT(ref, mask)
 

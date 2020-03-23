@@ -73,6 +73,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintBytesAndFlush(PCBYTE buffer, CSIZE size, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = PrintBytes(buffer, size);
+		result += printer.println();
 		FlushAndDelay();
 
 		return result;
@@ -86,6 +87,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = PrintBit(data);
+		result += printer.println();
 		FlushAndDelay();
 
 		return result;
@@ -99,6 +101,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintLine(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = PrintValue(data, printer);
+		result += printer.println();
 		FlushAndDelay(printer);
 
 		return result;
