@@ -32,20 +32,20 @@
 
 // PRINTED VALUE LITERALS
 
-#ifndef ON_STRING
-	#define ON_STRING					"1"
+#ifndef DEFAULT_TRUE_STRING
+	#define DEFAULT_TRUE_STRING		F("TRUE")
 #endif
 
-#ifndef OFF_STRING
-	#define OFF_STRING					"0"
+#ifndef DEFAULT_FALSE_STRING
+	#define DEFAULT_FALSE_STRING	F("FALSE")
 #endif
 
-#ifndef TRUE_STRING
-	#define TRUE_STRING					"TRUE"
+#ifndef HIGH_STRING
+	#define HIGH_STRING				F("1")
 #endif
 
-#ifndef FALSE_STRING
-	#define FALSE_STRING				"FALSE"
+#ifndef LOW_STRING
+	#define LOW_STRING				F("0")
 #endif
 
 #pragma endregion
@@ -79,32 +79,38 @@ namespace IttyBitty
 		return result;
 	}
 
-	INLINE CSIZE PrintBit(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintValue(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data ? ON_STRING : OFF_STRING);
+		return printer.print(data ? trueString : falseString);
 	}
 
-	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintLine(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = PrintBit(data);
+		SIZE result = PrintValue(data, trueString, falseString, printer);
 		result += printer.println();
-		FlushAndDelay();
+		FlushAndDelay(printer);
 
 		return result;
 	}
 
 	INLINE CSIZE PrintValue(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data ? TRUE_STRING : FALSE_STRING);
+		return PrintValue(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, printer);
 	}
 
 	INLINE CSIZE PrintLine(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = PrintValue(data, printer);
-		result += printer.println();
-		FlushAndDelay(printer);
+		return PrintLine(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, printer);
+	}
 
-		return result;
+	INLINE CSIZE PrintBit(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintValue(data, HIGH_STRING, LOW_STRING, printer);
+	}
+
+	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, HIGH_STRING, LOW_STRING, printer);
 	}
 
 	INLINE CSIZE PrintValue(CBYTE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
