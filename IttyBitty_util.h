@@ -33,8 +33,32 @@
 #define PREFETCH_3(addr, rw, locality)	__builtin_prefetch(addr, rw, locality)
 
 #define EXPECT(expr, val)				__builtin_expect(expr, val)
-#define EXPECTED(expr)					EXPECT(expr, TRUE)
-#define NOT_EXPECTED(expr)				EXPECT(expr, FALSE)
+#define EXPECT_TRUE(expr)				EXPECT(expr, TRUE)
+#define EXPECTED(expr)					EXPECT_TRUE(expr)
+#define EXPECT_FALSE(expr)				EXPECT(expr, FALSE)
+#define NOT_EXPECTED(expr)				EXPECT_FALSE(expr)
+#define UNEXPECTED(expr)				EXPECT_FALSE(expr)
+#define EXPECT_NULL(expr)				EXPECT_TRUE((expr) == NULL)
+#define EXPECT_NOT_NULL(expr)			EXPECT_TRUE((expr) != NULL)
+
+#define UNREACHABLE()					__builtin_unreachable()
+
+#define TRAP()							__builtin_trap()
+
+#define CLEAR_CACHE(begin_ptr, end_ptr)					__builtin___clear_cache(begin_ptr, end_ptr)
+
+#define SPECULATION_SAFE_VALUE(val, failVal)			__builtin_speculation_safe_value(val, failVal)
+
+#define ASSUME_ALIGNED(ptr, align_bytes)				__builtin_assume_aligned(ptr, align_bytes)
+
+#define STACK_ALLOC(byte_size)							__builtin_alloca(byte_size)
+#define STACK_ALLOC_AND_ALIGN(byte_size, align_bits)	__builtin_alloca_with_align(byte_size, align_bits)
+
+#define HAS_ATTRIBUTE(expr, attribute)					__builtin_has_attribute(expr, attribute)
+
+#define CHOOSE_EXPR(const_expr, expr1, expr2)			__builtin_choose_expr(const_expr, expr1, expr2)
+#define CHOOSE_CHOOSE_EXPR(outer_const_expr, outer_expr, inner_const_expr, inner_expr1, inner_expr2)	\
+	__builtin_choose_expr(outer_const_expr, outer_expr, __builtin_choose_expr(inner_const_expr, inner_expr1, inner_expr2))
 
 #define PRAGMA_MACRO(pragma_clause)		_Pragma(#pragma_clause)
 #define IGNORE_WARNING(gcc_warning)		PRAGMA_MACRO(GCC diagnostic ignored "-W"#gcc_warning)
@@ -357,9 +381,9 @@ IGNORE_WARNING(unused-but-set-variable)
 #define SPACE				SPACE_CHAR
 
 #ifndef Print_h
-#define CR					CARRIAGE_RETURN
-#define LF					LINE_FEED
-#define CRLF				"\r\n"
+	#define CR				CARRIAGE_RETURN
+	#define LF				LINE_FEED
+	#define CRLF			"\r\n"
 #endif
 
 
@@ -368,6 +392,11 @@ IGNORE_WARNING(unused-but-set-variable)
 #define typeof(var)					decltype(var)
 #define TYPEOF(var)					typeof(var)
 
+#define ARE_TYPES_COMPATIBLE(type1, type2)			\
+	static_cast<CBOOL>(__builtin_types_compatible_p(type1, type2))
+#define IS_TYPEOF_COMPATIBLE(var, type)				\
+	static_cast<CBOOL>(__builtin_types_compatible_p(TYPEOF(var), type))
+
 #define OFFSETOF(type, member_var)	offsetof(type, member_var)
 
 #define SIZEOF(var)					sizeof(var)
@@ -375,7 +404,7 @@ IGNORE_WARNING(unused-but-set-variable)
 #define bitsizeof(var)				(BITS_PER_BYTE * sizeof(var))
 #define BITSIZEOF(var)				bitsizeof(var)
 
-#define IS_COMPILE_TIME_CONSTANT(var)	__builtin_constant_p(var)
+#define IS_COMPILE_TIME_CONSTANT(var)	static_cast<CBOOL>(__builtin_constant_p(var))
 #define IS_CONSTANT(var)				IS_COMPILE_TIME_CONSTANT(var)
 
 
@@ -487,7 +516,7 @@ using std::forward;
 #define BYTE_SIZE(T)				SIZEOF(T)
 #define BYTE_SIZEOF(var)			BYTE_SIZE(TYPEOF(var))
 
-#define BIT_SIZE(T)					static_cast<SIZE>(SIZEOF(T) * BITS_PER_BYTE)
+#define BIT_SIZE(T)					static_cast<CSIZE>(SIZEOF(T) * BITS_PER_BYTE)
 #define BIT_SIZEOF(var)				BIT_SIZE(TYPEOF(var))
 
 #define countof(var)				(SIZEOF(var) / SIZEOF(0[var]))
@@ -521,6 +550,9 @@ using std::forward;
 #define VALUE_RANGE_OF(var)			VALUE_RANGE(TYPEOF(var))
 #define RANGEOF(var)				VALUE_RANGE_OF(var)
 
+#define IS_EVENLY_DIVISIBLE(var, divisor)	(var % divisor == 0)
+#define HAS_REMAINDER(var, divisor)			static_cast<CBOOL>(var % divisor)
+
 #define T_SIZE						SIZEOF(T)
 #define T_RANGE						RANGE(T)
 #define T_MAX						MAX_VALUE(T)
@@ -536,8 +568,8 @@ using std::forward;
 /* FLASH DATA ADDRESSING MACROS */
 
 #ifndef F
-class __FlashStringHelper;
-#define F(string_literal)						(reinterpret_cast<const __FlashStringHelper *>(PSTR(string_literal)))
+	class __FlashStringHelper;
+	#define F(string_literal)					(reinterpret_cast<const __FlashStringHelper *>(PSTR(string_literal)))
 #endif
 
 #define FLASH_STRING_ADDRESS(string_addr)		((PCCHAR)(string_addr))

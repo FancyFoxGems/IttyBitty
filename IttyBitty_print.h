@@ -10,7 +10,7 @@
 #define _ITTYBITTY_PRINT_H
 
 
-#include "IttyBitty_util.h"
+#include "IttyBitty_bits.h"
 
 #include "HardwareSerial.h"
 
@@ -40,12 +40,15 @@
 	#define DEFAULT_FALSE_STRING	F("FALSE")
 #endif
 
+#define ONE_STRING					F("1")
+#define ZERO_STRING					F("0")
+
 #ifndef HIGH_STRING
-	#define HIGH_STRING				F("1")
+	#define HIGH_STRING				ONE_STRING
 #endif
 
 #ifndef LOW_STRING
-	#define LOW_STRING				F("0")
+	#define LOW_STRING				ZERO_STRING
 #endif
 
 #pragma endregion
@@ -115,37 +118,133 @@ namespace IttyBitty
 
 	INLINE CSIZE PrintValue(CBYTE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS(data);
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(CSHORT data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS(data);
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(CWORD data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS(data);
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(CLONG data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS_32(MAKE_UNSIGNED(data));
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes /= 3;
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(RCDWORD data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS_32(data);
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
-	INLINE CSIZE PrintValue(CSIZE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintValue(CUINT data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS_UINT(data);
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(data, base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(CINT data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return printer.print(data, base);
+		return PrintValue(static_cast<UINT>(data), base, printer);
 	}
 
 	INLINE CSIZE PrintValue(RCFLOAT data, CINT digits = 2, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)

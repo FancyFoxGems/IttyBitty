@@ -41,35 +41,35 @@
 
 /* MISCELLANOUS BUILT-IN BIT OPERATION ALIASES */
 
-#define REDUNDANT_LEADING_BITS_16(word_val)			__builtin_clrs(word_val)
-#define REDUNDANT_LEADING_BITS_32(dword_val)		__builtin_clrsl(dword_val)
-#define REDUNDANT_LEADING_BITS_64(qword_val)		__builtin_clrsll(qword_val)
-#define REDUNDANT_LEADING_BITS(val)					REDUNDANT_LEADING_BITS_16(val)
+#define REDUNDANT_LEADING_BITS_INT(int_val)			__builtin_clrsb(int_val)
+#define REDUNDANT_LEADING_BITS_32(long_val)			__builtin_clrsbl(long_val)
+#define REDUNDANT_LEADING_BITS_64(longlong_val)		__builtin_clrsbll(longlong_val)
+#define REDUNDANT_LEADING_BITS(val)					REDUNDANT_LEADING_BITS_INT(static_cast<INT>(val))
 
-#define LEAST_SIGNIFICANT_ONE_BIT_16(word_val)		__builtin_ffs(word_val)
-#define LEAST_SIGNIFICANT_ONE_BIT_32(dword_val)		__builtin_ffsl(dword_val)
-#define LEAST_SIGNIFICANT_ONE_BIT_64(qword_val)		__builtin_ffsll(qword_val)
-#define LEAST_SIGNIFICANT_ONE_BIT(val)				LEAST_SIGNIFICANT_ONE_BIT_16(val)
+#define LEAST_SIGNIFICANT_ONE_BIT_INT(int_val)		__builtin_ffs(int_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_32(long_val)		__builtin_ffsl(long_val)
+#define LEAST_SIGNIFICANT_ONE_BIT_64(longlong_val)	__builtin_ffsll(longlong_val)
+#define LEAST_SIGNIFICANT_ONE_BIT(val)				LEAST_SIGNIFICANT_ONE_BIT_INT(static_cast<INT>(val))
 
-#define ONE_BITS_16(word_val)						__builtin_popcount(word_val)
+#define ONE_BITS_UINT(uint_val)						__builtin_popcount(uint_val)
 #define ONE_BITS_32(dword_val)						__builtin_popcountl(dword_val)
 #define ONE_BITS_64(qword_val)						__builtin_popcountll(qword_val)
-#define ONE_BITS(val)								ONE_BITS_16(val)
+#define ONE_BITS(val)								ONE_BITS_UINT(static_cast<UINT>(val))
 
-#define LEADING_ZERO_BITS_16(word_val)				__builtin_clz(word_val)
+#define LEADING_ZERO_BITS_UINT(uint_val)			__builtin_clz(uint_val)
 #define LEADING_ZERO_BITS_32(dword_val)				__builtin_clzl(dword_val)
 #define LEADING_ZERO_BITS_64(qword_val)				__builtin_clzll(qword_val)
-#define LEADING_ZERO_BITS(val)						LEADING_ZERO_BITS_16(val)
+#define LEADING_ZERO_BITS(val)						LEADING_ZERO_BITS_UINT(static_cast<UINT>(val))
 
-#define TRAILING_ZERO_BITS_16(word_val)				__builtin_ctz(word_val)
+#define TRAILING_ZERO_BITS_UINT(uint_val)			__builtin_ctz(uint_val)
 #define TRAILING_ZERO_BITS_32(dword_val)			__builtin_ctzl(dword_val)
 #define TRAILING_ZERO_BITS_64(qword_val)			__builtin_ctzll(qword_val)
-#define TRAILING_ZERO_BITS(val)						TRAILING_ZERO_BITS_16(val)
+#define TRAILING_ZERO_BITS(val)						TRAILING_ZERO_BITS_UINT(static_cast<UINT>(val))
 
-#define BIT_PARITY_16(word_val)						__builtin_parity(word_val)
+#define BIT_PARITY_UINT(uint_val)					__builtin_parity(uint_val)
 #define BIT_PARITY_32(dword_val)					__builtin_parityl(dword_val)
 #define BIT_PARITY_64(qword_val)					__builtin_parityll(qword_val)
-#define BIT_PARITY(val)								BIT_PARITY_16(val)
+#define BIT_PARITY(val)								BIT_PARITY_UINT(static_cast<UINT>(val))
 
 
 /* LOGICAL (BOOLEAN) OPERATOR ALIASES */
