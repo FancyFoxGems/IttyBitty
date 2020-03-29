@@ -73,18 +73,18 @@ namespace IttyBitty
 {
 #pragma region LCD BIG FONT FLASH DATA TABLE DECLARATIONS
 
-	EXTERN BYTE_P LCD_BIG_FONT_SHAPES[64];
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_SHAPES[64];
 
-	EXTERN BYTE_P LCD_BIG_FONT_CHAR_MAP[59];
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_CHAR_MAP[59];
 
-	EXTERN PBYTE_P LCD_BIG_FONT_DATA_TABLES[6];
+	EXTERN PPROGMEM BYTE_P LCD_BIG_FONT_DATA_TABLES[6];
 
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_1[18];			//	1 cols/char * 2 rows/char * 18 chars
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_2[8];			//	2 cols/char * 2 rows/char * 2 chars
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_3[180];			//	3 cols/char * 2 rows/char * 30 chars
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_3_SYMBOLS[18];	//	3 cols/char * 2 rows/char * 3 chars
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_4[24];			//	4 cols/char * 2 rows/char * 3 chars
-	EXTERN BYTE_P LCD_BIG_FONT_DATA_5[20];			//	5 cols/char * 2 rows/char * 2 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_1[18];			//	1 cols/char * 2 rows/char * 18 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_2[8];			//	2 cols/char * 2 rows/char * 2 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_3[180];			//	3 cols/char * 2 rows/char * 30 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_3_SYMBOLS[18];	//	3 cols/char * 2 rows/char * 3 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_4[24];			//	4 cols/char * 2 rows/char * 3 chars
+	EXTERN PROGMEM BYTE_P LCD_BIG_FONT_DATA_5[20];			//	5 cols/char * 2 rows/char * 2 chars
 
 #pragma endregion
 };
