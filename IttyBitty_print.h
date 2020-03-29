@@ -64,56 +64,43 @@ namespace IttyBitty
 		delay(SERIAL_PRINT_DELAY_MS);
 	}
 
-	INLINE CSIZE PrintBytes(PCBYTE buffer, CSIZE size, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = 0;
-		for (SIZE i = 0; i < size; i++)
-			result += printer.write(buffer[i]);
 
-		return result;
-	}
-
-	INLINE CSIZE PrintBytesAndFlush(PCBYTE buffer, CSIZE size, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = PrintBytes(buffer, size);
-		result += printer.println();
-		FlushAndDelay();
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintBool(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		return printer.print(data ? trueString : falseString);
 	}
 
-	INLINE CSIZE PrintLine(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintBool(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = PrintValue(data, trueString, falseString, printer);
-		result += printer.println();
-		FlushAndDelay(printer);
-
-		return result;
-	}
-
-	INLINE CSIZE PrintValue(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return PrintValue(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, printer);
-	}
-
-	INLINE CSIZE PrintLine(CBOOL data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		return PrintLine(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, printer);
+		return PrintBool(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, printer);
 	}
 
 	INLINE CSIZE PrintBit(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return PrintValue(data, HIGH_STRING, LOW_STRING, printer);
+		return PrintBool(data, HIGH_STRING, LOW_STRING, printer);
 	}
 
-	INLINE CSIZE PrintBitLine(CBIT data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintValue(CCHAR data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		return PrintLine(data, HIGH_STRING, LOW_STRING, printer);
+		SIZE result = 0;
+
+		if (base != DEC)
+		{
+			INT leadingZeroes = LEADING_ZERO_BITS(data) / 2;
+			if (base == HEX)
+				leadingZeroes /= BITS_PER_NYBBLE;
+			else if (base != BIN)
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			if (data == 0) --leadingZeroes;
+
+			for (SIZE i = 0; i < leadingZeroes; i++)
+				result += printer.print(ZERO_STRING);
+		}
+
+		result += printer.print(static_cast<CSHORT>(data), base);
+
+		return result;
 	}
 
 	INLINE CSIZE PrintValue(CBYTE data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
@@ -122,11 +109,13 @@ namespace IttyBitty
 
 		if (base != DEC)
 		{
-			INT leadingZeroes = LEADING_ZERO_BITS(data);
+			INT leadingZeroes = LEADING_ZERO_BITS(data) / 2;
 			if (base == HEX)
 				leadingZeroes /= BITS_PER_NYBBLE;
 			else if (base != BIN)
 				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			if (data == 0) --leadingZeroes;
 
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
@@ -149,6 +138,8 @@ namespace IttyBitty
 			else if (base != BIN)
 				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
 
+			if (data == 0) --leadingZeroes;
+
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
@@ -170,6 +161,8 @@ namespace IttyBitty
 			else if (base != BIN)
 				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
 
+			if (data == 0) --leadingZeroes;
+
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
@@ -189,7 +182,9 @@ namespace IttyBitty
 			if (base == HEX)
 				leadingZeroes /= BITS_PER_NYBBLE;
 			else if (base != BIN)
-				leadingZeroes /= 3;
+				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
+
+			if (data == 0) --leadingZeroes;
 
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
@@ -212,6 +207,8 @@ namespace IttyBitty
 			else if (base != BIN)
 				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
 
+			if (data == 0) --leadingZeroes;
+
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
@@ -233,6 +230,8 @@ namespace IttyBitty
 			else if (base != BIN)
 				leadingZeroes = leadingZeroes / 3 + HAS_REMAINDER(leadingZeroes, 3);
 
+			if (data == 0) --leadingZeroes;
+
 			for (SIZE i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
@@ -253,17 +252,7 @@ namespace IttyBitty
 	}
 
 	template<typename T>
-	INLINE CSIZE PrintLine(T data, CINT base = DEC, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = PrintValue(data, base);
-		result += printer.println();
-		FlushAndDelay(printer);
-
-		return result;
-	}
-
-	template<typename T>
-	INLINE CSIZE PrintBits(T data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	INLINE CSIZE PrintBinary(T data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		return PrintValue(data, BIN, printer);
 	}
@@ -290,27 +279,117 @@ namespace IttyBitty
 		return printer.print(data);
 	}
 
-	INLINE CSIZE PrintLine(PCCHAR data = "", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
-	{
-		SIZE result = PrintString(data, printer);
-		result += printer.println();
-		FlushAndDelay(printer);
-
-		return result;
-	}
-
 	INLINE CSIZE PrintString(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		return printer.print(data);
 	}
 
-	INLINE CSIZE PrintLine(FLASH_STRING data, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	template<typename T>
+	INLINE CSIZE PrintValues(CONST T * values, CSIZE size, CINT base = DEC, PCCHAR separator = " ", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
-		SIZE result = PrintString(data, printer);
-		result += printer.println();
-		FlushAndDelay(printer);
+		SIZE result = 0;
+		for (SIZE i = 0; i < size; i++)
+		{
+			if (i > 0)
+				result += PrintString(separator, printer);
+			result += PrintValue(values[i], base, printer);
+		}
 
 		return result;
+	}
+	
+
+	INLINE CSIZE _PrintLine(CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = printer.println();
+		if (flushAndDelay)
+			FlushAndDelay(printer);
+
+		return result;
+	}
+
+	INLINE CSIZE PrintLine(CBOOL data, FLASH_STRING trueString, FLASH_STRING falseString, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintBool(data, trueString, falseString, printer);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	INLINE CSIZE PrintBoolLine(CBOOL data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, DEFAULT_TRUE_STRING, DEFAULT_FALSE_STRING, flushAndDelay, printer);
+	}
+
+	INLINE CSIZE PrintBitLine(CBIT data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, HIGH_STRING, LOW_STRING, flushAndDelay, printer);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintLine(T data, CINT base = DEC, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintValue(data, base);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintBinaryLine(T data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, BIN, flushAndDelay, printer);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintOctalLine(T data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, OCT, flushAndDelay, printer);
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintHexLine(T data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(data, HEX, flushAndDelay, printer);
+	}
+
+	INLINE CSIZE PrintCharLine(CCHAR data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintChar(data);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	INLINE CSIZE PrintLine(PCCHAR data = "", CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintString(data, printer);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	INLINE CSIZE PrintLine(FLASH_STRING data, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintString(data, printer);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintLine(CONST T * values, CSIZE size, CINT base = DEC, PCCHAR separator = " ", CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		SIZE result = PrintValues(values, size, base, separator, printer);
+		result += _PrintLine(flushAndDelay, printer);
+
+		return result;
+	}
+
+	template<typename T>
+	INLINE CSIZE PrintLines(CONST T * values, CSIZE size, CINT base = DEC, CBOOL flushAndDelay = TRUE, HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
+	{
+		return PrintLine(values, size, base, "\n", flushAndDelay, printer);
 	}
 
 #pragma endregion

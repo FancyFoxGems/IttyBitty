@@ -78,7 +78,7 @@
 #define AND							&&
 #define OR							||
 
-#define XOR(val1, val2)				(NOT (NOT (val1) ^ NOT (val2)))
+#define XOR(val1, val2)				(NOT (val1) != NOT (val2))
 #define NAND(val1, val2)			(NOT ((val1) AND (val2)))
 #define NOR(val1, val2)				(NOT ((val1) OR (val2)))
 #define NXOR(val1, val2)			(NOT (val1) ^ NOT (val2))
