@@ -13,6 +13,8 @@
 /* COMPILER MACROS */
 
 #define ALT_KEYWORD(keyword)			__##keyword##__
+#define C90_ALT(keyword)				ALT_KEYWORD(keyword)
+
 #define EXTENSION(expr)					\
 	__extension__(						\
 	{									\
@@ -49,7 +51,7 @@
 
 #define SPECULATION_SAFE_VALUE(val, failVal)			__builtin_speculation_safe_value(val, failVal)
 
-#define ASSUME_ALIGNED(ptr, align_bytes)				__builtin_assume_aligned(ptr, align_bytes)
+#define ASSUME_ALIGNED_PTR(ptr, align_bytes)			__builtin_assume_aligned(ptr, align_bytes)
 
 #define STACK_ALLOC(byte_size)							__builtin_alloca(byte_size)
 #define STACK_ALLOC_AND_ALIGN(byte_size, align_bits)	__builtin_alloca_with_align(byte_size, align_bits)

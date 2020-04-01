@@ -18,6 +18,11 @@
 #define ARDUINO 10608
 #define ARDUINO_AVR_NANO
 #define ARDUINO_ARCH_AVR
+#define _DEBUG
+#define ITTYBITTY_BASE
+#define NO_ITTYBITTY_BYTES
+#define NO_ITTYBITTY_LCD
+#define NO_ITTYBITTY_VALUES
 #define __cplusplus 201103L
 #define __AVR__
 #define __inline__

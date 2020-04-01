@@ -94,7 +94,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -117,7 +117,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -140,7 +140,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -163,7 +163,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -186,7 +186,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -209,7 +209,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -232,7 +232,7 @@ namespace IttyBitty
 
 			if (data == 0) --leadingZeroes;
 
-			for (SIZE i = 0; i < leadingZeroes; i++)
+			for (INT i = 0; i < leadingZeroes; i++)
 				result += printer.print(ZERO_STRING);
 		}
 
@@ -288,7 +288,7 @@ namespace IttyBitty
 	INLINE CSIZE PrintValues(CONST T * values, CSIZE size, CINT base = DEC, PCCHAR separator = " ", HardwareSerial & printer = SERIAL_PRINT_DEFAULT_PORT)
 	{
 		SIZE result = 0;
-		for (SIZE i = 0; i < size; i++)
+		for (INT i = 0; i < size; i++)
 		{
 			if (i > 0)
 				result += PrintString(separator, printer);
