@@ -528,6 +528,7 @@ using std::forward;
 #define IS_UNSIGNED(T)				!IS_SIGNED(T)
 
 #define MAX_UNSIGNED_VALUE(T)		((T)(T(0) - 0b1))
+#define MAX_UNSIGNED(T)				MAX_UNSIGNED_VALUE(T)
 #define MAX_UNSIGNED_VALUE_OF(var)	MAX_UNSIGNED_VALUE(TYPEOF(var))
 
 #define MAX_BYTE					MAX_UNSIGNED_VALUE(BYTE)
@@ -537,23 +538,41 @@ using std::forward;
 
 #define MAX_SIGNED_VALUE(T)			((T)(MAX_UNSIGNED_VALUE(UNSIGNED_TYPE(T)) / 2))
 #define MAX_SIGNED(T)				MAX_SIGNED_VALUE(T)
+#define MAX_SIGNED_VALUE_OF(var)	MAX_SIGNED_VALUE(TYPEOF(var))
 
 #define MAX_CHAR					MAX_SIGNED(CHAR)
 #define MAX_SHORT					MAX_SIGNED(SHORT)
 #define MAX_LONG					MAX_SIGNED(LONG)
 #define MAX_LONGLONG				MAX_SIGNED(LONGLONG)
 
-#define MAX_VALUE(T)				(IS_SIGNED(T) ? MAX_UNSIGNED_VALUE(T) : MAX_SIGNED_VALUE(T))
+#define MIN_SIGNED_VALUE(T)			(-1 * MAX_SIGNED_VALUE(T) - 1)
+#define MIN_SIGNED(T)				MIN_SIGNED_VALUE(T)
+#define MIN_SIGNED_VALUE_OF(var)	MIN_SIGNED_VALUE(TYPEOF(var))
+
+#define MIN_CHAR					MIN_SIGNED(CHAR)
+#define MIN_SHORT					MIN_SIGNED(SHORT)
+#define MIN_LONG					MIN_SIGNED(LONG)
+#define MIN_LONGLONG				MIN_SIGNED(LONGLONG)
+
+#define MAX_VALUE(T)				(IS_SIGNED(T) ? MAX_SIGNED_VALUE(T) : MAX_UNSIGNED_VALUE(T))
 #define MAX_VALUE_OF(var)			MAX_VALUE(TYPEOF(var))
 #define MAXOF(var)					MAX_VALUE_OF(var)
+
+#define MIN_VALUE(T)				(IS_SIGNED(T) ? MIN_SIGNED_VALUE(T) : 0)
+#define MIN_VALUE_OF(var)			MIN_VALUE(TYPEOF(var))
+#define MINOF(var)					MIN_VALUE_OF(var)
 
 #define VALUE_RANGE(T)				(static_cast<DWORD>(BIT_SIZE(T)) * static_cast<DWORD>(BIT_SIZE(T)))
 #define RANGE(T)					VALUE_RANGE(T)
 #define VALUE_RANGE_OF(var)			VALUE_RANGE(TYPEOF(var))
 #define RANGEOF(var)				VALUE_RANGE_OF(var)
 
-#define IS_EVENLY_DIVISIBLE(var, divisor)	(var % divisor == 0)
 #define HAS_REMAINDER(var, divisor)			static_cast<CBOOL>(var % divisor)
+#define IS_EVENLY_DIVISIBLE(var, divisor)	(NOT HAS_REMAINDER(var, divisor))
+#define IS_FACTOR_OF(var, divisor)			IS_EVENLY_DIVISIBLE(var, divisor)
+
+#define IS_EVEN(var)				IS_EVENLY_DIVISIBLE(var, 2)
+#define IS_ODD(var)					(NOT IS_EVENLY_DIVISIBLE(var, 2))
 
 #define T_SIZE						SIZEOF(T)
 #define T_RANGE						RANGE(T)
