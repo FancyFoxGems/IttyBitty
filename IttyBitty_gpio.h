@@ -512,6 +512,7 @@ namespace IttyBitty
 		STATIC RCGPIO Instance()
 		{
 			STATIC GPIO INSTANCE;
+			
 			return INSTANCE;
 		}
 

@@ -109,10 +109,12 @@
 #define SHIFT_RIGHT					BIT_SHIFT_RIGHT
 #define BSHR						BIT_SHIFT_RIGHT
 #define SHR							BIT_SHIFT_RIGHT
+#define RSH							BIT_SHIFT_RIGHT
 #define BIT_SHIFT_LEFT				<<
 #define SHIFT_LEFT					BIT_SHIFT_LEFT
 #define BSHL						BIT_SHIFT_LEFT
 #define SHL							BIT_SHIFT_LEFT
+#define LSH							BIT_SHIFT_LEFT
 
 #define MASK(ref, mask)				BAND(ref, mask)
 #define NOT_MASK(ref, mask)			BAND(~ref, mask)
@@ -466,10 +468,8 @@
 #define LOW_NYBBLE(byte_ref)							MASK(byte_ref, LOW_NYBBLE_MASK)
 #define HIGH_NYBBLE(byte_ref)							MASK(byte_ref, HIGH_NYBBLE_MASK)
 
-#define CHECK_NYBBLE_SET(byte_ref, nybble_offset)		MASK(byte_ref, NYBBLE_MASK(nybble_offset))
-#define CHECK_NYBBLE(byte_ref, nybble_offset)			CHECK_NYBBLE_SET(byte_ref, nybble_offset)
-
-#define CHECK_NYBBLE_UNSET(byte_ref, nybble_offset)		MASK(byte_ref, NOT_NYBBLE(nybble_offset))
+#define GET_NYBBLE(ref, nybble_offset)					MASK(ref, NYBBLE_MASK(nybble_offset))
+#define GET_WITHOUT_NYBBLE(ref, nybble_offset)			MASK(ref, NOT_NYBBLE(nybble_offset))
 
 #define SET_LOW_NYBBLE(byte_ref)						SET_BITS_FROM(byte_ref, LOW_NYBBLE_MASK)
 #define SET_HIGH_NYBBLE(byte_ref)						SET_BITS_FROM(byte_ref, HIGH_NYBBLE_MASK)
@@ -503,10 +503,8 @@
 #define LOW_BYTE(word_ref)								MASK(word_ref, LOW_BYTE_MASK)
 #define HIGH_BYTE(word_ref)								MASK(word_ref, HIGH_BYTE_MASK)
 
-#define CHECK_BYTE_SET(ref, byte_offset)				MASK(ref, BYTE_MASK(byte_offset))
-#define CHECK_BYTE(ref, byte_offset)					CHECK_BYTE_SET(ref, byte_offset)
-
-#define CHECK_BYTE_UNSET(ref, byte_offset)				MASK(ref, NOT_BYTE(byte_offset))
+#define GET_BYTE(ref, byte_offset)						MASK(ref, BYTE_MASK(byte_offset))
+#define GET_WITHOUT_BYTE(ref, byte_offset)				MASK(ref, NOT_BYTE(byte_offset))
 
 #define SET_LOW_BYTE(word_ref)							SET_BITS(word_ref, LOW_BYTE_MASK)
 #define SET_HIGH_BYTE(word_ref)							SET_BITS(word_ref, HIGH_BYTE_MASK)
@@ -522,7 +520,7 @@
 #define CLEAR_BYTE(ref, byte_offset)					CLEAR_BITS(ref, BYTE_MASK(byte_offset))
 
 #define BYTE_RANGE(ref, bit_offset, bit_size)			ref SHL (BIT_SIZE(BYTE) - bit_size - bit_offset)	SHR bit_offset
-#define GET_BITS_FROM_BYTE(ref, bit_offset, bit_size)	BYTE_RANGE(ref, bit_offset, bit_size)
+#define CHECK_BITS_FROM_BYTE(ref, bit_offset, bit_size)	BYTE_RANGE(ref, bit_offset, bit_size)
 
 #define COPY_BYTE_FROM(ref, byte_offset, from_ref)		COPY_BITS_FROM(ref, BYTE_MASK(byte_offset), from_ref)
 #define COPY_BYTE(ref, byte_offset, from_ref)			COPY_BYTE_FROM(ref, byte_offset, from_ref)
@@ -547,10 +545,8 @@
 #define LOW_WORD(dword_ref)								MASK(dword_ref, LOW_WORD_MASK)
 #define HIGH_WORD(dword_ref)							MASK(dword_ref, HIGH_WORD_MASK)
 
-#define CHECK_WORD_SET(ref, word_offset)				MASK(ref, WORD_MASK(word_offset))
-#define CHECK_WORD(ref, word_offset)					CHECK_WORD_SET(ref, word_offset)
-
-#define CHECK_WORD_UNSET(ref, word_offset)				MASK(ref, NOT_WORD(word_offset))
+#define GET_WORD(ref, word_offset)						MASK(ref, WORD_MASK(word_offset))
+#define GET_WITHOUT_WORD(ref, word_offset)				MASK(ref, NOT_WORD(word_offset))
 
 #define SET_LOW_WORD(dword_ref)							SET_BITS(dword_ref, LOW_WORD_MASK)
 #define SET_HIGH_WORD(dword_ref)						SET_BITS(dword_ref, HIGH_WORD_MASK)
@@ -598,7 +594,7 @@ namespace IttyBitty
 	/* [_BitPack]: BITFIELD STRUCT FOR BIT-PACKING / BIT-REFERENCING OF A MEMORY BYTE */
 
 	struct _BitPack;
-	TYPEDEF_VOLATILE_STRUCT_ALIASES(BitPack, bitpack, BITPACK);
+	TYPEDEF_STRUCT_ALIASES_AS_VOLATILE(BitPack, bitpack, BITPACK);
 
 	BITFIELD_STRUCT _BitPack
 	{

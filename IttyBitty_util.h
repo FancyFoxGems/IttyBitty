@@ -211,6 +211,8 @@ IGNORE_WARNING(unused-but-set-variable)
 #define WARN_UNUSED_RESULT			__attribute__((warn_unused_result))
 #define MUST_USE_RESULT				WARN_UNUSED_RESULT
 
+#define WEAK_ALIAS(ref_func_name)	__attribute__((weak, alias(EXPAND_STR(ref_func_name))))
+
 #define WEAK_REF(ref_func_name)		__attribute__((weakref(EXPAND_STR(ref_func_name))))
 #define ALIAS_FUNC(ref_func_name)	WEAK_REF(ref_func_name)
 #define ALIAS(ref_func_name)		WEAK_REF(ref_func_name)
