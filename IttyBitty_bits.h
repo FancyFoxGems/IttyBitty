@@ -466,10 +466,10 @@
 #define HIGH_NYBBLE_MASK								NYBBLE_MASK(1)
 
 #define LOW_NYBBLE(byte_ref)							MASK(byte_ref, LOW_NYBBLE_MASK)
-#define HIGH_NYBBLE(byte_ref)							MASK(byte_ref, HIGH_NYBBLE_MASK)
+#define HIGH_NYBBLE(byte_ref)							(MASK(byte_ref, HIGH_NYBBLE_MASK) SHR BITS_PER_NYBBLE)
 
-#define GET_NYBBLE(ref, nybble_offset)					MASK(ref, NYBBLE_MASK(nybble_offset))
-#define GET_WITHOUT_NYBBLE(ref, nybble_offset)			MASK(ref, NOT_NYBBLE(nybble_offset))
+#define GET_NYBBLE(ref, nybble_offset)					(MASK(ref, NYBBLE_MASK(nybble_offset)) SHR (BITS_PER_NYBBLE * (nybble_offset)))
+#define GET_WITHOUT_NYBBLE(ref, nybble_offset)			(MASK(ref, NOT_NYBBLE(nybble_offset)) SHR (BITS_PER_NYBBLE * (nybble_offset)))
 
 #define SET_LOW_NYBBLE(byte_ref)						SET_BITS_FROM(byte_ref, LOW_NYBBLE_MASK)
 #define SET_HIGH_NYBBLE(byte_ref)						SET_BITS_FROM(byte_ref, HIGH_NYBBLE_MASK)
@@ -501,10 +501,10 @@
 #define HIGH_BYTE_MASK									BYTE_MASK(1)
 
 #define LOW_BYTE(word_ref)								MASK(word_ref, LOW_BYTE_MASK)
-#define HIGH_BYTE(word_ref)								MASK(word_ref, HIGH_BYTE_MASK)
+#define HIGH_BYTE(word_ref)								(MASK(word_ref, HIGH_BYTE_MASK) SHR BITS_PER_BYTE)
 
-#define GET_BYTE(ref, byte_offset)						MASK(ref, BYTE_MASK(byte_offset))
-#define GET_WITHOUT_BYTE(ref, byte_offset)				MASK(ref, NOT_BYTE(byte_offset))
+#define GET_BYTE(ref, byte_offset)						(MASK(ref, BYTE_MASK(byte_offset)) SHR (BITS_PER_BYTE * (byte_offset)))
+#define GET_WITHOUT_BYTE(ref, byte_offset)				(MASK(ref, NOT_BYTE(byte_offset)) SHR (BITS_PER_BYTE * (byte_offset)))
 
 #define SET_LOW_BYTE(word_ref)							SET_BITS(word_ref, LOW_BYTE_MASK)
 #define SET_HIGH_BYTE(word_ref)							SET_BITS(word_ref, HIGH_BYTE_MASK)
@@ -543,10 +543,10 @@
 #define HIGH_WORD_MASK									WORD_MASK(1)
 
 #define LOW_WORD(dword_ref)								MASK(dword_ref, LOW_WORD_MASK)
-#define HIGH_WORD(dword_ref)							MASK(dword_ref, HIGH_WORD_MASK)
+#define HIGH_WORD(dword_ref)							(MASK(dword_ref, HIGH_WORD_MASK) SHR BITS_PER_WORD)
 
-#define GET_WORD(ref, word_offset)						MASK(ref, WORD_MASK(word_offset))
-#define GET_WITHOUT_WORD(ref, word_offset)				MASK(ref, NOT_WORD(word_offset))
+#define GET_WORD(ref, word_offset)						(MASK(ref, WORD_MASK(word_offset)) SHR (BITS_PER_WORD * (word_offset)))
+#define GET_WITHOUT_WORD(ref, word_offset)				(MASK(ref, NOT_WORD(word_offset)) SHR (BITS_PER_WORD * (word_offset)))
 
 #define SET_LOW_WORD(dword_ref)							SET_BITS(dword_ref, LOW_WORD_MASK)
 #define SET_HIGH_WORD(dword_ref)						SET_BITS(dword_ref, HIGH_WORD_MASK)
